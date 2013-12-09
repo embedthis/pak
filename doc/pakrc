@@ -1,0 +1,9 @@
+{
+    "catalogs": [ 
+        "http://paks.embedthis.com/catalog.json", 
+    ],
+    "dirs": {
+        "paks": "paks",
+        "pakcache": "~/.paks",
+    },
+}

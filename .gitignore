@@ -16,3 +16,7 @@
 *.exe
 *.out
 *.app
+start.bit
+macosx-*
+*-debug
+*-release

@@ -1,0 +1,62 @@
+{
+    "name": "pak",
+    "description": "Embedthis Pak Package Manager",
+    "version": "0.7.0",
+    "keywords": [
+        "pak",
+        "package",
+    ],
+    "homepage": "http://embedthis.com/product/pak",
+    "author": {
+        "name": "Embedthis Software",
+        "email": "dev@embedthis.com",
+        "url": "http://embedthis.com"
+    },
+    "contributors": [
+        "Embedthis <dev@embedthis.com> (http://embedthis.github.com)",
+    ],
+    "maintainers": [
+        "Embedthis <dev@embedthis.com> (http://embedthis.github.com)",
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/embedthis/pak.git"
+    },
+    "bugs": {
+        "email": "dev@embedthis.com",
+        "url": "http://github.com/embedthis/pak/issues"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+        "bit": ">0.9.0",
+    },
+    "directories": {
+        "src": "src",
+        "bin": "*/bin",
+    },
+    "scripts": {
+        "install": "install.es",
+        "uninstall": "uninstall.es",
+        "build": "build.es",
+        "test": "test.es"                                                                               
+        "doc": "doc.es"                                                                               
+    },
+    "license": "GPL",
+    "files": [
+        "LICENSE.md",
+        "Makefile",
+        "README.md",
+        "configure",
+        "package.json",
+        "src",
+    ],
+    "ignore": [
+        "doc",
+        "test",
+        "releases",
+        "package",
+        "*-debug*",
+        "*-release*",
+    ],
+}

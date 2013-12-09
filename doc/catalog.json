@@ -1,0 +1,6 @@
+{
+    "version": "1.0.0",
+    "paks": {
+        "pak": "git://github.com/embedthis/pak.git",
+    },
+},

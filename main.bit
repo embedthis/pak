@@ -1,0 +1,142 @@
+/*
+    main.bit -- Main Bit file for the Pak utility
+ */
+
+Bit.load({
+    blend: [
+        "src/deps/est/est.bit",
+        "src/deps/mpr/mpr.bit",
+        "src/deps/pcre/pcre.bit",
+        "src/deps/http/http.bit",
+        "src/deps/ejs/ejs.bit",
+        "${BITS}/embedthis.bit",
+    ],
+
+    customize: [
+        /* 
+            The optional custom.bit file is loaded after main.bit is fully processed. It can
+            thus override any setting. Feel free to create and customize. 
+         */
+        'custom.bit',
+    ],
+
+    settings: {
+        product: 'pak',
+        title: 'Embedthis Pak',
+        company: 'Embedthis',
+
+        /*
+            Installation prefix set
+         */
+        prefixes: 'embedthis-prefixes',
+        manifest: 'package/manifest.bit',
+
+        sync: [ 'bitos', 'est', 'mpr', 'pcre', 'http', 'ejs' ],
+        platforms: [ 'local' ],
+        packs: [ 'bits/packs' ],
+        static: false,
+        tune: 'size',
+
+        /*
+            Optional packs to automatically discover and configure
+         */
+        '+discover': [ 'dsi', 'ejscript', 'man', 'man2html', 'pmaker', 'ssl', 'zip' ],
+        '+requires': [ 'compiler', 'pcre', 'ejscript' ],
+
+        /*
+            Packs to disable when using --without all. Note: keep ssl.
+         */
+        'without-all': [ 'dsi', 'man', 'man2html' ],
+
+        ejs: {
+            /*
+                Control if ejs.* is enabled or disabled
+             */
+            db: false,
+            mail: false,
+            mapper: false,
+            tar: true,                                                                                     
+            template: false,
+            web: false,
+            zlib: true,
+        }, 
+
+        /*
+            EST SSL stack configuration
+         */
+        est: {
+            camellia: false,
+            padlock: false,
+            sslClient: false,
+            des: false,
+            testCerts: false,
+            xtea: false,
+            romTables: false,
+            genPrime: false,
+        },
+
+        http: {
+            /* Use PAM (Plugable Authentication Module) to store passwords */
+            pam: false,
+        },
+                                                                                                           
+        mpr: {                                                                                             
+            /*                                                                                             
+                Enable logging via mprLog to the log file. Error messages are always enabled.              
+                The default is to enable logging for both debug and release builds.                        
+             */                                                                                            
+            logging: true,                                                                                 
+
+            /*                                                                                             
+                Enable debug trace and asserts to the log file.                                            
+                This is enabled by default for debug builds.                                               
+             */                                                                                            
+            // tracing: true,                                                                             
+
+            alloc: {
+                parallel: true
+            },
+        },
+
+        tune: 'speed',
+    },
+
+    scripts: {
+        preblend: "
+            bit.settings.esflags = (bit.platform.profile == 'debug' || bit.platform.profile == 'mine') ? '--debug' : ''
+        ",
+    },
+
+    targets: {
+        'pak.mod': {
+            path: '${BIN}/bits/pak.mod',
+            files: [ 'src/pak.es' ],
+            build: `
+                trace('Compile', 'pak.es')
+                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 src/pak.es')
+            `,
+            'generate-nmake': `"${BIN}\\ejsc" --out "${BIN}/pak.mod" ${settings.esflags} --optimize 9 pak.es`
+            'generate-sh': '${LBIN}/ejsc --out ${BIN}/pak.mod --optimize 9 src/pak.es',
+            depends: [ 'ejsc' ],
+        },
+
+        'pak': {
+            type: 'exe',
+            path: '${BIN}/pak${EXE}',
+            headers: [ 'src/*.h' ],
+            sources: [ 'src/*.c' ],
+            depends: [ 'libejs', 'pak.mod' ],
+        },
+
+        projects: {
+            action: "
+                genProjects('', 'default', ['freebsd-x86', 'linux-x86', 'macosx-x64', 'windows-x86'])
+            ",
+        },
+    },
+
+    usage: {
+        // 'mpr.logging':  'Enable application logging (true|false)',
+        // 'mpr.tracing':  'Enable debug tracing (true|false)',                                               
+    },
+})

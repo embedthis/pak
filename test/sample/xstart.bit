@@ -1,0 +1,13 @@
+/*
+	start.bit - Bit file 
+ */
+
+Bit.load({
+	targets: {
+		simpleAction: {
+			type: 'exe',
+			sources: ['*.c'],
+            '+libraries': [ 'appweb', 'http', 'mpr', 'mprssl' ],
+		},
+	},
+})
