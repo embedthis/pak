@@ -1,0 +1,82 @@
+{
+    version: "1.0",
+    packages: {
+        jem: {
+            name: "ejs.jem",
+            version: "2.0.0",
+            description: "Ejscript Package Manager",
+            keywords: [
+                "package",
+                "jem"
+            ],
+            homepage : "http://ejscript.org",
+            author: "Embedthis <dev@embedthis.com> (http://embedthis.github.com)",
+            contributors: [
+                "Embedthis <dev@embedthis.com> (http://embedthis.github.com) ",
+            ],
+            maintainers: [
+                "Embedthis <dev@embedthis.com> (http://embedthis.github.com) ",
+            ],
+            repository: {
+                type: "git",
+                url, "git://github.com/embedthis/ejs-2.git",
+            },
+            bugs: {
+                email: "dev@embedthis.com",
+                url: "http://github.com/embedthis/ejs/issues",
+            },
+            directories: {
+                doc: "./doc",
+            },
+            dependencies: {
+                /* version, =version, >version, >=, <, <=, 1.2.X, *, ver1 - ver2, range1 || range2, ~1.2.3,
+                    git://github.com/user/project.git#tag, */
+                ejs: "~0.0.0",
+                "ejs.unix": "~0.0.0",
+                "ejs.tar": "~0.0.0",
+            }
+            scripts: {
+                install: "install.es",
+                uninstall: "uninstall.es",
+                build: "build.es",
+                test: "test.es",                                                                                   
+            },
+            config: {
+                key: 'value',
+            },
+
+            //  MOB - allow simple string: "GPL"
+            licenses: [{ 
+                type: "GPLv2", 
+                url:  "http://www.ejscript.org/products/ejs/doc/licenses/gpl.html" 
+            }],
+            signature: {
+                md5: "719ea61444a0bd34c9cf7454227a2e5c",
+            },
+            stability: "prototype",
+            os: ["linux", "macos", "win"]
+            cpu: [ "*", "!arm", "mips" ],
+            private: true,
+            files: [ /* list of files to put into package */ ],
+
+            engines: {
+                appweb: '>=4.3",
+            },
+
+
+            /* Not implemented */
+            man: "jem.1",
+            preferGlobal: true,
+            builtin: true
+            main: "jem.es",
+            bin: "MOB",
+            bundleDependencies: [ 'mob', ],
+            devDependencies: [ 'mob', ],
+            optionalDependencies: [ 'mob', ],
+            implements: ["CommonJS/Modules/1.1", "CommonJS/JSGI/1.0"],
+            publishConfig : { 
+                tag : "rc" 
+            },
+        },
+    },
+},
