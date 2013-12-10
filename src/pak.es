@@ -608,7 +608,7 @@ class PakCmd
     function cache(pak: Pak) {
         if (checkCached(pak)) {
             if (!args.options.force) {
-                trace('Info', (pak.namever || pak.name) + ' is already cached')
+                vtrace('Info', (pak.namever || pak.name) + ' is already cached')
                 return
             }
         } else {
@@ -737,6 +737,31 @@ class PakCmd
         installPak(pak)
     }
 
+    private function installDependencies(pak: Pak): Boolean {
+        let spec = pak.spec
+        for (let [other, otherVer] in spec.dependencies) {
+            let dep = Pak.local(other + '#' + otherVer)
+            if (!checkInstalled(dep)) {
+                dtrace('Info', 'Install required dependency ' + dep.name)
+                try {
+                dumpAll(dep)
+                    install(dep)
+                } catch (e) {
+                    //  TODO - should test if present and must display (e)
+                    print(e)
+                    if (args.options.force) {
+                        trace('WARN', 'Cannot install required dependency "' + dep.name + '"' )
+                    } else {
+                        throw 'Cannot install ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
+                    }
+                }
+            } else {
+                dtrace('Info', 'dependency "' + dep.name + '" is installed')
+            }
+        }
+        return true
+    }
+
     private function installPak(pak: Pak): Void {
         trace('Install', pak.namever)
         if (!pak.cached) {
@@ -752,6 +777,8 @@ class PakCmd
         mkdir(dest)
         copyTree(pak.cachePath, dest)
         dtrace('Info', pak + ' successfully installed')
+
+        installDependencies(pak)
     }
 
     /*
@@ -800,7 +827,7 @@ class PakCmd
 
     function upgrade(pak: Pak? = null) {
         if (!checkCached(pak)) {
-            throw 'Pak "' + pak + '" is not installed'
+            throw 'Pak "' + pak + '" is not cached'
         }
         if (!pak.srcPath) {
             throw 'Cannot find pak "' + pak + '" to upgrade'
@@ -812,8 +839,7 @@ class PakCmd
     private function cacheDependencies(pak: Pak): Boolean {
         let spec = pak.spec
         for (let [other, otherVer] in spec.dependencies) {
-            let dep = Pak.cache(other)
-            dep.setVersion(otherVer)
+            let dep = Pak.cache(other + '/' + otherVer)
             if (!checkCached(dep)) {
                 dtrace('Info', 'Caching required dependency ' + dep.name)
                 try {
@@ -915,9 +941,9 @@ class PakCmd
                 dest.parent.join(pak.name + '-' + pak.version).rename(dest)
             } finally {
                 chdir(current)
-                //tgzName.remove()
-                // tarName.remove()
-                // tempName.remove()
+                tgzName.remove()
+                tarName.remove()
+                tempName.remove()
                 dest.parent.join(pak.name + '-' + pak.version).removeAll()
             }
 
@@ -998,6 +1024,12 @@ class PakCmd
         }
     }
 
+    function vtrace(tag, msg) {
+        if (options.verbose) {
+            trace(tag, msg)
+        }
+    }
+
     function makeVersion(version: String): Number {
         version = version.trimStart("v")
         if (!version || version == '*') version = 0
@@ -1048,7 +1080,7 @@ class PakCmd
     private function getDeps(pak: Pak, deps = {}, level: Number = 0) {
         if (options.all || level == 0) {
             for (let [name,version] in pak.spec.dependencies) {
-                let dep = makePak(name, version)
+                let dep = Pak(name, version)
                 if (!dep.version) {
                     pak = latest(pak)
                 }
@@ -1069,7 +1101,7 @@ class PakCmd
         }
         for (let [name, dep] in deps) {
             out.write(prefix)
-            out.write('    ' + dep.name + ' ' + dep.versionRange())
+            out.write('    ' + dep.name + ' ' + dep.versionRange() + '\n')
         }
     }
 
@@ -1114,12 +1146,12 @@ class PakCmd
     private function requiredPak(pak: Pak): Boolean {
         let vnum = makeVersion(pak.version)
         let consumers = []
-        for each (path in ls(dirs.pakcache, true)) {
+        for each (path in ls(dirs.paks, true)) {
             let name = path.basename.toString()
             if (name != pak.name) {
                 let spec = loadPakSpec(path)
                 for (let [other, otherVer] in spec.dependencies) {
-                    let dep = makePak(other, otherVer)
+                    let dep = Pak(other, otherVer)
                     if (dep.name == pak.name && dep.min <= vnum && vnum <= dep.max) {
                         consumers.append(name)
                     }
@@ -1496,6 +1528,7 @@ class Pak {
         if (max == 0) {
             max = MAX_VER
         }
+        version = version.replace(/[>=]+/, '')
         if (version.match(/^\d.\d.\d[-]*/)) {
             this.version = version
             this.vernum = makeVersion(version)
@@ -1612,10 +1645,10 @@ class Pak {
     }
 
     public static function latestCachedVersion(name: String): Path? {
-        let paks = find(dirs.pakcache, name + '/*', false)
-        paks = paks.sort()
-        if (paks.length > 0) {
-            return paks[0].basename
+        let names = find(dirs.pakcache, name + '/*', false)
+        names = names.sort()
+        if (names.length > 0) {
+            return names[0].basename
         }
         return null
     }
@@ -1659,6 +1692,8 @@ class Pak {
             } else {
                 result += '>= ' + makeVersionString(min) + ', <= ' + makeVersionString(max + 1)
             }
+        } else {
+            result += '*'
         }
         return result
     }
