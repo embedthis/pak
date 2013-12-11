@@ -1996,8 +1996,7 @@ static HttpConn *openConnection(HttpConn *conn, struct MprSsl *ssl)
     }
 #endif
     if ((level = httpShouldTrace(conn, HTTP_TRACE_RX, HTTP_TRACE_CONN, NULL)) >= 0) {
-        mprLog(level, "### Outgoing connection from %s:%d to %s:%d", 
-            conn->ip, conn->port, conn->sock->ip, conn->sock->port);
+        mprLog(level, "### Outgoing connection to %s:%d", conn->ip, conn->port);
     }
     return conn;
 }
@@ -2020,9 +2019,9 @@ static void setDefaultHeaders(HttpConn *conn)
         }
     }
     if (conn->port != 80 && conn->port != 443) {
-        httpSetHeader(conn, "Host", "%s:%d", conn->ip, conn->port);
+        httpAddHeader(conn, "Host", "%s:%d", conn->ip, conn->port);
     } else {
-        httpSetHeaderString(conn, "Host", conn->ip);
+        httpAddHeaderString(conn, "Host", conn->ip);
     }
     httpAddHeaderString(conn, "Accept", "*/*");
     if (conn->keepAliveCount > 0) {
@@ -15750,7 +15749,7 @@ static void manageTx(HttpTx *tx, int flags)
 /*
     Add key/value to the header hash. If already present, update the value
 */
-static void addHdr(HttpConn *conn, cchar *key, cchar *value)
+static void setHdr(HttpConn *conn, cchar *key, cchar *value)
 {
     assert(key && *key);
     assert(value);
@@ -15788,7 +15787,7 @@ PUBLIC void httpAddHeader(HttpConn *conn, cchar *key, cchar *fmt, ...)
         value = MPR->emptyString;
     }
     if (conn->tx && !mprLookupKey(conn->tx->headers, key)) {
-        addHdr(conn, key, value);
+        setHdr(conn, key, value);
     }
 }
 
@@ -15802,7 +15801,7 @@ PUBLIC void httpAddHeaderString(HttpConn *conn, cchar *key, cchar *value)
     assert(value);
 
     if (conn->tx && !mprLookupKey(conn->tx->headers, key)) {
-        addHdr(conn, key, sclone(value));
+        setHdr(conn, key, sclone(value));
     }
 }
 
@@ -15849,10 +15848,10 @@ PUBLIC void httpAppendHeader(HttpConn *conn, cchar *key, cchar *fmt, ...)
                 mprAddDuplicateKey(conn->tx->headers, key, value);
             }
         } else {
-            addHdr(conn, key, sfmt("%s, %s", kp->data, value));
+            setHdr(conn, key, sfmt("%s, %s", kp->data, value));
         }
     } else {
-        addHdr(conn, key, value);
+        setHdr(conn, key, value);
     }
 }
 
@@ -15876,10 +15875,10 @@ PUBLIC void httpAppendHeaderString(HttpConn *conn, cchar *key, cchar *value)
         if (scaselessmatch(key, "Set-Cookie")) {
             mprAddDuplicateKey(conn->tx->headers, key, sclone(value));
         } else {
-            addHdr(conn, key, sfmt("%s, %s", oldValue, value));
+            setHdr(conn, key, sfmt("%s, %s", oldValue, value));
         }
     } else {
-        addHdr(conn, key, sclone(value));
+        setHdr(conn, key, sclone(value));
     }
 }
 
@@ -15898,7 +15897,7 @@ PUBLIC void httpSetHeader(HttpConn *conn, cchar *key, cchar *fmt, ...)
     va_start(vargs, fmt);
     value = sfmtv(fmt, vargs);
     va_end(vargs);
-    addHdr(conn, key, value);
+    setHdr(conn, key, value);
 }
 
 
@@ -15907,7 +15906,7 @@ PUBLIC void httpSetHeaderString(HttpConn *conn, cchar *key, cchar *value)
     assert(key && *key);
     assert(value);
 
-    addHdr(conn, key, sclone(value));
+    setHdr(conn, key, sclone(value));
 }
 
 
