@@ -52,6 +52,7 @@
         "appweb": ">=4.3",
     },
     "private": false,
+    "precious": false,
 
     "config": {
         "key": "value",

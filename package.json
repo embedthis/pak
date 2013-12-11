@@ -1,10 +1,11 @@
 {
     "name": "pak",
     "description": "Embedthis Pak Package Manager",
-    "version": "0.7.0",
+    "title": "Embedthis Pak",
+    "version": "0.8.0",
     "keywords": [
         "pak",
-        "package",
+        "package"
     ],
     "homepage": "http://embedthis.com/product/pak",
     "author": {
@@ -13,10 +14,10 @@
         "url": "http://embedthis.com"
     },
     "contributors": [
-        "Embedthis <dev@embedthis.com> (http://embedthis.github.com)",
+        "Embedthis <dev@embedthis.com> (http://embedthis.github.com)"
     ],
     "maintainers": [
-        "Embedthis <dev@embedthis.com> (http://embedthis.github.com)",
+        "Embedthis <dev@embedthis.com> (http://embedthis.github.com)"
     ],
     "repository": {
         "type": "git",
@@ -29,11 +30,11 @@
     "dependencies": {
     },
     "devDependencies": {
-        "bit": ">0.9.0",
+        "bit": ">0.9.0"
     },
     "directories": {
         "src": "src",
-        "bin": "*/bin",
+        "bin": "*/bin"
     },
     "scripts": {
         "install": "install.es",
@@ -42,21 +43,29 @@
         "test": "test.es"                                                                               
         "doc": "doc.es"                                                                               
     },
-    "license": "GPL",
     "files": [
         "LICENSE.md",
         "Makefile",
         "README.md",
         "configure",
         "package.json",
-        "src",
+        "src"
     ],
     "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
         "doc",
         "test",
         "releases",
         "package",
         "*-debug*",
-        "*-release*",
+        "*-release*"
     ],
+    "licenses": [{ 
+        "type": "GPL", 
+        "url": "http://www.gnu.org/licenses/gpl-2.0.html"
+    }, {
+        "type": "Commercial", "url": "http://embedthis.com/licensing/"
+    }]
 }

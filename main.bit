@@ -21,9 +21,7 @@ Bit.load({
     ],
 
     settings: {
-        product: 'pak',
-        title: 'Embedthis Pak',
-        company: 'Embedthis',
+        bit: '0.9.0',
 
         /*
             Installation prefix set
@@ -109,7 +107,7 @@ Bit.load({
 
     targets: {
         'pak.mod': {
-            path: '${BIN}/bits/pak.mod',
+            path: '${BIN}/pak.mod',
             files: [ 'src/pak.es' ],
             build: `
                 trace('Compile', 'pak.es')
