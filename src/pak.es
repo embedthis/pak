@@ -547,10 +547,16 @@ class PakCmd
 
     function edit(path: Path): Void {
         if (!args.options.field) {
-            erorr('Missing --field option')
+            error('Missing --field option')
         }
         if (!args.options.value) {
-            erorr('Missing --value option')
+            if (args.options.field.contains('=')) {
+                let parts = args.options.field.split('=')
+                args.options.field = parts[0]
+                args.options.value = parts[1]
+            } else {
+                error('Missing --field key=value or --value option')
+            }
         }
         let spec = loadPakSpec(path)
         spec[args.options.field] = args.options.value
@@ -624,7 +630,6 @@ class PakCmd
         cachePak(pak)
     }
 
-
     /*
         Show list of paks in the cache
             --all          # Independently list all versions of a module instead of just the most recent
@@ -685,10 +690,10 @@ class PakCmd
             }
             for each (match in matches) {
                 if (options.versions) {
-                    print('    ' + match.name + ' ' + match.remote)
+                    print('    ' + match.name + ' ' + match.remoteUri)
                     print('    Versions:')
                     for each (v in match.versions) {
-                        print('        ' + v)
+                        print('        ' + v + '\n')
                     }
                 } else {
                     print('    ' + match.name + ' ' + match.version + ' ' + match.remoteUri)
@@ -744,7 +749,6 @@ class PakCmd
             if (!checkInstalled(dep)) {
                 dtrace('Info', 'Install required dependency ' + dep.name)
                 try {
-                dumpAll(dep)
                     install(dep)
                 } catch (e) {
                     //  TODO - should test if present and must display (e)
@@ -763,7 +767,7 @@ class PakCmd
     }
 
     private function installPak(pak: Pak): Void {
-        trace('Install', pak.namever)
+        trace('Install', pak.name)
         if (!pak.cached) {
             cachePak(pak)
         }
@@ -777,8 +781,8 @@ class PakCmd
         mkdir(dest)
         copyTree(pak.cachePath, dest)
         dtrace('Info', pak + ' successfully installed')
-
         installDependencies(pak)
+        trace('Info', pak + ' successfully installed')
     }
 
     /*
@@ -843,7 +847,12 @@ class PakCmd
             if (!checkCached(dep)) {
                 dtrace('Info', 'Caching required dependency ' + dep.name)
                 try {
-                    dep = Pak.src(dep.name)
+                    //  Do a catalog search to get the download uri
+                    let matches = searchPak(dep)
+                    if (matches.length == 0) {
+                        throw 'Cannot find pak "' + pak + '" to cached'
+                    }
+                    dep = matches[0]
                     cachePak(dep)
                 } catch (e) {
                     //  TODO - should test if present and must display (e)
@@ -938,7 +947,7 @@ class PakCmd
                 //  Better to strip first part of file name and extract into the right place first time
                 //  Tar options strip: 1
                 tar.extract()
-                dest.parent.join(pak.name + '-' + pak.version).rename(dest)
+                dest.parent.join(pak.repName + '-' + pak.version).rename(dest)
             } finally {
                 chdir(current)
                 tgzName.remove()
@@ -991,7 +1000,7 @@ class PakCmd
         }
         //  TODO build source
         //  TODO run tests
-        trace('Info', pak + ' successfully installed')
+        trace('Info', pak + ' successfully cached')
     }
 
     /*
@@ -1259,9 +1268,10 @@ class PakCmd
                 }
                 for (let [name, remote] in index.paks) {
                     if (name.contains(pak.name)) {
-                        pak = Pak(name)
-                        getVersions(pak, remote)
-                        matches.push(pak)
+                        let mpak = Pak(name)
+                        mpak.setRemote(remote)
+                        getVersions(mpak, remote)
+                        matches.push(mpak)
                     }
                 }
             } catch (e) {
@@ -1476,9 +1486,9 @@ class Pak {
     var srcPath: Path           //  Source for Pak
 
     var versions: Array?        //  List of available versions
-    var remoteUri: Uri          //  Remote repository location
+    var remoteUri: String       //  Remote repository location
 
-    var downloadUri: Uri        //  URI to download a version
+    var downloadUri: String     //  URI to download a version
     var version: String?        //  Actual version of the pak
     var min: Number             //  Minimum acceptable version
     var max: Number             //  Maximum acceptable version
@@ -1669,7 +1679,17 @@ class Pak {
     }
 
     public function setRemote(remote: String) {
-        let matches = RegExp('([^:]+):\/\/([^\/]+)\/([^\/]+)\/([^\/]+).git').exec(remote)
+        /*
+            Remote formats examples:  
+                https://github.com/embedthis/pak-bit.git
+                git@github.com:embedthis/pak-esp-gui.git
+         */
+        let matches
+        if (remote.contains("://")) {
+            matches = RegExp('([^:]+):\/\/([^\/]+)\/([^\/]+)\/([^\/]+).git').exec(remote)
+        } else {
+            matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+).git').exec(remote)
+        }
         try {
             let [,protocol,host,owner,repName] = matches
             this.remoteUri = remote
