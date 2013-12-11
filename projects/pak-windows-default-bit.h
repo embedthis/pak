@@ -7,11 +7,14 @@
 
 
 /* Settings */
+#ifndef BIT_BIT
+    #define BIT_BIT "0.9.0"
+#endif
 #ifndef BIT_BUILD_NUMBER
     #define BIT_BUILD_NUMBER "0"
 #endif
 #ifndef BIT_COMPANY
-    #define BIT_COMPANY "Embedthis"
+    #define BIT_COMPANY "Embedthis Software"
 #endif
 #ifndef BIT_DEBUG
     #define BIT_DEBUG 1
@@ -45,6 +48,9 @@
 #endif
 #ifndef BIT_EJS_ONE_MODULE
     #define BIT_EJS_ONE_MODULE 1
+#endif
+#ifndef BIT_ESFLAGS
+    #define BIT_ESFLAGS ""
 #endif
 #ifndef BIT_EST_CAMELLIA
     #define BIT_EST_CAMELLIA 0
@@ -143,7 +149,7 @@
     #define BIT_TUNE "speed"
 #endif
 #ifndef BIT_VERSION
-    #define BIT_VERSION "1.0.0"
+    #define BIT_VERSION "0.8.0"
 #endif
 #ifndef BIT_WITHOUT_ALL
     #define BIT_WITHOUT_ALL "dsi,man,man2html"
@@ -238,16 +244,16 @@
 
 /* Miscellaneous */
 #ifndef BIT_MAJOR_VERSION
-    #define BIT_MAJOR_VERSION 1
+    #define BIT_MAJOR_VERSION 0
 #endif
 #ifndef BIT_MINOR_VERSION
-    #define BIT_MINOR_VERSION 0
+    #define BIT_MINOR_VERSION 8
 #endif
 #ifndef BIT_PATCH_VERSION
     #define BIT_PATCH_VERSION 0
 #endif
 #ifndef BIT_VNUM
-    #define BIT_VNUM 100000000
+    #define BIT_VNUM 00
 #endif
 
 /* Packs */

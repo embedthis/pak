@@ -3,7 +3,7 @@
 #
 
 PRODUCT            := pak
-VERSION            := 1.0.0
+VERSION            := 0.8.0
 BUILD_NUMBER       := 0
 PROFILE            := default
 ARCH               := $(shell uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/')
@@ -112,6 +112,7 @@ endif
 ifeq ($(BIT_PACK_EJSCRIPT),1)
 TARGETS            += $(CONFIG)/bin/ejs.mod
 endif
+TARGETS            += $(CONFIG)/bin/pak.mod
 TARGETS            += $(CONFIG)/bin/pak
 
 unexport CDPATH
@@ -158,6 +159,7 @@ clean:
 	rm -f "$(CONFIG)/bin/libejs.dylib"
 	rm -f "$(CONFIG)/bin/ejs"
 	rm -f "$(CONFIG)/bin/ejsc"
+	rm -f "$(CONFIG)/bin/pak"
 	rm -f "$(CONFIG)/obj/estLib.o"
 	rm -f "$(CONFIG)/obj/mprLib.o"
 	rm -f "$(CONFIG)/obj/mprSsl.o"
@@ -179,7 +181,7 @@ clobber: clean
 #   version
 #
 version: $(DEPS_1)
-	@echo 1.0.0-0
+	echo 0.8.0-0
 
 #
 #   est.h
@@ -226,7 +228,7 @@ DEPS_6 += $(CONFIG)/obj/estLib.o
 
 $(CONFIG)/bin/libest.dylib: $(DEPS_6)
 	@echo '      [Link] $(CONFIG)/bin/libest.dylib'
-	$(CC) -dynamiclib -o $(CONFIG)/bin/libest.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libest.dylib -compatibility_version 1.0.0 -current_version 1.0.0 "$(CONFIG)/obj/estLib.o" $(LIBS) 
+	$(CC) -dynamiclib -o $(CONFIG)/bin/libest.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libest.dylib -compatibility_version 0.8.0 -current_version 0.8.0 "$(CONFIG)/obj/estLib.o" $(LIBS) 
 endif
 
 #
@@ -269,7 +271,7 @@ DEPS_10 += $(CONFIG)/obj/mprLib.o
 
 $(CONFIG)/bin/libmpr.dylib: $(DEPS_10)
 	@echo '      [Link] $(CONFIG)/bin/libmpr.dylib'
-	$(CC) -dynamiclib -o $(CONFIG)/bin/libmpr.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libmpr.dylib -compatibility_version 1.0.0 -current_version 1.0.0 "$(CONFIG)/obj/mprLib.o" $(LIBS) 
+	$(CC) -dynamiclib -o $(CONFIG)/bin/libmpr.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libmpr.dylib -compatibility_version 0.8.0 -current_version 0.8.0 "$(CONFIG)/obj/mprLib.o" $(LIBS) 
 
 #
 #   mprSsl.o
@@ -305,7 +307,7 @@ endif
 
 $(CONFIG)/bin/libmprssl.dylib: $(DEPS_12)
 	@echo '      [Link] $(CONFIG)/bin/libmprssl.dylib'
-	$(CC) -dynamiclib -o $(CONFIG)/bin/libmprssl.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libmprssl.dylib -compatibility_version 1.0.0 -current_version 1.0.0 "$(CONFIG)/obj/mprSsl.o" $(LIBPATHS_12) $(LIBS_12) $(LIBS_12) $(LIBS) 
+	$(CC) -dynamiclib -o $(CONFIG)/bin/libmprssl.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libmprssl.dylib -compatibility_version 0.8.0 -current_version 0.8.0 "$(CONFIG)/obj/mprSsl.o" $(LIBPATHS_12) $(LIBS_12) $(LIBS_12) $(LIBS) 
 
 #
 #   makerom.o
@@ -363,7 +365,7 @@ DEPS_17 += $(CONFIG)/obj/pcre.o
 
 $(CONFIG)/bin/libpcre.dylib: $(DEPS_17)
 	@echo '      [Link] $(CONFIG)/bin/libpcre.dylib'
-	$(CC) -dynamiclib -o $(CONFIG)/bin/libpcre.dylib -arch $(CC_ARCH) $(LDFLAGS) -compatibility_version 1.0.0 -current_version 1.0.0 $(LIBPATHS) -install_name @rpath/libpcre.dylib -compatibility_version 1.0.0 -current_version 1.0.0 "$(CONFIG)/obj/pcre.o" $(LIBS) 
+	$(CC) -dynamiclib -o $(CONFIG)/bin/libpcre.dylib -arch $(CC_ARCH) $(LDFLAGS) -compatibility_version 0.8.0 -current_version 0.8.0 $(LIBPATHS) -install_name @rpath/libpcre.dylib -compatibility_version 0.8.0 -current_version 0.8.0 "$(CONFIG)/obj/pcre.o" $(LIBS) 
 endif
 
 #
@@ -409,7 +411,7 @@ endif
 
 $(CONFIG)/bin/libhttp.dylib: $(DEPS_20)
 	@echo '      [Link] $(CONFIG)/bin/libhttp.dylib'
-	$(CC) -dynamiclib -o $(CONFIG)/bin/libhttp.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libhttp.dylib -compatibility_version 1.0.0 -current_version 1.0.0 "$(CONFIG)/obj/httpLib.o" $(LIBPATHS_20) $(LIBS_20) $(LIBS_20) $(LIBS) 
+	$(CC) -dynamiclib -o $(CONFIG)/bin/libhttp.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libhttp.dylib -compatibility_version 0.8.0 -current_version 0.8.0 "$(CONFIG)/obj/httpLib.o" $(LIBPATHS_20) $(LIBS_20) $(LIBS_20) $(LIBS) 
 
 #
 #   http.o
@@ -520,7 +522,7 @@ endif
 
 $(CONFIG)/bin/libejs.dylib: $(DEPS_27)
 	@echo '      [Link] $(CONFIG)/bin/libejs.dylib'
-	$(CC) -dynamiclib -o $(CONFIG)/bin/libejs.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libejs.dylib -compatibility_version 1.0.0 -current_version 1.0.0 "$(CONFIG)/obj/ejsLib.o" $(LIBPATHS_27) $(LIBS_27) $(LIBS_27) $(LIBS) 
+	$(CC) -dynamiclib -o $(CONFIG)/bin/libejs.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libejs.dylib -compatibility_version 0.8.0 -current_version 0.8.0 "$(CONFIG)/obj/ejsLib.o" $(LIBPATHS_27) $(LIBS_27) $(LIBS_27) $(LIBS) 
 endif
 
 #
@@ -650,6 +652,7 @@ endif
 #
 #   pak.mod
 #
+DEPS_33 += src/pak.es
 DEPS_33 += $(CONFIG)/inc/mpr.h
 DEPS_33 += $(CONFIG)/inc/bit.h
 DEPS_33 += $(CONFIG)/inc/bitos.h
@@ -675,8 +678,9 @@ ifeq ($(BIT_PACK_EJSCRIPT),1)
     DEPS_33 += $(CONFIG)/bin/ejsc
 endif
 
-pak.mod: $(DEPS_33)
-	/Users/mob/git/pak/macosx-x64-default/bin/ejsc --out /Users/mob/git/pak/macosx-x64-default/bin/pak.mod --optimize 9 src/pak.es
+$(CONFIG)/bin/pak.mod: $(DEPS_33)
+	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 src/pak.es
+
 #
 #   pak.o
 #
@@ -715,7 +719,7 @@ DEPS_35 += $(CONFIG)/obj/ejsc.o
 ifeq ($(BIT_PACK_EJSCRIPT),1)
     DEPS_35 += $(CONFIG)/bin/ejsc
 endif
-DEPS_35 += $(CONFIG)/bin/bits/pak.mod
+DEPS_35 += $(CONFIG)/bin/pak.mod
 DEPS_35 += $(CONFIG)/obj/pak.o
 
 ifeq ($(BIT_PACK_EJSCRIPT),1)
@@ -742,7 +746,7 @@ stop: $(DEPS_36)
 installBinary: $(DEPS_37)
 	mkdir -p "$(BIT_APP_PREFIX)"
 	rm -f "$(BIT_APP_PREFIX)/latest"
-	ln -s "1.0.0" "$(BIT_APP_PREFIX)/latest"
+	ln -s "0.8.0" "$(BIT_APP_PREFIX)/latest"
 	mkdir -p "$(BIT_VAPP_PREFIX)/bin"
 	cp $(CONFIG)/bin/bit $(BIT_VAPP_PREFIX)/bin/bit
 	mkdir -p "$(BIT_BIN_PREFIX)"
