@@ -1276,7 +1276,7 @@ class PakCmd
                 }
             } catch (e) {
                 dtrace('Warn', e)
-                trace('Warn', 'Cannot find suitable ' + pak.name + ' in catalog: ' + catalog)
+                trace('Info', 'Cannot find suitable ' + pak.name + ' in catalog: ' + catalog)
             }
         }
         return matches
