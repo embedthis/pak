@@ -12771,7 +12771,7 @@ PUBLIC MprJson *mprJsonQuery(MprJson *obj, cchar *keyPath, MprJson *value, int f
                 if (!value) {
                     /* 
                         Property deemed to have matched: [*]
-                        MOB - but should we match all elements?
+                        TODO - but should we match all elements?
                      */
                     break;
                 }
@@ -12977,12 +12977,28 @@ MprJson *mprLoadJson(cchar *path)
 
 PUBLIC int mprSaveJson(MprJson *obj, cchar *path, int flags)
 {
+    MprFile     *file;
+    ssize       len;
+    char        *buf;
+
     if (flags == 0) {
         flags = MPR_JSON_PRETTY | MPR_JSON_QUOTES;
     }
-    if (mprWritePathContents(path, mprJsonToString(obj, flags), -1, 0664) < 0) {
+    if ((buf = mprJsonToString(obj, flags)) == 0) {
+        return MPR_ERR_BAD_FORMAT;
+    }
+    len = slen(buf);
+    if ((file = mprOpenFile(path, O_WRONLY | O_TRUNC | O_CREAT | O_BINARY, 0644)) == 0) {
+        mprError("Cannot open %s", path);
+        return MPR_ERR_CANT_OPEN;
+    }
+    if (mprWriteFile(file, buf, len) != len) {
+        mprError("Cannot write %s", path);
+        mprCloseFile(file);
         return MPR_ERR_CANT_WRITE;
     }
+    mprWriteFileString(file, "\n");
+    mprCloseFile(file);
     return 0;
 }
 
@@ -13048,12 +13064,18 @@ static void removeChild(MprJson *obj, MprJson *child)
 
     for (ITERATE_JSON(obj, dep, index)) {
         if (dep == child) {
+            if (--obj->length == 0) {
+                obj->children = 0;
+            } else if (obj->children == dep) {
+                if (dep->next == dep) {
+                    obj->children = 0;
+                } else {
+                    obj->children = dep->next;
+                }
+            }
             dep->prev->next = dep->next;
             dep->next->prev = dep->prev;
             child->next = child->prev = 0;
-            if (--obj->length == 0) {
-                obj->children = 0;
-            }
             break;
         }
     }
@@ -17739,6 +17761,21 @@ PUBLIC char *mprJoinPath(cchar *path, cchar *other)
         return 0;
     }
     return mprNormalizePath(join);
+}
+
+
+PUBLIC char *mprJoinPaths(cchar *base, ...)
+{
+    va_list     args;
+    cchar       *path;
+
+    va_start(args, base);
+    va_end(args);
+
+    while ((path = va_arg(args, char*)) != 0) {
+        base = mprJoinPath(base, path);
+    }
+    return (char*) base;
 }
 
 

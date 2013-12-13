@@ -909,7 +909,7 @@ PUBLIC void mprAtomicAdd64(volatile int64 *target, int64 value);
     @defgroup MprMem MprMem
     @see MprFreeMem MprHeap MprManager MprMemNotifier MprRegion mprAddRoot mprAlloc mprAllocMem mprAllocObj 
         mprAllocZeroed mprCreateMemService mprDestroyMemService mprEnableGC mprGetBlockSize mprGetMem 
-        mprGetMemStats mprGetMpr mprGetPageSize mprHasMemError mprHold mprIsParent mprIsValid mprMark 
+        mprGetMemStats mprGetMpr mprGetPageSize mprHasMemError mprHold mprIsParentPathOf mprIsValid mprMark 
         mprMemcmp mprMemcpy mprMemdup mprPrintMem mprRealloc mprRelease mprRemoveRoot mprRequestGC mprResetMemError 
         mprRevive mprSetAllocLimits mprSetManager mprSetMemError mprSetMemLimits mprSetMemNotifier mprSetMemPolicy 
         mprSetName mprVerifyMem mprVirtAlloc mprVirtFree 
@@ -4475,7 +4475,7 @@ PUBLIC void mprSetPathNewline(cchar *path, cchar *newline);
     @see MprFile mprAttachFileFd mprCloseFile mprDisableFileBuffering mprEnableFileBuffering mprFlushFile mprGetFileChar 
         mprGetFilePosition mprGetFileSize mprGetStderr mprGetStdin mprGetStdout mprOpenFile 
         mprPeekFileChar mprPutFileChar mprPutFileString mprReadFile mprReadLine mprSeekFile mprTruncateFile mprWriteFile 
-        mprWriteFormat mprWriteString 
+        mprWriteFileFmt mprWriteFileString 
         mprGetFileFd
     @defgroup MprFile MprFile
     @stability Internal
@@ -4774,7 +4774,7 @@ PUBLIC ssize mprWriteFileString(MprFile *file, cchar *str);
         mprGetFirstPathSeparator mprGetLastPathSeparator mprGetNativePath mprGetPathBase 
         mprGetPathDir mprGetPathExt mprGetPathFiles mprGetPathLink mprGetPathNewline mprGetPathParent 
         mprGetPathSeparators mprGetPortablePath mprGetRelPath mprGetTempPath mprGetWinPath mprIsAbsPath 
-        mprIsRelPath mprJoinPath mprJoinPathExt mprMakeDir mprMakeLink mprMapSeparators mprNormalizePath
+        mprIsRelPath mprJoinPath mprJoinPaths mprJoinPathExt mprMakeDir mprMakeLink mprMapSeparators mprNormalizePath
         mprPathExists mprReadPathContents mprReplacePathExt mprResolvePath mprSamePath mprSamePathCount mprSearchPath 
         mprTransformPath mprTrimPathExt mprTruncatePath 
     @defgroup MprPath MprPath
@@ -5153,7 +5153,16 @@ PUBLIC bool mprIsPathSeparator(cchar *path, cchar c);
  */
 PUBLIC char *mprJoinPath(cchar *base, cchar *path);
 
-//  FUTURE - need mprJoinPaths(base, ....);
+/**
+    Join paths
+    @description Join each given path in turn to the path. Calls mprJoinPath for each argument.
+    @param base Directory path name to use as the base.
+    @param ... Other paths to join to the base path.
+    @returns Allocated string containing the resolved path.
+    @ingroup MprPath
+    @stability Prototype
+ */
+PUBLIC char *mprJoinPaths(cchar *base, ...);
 
 /**
     Join an extension to a path

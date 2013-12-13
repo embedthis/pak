@@ -20,3 +20,4 @@ start.bit
 macosx-*
 *-debug
 *-release
+*.mod
