@@ -11855,7 +11855,6 @@ static MprJson *jsonParse(MprJsonParser *parser, MprJson *obj);
 static void jsonErrorCallback(MprJsonParser *parser, cchar *msg);
 static int peektok(MprJsonParser *parser);
 static void puttok(MprJsonParser *parser);
-static void removeChild(MprJson *obj, MprJson *child);
 static void setValue(MprJson *obj, cchar *value);
 static int setValueCallback(MprJsonParser *parser, MprJson *obj, cchar *name, MprJson *child);
 static void spaces(MprBuf *buf, int count);
@@ -12861,7 +12860,7 @@ PUBLIC MprJson *mprJsonQuery(MprJson *obj, cchar *keyPath, MprJson *value, int f
                 /* At terminus of the property key */
                 if (flags & MPR_JSON_REMOVE) {
                     /* Remove */
-                    removeChild(obj, child);
+                    mprRemoveJsonChild(obj, child);
                     appendItem(result, child, flags);
 
                 } else if (value) {
@@ -13057,7 +13056,7 @@ static int setValueCallback(MprJsonParser *parser, MprJson *obj, cchar *name, Mp
 }
 
 
-static void removeChild(MprJson *obj, MprJson *child)
+PUBLIC void mprRemoveJsonChild(MprJson *obj, MprJson *child)
 {
     MprJson      *dep;
     int         index;
@@ -23549,7 +23548,7 @@ static char *stemplateInner(cchar *str, void *keys, int json)
                     tok = snclone(src, cp - src);
                 }
                 if (json) {
-                    value = mprLookupJson(keys, tok);
+                    value = mprGetJson(keys, tok, 0);
                 } else {
                     value = mprLookupKey(keys, tok);
                 }

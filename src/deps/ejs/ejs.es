@@ -5186,10 +5186,9 @@ module ejs {
         @param src Source object
         @param options Control options
         @option combine Boolean. If true, then support key prefixes "+", "=", "-", "?" to add, assign and subtract 
-            and conditionally assign key values.
-            When adding string properties, values will be appended using a space separator. Extra spaces will not 
-            be removed on subtraction.
-            Arrays with string values may also be combined using the key prefixes. 
+            and conditionally assign key values. When adding string properties, values will be appended using a 
+            space separator. Extra spaces will not be removed on subtraction.
+            Arrays with string values may also be combined using these key prefixes. 
         @option overwrite Boolean. If true, then overwrite existing properties in the destination object. Defaults to true.
         @option deep Boolean. If true, then recursively copy the properties of any objects referenced in the source object.
             Otherwise, the copy is only one level deep. Defaults to true.
@@ -9246,9 +9245,9 @@ module ejs {
         /**
             Rename a file. If the new path exists it is removed before the rename.
             @param target New name of the path
-            @return True if the file is renamed.
+            @throws IOError if the rename fails.
          */
-        native function rename(target: Path): Boolean
+        native function rename(target: Path): Void
         
         /**
             Replace the path extension and return a new path.

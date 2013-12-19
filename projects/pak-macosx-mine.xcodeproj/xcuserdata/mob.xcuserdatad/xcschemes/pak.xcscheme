@@ -240,7 +240,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/mob/git/pak"
+      customWorkingDirectory = "/Users/mob/git/apps/xx"
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -257,6 +257,10 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-v --debug --log stdout:3 cache jquery#200"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "install esp-angular-mvc"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

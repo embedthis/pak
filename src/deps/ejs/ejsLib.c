@@ -35227,15 +35227,16 @@ PUBLIC int ejsBlendObject(Ejs *ejs, EjsObj *dest, EjsObj *src, int flags)
             continue;
         }
         qname = ejsGetPropertyName(ejs, src, i);
+        if (!qname.name || !qname.space) {
+            continue;
+        }
         if (!privateProps && ejsContainsAsc(ejs, qname.space, ",private") >= 0) {
             continue;
         }
         if (trace) {
             mprLog(0, "Blend name %N", qname);
         }
-
-        //  TODO - refactor into a function
-        if (combine) {
+        if (combine && qname.name) {
             cflags = flags;
             kind = qname.name->value[0];
             if (kind == '+') {
@@ -35344,7 +35345,6 @@ PUBLIC int ejsBlendObject(Ejs *ejs, EjsObj *dest, EjsObj *src, int flags)
                 }
             } else {
                 /*  Primitive type (including arrays) */
-                //  TODO - rethink this. Should the array be cloned?
                 if (overwrite) {
                     ejsSetPropertyByName(ejs, dest, qname, vp);
                 } else if (ejsLookupProperty(ejs, dest, qname) < 0) {
@@ -37709,6 +37709,7 @@ Token getNextJsonToken(MprBuf *buf, wchar **token, JsonState *js)
         if (buf) {
             mprAddNullToBuf(buf);
         }
+        while (*cp && isspace((int) *cp)) cp++;
         if (*cp == ',' || *cp == ':') {
             cp++;
         } else if (*cp != '}' && *cp != ']' && *cp != '\0' && *cp != '\n' && *cp != '\r' && *cp != ' ') {
@@ -37890,7 +37891,7 @@ PUBLIC EjsString *ejsSerializeWithOptions(Ejs *ejs, EjsAny *vp, EjsObj *options)
     memset(&json, 0, sizeof(Json));
     json.depth = 99;
     json.quotes = 1;
-    json.indent = sclone("  ");
+    json.indent = sclone("    ");
 
     if (options) {
         json.options = options;
@@ -42958,7 +42959,7 @@ static EjsObj *removePath(Ejs *ejs, EjsPath *fp, int argc, EjsObj **argv)
 /*
     Rename the file
   
-    function rename(to: Path): Boolean
+    function rename(to: Path): Void
  */
 static EjsObj *renamePathFile(Ejs *ejs, EjsPath *fp, int argc, EjsObj **argv)
 {
@@ -42968,7 +42969,8 @@ static EjsObj *renamePathFile(Ejs *ejs, EjsPath *fp, int argc, EjsObj **argv)
     to = (EjsPath*) argv[0];
     unlink((char*) to->value);
     if (rename(fp->value, to->value) < 0) {
-        return ESV(false);
+        ejsThrowIOError(ejs, "Cannot rename %s to %s, error %d", fp->value, to->value, errno);
+        return 0;
     }
     return ESV(true);
 }
@@ -47120,13 +47122,11 @@ static EjsString *trimString(Ejs *ejs, EjsString *sp, int argc,  EjsObj **argv)
 {
     EjsString   *pattern;
 
-    assert(argc == 0 || (argc == 1 && ejsIs(ejs, argv[0], String)));
-
     if (argc == 0) {
         return trim(ejs, sp, NULL, MPR_TRIM_START | MPR_TRIM_END);
 
     } else {
-        pattern = (EjsString*) argv[0];
+        pattern = (EjsString*) ejsToString(ejs, argv[0]);
         return trim(ejs, sp, pattern, MPR_TRIM_START | MPR_TRIM_END);
     }
 }
@@ -47535,7 +47535,6 @@ PUBLIC int ejsContainsAsc(Ejs *ejs, EjsString *sp, cchar *pat)
     int     i, j, k;
 
     assert(sp);
-    assert(pat);
 
     if (pat == 0 || *pat == '\0' || sp == 0) {
         return 0;

@@ -14,9 +14,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "32587"
-            endingLineNumber = "32587"
-            landmarkName = "debug_breakpoint()"
-            landmarkType = "7">
+            endingLineNumber = "32587">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -128,6 +126,38 @@
             startingLineNumber = "51765"
             endingLineNumber = "51765"
             landmarkName = "waitForHttpState()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../src/deps/mpr/mprLib.c"
+            timestampString = "408916356.841346"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14810"
+            endingLineNumber = "14810"
+            landmarkName = "mprIsValid()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../src/deps/ejs/ejsLib.c"
+            timestampString = "408916441.374338"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "35194"
+            endingLineNumber = "35194"
+            landmarkName = "ejsBlendObject()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

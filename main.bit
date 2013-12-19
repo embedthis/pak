@@ -108,14 +108,14 @@ Bit.load({
     targets: {
         'pak.mod': {
             path: '${BIN}/pak.mod',
-            files: [ 'src/*.es' ],
+            files: [ 'src/*.es', 'src/paks/version/Version.es' ],
             //  MOB - should be able to simplify this
             build: `
                 trace('Compile', 'src/*.es')
-                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 src/Pak.es src/Version.es src/pakcmd.es')
+                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 src/Package.es src/paks/version/Version.es src/pak.es')
             `,
-            'generate-nmake': `"${BIN}\\ejsc" --out "${BIN}/pak.mod" ${settings.esflags} --optimize 9 src/Pak.es src/Version.e src/pakcmd.es`
-            'generate-sh': '${LBIN}/ejsc --out ${BIN}/pak.mod --optimize 9 src/Pak.es src/Version.es src/pakcmd.es',
+            'generate-nmake': `"${BIN}\\ejsc" --out "${BIN}/pak.mod" ${settings.esflags} --optimize 9 src/Package.es src/paks/version/Version.e src/pak.es`
+            'generate-sh': '${LBIN}/ejsc --out ${BIN}/pak.mod --optimize 9 src/Package.es src/paks/version/Version.es src/pak.es',
             depends: [ 'ejsc' ],
         },
 

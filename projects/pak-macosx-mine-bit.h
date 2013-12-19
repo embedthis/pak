@@ -7,11 +7,14 @@
 
 
 /* Settings */
+#ifndef BIT_BIT
+    #define BIT_BIT "0.9.0"
+#endif
 #ifndef BIT_BUILD_NUMBER
     #define BIT_BUILD_NUMBER "0"
 #endif
 #ifndef BIT_COMPANY
-    #define BIT_COMPANY "Embedthis"
+    #define BIT_COMPANY "Embedthis Software"
 #endif
 #ifndef BIT_DEBUG
     #define BIT_DEBUG 1
@@ -155,7 +158,7 @@
     #define BIT_TUNE "speed"
 #endif
 #ifndef BIT_VERSION
-    #define BIT_VERSION "1.0.0"
+    #define BIT_VERSION "0.8.0"
 #endif
 #ifndef BIT_WARN64TO32
     #define BIT_WARN64TO32 1
@@ -184,7 +187,7 @@
     #define BIT_APP_PREFIX "/usr/local/lib/pak"
 #endif
 #ifndef BIT_VAPP_PREFIX
-    #define BIT_VAPP_PREFIX "/usr/local/lib/pak/1.0.0"
+    #define BIT_VAPP_PREFIX "/usr/local/lib/pak/0.8.0"
 #endif
 #ifndef BIT_BIN_PREFIX
     #define BIT_BIN_PREFIX "/usr/local/bin"
@@ -217,7 +220,7 @@
     #define BIT_CACHE_PREFIX "/var/spool/pak/cache"
 #endif
 #ifndef BIT_SRC_PREFIX
-    #define BIT_SRC_PREFIX "pak-1.0.0"
+    #define BIT_SRC_PREFIX "pak-0.8.0"
 #endif
 
 /* Suffixes */
@@ -253,16 +256,16 @@
 
 /* Miscellaneous */
 #ifndef BIT_MAJOR_VERSION
-    #define BIT_MAJOR_VERSION 1
+    #define BIT_MAJOR_VERSION 0
 #endif
 #ifndef BIT_MINOR_VERSION
-    #define BIT_MINOR_VERSION 0
+    #define BIT_MINOR_VERSION 8
 #endif
 #ifndef BIT_PATCH_VERSION
     #define BIT_PATCH_VERSION 0
 #endif
 #ifndef BIT_VNUM
-    #define BIT_VNUM 100000000
+    #define BIT_VNUM 00
 #endif
 
 /* Packs */
