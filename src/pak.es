@@ -695,7 +695,9 @@ class PakCmd
         } else {
             vtrace('Update', path)
         }
-        path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
+        if (path.exists) {
+            path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
+        }
         installPakFiles(pak)
     }
 
