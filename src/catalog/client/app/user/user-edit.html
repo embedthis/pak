@@ -1,0 +1,24 @@
+<ul class="breadcrumb">
+    <li>User</li>
+    <li><a href="#/user/list">Users</a></li>
+    <li><i class="icon-home"></i> <a href="#">Home</a></li>
+</ul>
+<div class="panel">
+    <h2>{{id ? "Edit" : "Create"}} User</h2>
+    <form name="userForm" class="form-horizontal">
+        <esp-input ng-model="user.username" inputClass="col-sm-5"></esp-input>
+        <esp-input ng-model="user.password" inputClass="col-sm-5" type="password"></esp-input>
+        <esp-input ng-model="user.email" inputClass="col-sm-5"></esp-input>
+        <esp-input ng-model="user.roles" inputClass="col-sm-3" type="select"></esp-input>
+        <esp-input ng-model="user.roles" ng-repeat="role in options.roles" value="{{role}}" label="{{Esp.titlecase(role)}}"
+            inputClass="col-sm-3" type="checkbox"></esp-input>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-4">
+                <button class="btn btn-primary" ng-click='save()'>OK</button>
+                <button class="btn" esp-click="/user/list">Cancel</button>
+                <button class="btn" ng-show="id" ng-click='remove({{user.id}})'>Delete</button>
+            </div>
+        </div>
+    </form>
+</div>

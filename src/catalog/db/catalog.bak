@@ -1,0 +1,71 @@
+{
+    '_EspMigrations': {
+        hints: {
+            ncols: 2
+        },
+        schema: {
+            'id': { type: 'int', autoinc: true, index: true, key: true },
+            'version': { type: 'string' },
+        },
+        data: [
+            [ 1,'201004121637121',],
+            [ 2,'201312132156440',],
+        ],
+    },
+    'user': {
+        hints: {
+            ncols: 5
+        },
+        schema: {
+            'id': { type: 'int', autoinc: true, index: true, key: true },
+            'username': { type: 'string' },
+            'password': { type: 'string' },
+            'email': { type: 'string' },
+            'roles': { type: 'string' },
+        },
+        data: [
+            [ 1,'admin','BF1:00128:Y4fBgVbIGQCRlrF6:FihledY+qtMLVX9HG+DCgB6yARBc1oJo','dev@embedthis.com','edit, view',],
+            [ 2,'guest','BF1:00016:wPGC5zCj0FvBPYId:SiTs9WrOXkPwOlrBunyhBF1WcL2lMf9C','guest@example.com','view',],
+        ],
+    },
+    'pak': {
+        hints: {
+            ncols: 4
+        },
+        schema: {
+            'id': { type: 'int', autoinc: true, index: true, key: true },
+            'name': { type: 'string' },
+            'uri': { type: 'string' },
+            'key': { type: 'string' },
+        },
+        data: [
+            [ 1,'angular','https://github.com/embedthis/pak-angular.git','0',],
+            [ 2,'angular-bootstrap','https://github.com/embedthis/pak-angular-bootstrap.git','0',],
+            [ 3,'animate','https://github.com/embedthis/pak-animate.git','0',],
+            [ 4,'bit','https://github.com/embedthis/pak-bit.git','0',],
+            [ 5,'bootstrap','https://github.com/embedthis/pak-bootstrap.git','0',],
+            [ 6,'d3','https://github.com/embedthis/pak-d3.git','0',],
+            [ 7,'esp-angular','https://github.com/embedthis/pak-esp-angular.git','0',],
+            [ 8,'esp-angular-mvc','https://github.com/embedthis/pak-esp-angular-mvc.git','0',],
+            [ 9,'esp-best','https://github.com/embedthis/pak-esp-best.git','0',],
+            [ 10,'esp-gui','git@github.com:embedthis/pak-esp-gui.git','0',],
+            [ 11,'esp-html-mvc','git@github.com:embedthis/pak-esp-html-mvc.git','0',],
+            [ 12,'esp-legacy-mvc','git@github.com:embedthis/pak-esp-legacy-mvc.git','0',],
+            [ 13,'esp-mgr','https://github.com/embedthis/pak-esp-mgr.git','0',],
+            [ 14,'esp-server','https://github.com/embedthis/pak-esp-server.git','0',],
+            [ 15,'esp-user','https://github.com/embedthis/pak-esp-user.git','0',],
+            [ 16,'flot','https://github.com/embedthis/pak-flot.git','0',],
+            [ 17,'font-awesome','https://github.com/embedthis/pak-font-awesome.git','0',],
+            [ 18,'html5shiv','https://github.com/embedthis/pak-html5shiv.git','0',],
+            [ 19,'jquery','https://github.com/embedthis/pak-jquery.git','0',],
+            [ 20,'less','https://github.com/embedthis/pak-less.git','0',],
+            [ 21,'more','https://github.com/embedthis/pak-more.git','0',],
+            [ 22,'normalize','https://github.com/embedthis/pak-normalize.git','0',],
+            [ 23,'nvd3','https://github.com/embedthis/pak-nvd3.git','0',],
+            [ 24,'respond','https://github.com/embedthis/pak-respond.git','0',],
+            [ 25,'version','https://github.com/embedthis/pak-version.git','0',],
+            [ 26,'xcharts','https://github.com/embedthis/pak-xcharts.git','0',],
+            [ 27,'mypak','http://example.git','1234',],
+        ],
+    },
+}

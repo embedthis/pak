@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" ng-csp>
+<head>
+    <title>Pak Catalog</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+    <% stylesheets(NULL); %>
+</head>
+<body data-config='<% renderConfig(); %>' id='body'>
+    <nav class="navbar">
+        <div class="navbar-header">
+            <a class="navbar-brand ng-cloak" href="#">Pak Catalog</a>
+        </div>
+    </nav>
+    <main class="container ng-cloak">
+        <section class="col-md-10 content">
+            <div ng-view class="ng-cloak"></div>
+        </section>
+    </main>
+    <div ng-repeat="(field, msg) in feedback">
+        <span class="ng-hide-remove" ng-class="'feedback-' + field" ng-cloak>{{msg}}</span>       
+    </div> 
+    <% scripts(NULL); %>
+</body>
+</html>

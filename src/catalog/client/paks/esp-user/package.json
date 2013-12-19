@@ -1,0 +1,9 @@
+{
+    "name": "esp-user",
+    "description": "User authentication and authorization for ESP",
+    "version": "0.8.0",
+    "dependencies": {
+        "esp-angular-mvc": "*"
+    },
+    "export": ["client/**", "controllers/*.c", "db/**"],
+}

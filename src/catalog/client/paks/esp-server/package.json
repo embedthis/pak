@@ -1,0 +1,16 @@
+{
+    "name": "esp-server",
+    "description": "ESP Server Framework",
+    "version": "4.5.0",
+    "dirs": {
+        "client": "client",
+        "paks": "client/paks"
+    },
+    "export": [
+        "appweb.conf",
+        "templates/**"
+    ],
+    "esp": {
+        "serverPrefix": "/do"
+    }
+}

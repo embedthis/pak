@@ -1,0 +1,18 @@
+<div class="modal-dialog forgot">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class="icon icon-remove-circle pull-right" ng-click="$dismiss()"></i>
+            <h4>Forgot Password?</h4>
+            <p>Enter your username or email address and you will be sent password reset instructions.</p>
+        </div>
+        <form class="form-horizontal">
+            <div class="modal-body">
+                <input type='text' class="form-control" ng-model='user.recover' autofocus placeholder="Username or Email">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click='$close(1)' tabindex='2'>Send Password Reset Details</button>
+                <button class="btn" ng-click='$dismiss()'>Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

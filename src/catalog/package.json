@@ -1,0 +1,98 @@
+{
+    "name": "catalog",
+    "description": "catalog",
+    "version": "0.8.0",
+    "dependencies": {
+        "angular": "1.2.0",
+        "angular-bootstrap": "1.2.0",
+        "bootstrap": "3.0.0",
+        "esp-angular": "4.5.0",
+        "esp-angular-mvc": "4.5.0",
+        "esp-best": "0.8.0",
+        "esp-gui": "0.8.0",
+        "esp-server": "4.5.0",
+        "esp-user": "0.8.0",
+        "font-awesome": "3.2.1",
+        "html5shiv": "3.6.2",
+        "less": "1.3.3",
+        "more": "0.0.2",
+        "respond": "1.1.0"
+    },
+    "client-scripts": [
+        "paks/angular/angular.js",
+        "paks/angular/angular-animate.js",
+        "paks/angular/angular-route.js",
+        "paks/esp-angular/*.js",
+        "app/main.js",
+        "app/*/**.js",
+        "paks/less/less.js",
+        "paks/angular-bootstrap/*.js",
+        "paks/html5shiv/html5shiv.js",
+        "paks/respond/respond.js",
+        "paks/esp-gui/*.js"
+    ],
+    "dirs": {
+        "client": "client",
+        "paks": "client/paks"
+    },
+    "mode": "debug",
+    "modes": {
+        "debug": {
+            "flat": false,
+            "showErrors": true,
+            "keepSource": true,
+            "update": true,
+            "login": {
+                "name": "",
+                "abilities": {
+                    "edit": true,
+                    "view": true
+                }
+            }
+        },
+        "release": {
+            "flat": true,
+            "compressed": true,
+            "showErrors": false,
+            "update": false,
+            "keepSource": false,
+            "login": {
+                "name": "",
+                "abilities": {
+                    "edit": true,
+                    "view": true
+                }
+            }
+        }
+    },
+    "esp": {
+        "_auth": "app",
+        "formats": {
+            "date": "yyyy-MM-dd",
+            "float": 2,
+            "int": 0
+        },
+        "json": true,
+        "loginRequired": "",
+        "refresh": 1000,
+        "serverPrefix": "/do",
+        "timeouts": {
+            "session": 300
+        },
+        "xsrf": true,
+        "server": {
+            "database": "mdb://catalog.mdb",
+            "_redirect": "secure",
+            "generate": {
+                "top": "angular-mvc",
+                "scaffold": true,
+                "clientModel": true,
+                "clientController": true,
+                "clientView": true,
+                "controller": true,
+                "migration": true,
+                "view": false
+            },
+        },
+    },
+}

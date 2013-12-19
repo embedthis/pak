@@ -1,0 +1,5 @@
+{
+    "name": "version",
+    "description": "Version parsing for SemVer versions",
+    "version": "0.8.0",
+}

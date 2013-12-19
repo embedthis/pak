@@ -1,0 +1,10 @@
+{
+    "name": "angular",
+    "description": "Angular client-side framework",
+    "version": "1.2.0",
+    "client-scripts": [
+        "${PAKS}/angular/angular.js",
+        "${PAKS}/angular/angular-animate.js",
+        "${PAKS}/angular/angular-route.js",
+    ]
+}
