@@ -1542,6 +1542,8 @@ class PakCmd
                     loadPakrc(HOME.join(RC))
                 } else if (HOME.join(DOTRC).exists) {
                     loadPakrc(HOME.join(DOTRC))
+                } else if (Path('/etc/pakrc').exists) {
+                    loadPakrc(Path('/etc/pakrc'))
                 }
             }
         }
