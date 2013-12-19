@@ -1274,13 +1274,19 @@ class PakCmd
 
     private function requiredInstalledPak(pak: Package): Array? {
         let users = []
+        /*
+            See if any installed paks has a dependency on pak
+         */
+        pak.resolve()
         for each (path in ls(dirs.paks, true)) {
             let name = path.basename.toString()
             if (name != pak.name) {
                 let spec = Package.readSpec(path, {quiet: true})
-                for (let [other, criteria] in spec.dependencies) {
-                    if (other == pak.name && pak.installVersion.acceptable(criteria)) {
-                        users.append(name)
+                if (spec && spec.dependencies) {
+                    for (let [other, criteria] in spec.dependencies) {
+                        if (other == pak.name && pak.installVersion.acceptable(criteria)) {
+                            users.append(name)
+                        }
                     }
                 }
             }
@@ -1479,7 +1485,7 @@ class PakCmd
         let list = []
         for each (path in dirs.paks.files('*')) {
             let pak = Package(path)
-            pak.resolve();
+            pak.setInstallPath();
             if (matchPakName(pak.name, patterns)) {
                 list.push(pak)
                 if (!pak.installed) {
