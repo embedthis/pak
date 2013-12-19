@@ -678,8 +678,10 @@ class PakCmd
         pak.resolve(pak.searchCriteria || '*')
         if (pak.cached) {
             if (pak.installed && Version(pak.spec.version).acceptable(pak.searchCriteria)) {
-                trace('Info', pak + ' is already installed')
-                return
+                if (!args.options.force) {
+                    trace('Info', pak + ' is already installed')
+                    return
+                }
             }
         } else {
             pak = searchPak(pak)
