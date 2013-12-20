@@ -314,8 +314,12 @@ class PakCmd
                     }
                 }
             } else {
+                let spec = Package.readSpec('.')
                 for each (name in rest) {
-                    install(Package(name))
+                    let criteria = spec.dependencies[name]
+                    let pak = Package(name)
+                    pak.resolve(criteria)
+                    install(pak)
                 }
             }
             break
@@ -333,18 +337,23 @@ class PakCmd
 
         case 'prune':
             if (rest.length == 0) {
+                let pak
                 for each (path in dirs.pakcache.files('*/*')) {
-                    let pak = Package(path.dirname.basename)
+                    pak = Package(path.dirname.basename)
                     pak.setVersion(path.basename)
                     prune(pak)
                 }
             } else {
+                let pak
                 for each (name in rest) {
                     for each (path in dirs.pakcache.join(name).files('*')) {
-                        let pak = Package(name)
-                        pak.setVersion(path.basename)
+                        pak = Package(name)
+                        pak.setSearchCriteria(path.basename)
                         prune(pak)
                     }
+                }
+                if (!pak) {
+                    trace('Info', 'Nothing to prune')
                 }
             }
             break
@@ -376,22 +385,27 @@ class PakCmd
             break
 
         case 'upgrade':
+            if (!PACKAGE.exists) {
+                error('Nothing to upgrade')
+                break
+            }
+            let spec = Package.readSpec('.')
+            if (!spec) {
+                error("Cannot read package.json")
+                break
+            }
             if (rest.length == 0) {
-                if (!PACKAGE.exists) {
-                    error('Nothing to upgrade')
-                } else {
-                    let spec = Package.readSpec('.')
-                    if (spec) {
-                        for (let [name,version] in spec.dependencies) {
-                            let pak = Package(name)
-                            pak.resolve(version)
-                            upgrade(pak)
-                        }
-                    }
+                for (let [name,criteria] in spec.dependencies) {
+                    let pak = Package(name)
+                    pak.resolve(criteria)
+                    upgrade(pak)
                 }
             } else {
                 for each (name in rest) {
-                    upgrade(Package(name))
+                    let criteria = spec.dependencies[name]
+                    let pak = Package(name)
+                    pak.resolve(criteria)
+                    upgrade(pak)
                 }
             }
             break
@@ -705,9 +719,6 @@ class PakCmd
         Blend dependencies bottom up so that lower paks can define dirs
      */
     private function blendPak(spec, pak: Package) {
-        if (pak.installed) {
-            return
-        }
         if (!pak.spec) {
             throw 'Pak ' + pak + ' at ' + pak.cachePath + ' is missing a package.json'
         }
@@ -756,7 +767,7 @@ class PakCmd
             }
         }
         spec.dependencies ||= {}
-        spec.dependencies[pak.name] = pak.installVersion.toString()
+        spec.dependencies[pak.name] ||= '~' + pak.installVersion.compatible
         Object.sortProperties(spec.dependencies)
     }
 
@@ -765,18 +776,6 @@ class PakCmd
         so lower packs won't modify the files of upper paks
      */
     private function installPakFiles(pak: Package): Void {
-
-    /* UNUSED - done by outer layers
-        upgrade relies on this not being here
-        if (pak.installed) {
-            if (!args.options.force) {
-                trace('Info', pak + ' is already installed')
-                return
-            }
-        } else {
-            dtrace('Info', pak + ' is not yet installed')
-        }
-    */
         trace('Install', pak.name, pak.cacheVersion)
         if (!pak.cached) {
             cachePak(pak)
@@ -865,8 +864,13 @@ class PakCmd
         if (!latest) {
             throw 'Nothing to prune for "' + pak + '"'
         }
+        if (pak.spec && pak.spec.precious && !options.force) {
+            trace('Warn', 'Cannot prune "' + pak + '" designated as precious. Use --force to force pruning.')
+            return
+        }
         if (pak.cachePath == latest && !options.all) {
             trace('Info', 'Preserve latest version for ' + pak + ' ' + pak.cacheVersion)
+            trace('Info', 'Use --all to prune all versions')
             return
         }
         if ((users = requiredCachedPak(pak)) != null) {
@@ -901,7 +905,7 @@ class PakCmd
         vtrace('Search', 'Latest version of ' + pak)
         let later = searchPak(pak)
         if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion)) {
-            trace('Info', pak + ' is current with ' + pak.cacheVersion)
+            trace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
             return pak
         }
         vtrace('Update', pak + ' to ' + later.cacheVersion)
@@ -918,8 +922,9 @@ class PakCmd
         if (!pak.cached) {
             later = update(pak)
         } 
-        if (pak.installVersion && pak.installVersion.same(later.cacheVersion)) {
-            trace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion)
+        if (pak.installVersion && pak.installVersion.same(later.cacheVersion) && !options.force) {
+            trace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
+                ' for version requirement ' + pak.searchCriteria)
             return
         }
         trace('Upgrade', pak + ' to ' + later.cacheVersion)
@@ -1000,6 +1005,7 @@ class PakCmd
             if (from.isDir) {
                 makeDir(to)
             } else {
+                makeDir(to.dirname)
                 from.copy(to)
                 dtrace(relocate[f] ? 'Export' : 'Copy', to)
             }
@@ -1217,9 +1223,6 @@ class PakCmd
                 throw 'Cannot remove "' + pak + '". It is required by: ' + users.join(', ') + '.'
             }
         }
-        if (pak.spec && pak.spec.precious) {
-            throw 'Cannot uninstall "' + pak + '" designated as "precious".'
-        }
         let script = pak.installPath.join('uninstall.es')
         if (script.exists) {
             try {
@@ -1299,7 +1302,13 @@ class PakCmd
     }
 
     private function selectRemoteVersion(pak: Package, criteria: String, remote) {
-        pak.setRemoteEndpoint(remote)
+        if (!pak.setRemoteEndpoint(remote)) {
+            if (RegExp('^[\w\-]$').match(remote)) {
+                trace('Warn', pak + ' is part of ' + remote + ' and not available separately')
+            } else {
+                throw 'Remote endpoint is not in the correct format: ' + remote
+            }
+        }
         dtrace('Run', [git, 'ls-remote', '--tags', pak.remoteUri].join(' '))
         let data = Cmd.run([git, 'ls-remote', '--tags', pak.remoteUri])
         let versions = data.trim().
@@ -1366,6 +1375,7 @@ class PakCmd
                     continue
                 }
                 if (data is Array) {
+                    /* Bower index */
                     for each (item in data) {
                         index[item.name] = item.url
                     }

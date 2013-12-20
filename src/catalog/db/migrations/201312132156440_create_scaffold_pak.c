@@ -32,20 +32,17 @@ PakData pakData[] = {
     { "more", "https://github.com/embedthis/pak-more.git" },
     { "normalize", "https://github.com/embedthis/pak-normalize.git" },
     { "nvd3", "https://github.com/embedthis/pak-nvd3.git" },
+    { "openssl", "https://github.com/embedthis/pak-openssl.git" },
+    { "php", "https://github.com/embedthis/pak-php.git" },
     { "respond", "https://github.com/embedthis/pak-respond.git" },
     { "version", "https://github.com/embedthis/pak-version.git" },
     { "xcharts", "https://github.com/embedthis/pak-xcharts.git" },
-#if FUTURE
-    { "matrixssl", "https://github.com/embedthis/pak-matrixssl.git" },
-    { "openssl", "https://github.com/embedthis/pak-openssl.git" },
-    { "php", "https://github.com/embedthis/pak-php.git" },
 
+#if FUTURE
     { "appweb", "https://github.com/embedthis/pak-appweb-4.git" },
     { "ejs", "https://github.com/embedthis/pak-ejs-2.git" },
     { "mpr", "https://github.com/embedthis/pak-mpr-4.git" },
     { "http", "https://github.com/embedthis/pak-http.git" },
-    { "kickstart", "https://github.com/embedthis/pak-kickstart.git" },
-    { "pak", "https://github.com/embedthis/pak-pak.git" },
 #endif
     { 0, 0 }
 };

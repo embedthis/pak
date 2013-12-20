@@ -67,6 +67,9 @@ class Package {
         if (cacheVersion && cacheVersion.acceptable(criteria)) {
             return
         }
+        /*
+            Pick most recent qualifying version
+         */
         for each (path in find(dirs.pakcache, name + '/*', false).reverse()) {
             let candidate = Version(path.basename)
             if (candidate.acceptable(criteria)) {
@@ -141,6 +144,9 @@ class Package {
         } else {
             matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+).git').exec(remote)
         }
+        if (!matches) {
+            return false
+        }
         try {
             let [,protocol,host,owner,repName] = matches
             this.remoteUri = remote
@@ -148,10 +154,10 @@ class Package {
             this.host = host
             this.owner = owner
             this.repName = repName
-        } catch (e) {
-        print(e)
-            throw 'Remote URI does not match expected format: ' + remote
+        } catch {
+            return false
         }
+        return true
     }
 
     function setSearchCriteria(criteria: String) {
