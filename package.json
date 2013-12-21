@@ -28,7 +28,7 @@
         "mpr": "~4.5",
         "pcre": "~1.0",
         "sqlite": "~1.0",
-        "version": "0.8.0",
+        "ejs-version": "0.8.0",
         "zlib": "~1.0"
     },
     "devDependencies": {

@@ -399,7 +399,6 @@ class PakCmd
 
         case 'upgrade':
             if (!PACKAGE.exists) {
-            print("AT", App.dir)
                 error('Nothing to upgrade')
                 break
             }
@@ -1289,9 +1288,11 @@ class PakCmd
             let name = path.dirname.basename.toString()
             if (name != pak.name) {
                 let spec = Package.readSpec(path, {quiet: true})
-                for (let [dname, criteria] in spec.dependencies) {
-                    if (dname == pak.name && pak.cacheVersion.acceptable(criteria)) {
-                        users.append(name)
+                if (spec && spec.dependencies) {
+                    for (let [dname, criteria] in spec.dependencies) {
+                        if (dname == pak.name && pak.cacheVersion.acceptable(criteria)) {
+                            users.append(name)
+                        }
                     }
                 }
             }
