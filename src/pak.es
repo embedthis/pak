@@ -265,13 +265,26 @@ class PakCmd
 
         switch (task) {
         case 'cache':
-            for each (name in rest) {
-                let pak = Package(name)
-                if (Path(name).exists) {
-                    pak.setSource(name)
-                    pak.resolve()
+            if (rest.length == 0) {
+                if (!PACKAGE.exists) {
+                    error('Nothing to install')
+                } else {
+                    let spec = Package.readSpec('.')
+                    pak = Package(spec.name)
+                    cache(pak)
                 }
-                cache(pak)
+            } else {
+                for each (name in rest) {
+                    let pak = Package(name)
+                    if (Path(name).exists) {
+                        pak.setSource(name)
+                        /* Use name from package.json so directory can be any name */
+                        let spec = Package.readSpec(name)
+                        pak.name = spec.name
+                        pak.resolve()
+                    }
+                    cache(pak)
+                }
             }
             break
 
@@ -316,7 +329,7 @@ class PakCmd
             } else {
                 let spec = Package.readSpec('.')
                 for each (name in rest) {
-                    let criteria = spec.dependencies[name]
+                    let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
                     let pak = Package(name)
                     pak.resolve(criteria)
                     install(pak)
@@ -386,6 +399,7 @@ class PakCmd
 
         case 'upgrade':
             if (!PACKAGE.exists) {
+            print("AT", App.dir)
                 error('Nothing to upgrade')
                 break
             }
@@ -972,6 +986,12 @@ class PakCmd
     function copyTree(fromDir: Path, toDir: Path, ignore: Array?, include: Array?, export: Array?) {
         if (include) {
             include.push('package.json')
+            if (fromDir.join('README.md').exists) {
+                include.push('README.md')
+            }
+            if (fromDir.join('LICENSE.md').exists) {
+                include.push('LICENSE.md')
+            }
         }
         include ||= ['**']
         fromDir = fromDir.relative
