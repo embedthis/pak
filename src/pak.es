@@ -249,7 +249,6 @@ class PakCmd
         for (d in dirs) {
             dirs[d] = Path(dirs[d])
         }
-        // dirs.current = App.dir
         for (let [d,value] in dirs) {
             dirs[d] = Path(value.toString().replace('~', HOME))
         }
@@ -272,6 +271,7 @@ class PakCmd
                 } else {
                     let spec = Package.readSpec('.')
                     pak = Package(spec.name)
+                    pak.setSource(Path('.').absolute)
                     cache(pak)
                 }
             } else {
@@ -451,38 +451,6 @@ class PakCmd
         return true
     }
 
-    function buildPak(pak: Package) {
-        let dir = pak.cachePath
-        let path: Path = dir.join('build.es')
-        if (path.exists) {
-            qtrace('Build', pak.name)
-            Worker().load(path)
-/* UNUSED
-        } else {
-            let files = []
-            if (pak.spec && pak.spec.ejs) {
-                for each (e in [extensions.es, extensions.js]) {
-                    files += find(dir, '*.' + e, {descend: true})
-                }
-            } else {
-                files = find(dir.join('lib'), '*.' + extensions.js, {descend: true})
-            }
-            //  TODO - our should be just do lib as per CommonJS
-            files -= ['build.es', 'install.es', 'remove.es']
-            if (files.length > 0) {
-                makeDir(dir.join(dirs.pakcache))
-                let out = pak.sourcePath.join(pak.name).joinExt(extensions.mod)
-                if (options.verbose) {
-                    vtrace('Compile', 'ejsc --out ' + out + ' ' + files.join(' '))
-                } else {
-                    qtrace('Compile', pak.name)
-                }
-                Cmd.sh('ejsc --out ' + out + ' ' + files.join(' '))
-            }
-            */
-        }
-    }
-
     private function cleanup() {
         if (tempFile) {
             tempFile.remove()
@@ -567,7 +535,7 @@ class PakCmd
                 return
             }
         } else {
-            vtrace('Info', pak + ' is not yet cached')
+            trace('Info', pak + ' is not yet cached')
         }
         if (pak.sourcePath) {
             if (!pak.spec) {
@@ -762,12 +730,12 @@ class PakCmd
             pak.resolve()
         }
         let dest = pak.installPath
-        vtrace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
+        trace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
         if (dest.exists) {
             vtrace('Rmdir', dest)
             removeDir(dest, true)
         }
-        vtrace('Mkdir', dest)
+        trace('Mkdir', dest)
         mkdir(dest)
         copyTree(pak.cachePath, dest, pak.spec.ignore, pak.spec.files, pak.spec.export)
         installDependencies(pak)
@@ -785,7 +753,7 @@ class PakCmd
             dep.selectCacheVersion(criteria)
             dep.resolve()
             if (!dep.installed) {
-                vtrace('Info', 'Install required dependency ' + dep.name)
+                trace('Info', 'Install required dependency ' + dep.name)
                 try {
                     installPakFiles(dep)
                 } catch (e) {
@@ -797,7 +765,7 @@ class PakCmd
                     }
                 }
             } else {
-                vtrace('Info', 'dependency "' + dep.name + '" is installed')
+                trace('Info', 'dependency "' + dep.name + '" is installed')
             }
         }
         return true
@@ -927,7 +895,7 @@ class PakCmd
             dep.resolve()
             if (!dep.cached) {
                 if (dep.sourced) {
-                    vtrace('Info', 'Caching required dependency from source at: ' + dep.sourcePath)
+                    trace('Info', 'Caching required dependency from source at: ' + dep.sourcePath)
                     cachePak(dep)
                 } else {
                     try {
@@ -944,7 +912,7 @@ class PakCmd
                     }
                 }
             } else {
-                vtrace('Info', 'dependency "' + dep.name + '" is cached')
+                trace('Info', 'dependency "' + dep.name + '" is cached')
             }
         }
         return true
@@ -993,31 +961,9 @@ class PakCmd
             } else {
                 makeDir(to.dirname)
                 from.copy(to)
-                vtrace(relocate[f] ? 'Export' : 'Copy', to)
+                trace(relocate[f] ? 'Export' : 'Copy', to)
             }
         }
-    }
-
-    //  TODO - can we remove this and push into build.es
-    function installModules(pak: Package): Void {
-        for each (f in find(pak.cachePath.join(dirs.pakcache), '*.' + extensions.mod, {descend: true})) {
-            let dest = dirs.modules.join(Path(f).basename)
-            qtrace('Install', dest)
-            cp(f, dest)
-        }
-    }
-
-    //  TODO - can we remove this and push into build.es
-    function installNativeModules(pak: Package): Void {
-        for each (f in find(pak.cachePath.join(dirs.pakcache), '*.' + extensions.so, {descend: true})) {
-            let dest = dirs.lib.join(Path(f).basename)
-            qtrace('Install', dest)
-            cp(f, dest)
-        }
-    }
-
-    function installDocumentation(dir): Void {
-        // print('TODO')
     }
 
     private function fetchPak(pak: Package) {
@@ -1029,7 +975,7 @@ class PakCmd
         let dest = pak.cachePath
         try {
             http.followRedirects = true
-            vtrace('Get', pak.downloadUri)
+            trace('Get', pak.downloadUri)
             http.get(pak.downloadUri)
             let file = File(tgzName, 'w')
             let buf = new ByteArray
@@ -1038,11 +984,11 @@ class PakCmd
             }
             file.close()
             http.close()
-            vtrace('Save', 'Response to ' + tgzName.absolute)
+            trace('Save', 'Response to ' + tgzName.absolute)
             Zlib.uncompress(tgzName, tarName)
             let tar = new Tar(tarName.absolute)
             chdir(dest.parent)
-            vtrace('Extract', 'Extract to ' + dest)
+            trace('Extract', 'Extract to ' + dest)
             //  Better to strip first part of file name and extract into the right place first time
             //  Tar options strip: 1
             tar.extract()
@@ -1060,41 +1006,32 @@ class PakCmd
     private function runInstallScripts(pak: Package) {
         let script = pak.cachePath.join('install.es')
         if (script.exists) {
+            let current = App.dir
             try {
-                vtrace('Run', 'Installation script: ' + script)
-                //  TODO - need to trap onerror
-                //  TODO - need to set dirs.pakcache, inside the script env
+                trace('Run', 'Install script')
                 chdir(pak.sourcePath)
-                Worker().load(script)
-                Worker.join()
+                load(script)
             } catch (e) {
                 throw 'Cannot run installion script "' + script + '" for ' + pak + '\n' + e
             } finally {
                 chdir(current)
             }
-        } else {
-            buildPak(pak)
-            if (args.options.test) {
-                // runTests(pak)
-            }
-            installModules(pak)
-            installNativeModules(pak)
-            installDocumentation(pak)
         }
     }
 
     private function copyPak(pak: Package) {
-        vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
+        trace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
         copyTree(pak.sourcePath, pak.cachePath, pak.spec.ignore, pak.spec.files)
     }
 
     private function cachePak(pak: Package) {
+        trace('Cache', pak)
         let dest = pak.cachePath
         if (dest.exists) {
             vtrace('Rmdir', dest)
             removeDir(dest, true)
         }
-        vtrace('Mkdir', dest)
+        trace('Mkdir', dest)
         mkdir(dest)
         if (!pak.sourcePath) {
             fetchPak(pak)
@@ -1279,10 +1216,9 @@ class PakCmd
         if (script.exists) {
             try {
                 qtrace('Run', 'Uninstall script: ' + script)
-                Worker().load(script)
-                Worker.join()
+                load(script)
             } catch (e) {
-                throw 'Cannot uinstall "' + pak + '"\n' + e
+                throw 'Cannot uninstall "' + pak + '"\n' + e
             }
         }
         removeDir(pak.installPath, true)
@@ -1360,7 +1296,7 @@ class PakCmd
                 throw 'Remote endpoint is not in the correct format: ' + remote
             }
         }
-        vtrace('Run', [git, 'ls-remote', '--tags', pak.remoteUri].join(' '))
+        trace('Run', [git, 'ls-remote', '--tags', pak.remoteUri].join(' '))
         let data = Cmd.run([git, 'ls-remote', '--tags', pak.remoteUri])
         let versions = data.trim().
             replace(/[ \t]+/g, ' ').
@@ -1382,14 +1318,14 @@ class PakCmd
         }
         if (!found) {
             if (options.force) {
-                vtrace('Warn', 'Desired version not found in catalog for ' + pak.name + ' ' + criteria)
+                trace('Warn', 'Desired version not found in catalog for ' + pak.name + ' ' + criteria)
                 pak.setRemoteVersion(versions[versions.length - 1])
                 pak.setCachePath()
             } else {
                 throw 'Desired version not found in catalog. ' + criteria
             }
         }
-        vtrace('Info', 'Matched ' + pak + ' ' + pak.remoteVersion + ' from ' + pak.remoteUri)
+        trace('Info', 'Matched ' + pak + ' ' + pak.remoteVersion + ' from ' + pak.remoteUri)
         if (pak.host != 'github.com') {
             throw 'Repository host "' + pak.host + '" is not support. Only github supported'
         }

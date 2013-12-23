@@ -53,7 +53,8 @@ class Package {
         }
         if (searchCriteria) {
             selectCacheVersion(searchCriteria)
-        } else if (cacheVersion) {
+        } 
+        if (cacheVersion) {
             setCachePath()
         }
         loadSpec()
@@ -64,17 +65,16 @@ class Package {
     }
 
     function selectCacheVersion(criteria: String) {
-        if (cacheVersion && cacheVersion.acceptable(criteria)) {
-            return
-        }
-        /*
-            Pick most recent qualifying version
-         */
-        for each (path in find(dirs.pakcache, name + '/*', false).reverse()) {
-            let candidate = Version(path.basename)
-            if (candidate.acceptable(criteria)) {
-                cacheVersion = candidate
-                break
+        if (!cacheVersion || !cacheVersion.acceptable(criteria)) {
+            /*
+                Pick most recent qualifying version
+             */
+            for each (path in find(dirs.pakcache, name + '/*', false).reverse()) {
+                let candidate = Version(path.basename)
+                if (candidate.acceptable(criteria)) {
+                    cacheVersion = candidate
+                    break
+                }
             }
         }
         setCachePath()
