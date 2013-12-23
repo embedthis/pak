@@ -3,6 +3,9 @@
  */
 #include "esp.h"
 
+#define PASSWORD_SALT   16
+#define PASSWORD_ROUNDS 128
+
 /*
     Create a new resource in the database
  */
@@ -81,40 +84,29 @@ static void updatePak() {
 static void publishPackage() {
     EspReq      *req;
     EdiRec      *rec;
-    cchar       *key, *name, *uri, *priorUri;
-#if UNUSED
-    MprJson     *catalog, *keys, *paks;
-    cchar       *key, *catalogPath, *keysPath, *name, *uri, *priorUri;
-#endif
+    cchar       *password, *name, *endpoint, *prior;
 
     req = getReq();
     name = param("name");
-    uri = param("uri");
-    key = param("key");
+    endpoint = param("endpoint");
+    password = param("password");
 
-    // addHeader("Content-Type", "application/json");
-
-    if (!name || !*name || !uri || !*uri) {
-        sendResult(feedback("error", "Missing name and/or uri parameters"));
+    if (!name || !*name || !endpoint || !*endpoint || !password || !*password) {
+        sendResult(feedback("error", "Missing name, endpoint or password parameters"));
         return;
     }
     if ((rec = readRecWhere("pak", "name", "==", name)) != 0) {
-        priorUri = getField(rec, "uri");
-        if (!smatch(getField(rec, "key"), key)) {
-            sendResult(feedback("error", "Must quote original publish key to republish"));
+        prior = getField(rec, "endpoint");
+        if (!mprCheckPassword(password, getField(rec, "password"))) {
+            sendResult(feedback("error", "Invalid password"));
             return;
         }
     } else {
         rec = createRec("pak", params());
-        priorUri = 0;
-        if ((key = mprGetMD5(mprGetRandomString(32))) == 0) {
-            sendResult(feedback("error", "Cannot generate publish key"));
-            //  MOB - this must do an mprError too
-            return;
-        }
-        setField(rec, "key", key);
+        setField(rec, "password", mprMakePassword(password, PASSWORD_SALT, PASSWORD_ROUNDS));
+        prior = 0;
     }
-    if (!smatch(uri, priorUri)) {
+    if (!smatch(endpoint, prior)) {
         if (!(updateRec(rec))) {
             sendResult(feedback("error", "Cannot save package details"));
         } else {
@@ -126,6 +118,27 @@ static void publishPackage() {
 }
 
 static void retractPackage() {
+    EspReq      *req;
+    EdiRec      *rec;
+    cchar       *password, *name;
+
+    req = getReq();
+    name = param("name");
+    password = param("password");
+
+    if (!name || !*name || !password || !*password) {
+        sendResult(feedback("error", "Missing name or password parameters"));
+        return;
+    }
+    if ((rec = readRecWhere("pak", "name", "==", name)) == 0) {
+        sendResult(feedback("error", "Cannot find pak"));
+        return;
+
+    } else if (!mprCheckPassword(password, getField(rec, "password"))) {
+        sendResult(feedback("error", "Invalid password"));
+        return;
+    }
+    sendResult(removeRec("pak", rec->id));
 }
 
 /*

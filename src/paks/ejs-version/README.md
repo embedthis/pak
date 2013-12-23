@@ -1,9 +1,9 @@
-Pak for version
+Pak for ejs-version
 ===
 
 ### To install:
 
-pak install version
+pak install ejs-version
 
 
 ### Get Pak from

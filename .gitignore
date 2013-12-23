@@ -22,3 +22,5 @@ macosx-*
 *-release
 *.mod
 projects/*mine*
+src/catalog/cache
+*.tmp

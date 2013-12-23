@@ -708,7 +708,7 @@ $(CONFIG)\bin\removeFiles.exe: $(DEPS_34)
 #
 DEPS_35 = $(DEPS_35) src\Package.es
 DEPS_35 = $(DEPS_35) src\pak.es
-DEPS_35 = $(DEPS_35) src\paks\version\Version.es
+DEPS_35 = $(DEPS_35) src\paks\ejs-version\Version.es
 DEPS_35 = $(DEPS_35) $(CONFIG)\inc\mpr.h
 DEPS_35 = $(DEPS_35) $(CONFIG)\inc\bit.h
 DEPS_35 = $(DEPS_35) $(CONFIG)\inc\bitos.h
@@ -735,7 +735,7 @@ DEPS_35 = $(DEPS_35) $(CONFIG)\bin\ejsc.exe
 !ENDIF
 
 $(CONFIG)\bin\pak.mod: $(DEPS_35)
-	".\$(CONFIG)\bin\ejsc" --out ".\$(CONFIG)\bin\pak.mod"  --optimize 9 src/Package.es src/paks/version/Version.e src/pak.es
+	".\$(CONFIG)\bin\ejsc" --out ".\$(CONFIG)\bin\pak.mod"  --optimize 9 src/Package.es src/paks/ejs-version/Version.e src/pak.es
 
 #
 #   pak.obj

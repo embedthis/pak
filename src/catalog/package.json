@@ -79,7 +79,7 @@
         "timeouts": {
             "session": 300
         },
-        "xsrf": true,
+        "xsrf": false,
         "server": {
             "database": "mdb://catalog.mdb",
             "_redirect": "secure",

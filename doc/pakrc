@@ -1,7 +1,7 @@
 {
     "catalogs": [ 
-        "http://localhost:5000/do/catalog/lookup",
-        "http://paks.embedthis.com/catalog/do/catalog/lookup", 
+        "http://localhost:5000/do/pak",
+        "http://paks.embedthis.com/catalog/do/pak", 
         "https://bower.herokuapp.com/packages",
     ],
     "requirePrimaryCatalog": true,

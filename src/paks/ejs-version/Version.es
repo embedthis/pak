@@ -39,14 +39,18 @@ class Version {
         try {
             [,baseVersion,preVersion] = version.match(SemVer)
             preVersion ||= ''
-            publicVersion = (!preVersion && version.match(StrictSemVer)) || false
+            /* Cannot use this for versions like 1.0.1e (OpenSSL)
+                publicVersion = (!preVersion && version.match(StrictSemVer)) || false
+             */
+            publicVersion = (!preVersion) || false
             numberVersion = asNumber(baseVersion)
             let [maj,min,pat] = baseVersion.split('.')
             majorVersion = maj
             minorVersion = min
             patchVersion = pat
             ok = true
-        } catch {}
+        } catch (e) {
+        }
         criteria = version
     }
 
@@ -100,12 +104,6 @@ class Version {
             if (partial == '*') partial = 'x'
             ver = complete(partial)
             [,base,pre] = ver.match(SemCriteria)
-        /* UNUSED
-            dont use this as we need to be able to match exactly with pre-release version
-            if (!op && pre) {
-                op = '~'
-            }
-         */
             if (op == '~' || op == '^') {
                 if (op == '^' && !publicVersion) {
                     return false
@@ -134,7 +132,7 @@ class Version {
             min = max = asNumber(base)
         }
         if (min <= numberVersion && numberVersion <= max) {
-            if (pre && (pre == preVersion) || (!pre && publicVersion)) {
+            if ((pre && (pre == preVersion)) || (!pre && publicVersion)) {
                 return true
             }
         }
@@ -360,4 +358,3 @@ assert(Version('v1.2.6-build.1988+sha.b0474cb').acceptable('~1.2.*'))
 assert(Version('v1.2.6-build.1988+sha.b0474cb').acceptable('1.2.*-build'))
 
 */
-

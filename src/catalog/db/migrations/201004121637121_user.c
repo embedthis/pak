@@ -23,7 +23,7 @@ static int forward(Edi *db) {
     ediSetFields(rec, ediMakeJson("{ username: 'admin', password: '%s', email: 'dev@embedthis.com', roles: 'edit, view' }", password));
     ediUpdateRec(db, rec);
 
-    password = mprMakePassword("demo", 16, 16);
+    password = mprMakePassword("demo", 16, 128);
     rec = ediCreateRec(db, "user");
     ediSetFields(rec, ediMakeJson("{ username: 'guest', password: '%s', email: 'guest@example.com', roles: 'view' }", password));
     ediUpdateRec(db, rec);

@@ -45,9 +45,10 @@ class PakCmd
     /* This layers over App.config */
     private var defaultConfig = {
         catalogs: [ 
-            'http://embedthis.com/pak/catalog',
+            'http://embedthis.com/catalog/pak',
             'https://bower.herokuapp.com/packages',
         ],
+        publish: 'http://embedthis.com/pak/do/catalog/publish',
         dirs: {
             paks: Path('paks'),
             pakcache: Path('~/.paks'),
@@ -131,12 +132,12 @@ class PakCmd
             cache: { range: String },
             catalog: { range: String },
             code: { range: String },
-            debug: { alias: 'd' },
             details: {},
             dir: { range: String },
             force: { alias: 'f' },
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
             quiet: { alias: 'q' },
+            silent: { alias: 's' },
             verbose: { alias: 'v' },
             version: { alias: 'V', range: String },
             versions: {},
@@ -149,35 +150,36 @@ class PakCmd
     function usage(): Void {
         print('\nUsage: pak ' + ' [options] [commands] ...\n' +
             '  Commands:\n' + 
-            '    cache [paks...]      # Populate the cache with paks\n' +
-            '    cached [paks...]     # List paks in the cache\n' +
-            '    config               # Show the Pak configuration\n' +
-            '    depend [paks...]     # Display installed pak dependencies\n' +
-            '    edit key[=value]...  # Edit a pak description file \n' +
-            '    help                 # Display this usage help\n' +
-            '    init                 # Create a new package.json\n' +
-            '    install paks...      # Install a pak on the local system\n' +
-            '    list [paks...]       # list installed paks\n' +
-            '    prune [paks...]      # Prune named paks\n' +
-            '    publish [dir]        # Upload and publish a pak\n' +
-            '    retract pak          # Unpublish a pak\n' +
-            '    search paks...       # Search for paks in the catalog\n' +
-            '    uninstall            # Uninstall a pak on the local system\n' +
-            '    update [paks...]     # Update the cache with latest version\n' +
-            '    upgrade [paks...]    # Upgrade installed paks\n' +
+            '    cache [paks...]          # Populate the cache with paks\n' +
+            '    cached [paks...]         # List paks in the cache\n' +
+            '    config                   # Show the Pak configuration\n' +
+            '    depend [paks...]         # Display installed pak dependencies\n' +
+            '    edit key[=value]...      # Edit a pak description file \n' +
+            '    help                     # Display this usage help\n' +
+            '    info paks...             # Display README for a pak\n' +
+            '    init                     # Create a new package.json\n' +
+            '    install paks...          # Install a pak on the local system\n' +
+            '    list [paks...]           # list installed paks\n' +
+            '    prune [paks...]          # Prune named paks\n' +
+            '    publish [name uri pass]  # publish a pak in a catalog\n' +
+            '    retract name [pass]      # Unpublish a pak\n' +
+            '    search paks...           # Search for paks in the catalog\n' +
+            '    uninstall                # Uninstall a pak on the local system\n' +
+            '    update [paks...]         # Update the cache with latest version\n' +
+            '    upgrade [paks...]        # Upgrade installed paks\n' +
             '  General options:\n' + 
-            '    --catalog catalog    # Catalog to use instead of defaults\n' +
-            '    -d, --debug          # Run in debug mode (more verbose)\n' +
-            '    --dir                # Change to directory before running\n' +
-            '    --force              # Ignore dependencies and continue\n' +
-            '    --log file:level     # Send log output to a file at a given level\n' + 
-            '    --paks dir           # Use given directory for packs cache\n' +
-            '    -q, --quiet          # Run in quiet mode\n' +
-            '    -v, --verbose        # Run in verbose mode\n' +
+            '    --catalog catalog        # Catalog to use instead of defaults\n' +
+            '    --dir                    # Change to directory before running\n' +
+            '    --force                  # Ignore dependencies and continue\n' +
+            '    --log file:level         # Send output to a file at a given level\n' + 
+            '    --paks dir               # Use given directory for paks cache\n' +
+            '    -q, --quiet              # Run in quiet mode\n' +
+            '    -s, --silent             # Run in totally silent mode\n' +
+            '    -v, --verbose            # Run in verbose mode\n' +
             '  List options:\n' + 
-            '    -a, --all            # Show all versions for a pak individually\n' +
-            '    --details            # Show pak details\n' +
-            '    --versions           # Show pak version information\n' +
+            '    -a, --all                # Show all versions for a pak\n' +
+            '    --details                # Show pak details\n' +
+            '    --versions               # Show pak version information\n' +
             '')
         App.exit(1)
     }
@@ -197,9 +199,8 @@ class PakCmd
             } else {
                 msg = e.message
                 error(msg)
-                if (!args || args.options.debug) {
+                if (!args || args.options.verbose) {
                     print(e)
-                    // error(e.stack + '\n')
                 }
             }
             App.exit(2)
@@ -210,8 +211,8 @@ class PakCmd
 
     function processOptions(args: Args) {
         options = args.options
-        if (options.debug) {
-            options.verbose ||= true
+        if (options.silent) {
+            options.quiet = true
         }
         if (options.version) {
             print(Config.version)
@@ -231,7 +232,7 @@ class PakCmd
         if (options.dir) {
             App.chdir(options.dir)
         }
-        if (options.all || options.verbose) {
+        if (options.all || !options.quiet) {
             options.versions = true
         }
     }
@@ -312,6 +313,26 @@ class PakCmd
             init(rest)
             break
 
+        case 'info':
+            let spec = Package.readSpec('.')
+            for each (name in rest) {
+                let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
+                let pak = Package(name)
+                pak.resolve(criteria)
+                if (pak.cachePath.join('README.md')) {
+                    let readme = pak.cachePath.join('README.md')
+                    let text = readme.readString()
+                    if (Config.OS == 'macosx') {
+                        try {
+                            Cmd.run('open ' + readme)
+                        } catch {
+                            print(text)
+                        }
+                    }
+                }
+            }
+            break
+
         case 'install':
             if (rest.length == 0) {
                 if (!PACKAGE.exists) {
@@ -343,9 +364,7 @@ class PakCmd
             break
 
         case 'publish':
-            for each (name in rest) {
-                publish(Package(name))
-            }
+            publish(rest)
             break
 
         case 'prune':
@@ -366,15 +385,13 @@ class PakCmd
                     }
                 }
                 if (!pak) {
-                    trace('Info', 'Nothing to prune')
+                    qtrace('Info', 'Nothing to prune')
                 }
             }
             break
 
         case 'retract': case 'unpublish':
-            for each (name in rest) {
-                retract(Package(name))
-            }
+            retract(rest)
             break
 
         case 'search':
@@ -404,7 +421,7 @@ class PakCmd
             }
             let spec = Package.readSpec('.')
             if (!spec) {
-                error("Cannot read package.json")
+                error('Cannot read package.json')
                 break
             }
             if (rest.length == 0) {
@@ -438,7 +455,7 @@ class PakCmd
         let dir = pak.cachePath
         let path: Path = dir.join('build.es')
         if (path.exists) {
-            trace('Build', pak.name)
+            qtrace('Build', pak.name)
             Worker().load(path)
 /* UNUSED
         } else {
@@ -456,69 +473,13 @@ class PakCmd
                 makeDir(dir.join(dirs.pakcache))
                 let out = pak.sourcePath.join(pak.name).joinExt(extensions.mod)
                 if (options.verbose) {
-                    dtrace('Compile', 'ejsc --out ' + out + ' ' + files.join(' '))
+                    vtrace('Compile', 'ejsc --out ' + out + ' ' + files.join(' '))
                 } else {
-                    trace('Compile', pak.name)
+                    qtrace('Compile', pak.name)
                 }
                 Cmd.sh('ejsc --out ' + out + ' ' + files.join(' '))
             }
             */
-        }
-    }
-
-    /*
-        TODO - not used
-        Build a pak file
-        @param files Optional list of files to include in the package. Otherwise, build() discovers the files in the
-            current directory based on the package.files.
-     */
-    function build(items: Array): Void {
-        //  TODO - should build dependency list from the 'require' statements - ejsmod to create
-        let spec = Package.readSpec('.')
-        if (!spec) {
-            throw 'Missing ' + PACKAGE + ' Run "pak" in the directory containing the package description'
-        }
-        validateJson(spec)
-        let path = spec.name + '/' + spec.version + '.' + extensions.pak
-        try {
-            tar = new Tar(path)
-            let list = []
-            list.push(PACKAGE)
-            if (items.length > 0) {
-                //  TODO - should validate items. Must contain package.json ...
-                //  TODO - should 
-                for each (f in items) {
-                    list.push(f)
-                }
-            } else if (spec.files) {
-                for each (item in spec.files) {
-                    for each (f in Path('.').files(item)) {
-                        list.push(f)
-                    }
-                }
-            } else {
-                //  TODO -- need better filtering. Perhaps a file list would be better
-                //  TODO - use .pakignore
-                //  TODO - use Path().files
-                items =  find('.', '*.' + extensions.lib, {descend: true})
-                items += find('.', '*.mod', {descend: true})
-                items += find('.', '*.es', {descend: true})
-                items += find('doc', '*', {descend: true})
-                items += find('bin', '*', {descend: true})
-                items += find('lib', '*', {descend: true})
-                items += find('test', '*', {descend: true})
-                for each (f in items) {
-                    if (f.isRegular) {
-                        list.push(f)
-                    }
-                }
-                list.push('install.es')
-                list.push('uninstall.es')
-            }
-            tar.create(...list)
-            trace('Build', path)
-        } catch (e) {
-            print(e)
         }
     }
 
@@ -597,20 +558,20 @@ class PakCmd
     function cache(pak: Package) {
         pak.resolve(pak.searchCriteria || '*')
         if (pak.publish === false) {
-            trace('Skip', pak + ' has publish: false')
+            qtrace('Skip', pak + ' has publish: false')
             return
         }
         if (pak.cached) {
             if (!args.options.force) {
-                trace('Info', pak + ' ' + pak.cacheVersion + ' is already cached')
+                qtrace('Info', pak + ' ' + pak.cacheVersion + ' is already cached')
                 return
             }
         } else {
-            dtrace('Info', pak + ' is not yet cached')
+            vtrace('Info', pak + ' is not yet cached')
         }
         if (pak.sourcePath) {
             if (!pak.spec) {
-                trace('Skip', pak + ' does not have a valid package.json')
+                qtrace('Skip', pak + ' does not have a valid package.json')
                 return
             }
         } else {
@@ -693,12 +654,18 @@ class PakCmd
         pak init 
         Generates package.json template
      */
-    function init() {
+    function init(args) {
         if (PACKAGE.exists) {
             throw 'Package description "' + PACKAGE + '" .already exists in this directory'
         }
-        trace('Create', PACKAGE)
-        Path(PACKAGE).write(serialize(PakTemplate, {pretty: true, indent: 4}))
+        qtrace('Create', PACKAGE)
+        let spec = PakTemplate.clone()
+        if (args.length > 0) {
+            let [name, version] = args
+            spec.name = name
+            spec.version = version
+        }
+        Path(PACKAGE).write(serialize(spec, {pretty: true, indent: 4}))
     }
 
     function install(pak: Package) {
@@ -706,7 +673,7 @@ class PakCmd
         if (pak.cached) {
             if (pak.installed && Version(pak.spec.version).acceptable(pak.searchCriteria)) {
                 if (!args.options.force) {
-                    trace('Info', pak + ' is already installed')
+                    qtrace('Info', pak + ' is already installed')
                     return
                 }
             }
@@ -718,9 +685,9 @@ class PakCmd
         let spec = path.exists ? path.readJSON() : PakTemplate.clone()
         blendPak(spec, pak)
         if (!path.exists) {
-            trace('Create', path)
+            qtrace('Create', path)
         } else {
-            vtrace('Update', path)
+            qtrace('Update', path)
         }
         if (path.exists) {
             path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
@@ -735,7 +702,7 @@ class PakCmd
         if (!pak.spec) {
             throw 'Pak ' + pak + ' at ' + pak.cachePath + ' is missing a package.json'
         }
-        vtrace('Blend', pak + ' configuration')
+        trace('Blend', pak + ' configuration')
         blendDependencies(spec, pak)
         blendSpec(spec, pak)
     }
@@ -757,11 +724,11 @@ class PakCmd
 
     private function blendSpec(spec, pak: Package) {
         /*
-            Blend "esp", "dirs" and "client-scripts" only
+            Blend 'esp', 'dirs' and 'client-scripts' only
             Special handling for dirs which are also copied to this.dirs for immediate effect
          */
-        blendSpecProperties(spec, "esp", pak.spec, "esp")
-        blendSpecProperties(spec, "dirs", pak.spec, "dirs")
+        blendSpecProperties(spec, 'esp', pak.spec, 'esp')
+        blendSpecProperties(spec, 'dirs', pak.spec, 'dirs')
         for (let [k,v] in spec.dirs) {
             spec.dirs[k] = Path(v)
             dirs[k] = Path(v)
@@ -776,7 +743,7 @@ class PakCmd
             for (let [key,value] in pak.spec.blend) {
                 spec[key] ||= {}
                 blend(spec[key], pak.spec[value], {overwrite: false})
-                dtrace('Blend', 'Property ' + value + ' into ' + key)
+                vtrace('Blend', 'Property ' + value + ' into ' + key)
             }
         }
         spec.dependencies ||= {}
@@ -789,22 +756,23 @@ class PakCmd
         so lower packs won't modify the files of upper paks
      */
     private function installPakFiles(pak: Package): Void {
-        trace('Install', pak.name, pak.cacheVersion)
+        qtrace('Install', pak.name, pak.cacheVersion)
         if (!pak.cached) {
             cachePak(pak)
             pak.resolve()
         }
         let dest = pak.installPath
-        dtrace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
+        vtrace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
         if (dest.exists) {
-            dtrace('Rmdir', dest)
+            vtrace('Rmdir', dest)
             removeDir(dest, true)
         }
-        dtrace('Mkdir', dest)
+        vtrace('Mkdir', dest)
         mkdir(dest)
         copyTree(pak.cachePath, dest, pak.spec.ignore, pak.spec.files, pak.spec.export)
         installDependencies(pak)
-        vtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
+        trace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
+        trace('Info', 'Use "pak info ' + pak.name + '" to view the README')
     }
 
     private function installDependencies(pak: Package): Boolean {
@@ -817,19 +785,19 @@ class PakCmd
             dep.selectCacheVersion(criteria)
             dep.resolve()
             if (!dep.installed) {
-                dtrace('Info', 'Install required dependency ' + dep.name)
+                vtrace('Info', 'Install required dependency ' + dep.name)
                 try {
                     installPakFiles(dep)
                 } catch (e) {
                     print(e)
                     if (args.options.force) {
-                        trace('WARN', 'Cannot install required dependency "' + dep.name + '"' )
+                        qtrace('WARN', 'Cannot install required dependency "' + dep.name + '"' )
                     } else {
                         throw 'Cannot install ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
                     }
                 }
             } else {
-                dtrace('Info', 'dependency "' + dep.name + '" is installed')
+                vtrace('Info', 'dependency "' + dep.name + '" is installed')
             }
         }
         return true
@@ -878,12 +846,12 @@ class PakCmd
             throw 'Nothing to prune for "' + pak + '"'
         }
         if (pak.spec && pak.spec.precious && !options.force) {
-            trace('Warn', 'Cannot prune "' + pak + '" designated as precious. Use --force to force pruning.')
+            qtrace('Warn', 'Cannot prune "' + pak + '" designated as precious. Use --force to force pruning.')
             return
         }
         if (pak.cachePath == latest && !options.all) {
-            trace('Info', 'Preserve latest version for ' + pak + ' ' + pak.cacheVersion)
-            trace('Info', 'Use --all to prune all versions')
+            qtrace('Info', 'Preserve latest version for ' + pak + ' ' + pak.cacheVersion)
+            qtrace('Info', 'Use --all to prune all versions')
             return
         }
         if ((users = requiredCachedPak(pak)) != null) {
@@ -891,11 +859,11 @@ class PakCmd
                 throw 'Cannot prune "' + pak + '". It is required by: ' + users.join(', ') + '.'
             }
         }
-        trace('Prune', pak + ' ' + pak.cacheVersion)
+        qtrace('Prune', pak + ' ' + pak.cacheVersion)
         removeDir(pak.cachePath, true)
         /* Remove parent if empty */
         removeDir(pak.cachePath.dirname, false)
-        trace('Info', pak + ' successfully pruned')
+        qtrace('Info', pak + ' successfully pruned')
     }
 
     function showConfig() {
@@ -915,13 +883,13 @@ class PakCmd
      */
     function update(pak: Package? = null): Pak {
         pak.resolve(pak.searchCriteria || '*')
-        vtrace('Search', 'Latest version of ' + pak)
+        trace('Search', 'Latest version of ' + pak)
         let later = searchPak(pak)
         if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion)) {
-            trace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
+            qtrace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
             return pak
         }
-        vtrace('Update', pak + ' to ' + later.cacheVersion)
+        trace('Update', pak + ' to ' + later.cacheVersion)
         cachePak(later)
         return later
     }
@@ -936,11 +904,11 @@ class PakCmd
             later = update(pak)
         } 
         if (pak.installVersion && pak.installVersion.same(later.cacheVersion) && !options.force) {
-            trace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
+            qtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
                 ' for version requirement ' + pak.searchCriteria)
             return
         }
-        trace('Upgrade', pak + ' to ' + later.cacheVersion)
+        qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
         later.resolve(later.cacheVersion)
         install(later)
     }
@@ -959,7 +927,7 @@ class PakCmd
             dep.resolve()
             if (!dep.cached) {
                 if (dep.sourced) {
-                    dtrace('Info', 'Caching required dependency from source at: ' + dep.sourcePath)
+                    vtrace('Info', 'Caching required dependency from source at: ' + dep.sourcePath)
                     cachePak(dep)
                 } else {
                     try {
@@ -969,14 +937,14 @@ class PakCmd
                         //  TODO - should test if present and must display (e)
                         print(e)
                         if (args.options.force) {
-                            trace('WARN', 'Cannot cache required dependency "' + dep.name + '"' )
+                            qtrace('WARN', 'Cannot cache required dependency "' + dep.name + '"' )
                         } else {
                             throw 'Cannot cache ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
                         }
                     }
                 }
             } else {
-                dtrace('Info', 'dependency "' + dep.name + '" is cached')
+                vtrace('Info', 'dependency "' + dep.name + '" is cached')
             }
         }
         return true
@@ -1005,7 +973,6 @@ class PakCmd
             for each (f in find(fromDir, pat, {descend: true, relative: true})) {
                 let skip = false
                 if (ignoreSet[f]) {
-                    print("SKIP", f)
                     continue
                 }
                 files.push(f)
@@ -1026,7 +993,7 @@ class PakCmd
             } else {
                 makeDir(to.dirname)
                 from.copy(to)
-                dtrace(relocate[f] ? 'Export' : 'Copy', to)
+                vtrace(relocate[f] ? 'Export' : 'Copy', to)
             }
         }
     }
@@ -1035,7 +1002,7 @@ class PakCmd
     function installModules(pak: Package): Void {
         for each (f in find(pak.cachePath.join(dirs.pakcache), '*.' + extensions.mod, {descend: true})) {
             let dest = dirs.modules.join(Path(f).basename)
-            trace('Install', dest)
+            qtrace('Install', dest)
             cp(f, dest)
         }
     }
@@ -1044,7 +1011,7 @@ class PakCmd
     function installNativeModules(pak: Package): Void {
         for each (f in find(pak.cachePath.join(dirs.pakcache), '*.' + extensions.so, {descend: true})) {
             let dest = dirs.lib.join(Path(f).basename)
-            trace('Install', dest)
+            qtrace('Install', dest)
             cp(f, dest)
         }
     }
@@ -1062,7 +1029,7 @@ class PakCmd
         let dest = pak.cachePath
         try {
             http.followRedirects = true
-            dtrace('Get', pak.downloadUri)
+            vtrace('Get', pak.downloadUri)
             http.get(pak.downloadUri)
             let file = File(tgzName, 'w')
             let buf = new ByteArray
@@ -1071,11 +1038,11 @@ class PakCmd
             }
             file.close()
             http.close()
-            dtrace('Save', 'Response to ' + tgzName.absolute)
+            vtrace('Save', 'Response to ' + tgzName.absolute)
             Zlib.uncompress(tgzName, tarName)
             let tar = new Tar(tarName.absolute)
             chdir(dest.parent)
-            dtrace('Extract', 'Extract to ' + dest)
+            vtrace('Extract', 'Extract to ' + dest)
             //  Better to strip first part of file name and extract into the right place first time
             //  Tar options strip: 1
             tar.extract()
@@ -1094,7 +1061,7 @@ class PakCmd
         let script = pak.cachePath.join('install.es')
         if (script.exists) {
             try {
-                dtrace('Run', 'Installation script: ' + script)
+                vtrace('Run', 'Installation script: ' + script)
                 //  TODO - need to trap onerror
                 //  TODO - need to set dirs.pakcache, inside the script env
                 chdir(pak.sourcePath)
@@ -1117,17 +1084,17 @@ class PakCmd
     }
 
     private function copyPak(pak: Package) {
-        dtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
+        vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
         copyTree(pak.sourcePath, pak.cachePath, pak.spec.ignore, pak.spec.files)
     }
 
     private function cachePak(pak: Package) {
         let dest = pak.cachePath
         if (dest.exists) {
-            dtrace('Rmdir', dest)
+            vtrace('Rmdir', dest)
             removeDir(dest, true)
         }
-        dtrace('Mkdir', dest)
+        vtrace('Mkdir', dest)
         mkdir(dest)
         if (!pak.sourcePath) {
             fetchPak(pak)
@@ -1137,12 +1104,12 @@ class PakCmd
             throw 'Cannot find pack ' + pak.name + ' to install'
         }
         if (!Package.getSpecFile(pak.cachePath)) {
-            throw "Cannot find package description for " + pak + ' from ' + pak.cachePath
+            throw 'Cannot find package description for ' + pak + ' from ' + pak.cachePath
         }
         pak.resolve()
         cacheDependencies(pak)
         runInstallScripts(pak)
-        trace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
+        qtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
     }
 
     private function pakFileExists(path: Path): Boolean {
@@ -1203,37 +1170,103 @@ class PakCmd
     }
 
     /*
-        pak publish # returns token
+        pak publish <CR>
+        pak publish name URI [password]
      */
-    function publish(pak: Package): Void {
-    //  TODO - revise. No 'to' option anymore
-        let catalog = Path(args.options.to)
-        if (!catalog) {
-            catalog = dirs.catalogs[0]
+    function publish(args): Void {
+        let uri = options.catalog || catalogs[0]
+        let name, endpoint, password
+        if (!PACKAGE.exists) {
+            throw 'Cannot find package.json in current directory'
         }
-        if (catalog.contains('http://')) {
-            //  TODO TODO
-            publishRemote()
-            // TODO path = fetchRemote(rep, pak)
+        let spec = Package.readSpec('.', {quiet: true})
+        let pak = new Package(spec.name)
+        if (pak.publish === false) {
+            qtrace('Skip', pak + ' has publish: false')
+            return
+        }
+        pak.setSource('.')
+        if (args.length == 0) {
+            name = pak.name
+            endpoint = (spec.repository && spec.repository.url) || null
+        } else if (args.length == 3) {
+            [name, endpoint, password] = args
+        } else if (args.length == 2) {
+            [name, endpoint] = args
         } else {
-            //  TODO - really need to update the catalog
-            //  TODO pak.path doesn't exist
-            let from = pak.path
-            let dir = catalog.join(pak.name)
-            let target = dir.join(pak.path.basename).absolute.portable
-            //  TODO -- must cleanup if cp or makedir fails
-            makeDir(target.dirname)
-            cp(from, target)
-            tar = new Tar(target)
-            let current = App.dir
-            try {
-                chdir(dir)
-                tar.extract('package.json')
-            } finally {
-                chdir(current)
-            }
-            //  TODO publishLocal()
+            throw 'Incorrect args for publish'
         }
+        if (!validatePak(pak)) {
+            return
+        }
+        if (!endpoint) {
+            throw 'Missing repository property in pakcage.json.'
+        }
+        if (!password) {
+            while (true) {
+                password = App.getpass('Password: ')
+                confirm = App.getpass('Confirm: ')
+                if (password == confirm) {
+                    break
+                }
+                stdout.write('\nPassword confirmation does not match\n')
+            }
+            stdout.write('\n')
+        }
+        if (!password || password.length < 8) {
+            throw 'Bad password. Must be 8 characters or longer'
+        }
+        let http = new Http
+        let data = { name: pak.name, endpoint: endpoint, password: password }
+        http.setHeader('Content-Type', 'application/json');
+        try {
+            qtrace('Publish', pak.name + ' ' + pak.cacheVersion + ' at ' + uri)
+            http.post(uri + '/publish', serialize(data))
+            let response = deserialize(http.response)
+            if (response.error) {
+                qtrace('Error', response.feedback.error)
+            } else {
+                qtrace('Info', pak.name + ' successfully published at ' + endpoint)
+            }
+        } catch (e) {
+            throw 'Cannot register pak. ' + e
+        } 
+    }
+
+    /*
+        pak retract <CR>
+        pak retract name [password]
+     */
+    function retract(args): Void {
+        let uri = options.catalog || catalogs[0]
+        let name, endpoint, password
+        let spec = Package.readSpec('.', {quiet: true})
+        let pak = new Package(spec.name)
+        pak.setSource('.')
+        if (args.length == 0) {
+            name = pak.name
+        } else if (args.length != 2) {
+            throw 'Incorrect args for retract'
+        } else {
+            [name, password] = args
+        }
+        if (!password) {
+            password = App.getpass('Password')
+        }
+        let http = new Http
+        let data = { name: pak.name, endpoint: endpoint, password: password }
+        http.setHeader('Content-Type', 'application/json');
+        try {
+            http.post(uri + '/retract', serialize(data))
+            let response = deserialize(http.response)
+            if (response.error) {
+                qtrace('Error', response.feedback.error)
+            } else {
+                qtrace('Info', pak.name + ' retracted')
+            }
+        } catch (e) {
+            throw 'Cannot register pak. ' + e
+        } 
     }
 
     function uninstallPak(pak: Package): Void {
@@ -1245,7 +1278,7 @@ class PakCmd
         let script = pak.installPath.join('uninstall.es')
         if (script.exists) {
             try {
-                trace('Run', 'Uninstall script: ' + script)
+                qtrace('Run', 'Uninstall script: ' + script)
                 Worker().load(script)
                 Worker.join()
             } catch (e) {
@@ -1274,12 +1307,9 @@ class PakCmd
             }
         }
         path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
-        trace('Remove', pak.name)
+        qtrace('Remove', pak.name)
     }
 
-    //  TODO - check pak usage
-    function retract(pak: Package): Void {
-    }
 
     //  MOB - order functions
     private function requiredCachedPak(pak: Package): Array? {
@@ -1324,13 +1354,13 @@ class PakCmd
 
     private function selectRemoteVersion(pak: Package, criteria: String, remote) {
         if (!pak.setRemoteEndpoint(remote)) {
-            if (RegExp('^[\w\-]$').match(remote)) {
-                trace('Warn', pak + ' is part of ' + remote + ' and not available separately')
+            if (remote.match(/^[\w\-]$/)) {
+                qtrace('Warn', pak + ' is part of ' + remote + ' and not available separately')
             } else {
                 throw 'Remote endpoint is not in the correct format: ' + remote
             }
         }
-        dtrace('Run', [git, 'ls-remote', '--tags', pak.remoteUri].join(' '))
+        vtrace('Run', [git, 'ls-remote', '--tags', pak.remoteUri].join(' '))
         let data = Cmd.run([git, 'ls-remote', '--tags', pak.remoteUri])
         let versions = data.trim().
             replace(/[ \t]+/g, ' ').
@@ -1352,14 +1382,14 @@ class PakCmd
         }
         if (!found) {
             if (options.force) {
-                dtrace('Warn', 'Desired version not found in catalog for ' + pak.name + ' ' + criteria)
+                vtrace('Warn', 'Desired version not found in catalog for ' + pak.name + ' ' + criteria)
                 pak.setRemoteVersion(versions[versions.length - 1])
                 pak.setCachePath()
             } else {
                 throw 'Desired version not found in catalog. ' + criteria
             }
         }
-        dtrace('Info', 'Matched ' + pak + ' ' + pak.remoteVersion + ' from ' + pak.remoteUri)
+        vtrace('Info', 'Matched ' + pak + ' ' + pak.remoteVersion + ' from ' + pak.remoteUri)
         if (pak.host != 'github.com') {
             throw 'Repository host "' + pak.host + '" is not support. Only github supported'
         }
@@ -1374,11 +1404,14 @@ class PakCmd
         let http = new Http
         let matches = []
         for (let [index, catalog] in catalogs) {
-            vtrace('Info', 'Searching catalog: ' + catalog + ' for ' + pak + ' ' + (pak.searchCriteria || ''))
+            trace('Info', 'Searching catalog: ' + catalog + ' for ' + pak + ' ' + (pak.searchCriteria || ''))
             try {
+                if (!catalog.contains('bower')) {
+                    catalog += '/list'
+                }
                 http.get(catalog)
             } catch (e) {
-                trace('Warn', 'Cannot access catalog at: ' + catalog)
+                qtrace('Warn', 'Cannot access catalog at: ' + catalog)
                 if (App.config.requirePrimaryCatalog && !options.force) {
                     throw 'Cannot continue with offline primary catalog ' + catalog + '\n' + 'Wait or retry with --force'
                 }
@@ -1389,10 +1422,10 @@ class PakCmd
                 try {
                     data = deserialize(http.response)
                 } catch {
-                    vtrace('Skip', 'Bad response from catalog: ' + catalog)
+                    trace('Skip', 'Bad response from catalog: ' + catalog)
                 }
                 if (!data) {
-                    vtrace('Skip', 'Missing catalog data')
+                    trace('Skip', 'Missing catalog data')
                     continue
                 }
                 if (data is Array) {
@@ -1406,7 +1439,7 @@ class PakCmd
                 let remote = index[pak.name]
                 if (remote) {
                     /* Exact match */
-                    vtrace('Query', pak.name + ' versions at ' + remote)
+                    trace('Query', pak.name + ' versions at ' + remote)
                     let mpak = Package(pak.name)
                     let criteria = pak.searchCriteria || (options.all ? '*' : '^*')
                     selectRemoteVersion(mpak, criteria, remote)
@@ -1417,7 +1450,7 @@ class PakCmd
                     for (let [pname, remote] in index) {
                         /* Partial name match */
                         if (pname.contains(pak.name)) {
-                            vtrace('Query', pak.name + ' versions at ' + remote)
+                            trace('Query', pak.name + ' versions at ' + remote)
                             let mpak = Package(pname)
                             let criteria = pak.searchCriteria || (options.all ? '*' : '^*')
                             selectRemoteVersion(mpak, criteria, remote)
@@ -1426,8 +1459,8 @@ class PakCmd
                     }
                 }
             } catch (e) {
-                dtrace('Warn', e)
-                trace('Info', 'Cannot find suitable ' + pak.name + ' in catalog: ' + catalog)
+                vtrace('Warn', e)
+                qtrace('Info', 'Cannot find suitable ' + pak.name + ' in catalog: ' + catalog)
             }
         }
         if (matches.length == 0) {
@@ -1444,7 +1477,7 @@ class PakCmd
      */
     private function setdeps() {
         if (!pakFileExists('.')) {
-            throw 'Missing ' + PakFiles[0] + '. Run \"pak\"" in the directory containing the package file'
+            throw 'Missing ' + PakFiles[0] + '. Run "pak" in the directory containing the package file'
         }
         moddeps = []
         for each (f in args.rest) {
@@ -1463,25 +1496,27 @@ class PakCmd
         PACKAGE.write(serialize(spec, {pretty: true}))
     }
 
-/* UNUSED
     function validatePak(pak: Package): Boolean {
         let requiredFiles = [ PACKAGE ]
         for each (file in requiredFiles) {
             let path = pak.sourcePath.join(file)
             if (!exists(path) && !path.isDir) {
-                throw 'Pak is missing required files "' + file + '"'
+                throw 'Pak is missing required file "' + file + '"'
             }
         }
-        let requiredDirs = [ 'modules', 'doc', 'test' ]
-        for each (file in requiredFiles) {
-            let path = pak.sourcePath.join(file)
-            if (!exists(path) && !path.isDir) {
-                throw 'Pak is missing required directory "' + file + '"'
-            }
+        pak.resolve()
+        let spec = pak.spec
+        if (!spec.name || !spec.name.match(/^[\w_-]+$/)) {
+            throw 'Invalid package name: ' + spec.name
+        }
+        if (!spec.description) {
+            throw 'Invalid package name: ' + spec.description
+        }
+        if (!spec.version || !Version(spec.version).valid) {
+            throw 'Invalid package version: ' + spec.version
         }
         return true
     }
-    */
 
     /*
         Validate a package.json object
@@ -1540,7 +1575,7 @@ class PakCmd
         if (!path.exists) {
             return false
         }
-        dtrace('Read', 'Pak configuration from ' + path)
+        vtrace('Read', 'Pak configuration from ' + path)
         let spec = path.readJSON()
         blend(App.config, spec)
         if (spec.catalogs) {
@@ -1588,7 +1623,7 @@ class PakCmd
             let f = Package.getSpecFile(d)
             if (f) {
                 let spec = f.readJSON()
-                dtrace('Read', 'Configuration from: ' + f)
+                vtrace('Read', 'Configuration from: ' + f)
                 for (let [field, value] in spec.dirs) {
                     dirs[field] = f.dirname.join(value)
                 }
@@ -1654,13 +1689,10 @@ class PakCmd
         dependencies: {
             name: 'version',
         },
-        'client-scripts': [],
-        dirs: {},
     }
 }
 
-
-function trace(tag: String, ...args): Void {
+function qtrace(tag: String, ...args): Void {
     if (!options.quiet) {
         let msg = args.join(' ')
         let msg = '%12s %s' % (['[' + tag + ']'] + [msg]) + '\n'
@@ -1668,15 +1700,19 @@ function trace(tag: String, ...args): Void {
     }
 }
 
-function dtrace(tag, msg) {
-    if (options.debug) {
-        trace(tag, msg)
+function trace(tag: String, ...args) {
+    if (!options.silent) {
+        let msg = args.join(' ')
+        let msg = '%12s %s' % (['[' + tag + ']'] + [msg]) + '\n'
+        out.write(msg)
     }
 }
 
-function vtrace(tag, msg) {
+function vtrace(tag: String, ...args) {
     if (options.verbose) {
-        trace(tag, msg)
+        let msg = args.join(' ')
+        let msg = '%12s %s' % (['[' + tag + ']'] + [msg]) + '\n'
+        out.write(msg)
     }
 }
 

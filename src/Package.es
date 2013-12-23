@@ -188,9 +188,6 @@ class Package {
             spec = Package.readSpec(path)
         } else if (sourcePath && sourcePath.exists) {
             spec = Package.readSpec(sourcePath)
-            /* UNUSED - not best place 
-            cacheVersion ||= Version(spec.version)
-            */
         } else if (installPath && installPath.exists) {
             spec = Package.readSpec(installPath)
         } else if (cachePath && cachePath.exists) {
@@ -205,7 +202,7 @@ class Package {
         for each (name in PakFiles) {
             let f = path.join(name)
             if (f.exists) {
-                if (!options.quiet) dtrace('Read', f)
+                // if (!options.quiet) dtrace('Read', f)
                 return deserialize(f.readString())
             }
         }

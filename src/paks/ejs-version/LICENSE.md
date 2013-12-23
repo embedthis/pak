@@ -1,7 +1,7 @@
-version
+ejs-version
 ===
 
-[version](https://github.com/embedthis/pak-version) - [GPL](http://www.gnu.org/licenses/gpl-2.0.html)
+[ejs-version](https://github.com/embedthis/pak-ejs-version) - [GPL](http://www.gnu.org/licenses/gpl-2.0.html)
 
 Trademarks and Copyrights
 ---

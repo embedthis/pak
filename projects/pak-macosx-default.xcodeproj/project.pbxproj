@@ -1140,7 +1140,7 @@ macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/ejs.mod --optimize 9 --
 			inputPaths = (
 ../src/Package.es,
 ../src/pak.es,
-../src/paks/version/Version.es
+../src/paks/ejs-version/Version.es
 			);
 			outputPaths = (
 ../macosx-x64-default/bin/pak.mod
@@ -1149,7 +1149,7 @@ macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/ejs.mod --optimize 9 --
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 src/Package.es src/paks/version/Version.es src/pak.es";
+macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 src/Package.es src/paks/ejs-version/Version.es src/pak.es";
 		};
 		D2D67164D2D6811E00000025 /* ShellScript for Prep */ = {
 			isa = PBXShellScriptBuildPhase;

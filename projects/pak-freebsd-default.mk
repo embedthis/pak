@@ -654,7 +654,7 @@ endif
 #
 DEPS_33 += src/Package.es
 DEPS_33 += src/pak.es
-DEPS_33 += src/paks/version/Version.es
+DEPS_33 += src/paks/ejs-version/Version.es
 DEPS_33 += $(CONFIG)/inc/mpr.h
 DEPS_33 += $(CONFIG)/inc/bit.h
 DEPS_33 += $(CONFIG)/inc/bitos.h
@@ -681,7 +681,7 @@ ifeq ($(BIT_PACK_EJSCRIPT),1)
 endif
 
 $(CONFIG)/bin/pak.mod: $(DEPS_33)
-	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 src/Package.es src/paks/version/Version.es src/pak.es
+	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 src/Package.es src/paks/ejs-version/Version.es src/pak.es
 
 #
 #   pak.o
