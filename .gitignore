@@ -27,3 +27,4 @@ src/catalog/cache
 all*.gz
 all*.css
 all*.js
+releases
