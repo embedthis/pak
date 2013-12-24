@@ -1,41 +1,39 @@
 # Embedthis Pak
 
-Pak is a generic package manager implementing the CommonJS Package specification.
+Pak is a package manager for ESP/EJS implementing the CommonJS Package specification.
 Pak uses Git as back-end storage for packages.
 
 ## Usage
 
 ##### Installing packages
 
+    pak install <package>
     pak install <package>#<version>
+    pak install
 
 ##### Uninstalling packages
 
     pak uninstall <package>#<version>
 
-##### Searching for packages
+##### List installed  packages
 
-    pak search <name>
-
-##### Create a new package
-
-    pak create [files...]
-
-##### Build a package
-
-    pak build 
+    pak list
 
 ##### List a package's dependencies
 
     pak depend 
 
+##### Searching for packages
+
+    pak search <name>
+
 ##### Publish a package
 
-    pak publish 
+    pak publish NAME ENDPOINT PASSWORD
 
 ##### Retract a package
 
-    pak retract package <token> 
+    pak retract NAME PASSWORD
 
 ##### Upgrade a package
 
@@ -66,14 +64,6 @@ See [LICENSE.md](https://github.com/embedthis/pak/blob/master/LICENSE.md) for de
 
     ./configure --help
 
-### To run
-
-    make run
-
-    or
-
-    bit run
-
 ### To install:
 
     sudo make install
@@ -89,10 +79,6 @@ See [LICENSE.md](https://github.com/embedthis/pak/blob/master/LICENSE.md) for de
     or
 
     sudo bit uninstall
-
-### To test:
-
-    bit test
 
 Resources
 ---
