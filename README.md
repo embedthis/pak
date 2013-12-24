@@ -1,6 +1,6 @@
 # Embedthis Pak
 
-<img align="right" height="300" src="http://embedthis.com/images/pak.png">
+<img align="right" src="http://embedthis.com/images/pak.png">
 
 
 Pak is a simple package manager for embedding components into ESP/EJS applications. 
