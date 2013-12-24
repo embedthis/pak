@@ -1,7 +1,5 @@
 # Embedthis Pak
 
-<img align="right" height="300" src="http://bower.io/img/bower-logo.png">
-
 Pak is a generic package manager implementing the CommonJS Package specification.
 Pak uses Git as back-end storage for packages.
 
