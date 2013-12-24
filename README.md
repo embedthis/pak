@@ -2,8 +2,6 @@
 
 <img align="right" height="300" src="http://embedthis.com/images/pak.png">
 
-http://files.softicons.com/download/business-icons/ecommerce-and-business-icons-by-designcontest.com/png/128x128/packaging.png
-
 Pak is a package manager for ESP/EJS implementing the CommonJS Package specification.
 Pak uses Git as back-end storage for packages.
 
