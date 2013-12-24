@@ -1,11 +1,17 @@
-<h1>{{id ? "Edit" : "Create"}} Pak</h1>
-<form name="pakForm" class="form-horizontal">
-    <esp-input-group class="form-control" ng-model="pak"></esp-input-group>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <button class="btn btn-primary" ng-click='save()'>OK</button>
-            <button class="btn" esp-click="/">Cancel</button>
-            <button class="btn" ng-show="id" ng-click='remove({{pak.id}})'>Delete</button>
+<ul class="breadcrumb">
+    <li><a href="#/pak/list">Paks</a></li>
+    <li><i class="icon-home"></i> <a href="#">Home</a></li>
+</ul>
+<div class="panel">
+    <h1>{{id ? "Edit" : "Create"}} Pak</h1>
+    <form name="pakForm" class="form-horizontal">
+        <esp-input-group class="form-control" fields="name,endpoint" ng-model="pak"></esp-input-group>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-primary" ng-click='save()'>OK</button>
+                <button class="btn" esp-click="/pak/list">Cancel</button>
+                <button class="btn" ng-show="id" ng-click="remove('{{pak.id}}')">Delete</button>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>

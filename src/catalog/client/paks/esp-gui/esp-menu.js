@@ -20,17 +20,19 @@ angular.module('esp.menu', [])
                     angular.forEach(attrs.$attr, function(value, key){
                         attributes += ' ' + value + '="' + attrs[key] + '"';
                     });
-                    var arrow = sub = toggle = href = '';
-                    // var show = attrs.ngShow ? (' ng-show="' + attrs.ngShow + '"') : '';
+                    var arrow, sub, toggle, href;
                     if (child.length) {
                         var id = '$esp_menu_' + nextId++;
-                        toggle = ' ng-click="' + id + '=!' + id + '"';
-                        sub = '<ul class="nested" ng-show="' + id + '"></ul>';
                         arrow = '<i class="arrow fa" ng-class="{\'fa-caret-down\':' + id + 
                                 ', \'fa-caret-left\': !' + id + '}""></i>';
                         href = '';
+                        sub = '<ul class="nested" ng-show="' + id + '"></ul>';
+                        toggle = ' ng-click="' + id + '=!' + id + '"';
                     } else {
+                        arrow = '';
                         href = '#' + attrs.href;
+                        sub = '<span></span>';
+                        toggle = '';
                     }
                     var active = ' ng-class="{selected: path() == \'' + attrs.href + '\'}"';
                     var html = '<li' + attributes + active + '>' + 
@@ -44,7 +46,9 @@ angular.module('esp.menu', [])
                     var newelt = angular.element(html);
                     newelt.append(subelt);
                     $compile(newelt)(scope);
-                    element.replaceWith(newelt);
+                    try {
+                        element.replaceWith(newelt);
+                    } catch (e) {}
                 });
             };
         },

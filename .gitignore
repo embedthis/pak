@@ -24,3 +24,6 @@ macosx-*
 projects/*mine*
 src/catalog/cache
 *.tmp
+all*.gz
+all*.css
+all*.js

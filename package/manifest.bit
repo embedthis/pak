@@ -34,7 +34,7 @@ Bit.load({
 
         files: [ 
             /* Binary Set */
-            {   from:   '${BIN}/bit${EXE}',
+            {   from:   '${BIN}/pak${EXE}',
                 to:     '${abin}/',
                 linkin: '${bin}',
                 set:    'core',
@@ -55,21 +55,12 @@ Bit.load({
             },{ from: [
                     '${BIN}/ca.crt',
                     '${BIN}/ejs.mod',
+                    '${BIN}/pak.mod',
                 ],
                 to:     '${abin}/',
                 set:    'core',
 
-            },{ from:   'bits/**',
-                to:     '${abin}/bits',
-                subtree:'bits',
-                set:    'core',
-
-            },{ from:   '${BIN}/bits/bit.mod',
-                to:     '${abin}/bits/',
-                set:    'core',
-                enable: false,
-
-            },{ from:   'doc/man/bit.1',
+            },{ from:   'doc/man/pak.1',
                 to:     '${adoc}/man/man1/',
                 set:    'doc',
                 linkin: '${man}/man1',
@@ -87,7 +78,7 @@ Bit.load({
                 permissions: 0755,     
                 set:    'source',
 
-            },{ from:   [ 'Makefile', 'make.bat', 'main.bit', 'package.json', 'bits', 'src', 'doc', 'projects', 'package' ],
+            },{ from:   [ 'Makefile', 'make.bat', 'main.bit', 'package.json', 'src', 'doc', 'projects', 'package' ],
                 to:     '${src}/',
                 set:    'source',
             },

@@ -157,7 +157,7 @@ class PakCmd
             '    edit key[=value]...      # Edit a pak description file \n' +
             '    help                     # Display this usage help\n' +
             '    info paks...             # Display README for a pak\n' +
-            '    init                     # Create a new package.json\n' +
+            '    init [name [version]]    # Create a new package.json\n' +
             '    install paks...          # Install a pak on the local system\n' +
             '    list [paks...]           # list installed paks\n' +
             '    prune [paks...]          # Prune named paks\n' +
@@ -282,6 +282,7 @@ class PakCmd
                         /* Use name from package.json so directory can be any name */
                         let spec = Package.readSpec(name)
                         pak.name = spec.name
+
                         pak.resolve()
                     }
                     cache(pak)
@@ -350,7 +351,7 @@ class PakCmd
             } else {
                 let spec = Package.readSpec('.')
                 for each (name in rest) {
-                    let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
+                    let criteria = (spec && spec.dependencies && spec.dependencies[name]) || '*'
                     let pak = Package(name)
                     pak.resolve(criteria)
                     install(pak)
@@ -1605,9 +1606,9 @@ class PakCmd
     function error(msg) App.log.error(msg)
 
     private var PakTemplate = {
-        name: 'One word package name',
-        title: 'Multiword package title',
-        description: 'Package description',
+        name: 'Package name - one word',
+        title: 'Package title - several words',
+        description: 'Package description - one line',
         version: '1.0.0',
         keywords: [
             'Put search keywords here',
@@ -1629,7 +1630,7 @@ class PakCmd
 }
 
 function qtrace(tag: String, ...args): Void {
-    if (!options.quiet) {
+    if (!options.silent) {
         let msg = args.join(' ')
         let msg = '%12s %s' % (['[' + tag + ']'] + [msg]) + '\n'
         out.write(msg)
@@ -1637,7 +1638,7 @@ function qtrace(tag: String, ...args): Void {
 }
 
 function trace(tag: String, ...args) {
-    if (!options.silent) {
+    if (!options.quiet) {
         let msg = args.join(' ')
         let msg = '%12s %s' % (['[' + tag + ']'] + [msg]) + '\n'
         out.write(msg)

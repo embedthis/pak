@@ -86,7 +86,7 @@ static void logout() {
     sendResult(1);
 }
 
-ESP_EXPORT int esp_controller_kickstart_user(HttpRoute *route, MprModule *module) 
+ESP_EXPORT int esp_controller_catalog_user(HttpRoute *route, MprModule *module) 
 {
     Edi     *edi;
 

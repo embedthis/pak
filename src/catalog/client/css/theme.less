@@ -2,17 +2,18 @@
     theme.less - Application theme variables
  */
 
+@grid-float-breakpoint: 0;
+@screen-xs-max: 0;
+
 // Paths
 // -------------------------
-
-@FontAwesomePath: "../paks/font-awesome/font";
+@fa-font-path: "../paks/font-awesome/font";
 @icon-font-path:  "../paks/bootstrap/fonts/";
 
 // Scaffolding
 // -------------------------
-
 @body-bg:               #fff;
-@text-color:            @gray-dark;
+@text-color:            #222233;		// MOB @gray-dark;
 
 // Links
 // -------------------------
@@ -25,7 +26,7 @@
 
 @error-color:                   #FF0000;
 @feedback-error-background:     @error-color;
-@feedback-inform-background:    #306020;
+@feedback-inform-background:    #035703;
 @feedback-warning-background:   #FF8020;
 
 // Grays
@@ -36,6 +37,7 @@
 @gray:                   lighten(#000, 33.5%); // #555
 @gray-light:             lighten(#000, 60%);   // #999
 @gray-lighter:           lighten(#000, 93.5%); // #eee
+@gray-lightest:          lighten(#000, 96.0%); // #f5f5f5
 
 // Brand colors
 // -------------------------
@@ -57,7 +59,13 @@
 @font-size-base:          14px;
 @font-size-large:         ceil(@font-size-base * 1.25); // ~18px
 @font-size-larger:        ceil(@font-size-base * 1.5);  // ~21px
-@font-size-small:         ceil(@font-size-base * 0.85); // ~12px
+@font-size-largest:       ceil(@font-size-base * 2.0);  // ~28px
+@font-size-huge:       	  ceil(@font-size-base * 3.05); // ~42px
+@font-size-small:         ceil(@font-size-base * 0.85); // ~36px
+@font-size-smaller:       ceil(@font-size-base * 0.78); // ~11px
+@font-size-smallest:      ceil(@font-size-base * 0.65); // ~10px
+
+@font-size-counter:		  @font-size-huge;
 
 @line-height-base:        1.428571429; // 20/14
 @line-height-computed:    floor(@font-size-base * @line-height-base); // ~20px
@@ -103,12 +111,12 @@
 @table-cell-padding:                 8px;
 @table-condensed-cell-padding:       5px;
 
-@table-bg:                           transparent; // overall background-color
-@table-bg-accent:                    #f9f9f9; // for striping
-@table-bg-hover:                     #f5f5f5;
+@table-bg:                           @gray-lightest; 				//MOB transparent; // overall background-color
+@table-bg-accent:                    white; 						//MOB #f9f9f9; // for striping
+@table-bg-hover:                     lighten(@gray-light, 25%);		//MOB #f5f5f5;
 @table-bg-active:                    @table-bg-hover;
 
-@table-border-color:                 #ddd; // table and cell border
+@table-border-color:                 #9AC; 							// MOB #ddd; // table and cell border
 
 
 // Buttons
@@ -237,7 +245,7 @@
 // Number of columns in the grid system
 @grid-columns:              12;
 // Padding, to be divided by two and applied to the left and right of all columns
-@grid-gutter-width:         30px;
+@grid-gutter-width:         20px;	//MOB 30px;
 // Point at which the navbar stops collapsing
 @grid-float-breakpoint:     @screen-tablet;
 
@@ -265,7 +273,7 @@
 @navbar-default-link-disabled-bg:          transparent;
 
 // Navbar brand label
-@navbar-default-brand-color:               @navbar-default-link-color;
+@navbar-default-brand-color:               lighten(@navbar-inverse-bg, 35%);		//MOB was @navbar-default-link-color;
 @navbar-default-brand-hover-color:         darken(@navbar-default-link-color, 10%);
 @navbar-default-brand-hover-bg:            transparent;
 
@@ -279,7 +287,7 @@
 //
 // Reset inverted navbar basics
 @navbar-inverse-color:                      @gray-light;
-@navbar-inverse-bg:                         #222;
+@navbar-inverse-bg:                         #222; // #1f3442; // MOB was #222;
 @navbar-inverse-border:                     darken(@navbar-inverse-bg, 10%);
 
 // Inverted navbar links
@@ -298,7 +306,7 @@
 
 // Inverted navbar search
 // Normal navbar needs no special styles or vars
-@navbar-inverse-search-bg:                  lighten(@navbar-inverse-bg, 25%);
+@navbar-inverse-search-bg:                  lighten(@navbar-inverse-bg, 5%);
 @navbar-inverse-search-bg-focus:            #fff;
 @navbar-inverse-search-border:              @navbar-inverse-bg;
 @navbar-inverse-search-placeholder-color:   #ccc;
@@ -323,6 +331,16 @@
 
 // Tabs
 @nav-tabs-border-color:                     #ddd;
+@nav-tabs-border-top-color:                 #424242;
+@nav-tabs-border-bottom-color:              #282828;
+@nav-tabs-active-border-top-color:          #100000;
+@nav-tabs-active-border-bottom-color:       #503030;
+
+/* 
+    Borders for dark backgrounds: tissue, zigzag 
+	@nav-tabs-border-top-color:             #313131;
+	@nav-tabs-border-bottom-color:          #101010;
+ */
 
 @nav-tabs-link-hover-border-color:          @gray-lighter;
 
@@ -336,6 +354,13 @@
 // Pills
 @nav-pills-active-link-hover-bg:            @component-active-bg;
 @nav-pills-active-link-hover-color:         #fff;
+
+/*
+	Stacked
+ */
+@nav-tabs-stacked-active-border-color:   	#D12610;
+@nav-tabs-stacked-hover-bg:                 black;
+@nav-tabs-stacked-hover-border-color:       #252728;
 
 
 // Pagination
@@ -376,6 +401,7 @@
 @state-warning-bg:               #fcf8e3;
 @state-warning-border:           darken(spin(@state-warning-bg, -10), 3%);
 
+@state-danger-text:              #b94a48;
 @state-danger-text:              #b94a48;
 @state-danger-bg:                #f2dede;
 @state-danger-border:            darken(spin(@state-danger-bg, -10), 3%);
@@ -561,7 +587,7 @@
 // Breadcrumbs
 // -------------------------
 @breadcrumb-bg:               #f5f5f5;
-@breadcrumb-color:            #ccc;
+@breadcrumb-color:            #5D8BB0568BE3;		//	MOB #ccc;
 @breadcrumb-active-color:     @gray-light;
 
 

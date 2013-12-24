@@ -26,8 +26,15 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $r
     }
 
     $scope.remove = function() {
-        Pak.remove({id: $scope.id}, function(response) {
-            $location.path("/");
+        $modal.open({
+            scope: $scope,
+            template: '<esp-confirm header="Are you sure?" body="Do you want to remove pak: {{pak.name}}?" ok="Delete Pak">',
+        }).result.then(function(result) {
+            if (result) {
+                Pak.remove({id: $scope.user.id}, function(response) {
+                    $location.path("/");
+                });
+            }
         });
     };
 
@@ -49,6 +56,8 @@ angular.module('app').config(function($routeProvider) {
         controller: 'PakControl',
         resolve: { action: 'Esp' },
     };
-    $routeProvider.when('/', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-list.html')}));
+    $routeProvider.when('/pak/list', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-list.html')}));
     $routeProvider.when('/pak/:id', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-edit.html')}));
+    $routeProvider.when('/pak/', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-edit.html')}));
+    // $routeProvider.when('/', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-list.html')}));
 });

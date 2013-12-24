@@ -13,13 +13,15 @@ angular.module('app').controller('UserControl', function (Esp, User, $rootScope,
         Setup form select dropdowns
      */
     $scope.options = { roles: {}};
-    angular.forEach(Esp.config.login.abilities, function(value, key) {
-        $scope.options.roles[key] = key;
-        $scope.options[key] = {
-            "true":  "Enabled",
-            "false": "Disabled",
-        };
-    })
+    if (Esp.config.login) {
+        angular.forEach(Esp.config.login.abilities, function(value, key) {
+            $scope.options.roles[key] = key;
+            $scope.options[key] = {
+                "true":  "Enabled",
+                "false": "Disabled",
+            };
+        })
+    }
     $scope.user = {};
 
     if (Esp.user || !Esp.config.loginRequired) {

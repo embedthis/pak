@@ -1,0 +1,9 @@
+{
+    "name": "esp-mgr",
+    "description": "ESP Management Console Skeleton",
+    "version": "0.8.0",
+    "dependencies": {
+        "esp-best": "*",
+        "esp-gui": "*"
+    },
+}

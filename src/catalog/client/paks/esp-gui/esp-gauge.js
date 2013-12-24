@@ -25,9 +25,11 @@ angular.module('esp.gauge', [])
         },
         template: '<canvas>' + 'This text is displayed if your browser does not support HTML5 Canvas.' + '</canvas>',
         link: function (scope, element, attrs) {
+            var box = element[0]
             var children = element.children();
             var e = children[0];
             var c = e.getContext('2d');
+            var styles = window.getComputedStyle(box, null);
 
             scope.lastUpdate = Date.now();
             scope.current = 0;
@@ -38,22 +40,23 @@ angular.module('esp.gauge', [])
              */
             angular.extend(scope, {
                 highlight: '#60A8D8', 
-                height: element.css('height'),
-                width: element.css('width'),
+                height: box.clientHeight,
+                width: box.clientWidth,
                 period: 1000,
             }, attrs);
+
             c.canvas.height = scope.height = parseInt(scope.height);
             c.canvas.width = scope.width = parseInt(scope.width);
 
             var w = angular.element($window);
             w.bind('resize', function() {
-                c.canvas.width = scope.width = parseInt(element.css('width'));
+                c.canvas.width = scope.width = parseInt(box.clientWidth);
             });
             if (!scope.background) {
-                scope.background = Esp.rgb2hex(element.css('background-color'));
+                scope.background = Esp.rgb2hex(styles['background-color']);
             }
             if (!scope.color) {
-                scope.color = Esp.rgb2hex(element.css('color'));
+                scope.color = Esp.rgb2hex(styles['color']);
             }
             scope.draw = function() {
                 var value = scope.current;
@@ -73,9 +76,9 @@ angular.module('esp.gauge', [])
                 var sweep = 0.7 * Math.PI;
                 var startAngle = (1.5 * Math.PI) - (sweep / 2);
                 var endAngle = (1.5 * Math.PI) + (sweep / 2);
-                var font = element.css('font-family').split(',')[0]; 
-                var fontSize = parseInt(element.css('font-size'));
-                var fontWeight = element.css('font-weight');
+                var font = styles['font-family'].split(',')[0]; 
+                var fontSize = parseInt(styles['font-size']);
+                var fontWeight = styles['font-weight'];
 
                 c.save();
                 c.fillStyle = scope.background;

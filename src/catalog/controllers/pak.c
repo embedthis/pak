@@ -17,7 +17,11 @@ static void createPak() {
     Get a resource
  */
 static void getPak() { 
-    sendRec(readRec("pak", param("id")));
+    EdiRec  *rec;
+
+    rec = readRec("pak", param("id"));
+    ediFilterRecFields(rec, "password", 0);
+    sendRec(rec);
 }
 
 /*
@@ -31,7 +35,11 @@ static void initPak() {
     List the resources in this group
  */
 static void listPak() {
-    sendGrid(readTable("pak"));
+    EdiGrid     *grid;
+
+    grid = readTable("pak");
+    ediFilterGridFields(grid, "password", 0);
+    sendGrid(grid);
 }
 
 /*
@@ -144,7 +152,10 @@ static void retractPackage() {
 /*
     Dynamic module initialization
  */
-ESP_EXPORT int esp_controller_catalog_pak(HttpRoute *route, MprModule *module) {
+ESP_EXPORT int esp_controller_catalog_pak(HttpRoute *route, MprModule *module) 
+{
+    HttpRoute   *rp;
+
     espDefineAction(route, "pak-create", createPak);
     espDefineAction(route, "pak-get", getPak);
     espDefineAction(route, "pak-init", initPak);
@@ -155,6 +166,10 @@ ESP_EXPORT int esp_controller_catalog_pak(HttpRoute *route, MprModule *module) {
     espDefineAction(route, "pak-cmd-publish", publishPackage);
     espDefineAction(route, "pak-cmd-retract", retractPackage);
     espDefineAction(route, "pak-cmd-lookup", getCatalog);
+
+    if ((rp = httpLookupRoute(route->host, "/do/*/default")) != 0) {
+        rp->flags &= ~HTTP_ROUTE_XSRF;
+    }
     
 #if SAMPLE_VALIDATIONS
     Edi *edi = espGetRouteDatabase(route);

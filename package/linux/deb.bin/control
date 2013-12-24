@@ -4,14 +4,13 @@ Section: devel
 Priority: optional
 Architecture: ${platform.mappedCpu}
 Depends: libc6
-Provides: bit
-Replaces: bit
-Conflicts: bit
+Provides: pak
+Replaces: pak
+Conflicts: pak
 Installed-Size: 10
 Maintainer: Embedthis Development <dev@embedthis.com>
-Description: Embedthis Ejscript
- Bit is a modern replacement for the autoconf and make utilities. It uses Javascript to describe projects with smart defaults. 
- It then builds directly, or generates makefiles, and IDE projects.
+Description: Embedthis Bit
+ Pak is a simple package manager for ESP/EJS.
  .
- more information about Embedthis Bit can be found at:
+ more information about Embedthis Pak can be found at:
  <URL:http://embedthis.com>

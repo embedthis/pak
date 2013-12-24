@@ -1,7 +1,7 @@
 #
 #	RPM spec file for ${settings.title}
 #
-Summary: ${settings.title} -- A modern replacement for the autoconf and make tools
+Summary: ${settings.title} -- A simple package manager for ESP/EJS
 Name: ${settings.product}
 Version: ${settings.version}
 Release: ${settings.buildNumber}

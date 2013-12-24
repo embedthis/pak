@@ -3,19 +3,20 @@
     "description": "catalog",
     "version": "0.8.0",
     "dependencies": {
-        "angular": "1.2.0",
-        "angular-bootstrap": "1.2.0",
-        "bootstrap": "3.0.0",
-        "esp-angular": "4.5.0",
-        "esp-angular-mvc": "4.5.0",
+        "angular": "~1.2",
+        "angular-bootstrap": "~0.7",
+        "bootstrap": ">=3.0.0",
+        "esp-angular": "*",
+        "esp-angular-mvc": "*",
         "esp-best": "0.8.0",
         "esp-gui": "0.8.0",
-        "esp-server": "4.5.0",
+        "esp-mgr": "~0.8",
+        "esp-server": "*",
         "esp-user": "0.8.0",
-        "font-awesome": "3.2.1",
+        "font-awesome": "4.0.0",
         "html5shiv": "3.6.2",
-        "less": "1.3.3",
-        "more": "0.0.2",
+        "less": ">=1.3.3",
+        "more": "*",
         "respond": "1.1.0"
     },
     "client-scripts": [
@@ -26,10 +27,12 @@
         "app/main.js",
         "app/*/**.js",
         "paks/less/less.js",
-        "paks/angular-bootstrap/*.js",
         "paks/html5shiv/html5shiv.js",
         "paks/respond/respond.js",
-        "paks/esp-gui/*.js"
+        "paks/esp-gui/*.js",
+        "paks/angular-bootstrap/*.js",
+        "app/*/**.js*",
+        "paks/html5shiv.js"
     ],
     "dirs": {
         "client": "client",
@@ -66,7 +69,7 @@
         }
     },
     "esp": {
-        "_auth": "app",
+        "auth": "app",
         "formats": {
             "date": "yyyy-MM-dd",
             "float": 2,
@@ -79,7 +82,7 @@
         "timeouts": {
             "session": 300
         },
-        "xsrf": false,
+        "xsrf": true,
         "server": {
             "database": "mdb://catalog.mdb",
             "_redirect": "secure",
@@ -92,7 +95,54 @@
                 "controller": true,
                 "migration": true,
                 "view": false
-            },
+            }
         },
-    },
+        "appPrefix": "",
+        "prefix": "/do",
+        "mode": "debug",
+        "modes": {
+            "debug": {
+                "flat": false,
+                "showErrors": true,
+                "keepSource": true,
+                "update": true,
+                "login": {
+                    "name": "",
+                    "abilities": {
+                        "edit": true,
+                        "view": true
+                    }
+                }
+            },
+            "release": {
+                "flat": true,
+                "cache": 86400,
+                "compressed": true,
+                "showErrors": false,
+                "update": false,
+                "keepSource": false,
+                "login": {
+                    "name": "",
+                    "abilities": {
+                        "edit": true,
+                        "view": true
+                    }
+                }
+            }
+        },
+        "flat": false,
+        "showErrors": true,
+        "keepSource": true,
+        "update": true,
+        "login": {
+            "name": "",
+            "abilities": {
+                "edit": true,
+                "view": true
+            }
+        },
+        "esp": {
+            "mode": "debug"
+        }
+    }
 }

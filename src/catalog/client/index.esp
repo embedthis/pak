@@ -7,12 +7,32 @@
     <% stylesheets(NULL); %>
 </head>
 <body data-config='<% renderConfig(); %>' id='body'>
-    <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="navbar-header">
-            <a class="navbar-brand ng-cloak" href="#">Pak Catalog</a>
-        </div>
-    </nav>
+    <header>
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="navbar-header">
+                <a class="navbar-brand ng-cloak" href="#">Pak Catalog</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right ng-cloak">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" ng-cloak>{{Esp.user.name || 'guest'}} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a ng-href="#/user/{{Esp.user ? 'logout' : 'login'}}"><i class="fa fa-power-off"></i> {{Esp.user ?     'Sign out' : 'Sign in'}}</a></li>
+                        </ul>
+                    </li>
+                    <li><a href=""><i class="fa fa-question"></i></a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
     <main class="container ng-cloak">
+        <nav class="sidebar nav-collapse col-sm-2" ng-show="true">
+            <ul class="nav nav-tabs nav-stacked">
+                <esp-menu href="/" value="Search" icon="fa fa-search"></esp-menu>
+                <esp-menu href="/pak/list" value="My Paks" icon="fa fa-sitemap"></esp-menu>
+                <esp-menu ng-show="Esp.can('edit')" href="/setting" value="Profile" icon="glyphicon glyphicon-cog"></esp-menu>
+            </ul>
+        </nav>
         <section class="col-md-10 content">
             <div ng-view class="ng-cloak"></div>
         </section>
