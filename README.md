@@ -2,8 +2,14 @@
 
 <img align="right" height="300" src="http://embedthis.com/images/pak.png">
 
-Pak is a package manager for ESP/EJS implementing the CommonJS Package specification.
-Pak uses Git as back-end storage for packages.
+
+Pak is a simple package manager for embedding components into ESP/EJS applications. 
+It makes it easy to retrieve, integrate and manage components for applications. Pak focusses on embedded applications using
+ESP and EJS. It provides tested, integrated componens that work together. It is not intended
+as a generic package manager to install complete applications.
+
+Pak is a package manager for ESP/EJS implementing the CommonJS Package specification and 
+uses Git as back-end storage for packages. Pak calls packages "paks". This is not a misspelling.
 
 ## Usage
 
