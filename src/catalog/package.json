@@ -86,7 +86,7 @@
         "xsrf": true,
         "server": {
             "database": "mdb://catalog.mdb",
-            "_redirect": "secure",
+            "redirect": "secure",
             "generate": {
                 "top": "angular-mvc",
                 "scaffold": true,

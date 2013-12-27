@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xng-csp>
+<html lang="en" ng-csp>
 <head>
     <title>Pak Catalog</title>
     <meta charset="utf-8" />
@@ -9,7 +9,7 @@
 <body data-config='<% renderConfig(); %>' id='body' ng-cloak>
     <main class="container">
         <nav class="status" ng-controller="PakControl">
-            <a href="#/auth/{{Esp.user ? 'logout' : 'login'}}"> 
+            <a href="#/auth/{{Esp.user ? 'logout' : 'login'}}" ng-cloak>
                 {{authname()}} 
                 <i class="fa fa-sign-out"></i> 
             </a>
@@ -19,7 +19,7 @@
         </section>
     </main>
     <div ng-repeat="(field, msg) in feedback">
-        <span class="ng-hide-remove" ng-class="'feedback-' + field">{{msg}}</span>       
+        <span class="ng-hide-remove" ng-class="'feedback-' + field" ng-cloak>{{msg}}</span>       
     </div> 
     <% scripts(NULL); %>
 </body>

@@ -8,7 +8,6 @@
     "export": [
         "client/**",
         "templates/**",
-        "appweb.conf",
         "start.bit"
     ],
     "client-scripts": [

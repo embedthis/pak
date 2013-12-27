@@ -45,7 +45,7 @@ class PakCmd
     /* This layers over App.config */
     private var defaultConfig = {
         catalogs: [ 
-            'http://embedthis.com/catalog/pak',
+            'https://embedthis.com/catalog/pak',
             'https://bower.herokuapp.com/packages',
         ],
         publish: 'http://embedthis.com/pak/do/catalog/publish',
@@ -1170,6 +1170,8 @@ class PakCmd
         http.setHeader('Content-Type', 'application/json');
         try {
             qtrace('Publish', pak.name + ' ' + pak.cacheVersion + ' at ' + uri)
+//  TODO - while using a test cert
+http.verifyIssuer = false
             http.post(uri + '/publish', serialize(data))
             let response = deserialize(http.response)
             if (response.error) {
