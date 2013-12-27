@@ -46,6 +46,9 @@
             It makes it easy to retrieve, integrate and manage components for applications. Pak focusses on embedded 
             applications using ESP and EJS. It provides tested, integrated componens that work together. It is not intended
             as a generic package manager to install complete applications.</p>
+
+            <p>Pak implements the CommonJS Package specification and 
+                uses Git as back-end storage for packages. Pak calls packages "paks". This is not a misspelling.</p>
             <h4>Why Pak?</h4>
             <p>Existing package managers like Bower are excellent, but the published components are typically tuned for enterprise 
             environments and not for embedded use. Pak focusses on the embedded ESP and ESP web frameworks and offers components
@@ -76,6 +79,7 @@
             <h2>Download</h2>
             <p>Download from <a href="http://embedthis.com/products/pak/">http://embedthis.com/products/pak/</a> or get the 
             source from <a href="https://github.com/embedthis/pak">https://github.com/embedthis/pak</a>.
+
             <h2>Basic Usage</h2>
             <h4>Installing Paks</h4>
             <p>To install named paks:</p>
@@ -102,6 +106,7 @@
             <pre>pak cache Name</pre>
             <h4>To prune old versions from the cache</h4>
             <pre>pak prune</pre>
+
             <h2>Configuration</h2>
             <h4>To show the Pak configuration</h4>
             On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak. To
@@ -127,6 +132,64 @@
 ../pakrc and ../.pakrc and up the parent directory chain
 /etc/pakrc</pre>
             <p>It also loads the package.json from the current directory and will use any "catalogs" or "dirs" definitions.</p>
+
+            <h2>Publishing Paks</h2>
+            <p>To publish a new pak, create your package.json and then run pak in your new pak directory.
+            <pre>pak publish NAME ENDPOINT PASSWORD</pre>
+            <p>The NAME is the globally unique name for your package. It may contain "-", "_" or "." characters.
+            Check the <a href="http://embedthis.com/pak/catalog">Pak Catalog</a> for currently published Pak
+            names.</p>
+            <p>The ENDPOINT is a valid GitHub endpoint that hosts your pak contents. The PASSWORD is the 
+            password to use to manage this pak in the catalog. Choose and protect this password carefully and
+            then use it to modify or retract your pak in the catalog.</p>
+
+            <h2>Package.json</h2>
+            <p>The package.json file defines a pak. It defines the package name, version, authoring details
+            and dependencies. The format is specified by
+                <a href="http://wiki.commonjs.org/wiki/Packages/1.1">
+                http://wiki.commonjs.org/wiki/Packages/1.1</a>. For example:
+<pre>{
+    "name": "Package name - one word"
+    "description": "Package description - one line"
+    "version": "1.2.3",
+    "keywords": [
+        "comms", "websockets", "sockets", "ssl",
+    ],
+    "author": {
+        "name": "Your name",
+        "email": "Your email",
+        "url": "Your web site"
+    },
+    "bugs": {
+        "email": "name@example.com",
+        "url": "http://example.com/bugs"
+    },
+    "license": "GPL",
+    "dependencies": {
+        "name": "version"
+    }
+}</pre>
+            <p>At a minimum, a package.json must have a "name", "description" and "version". Other fields
+            are optional.</p>
+            <h4>Custom Fields</h4>
+            <p>Pak supports several custom fields in the package.json file.</p>
+            <ul>
+            <li>client-scripts &mdash; this is the list of Javascripts that a web application would like
+                served. The ESP web framework automatically includes these when rendering a scripts() call.</li>
+            <li>files &mdash; list of files to include when caching and installing the pak</li>
+            <li>ignore &mdash; list of files to exclude when caching and installing the pak</li>
+            <li>mode &mdash; execution mode. Set to "debug" or "release"</li>
+            <li>modes &mdash; collection of properties that are copied to the "esp" property depending on
+                the execution "mode".</li>
+            <li>esp &mdash; properties made available to ESP applications</li>
+            </ul>
+            <p>For more details, see:</p>
+            <ul>
+                <li><a href=" http://package.json.nodejitsu.com">http://package.json.nodejitsu.com</a></li>
+                <li><a href="http://wiki.commonjs.org/wiki/Packages/1.1">http://wiki.commonjs.org/wiki/Packages/1.1</a></li>
+                <li><a href="https://npmjs.org/doc/json.html">https://npmjs.org/doc/json.html</a></li>
+            </ul>
+
             <h2>Commands</h2>
             <p>The Pak command has the following commands:</>
             <ul>

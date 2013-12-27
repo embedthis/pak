@@ -3,6 +3,7 @@
  */
 #include "esp.h"
 
+#if UNUSED
 static void createUser() { 
     if (canUser("edit", 1)) {
         setParam("password", mprMakePassword(param("password"), 0, 0));
@@ -11,8 +12,10 @@ static void createUser() {
 }
 
 static void getUser() { 
-    /* Don't send the real password back to the user */
-    sendRec(setField(readRec("user", param("id")), "password", "   n o t p a s s w o r d   "));
+    EdiRec  *rec;
+    rec = readRec("user", param("id"));
+    //  MOB - should have filterRec, filterGrid
+    sendRec(ediFilterRecFields(rec, "password", 0));
 }
 
 static void indexUser() {
@@ -69,13 +72,13 @@ static void forgot() {
         sendResult(feedback("inform", "Password reset details sent."));
     }
 }
+#endif
 
 static void login() {
-    bool        remember = smatch(param("remember"), "true");
     HttpConn    *conn = getConn();
     if (httpLogin(conn, param("username"), param("password"))) {
-        render("{\"error\": 0, \"user\": {\"name\": \"%s\", \"abilities\": %s, \"remember\": %s}}", conn->username,
-            mprSerialize(conn->user->abilities, MPR_JSON_QUOTES), remember ? "true" : "false");
+        render("{\"error\": 0, \"user\": {\"name\": \"%s\", \"abilities\": %s}}", conn->username,
+            mprSerialize(conn->user->abilities, MPR_JSON_QUOTES));
     } else {
         sendResult(feedback("error", "Invalid Login"));
     }       
@@ -89,7 +92,7 @@ static void logout() {
 ESP_EXPORT int esp_controller_catalog_user(HttpRoute *route, MprModule *module) 
 {
     Edi     *edi;
-
+#if UNUSED
     espDefineAction(route, "user-create", createUser);
     espDefineAction(route, "user-get", getUser);
     espDefineAction(route, "user-list", listUsers);
@@ -100,9 +103,10 @@ ESP_EXPORT int esp_controller_catalog_user(HttpRoute *route, MprModule *module)
     espDefineAction(route, "user-update", updateUser);
 
     espDefineAction(route, "user-cmd-forgot", forgot);
+#endif
     espDefineAction(route, "user-cmd-login", login);
     espDefineAction(route, "user-cmd-logout", logout);
-
+#if UNUSED
     edi = espGetRouteDatabase(route);
     ediAddValidation(edi, "present", "user", "username", 0);
     ediAddValidation(edi, "unique", "user", "username", 0);
@@ -110,5 +114,6 @@ ESP_EXPORT int esp_controller_catalog_user(HttpRoute *route, MprModule *module)
     ediAddValidation(edi, "format", "user", "email", ".*@.*");
     ediAddValidation(edi, "unique", "user", "email", 0);
     ediAddValidation(edi, "present", "user", "roles", 0);
+#endif
     return 0;
 }

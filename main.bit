@@ -4,11 +4,11 @@
 
 Bit.load({
     blend: [
-        "src/paks/est/est.bit",
-        "src/paks/mpr/mpr.bit",
-        "src/paks/pcre/pcre.bit",
-        "src/paks/http/http.bit",
-        "src/paks/ejs/ejs.bit",
+        "src/cmd/paks/est/est.bit",
+        "src/cmd/paks/mpr/mpr.bit",
+        "src/cmd/paks/pcre/pcre.bit",
+        "src/cmd/paks/http/http.bit",
+        "src/cmd/paks/ejs/ejs.bit",
         "doc/doc.bit",
         "${BITS}/embedthis.bit",
     ],
@@ -85,16 +85,6 @@ Bit.load({
                 The default is to enable logging for both debug and release builds.                        
              */                                                                                            
             logging: true,                                                                                 
-
-            /*                                                                                             
-                Enable debug trace and asserts to the log file.                                            
-                This is enabled by default for debug builds.                                               
-             */                                                                                            
-            // tracing: true,                                                                             
-
-            alloc: {
-                parallel: true
-            },
         },
 
         tune: 'speed',
@@ -109,22 +99,22 @@ Bit.load({
     targets: {
         'pak.mod': {
             path: '${BIN}/pak.mod',
-            files: [ 'src/*.es', 'src/paks/ejs-version/Version.es' ],
+            files: [ 'src/cmd/*.es', 'src/cmd/paks/ejs-version/Version.es' ],
             //  MOB - should be able to simplify this
             build: `
                 trace('Compile', 'src/*.es')
-                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 src/Package.es src/paks/ejs-version/Version.es src/pak.es')
+                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 ' + TARGET.cmdfiles)
             `,
-            'generate-nmake': `"${BIN}\\ejsc" --out "${BIN}/pak.mod" ${settings.esflags} --optimize 9 src/Package.es src/paks/ejs-version/Version.e src/pak.es`
-            'generate-sh': '${LBIN}/ejsc --out ${BIN}/pak.mod --optimize 9 src/Package.es src/paks/ejs-version/Version.es src/pak.es',
+            'generate-nmake': `"${BIN}\\ejsc" --out "${BIN}/pak.mod" ${settings.esflags} --optimize 9 ${target.cmdfiles}`,
+            'generate-sh': '${LBIN}/ejsc --out ${BIN}/pak.mod --optimize 9 ${target.cmdfiles}',
             depends: [ 'ejsc' ],
         },
 
         'pak': {
             type: 'exe',
             path: '${BIN}/pak${EXE}',
-            headers: [ 'src/*.h' ],
-            sources: [ 'src/*.c' ],
+            headers: [ 'src/cmd/*.h' ],
+            sources: [ 'src/cmd/pak.c' ],
             depends: [ 'libejs', 'pak.mod' ],
         },
 

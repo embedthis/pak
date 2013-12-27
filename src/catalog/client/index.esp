@@ -1,44 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" ng-csp>
+<html lang="en" xng-csp>
 <head>
     <title>Pak Catalog</title>
     <meta charset="utf-8" />
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
     <% stylesheets(NULL); %>
 </head>
-<body data-config='<% renderConfig(); %>' id='body'>
-    <header>
-        <nav class="navbar navbar-inverse navbar-static-top">
-            <div class="navbar-header">
-                <a class="navbar-brand ng-cloak" href="#">Pak Catalog</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right ng-cloak">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" ng-cloak>{{Esp.user.name || 'guest'}} <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a ng-href="#/user/{{Esp.user ? 'logout' : 'login'}}"><i class="fa fa-power-off"></i> {{Esp.user ?     'Sign out' : 'Sign in'}}</a></li>
-                        </ul>
-                    </li>
-                    <li><a href=""><i class="fa fa-question"></i></a></li>
-                </ul>
-            </div>
+<body data-config='<% renderConfig(); %>' id='body' ng-cloak>
+    <main class="container">
+        <nav class="status" ng-controller="PakControl">
+            <a href="#/user/{{Esp.user ? 'logout' : 'login'}}"> 
+                {{username()}} 
+                <i class="fa fa-sign-out"></i> 
+            </a>
         </nav>
-    </header>
-    <main class="container ng-cloak">
-        <nav class="sidebar nav-collapse col-sm-2" ng-show="true">
-            <ul class="nav nav-tabs nav-stacked">
-                <esp-menu href="/" value="Search" icon="fa fa-search"></esp-menu>
-                <esp-menu href="/pak/list" value="My Paks" icon="fa fa-sitemap"></esp-menu>
-                <esp-menu ng-show="Esp.can('edit')" href="/setting" value="Profile" icon="glyphicon glyphicon-cog"></esp-menu>
-            </ul>
-        </nav>
-        <section class="col-md-10 content">
-            <div ng-view class="ng-cloak"></div>
+        <section class="col-md-12 content">
+            <div ng-view></div>
         </section>
     </main>
     <div ng-repeat="(field, msg) in feedback">
-        <span class="ng-hide-remove" ng-class="'feedback-' + field" ng-cloak>{{msg}}</span>       
+        <span class="ng-hide-remove" ng-class="'feedback-' + field">{{msg}}</span>       
     </div> 
     <% scripts(NULL); %>
 </body>

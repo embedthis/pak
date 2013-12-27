@@ -21,58 +21,58 @@ angular.module('esp.input-group', [])
         link: function (scope, element, attrs) {
             var model = attrs.ngModel;
             scope.$watch('schema', function (val) {
-                if (scope.schema) {
-                    if (element.children().length == 0) {
-                        var attributes = "";
-                        angular.forEach(attrs.$attr, function(value, key){
-                            if (value == 'ng-model') return;
-                            attributes += ' ' + value + '="' + attrs[key] + '"';
-                        });
-                        var fields = scope.schema.columns;
-                        if (attrs.fields) {
-                            fields = attrs.fields.split(',');
-                        }
-                        var labels;
-                        if (attrs.labels) {
-                            labels = attrs.labels.split(',');
-                        }
-                        var classes;
-                        if (attrs.classes) {
-                            classes = attrs.classes.split(',');
-                        }
-                        var types;
-                        if (attrs.types) {
-                            types = attrs.types.split(',');
-                        }
-                        var filters;
-                        if (attrs.filters) {
-                            filters = attrs.filters.split(',');
-                        }
-                        var inputClasses;
-                        if (attrs.inputClasses) {
-                            inputClasses = attrs.inputClasses.split(',');
-                        }
-                        var labelClasses;
-                        if (attrs.labelClasses) {
-                            labelClasses = attrs.labelClasses.split(',');
-                        }
-                        angular.forEach(fields, function(field, key) {
-                            var i = 0 + key;
-                            var label = 'label="' + ((labels && labels[i]) ? labels[i] : Esp.titlecase(field)) + '"';
-                            var klass = (classes && classes[i]) ? ('class=' + classes[i]) : '';
-                            var type = (types && types[i]) ? ('type="' + types[i] + '"') : '';
-                            var filter = (filters && filters[i]) ? ('filter="' + filters[i] + '"') : '';
-                            var inputClass = (inputClasses && inputClasses[i]) ? ('inputClass="' + inputClasses[i] + '"') : '';
-                            var labelClass = (labelClasses && labelClasses[i]) ? ('labelClass="' + labelClasses[i] + '"') : '';
-                            var thisAtt = attributes + ' ng-model="' + model + '.' + field + '"';
-                            var html = '<esp-input' + thisAtt + ' ' + type + ' ' + label + ' ' + labelClass + ' ' +
-                                filter + ' ' + klass + '>\n';
-                            var newelt = angular.element(html);
-                            element.append(newelt);
-                            $compile(newelt)(scope);
-                            element.removeAttr('class');
-                        });
+                if (element.children().length == 0) {
+                    var attributes = "";
+                    angular.forEach(attrs.$attr, function(value, key){
+                        if (value == 'ng-model') return;
+                        attributes += ' ' + value + '="' + attrs[key] + '"';
+                    });
+                    var fields;
+                    if (attrs.fields) {
+                        fields = attrs.fields.split(',');
+                    } else if (scope.schema) {
+                        fields = scope.schema.columns;
                     }
+                    var labels;
+                    if (attrs.labels) {
+                        labels = attrs.labels.split(',');
+                    }
+                    var classes;
+                    if (attrs.classes) {
+                        classes = attrs.classes.split(',');
+                    }
+                    var types;
+                    if (attrs.types) {
+                        types = attrs.types.split(',');
+                    }
+                    var filters;
+                    if (attrs.filters) {
+                        filters = attrs.filters.split(',');
+                    }
+                    var inputClasses;
+                    if (attrs.inputClasses) {
+                        inputClasses = attrs.inputClasses.split(',');
+                    }
+                    var labelClasses;
+                    if (attrs.labelClasses) {
+                        labelClasses = attrs.labelClasses.split(',');
+                    }
+                    angular.forEach(fields, function(field, key) {
+                        var i = 0 + key;
+                        var label = 'label="' + ((labels && labels[i]) ? labels[i] : Esp.titlecase(field)) + '"';
+                        var klass = (classes && classes[i]) ? ('class=' + classes[i]) : '';
+                        var type = (types && types[i]) ? ('type="' + types[i] + '"') : '';
+                        var filter = (filters && filters[i]) ? ('filter="' + filters[i] + '"') : '';
+                        var inputClass = (inputClasses && inputClasses[i]) ? ('inputClass="' + inputClasses[i] + '"') : '';
+                        var labelClass = (labelClasses && labelClasses[i]) ? ('labelClass="' + labelClasses[i] + '"') : '';
+                        var thisAtt = attributes + ' ng-model="' + model + '.' + field + '"';
+                        var html = '<esp-input' + thisAtt + ' ' + type + ' ' + label + ' ' + labelClass + ' ' +
+                            filter + ' ' + klass + '>\n';
+                        var newelt = angular.element(html);
+                        element.append(newelt);
+                        $compile(newelt)(scope);
+                        element.removeAttr('class');
+                    });
                 }
             });
         },

@@ -8,7 +8,7 @@ It makes it easy to retrieve, integrate and manage components for applications. 
 ESP and EJS. It provides tested, integrated componens that work together. It is not intended
 as a generic package manager to install complete applications.
 
-Pak is a package manager for ESP/EJS implementing the CommonJS Package specification and 
+Pak implements the CommonJS Package specification and 
 uses Git as back-end storage for packages. Pak calls packages "paks". This is not a misspelling.
 
 ## Usage

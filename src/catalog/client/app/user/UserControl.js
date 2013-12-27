@@ -6,12 +6,12 @@
  
 'use strict';
 
-angular.module('app').controller('UserControl', function (Esp, User, $rootScope, $route, $scope, $location, $modal, $routeParams, $timeout) {
+angular.module('app').controller('UserControl', function (Esp, User, $rootScope, $route, $scope, $location, $modal, $routeParams, $timeout, $window) {
     angular.extend($scope, $routeParams);
 
     /*
         Setup form select dropdowns
-     */
+     UNUSED
     $scope.options = { roles: {}};
     if (Esp.config.login) {
         angular.forEach(Esp.config.login.abilities, function(value, key) {
@@ -22,7 +22,9 @@ angular.module('app').controller('UserControl', function (Esp, User, $rootScope,
             };
         })
     }
+    */
     $scope.user = {};
+    $scope.user.username = $rootScope.username || '';
 
     if (Esp.user || !Esp.config.loginRequired) {
         if ($scope.id) {
@@ -58,7 +60,7 @@ angular.module('app').controller('UserControl', function (Esp, User, $rootScope,
                 Esp.login(response.user);
                 dialog.dismiss();
                 if (Esp.referrer) {
-                    $location.path(Esp.referrer.$$route.originalPath);
+                    $window.location.href = Esp.referrer;
                     Esp.referrer = null;
                 } else {
                     $location.path("/");
@@ -82,7 +84,7 @@ angular.module('app').controller('UserControl', function (Esp, User, $rootScope,
             $location.path("/");
         }
     };
-
+/* UNUSED
     $scope.forgot = function() {
         var esp = angular.module('esp');
         var confirm = $modal.open({
@@ -109,6 +111,12 @@ angular.module('app').controller('UserControl', function (Esp, User, $rootScope,
                 });
             }
         });
+    };
+*/
+
+    $scope.dismiss = function(dialog) {
+        dialog.dismiss();
+        $location.path("/");
     };
 });
 

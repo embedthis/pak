@@ -3,6 +3,7 @@
  */
 #include "esp.h"
 
+#if UNUSED
 typedef struct PakData {
     cchar   *name;
     cchar   *endpoint;
@@ -52,17 +53,19 @@ PakData pakData[] = {
 #endif
     { 0, 0 }
 };
+#endif
 
-static int forward(Edi *db) {
-    EdiRec      *rec;
-    PakData     *cd;
-
+static int forward(Edi *db) 
+{
     ediAddTable(db, "pak");
     ediAddColumn(db, "pak", "id", EDI_TYPE_INT, EDI_AUTO_INC | EDI_INDEX | EDI_KEY);
     ediAddColumn(db, "pak", "name", EDI_TYPE_STRING, 0);
     ediAddColumn(db, "pak", "endpoint", EDI_TYPE_STRING, 0);
     ediAddColumn(db, "pak", "password", EDI_TYPE_STRING, 0);
 
+#if UNUSED
+    EdiRec      *rec;
+    PakData     *cd;
     if ((rec = ediCreateRec(db, "pak")) == 0) {
         return MPR_ERR_CANT_CREATE;
     }
@@ -78,6 +81,7 @@ static int forward(Edi *db) {
             return MPR_ERR_CANT_WRITE;
         }
     }
+#endif
     return 0;
 }
 

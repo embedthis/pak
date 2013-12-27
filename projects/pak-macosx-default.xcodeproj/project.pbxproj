@@ -572,35 +572,35 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D2D67164D2D6811E00000027 /* estLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = estLib.c; path = src/paks/est/estLib.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E00000027 /* estLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = estLib.c; path = src/cmd/paks/est/estLib.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000A3 /* bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bit.h; path = macosx-x64-default/inc/bit.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000A4 /* est.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = est.h; path = macosx-x64-default/inc/est.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000A5 /* bitos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitos.h; path = macosx-x64-default/inc/bitos.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E0000003F /* libest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libest.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E00000029 /* mprLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mprLib.c; path = src/paks/mpr/mprLib.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E00000029 /* mprLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mprLib.c; path = src/cmd/paks/mpr/mprLib.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000A6 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpr.h; path = macosx-x64-default/inc/mpr.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E0000003D /* libmpr */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libmpr.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E0000002B /* mprSsl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mprSsl.c; path = src/paks/mpr/mprSsl.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E0000002B /* mprSsl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mprSsl.c; path = src/cmd/paks/mpr/mprSsl.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000A7 /* libmprssl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libmprssl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E0000002D /* makerom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = makerom.c; path = src/paks/mpr/makerom.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E0000002D /* makerom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = makerom.c; path = src/cmd/paks/mpr/makerom.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000A8 /* makerom */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = makerom; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E0000002F /* pcre.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pcre.c; path = src/paks/pcre/pcre.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E0000002F /* pcre.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pcre.c; path = src/cmd/paks/pcre/pcre.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000A9 /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcre.h; path = macosx-x64-default/inc/pcre.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E00000043 /* libpcre */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libpcre.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E00000031 /* httpLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = httpLib.c; path = src/paks/http/httpLib.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E00000031 /* httpLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = httpLib.c; path = src/cmd/paks/http/httpLib.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000AA /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = macosx-x64-default/inc/http.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E00000045 /* libhttp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libhttp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E00000033 /* http.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = http.c; path = src/paks/http/http.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E00000033 /* http.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = http.c; path = src/cmd/paks/http/http.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000AB /* http */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = http; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E00000035 /* ejsLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsLib.c; path = src/paks/ejs/ejsLib.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E00000035 /* ejsLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsLib.c; path = src/cmd/paks/ejs/ejsLib.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000AC /* ejs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.h; path = macosx-x64-default/inc/ejs.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000AD /* ejs.slots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.slots.h; path = macosx-x64-default/inc/ejs.slots.h; sourceTree = "<group>"; };
 		D2D67164D2D6811E0000004C /* libejs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libejs.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E00000037 /* ejs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejs.c; path = src/paks/ejs/ejs.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E00000037 /* ejs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejs.c; path = src/cmd/paks/ejs/ejs.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000AE /* ejs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ejs; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E00000039 /* ejsc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsc.c; path = src/paks/ejs/ejsc.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E00000039 /* ejsc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsc.c; path = src/cmd/paks/ejs/ejsc.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000AF /* ejsc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ejsc; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2D67164D2D6811E0000003B /* pak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pak.c; path = src/pak.c; sourceTree = "<group>"; };
+		D2D67164D2D6811E0000003B /* pak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pak.c; path = src/cmd/pak.c; sourceTree = "<group>"; };
 		D2D67164D2D6811E000000B0 /* pak */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pak; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1102,7 +1102,7 @@
 			files = (
 			);
 			inputPaths = (
-../src/paks/est/ca.crt
+../src/cmd/paks/est/ca.crt
 			);
 			outputPaths = (
 ../macosx-x64-default/bin/ca.crt
@@ -1110,9 +1110,9 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
-cd ../src/paks/est
-rm -rf ../../${OUT_DIR}/bin/ca.crt
-cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
+cd ../src/cmd/paks/est
+rm -rf ../../../${OUT_DIR}/bin/ca.crt
+cp -r ca.crt ../../../${OUT_DIR}/bin/ca.crt
 ";
 		};
 		D2D67164D2D6811E0000000B /* ShellScript for ejs.mod */ = {
@@ -1121,7 +1121,7 @@ cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
 			files = (
 			);
 			inputPaths = (
-../src/paks/ejs/ejs.es
+../src/cmd/paks/ejs/ejs.es
 			);
 			outputPaths = (
 ../macosx-x64-default/bin/ejs.mod
@@ -1129,8 +1129,8 @@ cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
-cd ..
-macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/ejs.mod --optimize 9 --bind --require null src/paks/ejs/ejs.es";
+cd ../src/cmd/paks/ejs
+../../../../macosx-x64-default/bin/ejsc --out ../../../../macosx-x64-default/bin/ejs.mod --optimize 9 --bind --require null ejs.es";
 		};
 		D2D67164D2D6811E00000010 /* ShellScript for pak.mod */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1138,9 +1138,9 @@ macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/ejs.mod --optimize 9 --
 			files = (
 			);
 			inputPaths = (
-../src/Package.es,
-../src/pak.es,
-../src/paks/ejs-version/Version.es
+../src/cmd/Package.es,
+../src/cmd/pak.es,
+../src/cmd/paks/ejs-version/Version.es
 			);
 			outputPaths = (
 ../macosx-x64-default/bin/pak.mod
@@ -1149,7 +1149,7 @@ macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/ejs.mod --optimize 9 --
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 src/Package.es src/paks/ejs-version/Version.es src/pak.es";
+macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 ${target.cmdfiles}";
 		};
 		D2D67164D2D6811E00000025 /* ShellScript for Prep */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1171,29 +1171,29 @@ macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 sr
 if ! diff ${INC_DIR}/bit.h pak-macosx-default-bit.h >/dev/null ; then
 cp pak-macosx-default-bit.h ${INC_DIR}/bit.h
 fi
-if [ ../src/paks/est/est.h -nt ${OUT_DIR}/inc/est.h ] ; then
-cp ../src/paks/est/est.h ${OUT_DIR}/inc/est.h
+if [ ../src/cmd/paks/est/est.h -nt ${OUT_DIR}/inc/est.h ] ; then
+cp ../src/cmd/paks/est/est.h ${OUT_DIR}/inc/est.h
 fi
-if [ ../src/paks/mpr/mpr.h -nt ${OUT_DIR}/inc/mpr.h ] ; then
-cp ../src/paks/mpr/mpr.h ${OUT_DIR}/inc/mpr.h
+if [ ../src/cmd/paks/mpr/mpr.h -nt ${OUT_DIR}/inc/mpr.h ] ; then
+cp ../src/cmd/paks/mpr/mpr.h ${OUT_DIR}/inc/mpr.h
 fi
-if [ ../src/paks/pcre/pcre.h -nt ${OUT_DIR}/inc/pcre.h ] ; then
-cp ../src/paks/pcre/pcre.h ${OUT_DIR}/inc/pcre.h
+if [ ../src/cmd/paks/pcre/pcre.h -nt ${OUT_DIR}/inc/pcre.h ] ; then
+cp ../src/cmd/paks/pcre/pcre.h ${OUT_DIR}/inc/pcre.h
 fi
-if [ ../src/paks/http/http.h -nt ${OUT_DIR}/inc/http.h ] ; then
-cp ../src/paks/http/http.h ${OUT_DIR}/inc/http.h
+if [ ../src/cmd/paks/http/http.h -nt ${OUT_DIR}/inc/http.h ] ; then
+cp ../src/cmd/paks/http/http.h ${OUT_DIR}/inc/http.h
 fi
-if [ ../src/paks/ejs/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
-cp ../src/paks/ejs/ejs.h ${OUT_DIR}/inc/ejs.h
+if [ ../src/cmd/paks/ejs/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
+cp ../src/cmd/paks/ejs/ejs.h ${OUT_DIR}/inc/ejs.h
 fi
-if [ ../src/paks/ejs/ejs.slots.h -nt ${OUT_DIR}/inc/ejs.slots.h ] ; then
-cp ../src/paks/ejs/ejs.slots.h ${OUT_DIR}/inc/ejs.slots.h
+if [ ../src/cmd/paks/ejs/ejs.slots.h -nt ${OUT_DIR}/inc/ejs.slots.h ] ; then
+cp ../src/cmd/paks/ejs/ejs.slots.h ${OUT_DIR}/inc/ejs.slots.h
 fi
-if [ ../src/paks/ejs/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
-cp ../src/paks/ejs/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
+if [ ../src/cmd/paks/ejs/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
+cp ../src/cmd/paks/ejs/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
 fi
-if [ ../src/bitos.h -nt ${OUT_DIR}/inc/bitos.h ] ; then
-cp ../src/bitos.h ${OUT_DIR}/inc/bitos.h
+if [ ../src/cmd/bitos.h -nt ${OUT_DIR}/inc/bitos.h ] ; then
+cp ../src/cmd/bitos.h ${OUT_DIR}/inc/bitos.h
 fi";
 		};
 /* End PBXShellScriptBuildPhase section */

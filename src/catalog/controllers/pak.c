@@ -7,18 +7,10 @@
 #define PASSWORD_ROUNDS 128
 
 /*
-    Create a new resource in the database
- */
-static void createPak() { 
-    sendResult(updateRec(createRec("pak", params())));
-}
-
-/*
     Get a resource
  */
 static void getPak() { 
     EdiRec  *rec;
-
     rec = readRec("pak", param("id"));
     ediFilterRecFields(rec, "password", 0);
     sendRec(rec);
@@ -28,11 +20,26 @@ static void getPak() {
     Initialize a new resource for the client to complete
  */
 static void initPak() { 
-    sendRec(createRec("pak", 0));
+    if (canUser("edit", 1)) {
+        sendRec(createRec("pak", 0));
+    }
 }
+
+#if UNUSED
+/*
+    Create a new resource in the database
+ */
+static void createPak() { 
+    if (canUser("edit", 1)) {
+        sendResult(updateRec(createRec("pak", params())));
+    }
+}
+
+
 
 /*
     List the resources in this group
+    MOB - not needed
  */
 static void listPak() {
     EdiGrid     *grid;
@@ -48,7 +55,6 @@ static void listPak() {
 static void getCatalog() { 
     EdiGrid     *catalog;
     EdiRec      *rec;
-    EdiField    *fp;
     MprBuf      *buf;
     int         r;
 
@@ -60,10 +66,8 @@ static void getCatalog() {
     for (r = 0; r < catalog->nrecords; r++) {
         mprPutStringToBuf(buf, "    ");
         rec = catalog->records[r];
-        fp = ediGetField(rec, "name");
-        mprPutToBuf(buf, "\"%s\": ", fp->value);
-        fp = ediGetField(rec, "uri");
-        mprPutToBuf(buf, "\"%s\"", fp->value);
+        mprPutToBuf(buf, "\"%s\": ", getField(rec, "name"));
+        mprPutToBuf(buf, "\"%s\"", getField(rec, "uri"));
         if ((r+1) < catalog->nrecords) {
             mprPutCharToBuf(buf, ',');
         }
@@ -78,7 +82,9 @@ static void getCatalog() {
     Remove a resource identified by the "id" parameter
  */
 static void removePak() { 
-    sendResult(removeRec("pak", param("id")));
+    if (canUser("edit", 1)) {
+        sendResult(removeRec("pak", param("id")));
+    }
 }
 
 /*
@@ -86,9 +92,16 @@ static void removePak() {
     If "id" is not defined, this is the same as a create
  */
 static void updatePak() { 
-    sendResult(updateRec(setFields(readRec("pak", param("id")), params())));
+    if (canUser("edit", 1)) {
+        //  MOB - should verify that the pak name matches the conn->username
+        sendResult(updateRec(setFields(readRec("pak", param("id")), params())));
+    }
 }
+#endif
 
+/*
+    Can call this without being authenticated
+ */
 static void publishPackage() {
     EspReq      *req;
     EdiRec      *rec;
@@ -99,16 +112,26 @@ static void publishPackage() {
     endpoint = param("endpoint");
     password = param("password");
 
+    //  MOB API for this
+    HttpConn *conn;
+    conn = getConn();
+
+//  Should verify that endpoint exists
+
     if (!name || !*name || !endpoint || !*endpoint || !password || !*password) {
         sendResult(feedback("error", "Missing name, endpoint or password parameters"));
         return;
     }
+    //  MOB - need DOS wait here
     if ((rec = readRecWhere("pak", "name", "==", name)) != 0) {
-        prior = getField(rec, "endpoint");
-        if (!mprCheckPassword(password, getField(rec, "password"))) {
-            sendResult(feedback("error", "Invalid password"));
-            return;
+        if (!smatch(conn->username, name) || !canUser("edit", 1)) {
+            if (!mprCheckPassword(password, getField(rec, "password"))) {
+                sendResult(feedback("error", "Invalid password"));
+                return;
+            }
+            //  MOB - must not update password
         }
+        prior = getField(rec, "endpoint");
     } else {
         rec = createRec("pak", params());
         setField(rec, "password", mprMakePassword(password, PASSWORD_SALT, PASSWORD_ROUNDS));
@@ -149,6 +172,55 @@ static void retractPackage() {
     sendResult(removeRec("pak", rec->id));
 }
 
+static void searchCatalog() {
+    EdiGrid     *grid;
+    EdiRec      *rec;
+    MprList     *words, *results;
+    MprBuf      *data;
+    cchar       *endpoint, *name, *word;
+    int         next, r;
+
+    addHeader("Content-Type", "application/json");
+    words = mprCreateListFromWords(param("keywords"));
+    results = mprCreateList(0, 0);
+
+    if ((grid = readTable("pak")) == 0) {
+        sendResult(feedback("error", "Cannot read Pak table"));
+        return;
+    }
+    for (r = 0; r < grid->nrecords; r++) {
+        rec = grid->records[r];
+        name = getField(rec, "name");
+        if (words->length == 0 || mprLookupStringItem(words, name) >= 0) {
+            mprAddItem(results, rec);
+        } else {
+            for (ITERATE_ITEMS(words, word, next)) {
+                if (scontains(name, word)) {
+                    mprAddItem(results, rec);
+                    break;
+                }
+            }
+        }
+    }
+    data = mprCreateBuf(0, 0);
+    mprPutStringToBuf(data, "[\n");
+    for (ITERATE_ITEMS(results, rec, next)) {
+        endpoint = getField(rec, "endpoint");
+        if (sstarts(endpoint, "git@")) {
+            continue;
+        }
+        mprPutToBuf(data, "{\"id\": \"%s\", \"name\": \"%s\", \"endpoint\": \"%s\"},\n",
+            getField(rec, "id"), getField(rec, "name"), endpoint);
+    }
+    if (results->length > 0) {
+        mprAdjustBufEnd(data, -2);
+    }
+    mprPutStringToBuf(data, "]\n");
+    mprAddNullToBuf(data);
+    print(mprGetBufStart(data));
+    render("{\n  \"data\": %s }\n", mprGetBufStart(data));
+}
+
 /*
     Dynamic module initialization
  */
@@ -156,22 +228,24 @@ ESP_EXPORT int esp_controller_catalog_pak(HttpRoute *route, MprModule *module)
 {
     HttpRoute   *rp;
 
+#if UNUSED
     espDefineAction(route, "pak-create", createPak);
-    espDefineAction(route, "pak-get", getPak);
-    espDefineAction(route, "pak-init", initPak);
     espDefineAction(route, "pak-list", listPak);
     espDefineAction(route, "pak-remove", removePak);
     espDefineAction(route, "pak-update", updatePak);
+    espDefineAction(route, "pak-cmd-lookup", getCatalog);
+#endif
 
+    espDefineAction(route, "pak-get", getPak);
+    espDefineAction(route, "pak-init", initPak);
     espDefineAction(route, "pak-cmd-publish", publishPackage);
     espDefineAction(route, "pak-cmd-retract", retractPackage);
-    espDefineAction(route, "pak-cmd-lookup", getCatalog);
+    espDefineAction(route, "pak-cmd-search", searchCatalog);
 
     if ((rp = httpLookupRoute(route->host, "/do/*/default")) != 0) {
         rp->flags &= ~HTTP_ROUTE_XSRF;
     }
-    
-#if SAMPLE_VALIDATIONS
+#if SAMPLE_VALIDATIONS && UNUSED && MOB
     Edi *edi = espGetRouteDatabase(route);
     ediAddValidation(edi, "present", "pak", "title", 0);
     ediAddValidation(edi, "unique", "pak", "title", 0);

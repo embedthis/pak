@@ -31,8 +31,10 @@
         "paks/respond/respond.js",
         "paks/esp-gui/*.js",
         "paks/angular-bootstrap/*.js",
-        "app/*/**.js*",
-        "paks/html5shiv.js"
+        "paks/html5shiv.js",
+        "paks/angular/angular.js",
+        "paks/angular/angular-animate.js",
+        "paks/angular/angular-route.js"
     ],
     "dirs": {
         "client": "client",

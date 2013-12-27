@@ -3,31 +3,27 @@
 
     This uses the Angular-UI modal directive. It observes the "modal" attribute and displays the modal if it is true.
     The options are defined in UserControl.js which is the controller for this dialog.
+
+    MOB - rename to pak-password.html
  -->
 <esp-modal class="modal">
     <div class="modal-dialog login">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>Log in</h4>
+                <h4>Enter Pak Password</h4>
             </div>
             <form class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type='text' class="form-control" ng-model='user.username' autofocus tabindex='1'
-                        placeholder="admin or guest">
+                        <input autofocus type='text' class="form-control" ng-model='user.username' tabindex='1' placeholder="Pak name">
                     </div>
                     <div class="form-group">
-                        <input id='password' type='password' class="form-control" ng-model='user.password' 
-                            tabindex='2' placeholder="demo">
-                        <a class="forgot-password" ng-click="forgot()">Forgot password?</a>
-                        <!--
-                        <input type='checkbox' ng-model="user.remember" value="true" tabindex='3'> <span class="remember-me">Remember me</span>
-                        -->
+                        <input id='password' type='password' class="form-control" ng-model='user.password' tabindex='2' placeholder="password">
                     </div>
                 </div>
                 <div class="text-right">
-                    <button class="btn btn-primary" ng-click='login($dialog)' tabindex='4'>OK</button>
-                    <button class="btn" ng-click='$dismiss()' tabindex='4'>Cancel</button>
+                    <button class="btn btn-primary" ng-click='login($dialog)' tabindex='3'>OK</button>
+                    <button class="btn" ng-click='dismiss($dialog)' tabindex='4'>Cancel</button>
                 </div>
             </form>
         </div>

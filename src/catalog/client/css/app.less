@@ -3,8 +3,9 @@
  */
 html, body {
     /* Select from concrete, linen, zigzag, tissue */
-    background: url('../assets/backgrounds/concrete.png');
-    background: url('../assets/linen.png');
+    // background: url('../assets/backgrounds/concrete.png');
+    // background: url('../assets/linen.png');
+    background: url('../assets/sunset.jpg');
     -webkit-font-smoothing: antialiased !important;
 }
 
@@ -52,114 +53,25 @@ main.container {
     padding: 0;
     max-width: 100%;
 
-    //  MOB - simplify this somehow
-    .sidebar {
-        padding: 40px 0 0 0;
-        line-height: 20px;
-        .nav-tabs {
-            border-bottom: none;
-            li {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-                &.selected {
-                    border-right: 4px solid @nav-tabs-stacked-active-border-color;
-                }
-                a {
-                    margin: 0;
-                    padding: 8px 0px 8px 15px;
-                    border-radius: 0;
-                    border-top: 1px solid @nav-tabs-border-top-color;
-                    border-bottom: 1px solid @nav-tabs-border-bottom-color;
-
-                    color: @gray-lighter;
-                    &:hover {
-                        cursor: pointer;
-                    }
-                    //  MOB - switch to font awesome?
-                    .glyphicon, i {
-                        text-align: center;
-                        font-size: @font-size-larger;
-                        padding-right: 10px;
-                        color: @gray-light;
-                    }
-                    .arrow {
-                        padding: 6px;
-                        float: right;
-                        font-size: @font-size-large;
-                        color: @gray-light;
-                    }
-                }
-                &.selected {
-                    a {
-                        background: #252728;
-                        border-top: 1px solid @nav-tabs-active-border-top-color;
-                        border-bottom: 1px solid @nav-tabs-active-border-bottom-color;
-                        &:hover {
-                            background: @nav-tabs-stacked-hover-bg;
-                            border-color: @nav-tabs-stacked-hover-border-color;
-                            i {
-                                color: white;
-                                margin: 0;
-                            }
-                        }
-                    }
-                    i {
-                        color: white;
-                    }
-                }
-                &:not(.selected) {
-                    a:hover {
-                        background: @nav-tabs-stacked-hover-bg;
-                        border-color: @nav-tabs-stacked-hover-border-color;
-                        border-top: 1px solid @nav-tabs-border-top-color;
-                        border-radius: 0;
-                        i {
-                            color: white;
-                        }
-                    }
-                }
-                .nested {
-                    li {
-                        margin: 0;
-                        a {
-                            margin: 0;
-                            padding: 4px 0 4px 10px;
-                            text-decoration: none;
-                            border: none;
-                            display: block;
-                        }
-                        &:hover {
-                            border: none;
-                            margin: 0;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    .breadcrumb, .play-controls {
-        float: right;
-        display: inline;
-        padding: 14px 24px 4px 6px;
-        margin: 0;
-        background: rgba(255,255,255,0);
-        font-size: @font-size-small;
+    .status {
+        color: white;
+        font-size: @font-size-larger;
         font-weight: bold;
+        z-index: 1;
+        position: absolute;
+        right: 80px;
+        padding: 10px;
         a {
-            color: @breadcrumb-color;
+            color: white;
+            text-decoration: none;
         }
     }
+    
     .content {
-        background: url('../assets/grid_noise.png');
-        padding: 0 20px 0 20px;
-        .nav {
-            padding-left: 20px;
-        }
+        padding: 0 80px 100px 80px;
         .panel {
-            background: white;
-            border: 1px solid @gray-lighter;
             padding: 0px 20px 8px 20px;
+            background: rgba(255,255,255,.15);
             min-height: 600px;
             table.small {
                 width: 50%;
@@ -167,43 +79,26 @@ main.container {
             .btn {
                 margin-top: 20px;   
             }
-
+            h1 {
+                color: #CCF;
+                font-size: 48px;
+                font-weight: bold;
+            }
+            h3 {
+                color: #DDE;
+                font-size: 32px;
+            }
+            table {
+                .rounded(5px);
+                background: rgba(255,255,255,.85);
+            }
+            .form-horizontal {
+                margin-top: 70px;
+            }
         }
     }
 }
 
-/* Log notification pulldown */
-.notify {
-    padding-bottom: 0px;
-    width: 400px;
-    color: @gray;
-    li {
-        padding: 8px 0 8px 0;
-        &:hover {
-            background: @gray-lighter;
-        }
-    }
-    .header {
-        padding: 4px 0px 10px 20px;
-        font-weight: bold;
-    }
-    .footer {
-        padding: 4px 0 4px 0;
-        background: @gray-lighter;
-    }
-    li.message {
-        padding: 8px 20px 8px 20px;
-        border-bottom: 1px solid @gray-lightest;
-        font-size: @font-size-small;
-        text-decoration: none;
-        color: @gray;
-    }
-    .time {
-        float: right;
-        font-style: italic;
-        font-size: 11px;
-    }
-}
 
 .modal-backdrop {
     background: url('../assets/sunset.jpg');
@@ -227,135 +122,6 @@ main.container {
     .remember-me {
         font-size: @font-size-small;
     }
-}
-
-.forgot {
-    &.modal-dialog {
-        width: 500px;
-    }
-}
-
-/*
-    Dashboard view
- */
-.view-dashboard {
-    /* Events widget */
-    .events {
-        ul {
-            text-align: left;
-            padding-left: 10px;
-            li {
-                padding: 4px;
-                border-bottom: 1px solid @gray-lighter;
-                list-style: none;
-                i {
-                    font-size: @font-size-smallest;
-                    text-align: center;
-                    width: 2em;
-                    padding: 4px;
-                    margin-right: 8px;
-                }
-            }
-        }
-    }
-}
-
-
-/*
-    Widget classes
- */
-.widget {
-    height: 100%;
-    width: 100%;
-    min-width: 160px;
-    padding: 10px;
-    margin: 8px 0 8px 0;
-    border: 1px solid darken(@gray-lighter, 10);
-    background: white;
-    color: @gray;
-    text-align: center;
-    &:hover {
-        border: 1px solid @gray-light;
-        .shadow(2px, 2px, 4px, 0.2);
-    }
-    .title {
-        font-size: @font-size-larger;
-        font-weight: bold;
-    }
-    .label {
-        color: @gray;
-        font-size: floor(@font-size-counter / 3);
-        font-weight: normal;
-    }
-    .number {
-        color: @gray;
-        font-size: @font-size-counter;
-        font-weight: bold;
-    }
-}
-
-
-.widget-controls {
-    padding: 0;
-    text-align: left;
-    .header {
-        height: 36px;
-        .gradient(@gray-lightest, darken(@gray-lightest, 8%), lighten(@gray-lightest, 8%));
-        h4 {
-            font-size: @font-size-base;
-            float: left;
-            padding: 0 8px 0 8px;
-            i {
-                padding-right: 6px;
-            }
-        }
-        .options {
-            margin: 8px;
-            float: right;
-            a {
-                color: @gray;
-                padding-right: 6px;
-            }
-        }
-    }
-    .body {
-        padding: 8px;
-    }
-}
-
-.gauge {
-    font-size: @font-size-counter;
-    background: white;
-    background: white;
-    display: block;
-}
-
-/*
-    Event backgrounds
- */
-.severity {
-    font-size: @font-size-smaller;
-    text-align: center;
-    width: 2em;
-    padding: 4px 4px 4px 6px;
-    margin-right: 8px;
-    text-align: center;
-}
-
-.event-critical {
-    .gradient(red, darken(red, 5%), lighten(red, 5%));
-}
-
-.event-error {
-    .gradient(orange, darken(orange, 5%), lighten(orange, 5%));
-}
-
-.event-success, .event-inform {
-    .gradient(red, darken(green, 5%), lighten(green, 5%));
-}
-
-.event-warning {
-    .gradient(red, darken(gold, 5%), lighten(gold, 5%));
 }
 
 /*
@@ -395,10 +161,9 @@ main.container {
 .feedback-inform {
     .feedback();
     .gradient(@feedback-inform-background, lighten(@feedback-inform-background, 10%), darken(@feedback-inform-background, 10%));
-    opacity: 0;
     top: -100px;
     &.ng-hide-remove {
-        -webkit-animation: feedback-transition ease-in 10s;
+        -webkit-animation: feedback-transition ease-in 5s;
     }
 }
 
@@ -413,26 +178,6 @@ fieldset {
     80%  { opacity: 1.0; top:    0px; }
     90%  { opacity: 0.5; top:    0px; }
     100% { opacity: 0.0; top: -100px; }
-}
-
-UNUSED.form-error {
-    width: 500px;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    text-indent: 10px;
-    border: 2px solid @error-color;
-    .rounded(4px);
-    .shadow();
-    h2 {
-        margin: 0 0 10px 0;
-        padding: 10px 0 10px 0;
-        font-size: @font-size-small;
-        color: white;
-        background: @error-color;
-        }
-    ul {
-        margin-bottom: 0;
-    }
 }
 
 .has-error .form-control {
@@ -454,18 +199,6 @@ UNUSED.form-error {
 }
 
 /*
-    ID rules
- */
-#author {
-    position: relative;
-    clear: both;
-    height: 30px;
-    padding: 8px 28px 0 10px;
-    color: @gray-light;
-    font-size: @font-size-smallest;
-}
-
-/*
     Universal rules
  */
 [ng-click],[esp-click] {
@@ -475,6 +208,6 @@ UNUSED.form-error {
 /*
     angular-ui fixes
  */
- .modal {
+.modal {
     display: block;
- }
+}

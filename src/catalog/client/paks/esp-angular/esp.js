@@ -164,16 +164,21 @@ angular.module('esp', ['esp.click', 'esp.field-errors', 'esp.format', 'esp.input
         Esp.login(Esp.config.login);
         Esp.user.auto = true;
     } else {
-        Esp.user = SessionStore.get('user') || null;
-        Esp.user.lastAccess = Date().now;
+       Esp.user = SessionStore.get('user') || null;
+       Esp.user.lastAccess = Date().now;
     }
-    if (Esp.user.length == 0) {
+    //  MOB - what is this array
+    if (Esp.user && Esp.user.length == 0) {
         Esp.user = null;
     }
     /*
         Remember the referrer in route changes
-     */
     $rootScope.$on("$routeChangeSuccess", function(scope, current, previous) {
+        Esp.referrer = previous;
+    });
+     */
+
+    $rootScope.$on("$locationChangeSuccess", function(scope, current, previous) {
         Esp.referrer = previous;
     });
 
