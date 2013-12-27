@@ -9,7 +9,7 @@
  */
 angular.module('app').controller('PakControl', function (Esp, Pak, $location, $modal, $routeParams, $scope, $rootScope, $window) {
     angular.extend($scope, $routeParams);
-    $scope.unused = '_ _ U N U S E D _ _';
+    $scope.unused = '_   U N U S E D   _';
 
     if ($location.path() == "/pak/") {
         /* Create new pak */
@@ -30,9 +30,9 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $m
             }
             if (!Esp.can('edit') || !found) {
                 if (pak) {
-                    $rootScope.username = pak.name;
+                    $rootScope.authname = pak.name;
                 }
-                $location.path('/user/login');
+                $location.path('/auth/login');
                 return
             }
         }
@@ -57,9 +57,17 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $m
     });
 
     $scope.retract = function() {
+        if ($scope.pak.password == $scope.unused) {
+            Esp.feedback('error', 'Must enter password and confirmation to delete a pak');
+            return;
+        }
+        if ($scope.pak.password != $scope.pak.confirm) {
+            Esp.feedback('error', 'Password confirmation does not match');
+            return;
+        }
         $modal.open({
             scope: $scope,
-            template: '<esp-confirm header="Are you sure?" body="Do you want to retract {{pak.name}}?" ok="Delete Pak">',
+            template: '<esp-confirm header="Are you sure?" body="Do you want to delete {{pak.name}}?" ok="Delete Pak">',
         }).result.then(function(result) {
             if (result) {
                 Pak.retract($scope.pak, function(response) {
@@ -71,8 +79,7 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $m
 
     $scope.publish = function() {
         if ($scope.pak.password != $scope.pak.confirm) {
-            //  MOB - should have an API for this
-            $rootScope.feedback = { error: "Password confirmation does not match" };
+            Esp.feedback('error', 'Password confirmation does not match');
             return;
         }
         if ($scope.pak.password == $scope.unused) {
@@ -81,23 +88,13 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $m
         }
         Pak.publish($scope.pak, $scope, function(response) {
             if (!response.error) {
+                Esp.feedback('inform', 'Pak ' + $scope.pak.name + ' saved')
                 $location.path('/');
             }
         });
     };
 
-    //  MOB - need this in Esp
-    $scope.go = function (url) {
-        if (url.indexOf("http") == 0) {
-            $window.location.href = url;
-        } else if (url.indexOf("git@github") == 0) {
-            $rootScope.feedback = { inform: "Private repository" };
-        } else {
-            $location.path(url);
-        }
-    }
-
-    $scope.username = function () {
+    $scope.authname = function () {
         return (Esp.user && Esp.user.name) || 'guest';
     }
 });
@@ -115,5 +112,4 @@ angular.module('app').config(function($routeProvider) {
     $routeProvider.when('/pak/list', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-list.html')}));
     $routeProvider.when('/pak/:id', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-edit.html')}));
     $routeProvider.when('/pak/', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-edit.html')}));
-    // $routeProvider.when('/', angular.extend({}, Default, {templateUrl: esp.url('/app/pak/pak-list.html')}));
 });

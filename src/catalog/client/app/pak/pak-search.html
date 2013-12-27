@@ -5,7 +5,7 @@
         <div class="row">
             <div class="input-group col-md-6">
                 <input class="form-control" type="text" ng-model="keywords" placeholder="Keywords ...">
-                <span class="btn btn-primary input-group-addon" ng-click="go('/pak/')">New Pak</span>
+                <span class="btn btn-primary input-group-addon" ng-click="Esp.go('/pak/')">New Pak</span>
             </div>
         </div>
     </form>
@@ -15,10 +15,10 @@
         <thead><tr><th ng-repeat="header in ['name', 'description', 'endpoint', 'modify']">{{header | titlecase}}</th></tr></thead>
         <tbody>
             <tr ng-repeat="result in results">
-                <td ng-click="go(result.endpoint)">{{result.name}}</td>
-                <td ng-click="go(result.endpoint)">{{result.description}}</td>
-                <td ng-click="go(result.endpoint)">{{result.endpoint}}</td>
-                <td ng-click="go('/pak/' + result.id)"><i class="fa fa-pencil-square-o"></i></td>
+                <td ng-click="Esp.go(result.endpoint)">{{result.name}}</td>
+                <td ng-click="Esp.go(result.endpoint)">{{result.description}}</td>
+                <td ng-click="Esp.go(result.endpoint)">{{result.endpoint}}</td>
+                <td ng-click="Esp.go('/pak/' + result.id)"><i class="fa fa-pencil-square-o"></i></td>
             </tr>
         </tbody>
     </table>

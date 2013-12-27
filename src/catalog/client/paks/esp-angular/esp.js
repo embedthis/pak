@@ -27,7 +27,7 @@ angular.module('esp', ['esp.click', 'esp.field-errors', 'esp.format', 'esp.input
         return esp.$config.appPrefix + url;
     }
 
-}).factory('Esp', function(SessionStore, $document, $http, $location, $rootScope, $timeout) {
+}).factory('Esp', function(SessionStore, $document, $http, $location, $rootScope, $timeout, $window) {
 
     var Esp = { config: angular.module('esp').$config };
     $rootScope.Esp = Esp;
@@ -74,6 +74,20 @@ angular.module('esp', ['esp.click', 'esp.field-errors', 'esp.format', 'esp.input
 
     Esp.faclass = function(kind) {
         return fa_map[kind];
+    }
+
+    Esp.feedback = function(kind, msg) {
+        var o = {}
+        o[kind] = msg;
+        $rootScope.feedback = o;
+    }
+
+    Esp.go = function (url) {
+        if (url.indexOf("http") == 0) {
+            $window.location.href = url;
+        } else {
+            $location.path(url);
+        }
     }
 
     Esp.inform = function (str) {

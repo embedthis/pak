@@ -1,10 +1,8 @@
 <!--
-    user-login.html - Modal user/password login dialog.
+    auth-login.html - Modal auth/password login dialog.
 
     This uses the Angular-UI modal directive. It observes the "modal" attribute and displays the modal if it is true.
-    The options are defined in UserControl.js which is the controller for this dialog.
-
-    MOB - rename to pak-password.html
+    The options are defined in AuthControl.js which is the controller for this dialog.
  -->
 <esp-modal class="modal">
     <div class="modal-dialog login">
@@ -15,10 +13,10 @@
             <form class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-group">
-                        <input autofocus type='text' class="form-control" ng-model='user.username' tabindex='1' placeholder="Pak name">
+                        <input autofocus type='text' class="form-control" ng-model='auth.authname' tabindex='1' placeholder="Pak name">
                     </div>
                     <div class="form-group">
-                        <input id='password' type='password' class="form-control" ng-model='user.password' tabindex='2' placeholder="password">
+                        <input id='password' type='password' class="form-control" ng-model='auth.password' tabindex='2' placeholder="password">
                     </div>
                 </div>
                 <div class="text-right">

@@ -9,8 +9,8 @@
 <body data-config='<% renderConfig(); %>' id='body' ng-cloak>
     <main class="container">
         <nav class="status" ng-controller="PakControl">
-            <a href="#/user/{{Esp.user ? 'logout' : 'login'}}"> 
-                {{username()}} 
+            <a href="#/auth/{{Esp.user ? 'logout' : 'login'}}"> 
+                {{authname()}} 
                 <i class="fa fa-sign-out"></i> 
             </a>
         </nav>
