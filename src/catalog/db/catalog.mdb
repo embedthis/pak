@@ -70,8 +70,8 @@
             [ 29,'php','https://github.com/embedthis/pak-php.git','BF1:00128:kslkZIcOTaP2Ie8k:qjupOqVgw7xm/RfEMAJbIM9Ewx8UYQjm',],
             [ 30,'respond','https://github.com/embedthis/pak-respond.git','BF1:00128:kp8a4E7bFxXNFSEZ:8TWl7gbTPFJnkCrxkGhNuYjn+BbJejhR',],
             [ 31,'sqlite','https://github.com/embedthis/pak-sqlite.git','BF1:00128:wLnwzVagkgibvI2j:6ZSOGjSDg6pmBWQGrcsfhAy5ZXwmi5gU',],
-            [ 32,'xcharts','https://github.com/embedthis/pak-xcharts.git','BF1:00128:avQb3XZ76d2KGLcA:qebu8fDo1NdtFI2keqjLbaKdAyreN9MZ',],
             [ 33,'zlib','https://github.com/embedthis/pak-zlib.git','BF1:00128:7EcGarzzXd78MRBM:PP6zPvOfPbQrfu8BRspzTMrNE65+CSDq',],
+            [ 34,'xcharts','http://github.com/embedthis/pak-xcharts.git','BF1:00128:QjxZQu38aOZbBbDb:J90Pp1CuVzK78T2TuD2JfmhpMQ1FC1DG',],
         ],
     },
 }

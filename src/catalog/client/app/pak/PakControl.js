@@ -19,6 +19,10 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $m
         /* Edit pak or search for list of paks */
         if ($scope.id || $location.path() == "/pak/") {
             var pak, found;
+            if (!$scope.paks) {
+                $location.path('/');
+                return;
+            }
             for (var i = 0; i < $scope.paks.length; i++) {
                 if ($scope.paks[i].id == $scope.id) {
                     pak = $scope.paks[i];
