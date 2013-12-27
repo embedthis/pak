@@ -5,10 +5,11 @@
             <esp-input-group class="form-control" fields="name,endpoint,password,confirm" 
                 types="string,string,password,password" ng-model="pak"></esp-input-group>
             <!-- 8 characters or more. Try not to use words -->
+            <!-- 8 characters or more. Try not to use words -->
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button class="btn btn-primary" ng-click='save()'>OK</button>
+                <button class="btn btn-primary" ng-click='publish()'>OK</button>
                 <button class="btn btn-default" ng-click="go('/')">Cancel</button>
                 <button class="btn btn-danger" ng-show="id" ng-click="remove('{{pak.id}}')">Delete</button>
             </div>

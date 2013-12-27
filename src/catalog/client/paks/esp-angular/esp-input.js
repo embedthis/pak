@@ -130,7 +130,7 @@ angular.module('esp.input', [])
                     element.removeAttr('readonly');
                     $compile(newelt)(scope);
 
-                    if (!value) {
+                    if (!value && scope[model]) {
                         value = scope[model][field];
                     }
                     if (attrs.filter) {

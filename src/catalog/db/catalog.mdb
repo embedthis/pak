@@ -39,7 +39,7 @@
             'password': { type: 'string' },
         },
         data: [
-            [ 1,'angular','https://github.com/embedthis/pak-angular.git','BF1:00128:A5qbquXiB5SUOfbG:YGKA5RFGA5ZrUDIV1ojjQjttDPydKlpb',],
+            [ 1,'angular','https://github.com/embedthis/appweb-4.git',null, ],
             [ 2,'angular-bootstrap','https://github.com/embedthis/pak-angular-bootstrap.git','BF1:00128:PhiLdz7rVAdwqcbX:DhZMUe51bf3Avx3GqCW9HfaiGU9D6SWq',],
             [ 3,'animate','https://github.com/embedthis/pak-animate.git','BF1:00128:5uua1mPaJtl5XCgT:x2W4THWoyNMMN6QpS1C3S98QgV+8l/vx',],
             [ 4,'bitos','https://github.com/embedthis/pak-bitos.git','BF1:00128:ptGCWiVj1kCKnSQ1:2/9+WZ6DZMh8UPSNGKvfjplof+T1KsmI',],
@@ -74,6 +74,7 @@
             [ 33,'xcharts','https://github.com/embedthis/pak-xcharts.git','BF1:00128:sLaWzGMfxBQGqdVV:OWcKASJ77Drmvyt4AnVgFoqAxpIWpk5c',],
             [ 34,'zlib','https://github.com/embedthis/pak-zlib.git','BF1:00128:JFvA1DdFCg9mGrPc:1vs5OeqzLDwFsYaH4x+pGc0FVbfBjyvG',],
             [ 35,'test2','test2','BF1:00128:cTYcQMr1jbeDF2bU:5LlEBnmN5sYhGOnaBPW2U6JAJbXITOy+',],
+            [ 36,'t2','t2','BF1:00128:81QUQP1TDulwpN1G:I1fo9DZ4Py7STC28EUnchgYvBlbgPPW4',],
         ],
     },
 }

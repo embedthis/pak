@@ -12,7 +12,6 @@
         "esp-gui": "0.8.0",
         "esp-mgr": "~0.8",
         "esp-server": "*",
-        "esp-user": "0.8.0",
         "font-awesome": "4.0.0",
         "html5shiv": "3.6.2",
         "less": ">=1.3.3",

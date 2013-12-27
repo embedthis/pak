@@ -20,9 +20,7 @@ static void getPak() {
     Initialize a new resource for the client to complete
  */
 static void initPak() { 
-    if (canUser("edit", 1)) {
-        sendRec(createRec("pak", 0));
-    }
+    sendRec(createRec("pak", 0));
 }
 
 #if UNUSED
@@ -34,8 +32,6 @@ static void createPak() {
         sendResult(updateRec(createRec("pak", params())));
     }
 }
-
-
 
 /*
     List the resources in this group
@@ -106,6 +102,7 @@ static void publishPackage() {
     EspReq      *req;
     EdiRec      *rec;
     cchar       *password, *name, *endpoint, *prior;
+    bool        checkPassword;
 
     req = getReq();
     name = param("name");
@@ -118,34 +115,40 @@ static void publishPackage() {
 
 //  Should verify that endpoint exists
 
-    if (!name || !*name || !endpoint || !*endpoint || !password || !*password) {
-        sendResult(feedback("error", "Missing name, endpoint or password parameters"));
+    if (!name || !*name || !endpoint || !*endpoint) {
+        sendResult(feedback("error", "Missing name or endpoint parameters"));
         return;
+    }
+    if (canUser("edit", 0) && smatch(conn->username, name)) {
+        checkPassword = 0;
+        mprLog(2, "pak: publish, logged in to edit pak %s", name);
+    } else {
+        if (!password || !*password) {
+            sendResult(feedback("error", "Missing password parameter"));
+            return;
+        }
+        checkPassword = 1;
+        mprLog(2, "pak: publish, check password for %s", name);
     }
     //  MOB - need DOS wait here
     if ((rec = readRecWhere("pak", "name", "==", name)) != 0) {
-        if (!smatch(conn->username, name) || !canUser("edit", 1)) {
-            if (!mprCheckPassword(password, getField(rec, "password"))) {
-                sendResult(feedback("error", "Invalid password"));
-                return;
-            }
-            //  MOB - must not update password
+        if (checkPassword && !mprCheckPassword(password, getField(rec, "password"))) {
+            sendResult(feedback("error", "Invalid password"));
+            return;
         }
         prior = getField(rec, "endpoint");
+        setFields(rec, params());
+
     } else {
         rec = createRec("pak", params());
         setField(rec, "password", mprMakePassword(password, PASSWORD_SALT, PASSWORD_ROUNDS));
         prior = 0;
     }
-    if (!smatch(endpoint, prior)) {
-        if (!(updateRec(rec))) {
-            sendResult(feedback("error", "Cannot save package details"));
-        } else {
-            sendRec(rec);
-        }
-    } else {
-        sendRec(rec);
+    if (!(updateRec(rec))) {
+        sendResult(feedback("error", "Cannot save package details"));
+        return;
     }
+    sendRec(rec);
 }
 
 static void retractPackage() {

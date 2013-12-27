@@ -9,6 +9,7 @@
  */
 angular.module('app').controller('PakControl', function (Esp, Pak, $location, $modal, $routeParams, $scope, $rootScope, $window) {
     angular.extend($scope, $routeParams);
+    $scope.unused = '_ _ U N U S E D _ _';
 
     if ($location.path() == "/pak/") {
         /* Create new pak */
@@ -37,9 +38,8 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $m
         }
         if ($scope.id) {
             Pak.get({id: $scope.id}, $scope, function(response) {
-                console.log($scope.pak);
-                $scope.pak.password = '_ _ U N U S E D _ _';
-                $scope.pak.confirm  = '_ _ U N U S E D _ _';
+                $scope.pak.password = $scope.unused;
+                $scope.pak.confirm  = $scope.unused;
             });
         }
     }
@@ -56,29 +56,29 @@ angular.module('app').controller('PakControl', function (Esp, Pak, $location, $m
         }
     });
 
-    $scope.remove = function() {
+    $scope.retract = function() {
         $modal.open({
             scope: $scope,
-            template: '<esp-confirm header="Are you sure?" body="Do you want to remove {{pak.name}}?" ok="Delete Pak">',
+            template: '<esp-confirm header="Are you sure?" body="Do you want to retract {{pak.name}}?" ok="Delete Pak">',
         }).result.then(function(result) {
             if (result) {
-                Pak.remove({id: $scope.pak.id}, function(response) {
+                Pak.retract($scope.pak, function(response) {
                     $location.path("/");
                 });
             }
         });
     };
 
-    $scope.save = function() {
+    $scope.publish = function() {
         if ($scope.pak.password != $scope.pak.confirm) {
             //  MOB - should have an API for this
             $rootScope.feedback = { error: "Password confirmation does not match" };
             return;
         }
-        if ($scope.pak.password == '_ _ U N U S E D _ _') {
-
+        if ($scope.pak.password == $scope.unused) {
+            delete $scope.pak.password;
+            delete $scope.pak.confirm;
         }
-        //  MOB - must be https
         Pak.publish($scope.pak, $scope, function(response) {
             if (!response.error) {
                 $location.path('/');
