@@ -28,3 +28,4 @@ all*.gz
 all*.css
 all*.js
 releases
+src/catalog/db/init.es
