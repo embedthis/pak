@@ -705,7 +705,12 @@ class PakCmd
         let PAKS = dirs.client ? { PAKS: dirs.paks.trimStart(dirs.client + '/') } : {}
         for each (script in pak.spec['client-scripts']) {
             let scripts = spec['client-scripts'] ||= []
-            script = script.expand(PAKS)
+            script = script.expand(PAKS).expand(spec)
+            for (let [index,value] in spec['client-scripts']) {
+                if (value.startsWith(script)) {
+                    spec['client-scripts'].remove(index)
+                }
+            }
             scripts.push(script.expand(spec))
         }
         if (pak.spec.blend) {
