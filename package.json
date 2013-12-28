@@ -34,7 +34,7 @@
         "bit": ">0.9.0"
     },
     "dirs": {
-        "paks": "src/cmd/paks",
+        "paks": "src/paks",
         "client": "client"
     },
     "licenses": [
