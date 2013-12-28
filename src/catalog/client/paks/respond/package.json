@@ -1,6 +1,0 @@
-{
-    "name": "respond",
-    "description": "Polyfill for CSS media queries",
-    "version": "1.1.0",
-    "client-scripts": [ "${PAKS}/respond/respond.js" ]
-}

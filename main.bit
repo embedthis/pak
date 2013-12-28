@@ -4,11 +4,11 @@
 
 Bit.load({
     blend: [
-        "src/cmd/paks/est/est.bit",
-        "src/cmd/paks/mpr/mpr.bit",
-        "src/cmd/paks/pcre/pcre.bit",
-        "src/cmd/paks/http/http.bit",
-        "src/cmd/paks/ejs/ejs.bit",
+        "src/paks/est/est.bit",
+        "src/paks/mpr/mpr.bit",
+        "src/paks/pcre/pcre.bit",
+        "src/paks/http/http.bit",
+        "src/paks/ejs/ejs.bit",
         "doc/doc.bit",
         "${BITS}/embedthis.bit",
     ],
@@ -30,7 +30,6 @@ Bit.load({
         prefixes: 'embedthis-prefixes',
         manifest: 'package/manifest.bit',
 
-        sync: [ 'bitos', 'est', 'mpr', 'pcre', 'http', 'ejs' ],
         platforms: [ 'local' ],
         packs: [ 'bits/packs' ],
         static: false,
@@ -99,7 +98,7 @@ Bit.load({
     targets: {
         'pak.mod': {
             path: '${BIN}/pak.mod',
-            files: [ 'src/cmd/*.es', 'src/cmd/paks/ejs-version/Version.es' ],
+            files: [ 'src/*.es', 'src/paks/ejs-version/Version.es' ],
             //  MOB - should be able to simplify this
             build: `
                 trace('Compile', 'src/*.es')
@@ -113,8 +112,8 @@ Bit.load({
         'pak': {
             type: 'exe',
             path: '${BIN}/pak${EXE}',
-            headers: [ 'src/cmd/*.h' ],
-            sources: [ 'src/cmd/pak.c' ],
+            headers: [ 'src/*.h' ],
+            sources: [ 'src/pak.c' ],
             depends: [ 'libejs', 'pak.mod' ],
         },
 

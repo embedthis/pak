@@ -1,6 +1,0 @@
-{
-    "name": "less",
-    "description": "CSS pre-processor for the Less stylesheet language",
-    "version": "1.3.3",
-    "client-scripts": [ "${PAKS}/less/less.js" ]
-}
