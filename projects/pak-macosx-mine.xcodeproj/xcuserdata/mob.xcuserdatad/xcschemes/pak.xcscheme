@@ -240,7 +240,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/mob/git/apps/xx"
+      customWorkingDirectory = "/Users/mob/git/catalog"
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -260,7 +260,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "install esp-angular-mvc"
+            argument = "-f upgrade"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
