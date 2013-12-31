@@ -1647,6 +1647,9 @@ http.verifyIssuer = false
     }
 }
 
+/*
+    Trace for quiet mode only
+ */
 function qtrace(tag: String, ...args): Void {
     if (!options.silent) {
         let msg = args.join(' ')

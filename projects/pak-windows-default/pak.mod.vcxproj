@@ -96,7 +96,7 @@
 
   <CustomBuildStep>
     <Command>cd ..\..
-"$(BinDir)\ejsc" --out "$(BinDir)/pak.mod"  --optimize 9 /Users/mob/git/pak/src/cmd/Package.es /Users/mob/git/pak/src/cmd/pak.es /Users/mob/git/pak/src/cmd/paks/ejs-version/Version.es
+"$(BinDir)\ejsc" --out "$(BinDir)/pak.mod"  --optimize 9 /Users/mob/git/pak/src/Package.es /Users/mob/git/pak/src/pak.es /Users/mob/git/pak/src/paks/ejs-version/Version.es
 cd projects\pak-windows-default</Command>
     <Outputs>$(BinDir)\pak.mod</Outputs>
   </CustomBuildStep>

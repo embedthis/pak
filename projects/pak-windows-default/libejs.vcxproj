@@ -100,7 +100,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ClCompile Include="..\..\src\cmd\paks\ejs\ejsLib.c" />
+    <ClCompile Include="..\..\src\paks\ejs\ejsLib.c" />
   </ItemGroup>
 
   <ItemGroup>
@@ -122,11 +122,11 @@
   </Link>
 
   <CustomBuildStep>
-    <Command>cd ..\..\src\cmd\paks\ejs
+    <Command>cd ..\..\src\paks\ejs
 copy /Y ejs.h $(IncDir)
 copy /Y ejs.slots.h $(IncDir)
 copy /Y ejsByteGoto.h $(IncDir)
-cd ..\..\..\..\projects\pak-windows-default</Command>
+cd ..\..\..\projects\pak-windows-default</Command>
     <Outputs>$(BinDir)\libejs.dll</Outputs>
   </CustomBuildStep>
   </ItemDefinitionGroup>

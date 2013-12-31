@@ -132,6 +132,10 @@ prep:
 	@[ ! -x $(CONFIG)/bin ] && mkdir -p $(CONFIG)/bin; true
 	@[ ! -x $(CONFIG)/inc ] && mkdir -p $(CONFIG)/inc; true
 	@[ ! -x $(CONFIG)/obj ] && mkdir -p $(CONFIG)/obj; true
+	@[ ! -f $(CONFIG)/inc/bitos.h ] && cp src/bitos.h $(CONFIG)/inc/bitos.h ; true
+	@if ! diff $(CONFIG)/inc/bitos.h src/bitos.h >/dev/null ; then\
+		cp src/bitos.h $(CONFIG)/inc/bitos.h  ; \
+	fi; true
 	@[ ! -f $(CONFIG)/inc/bit.h ] && cp projects/pak-macosx-default-bit.h $(CONFIG)/inc/bit.h ; true
 	@if ! diff $(CONFIG)/inc/bit.h projects/pak-macosx-default-bit.h >/dev/null ; then\
 		cp projects/pak-macosx-default-bit.h $(CONFIG)/inc/bit.h  ; \
@@ -185,7 +189,7 @@ version: $(DEPS_1)
 $(CONFIG)/inc/est.h: $(DEPS_2)
 	@echo '      [Copy] $(CONFIG)/inc/est.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/paks/est/est.h $(CONFIG)/inc/est.h
+	cp src/paks/est/est.h $(CONFIG)/inc/est.h
 
 #
 #   bit.h
@@ -199,7 +203,7 @@ $(CONFIG)/inc/bit.h: $(DEPS_3)
 $(CONFIG)/inc/bitos.h: $(DEPS_4)
 	@echo '      [Copy] $(CONFIG)/inc/bitos.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/bitos.h $(CONFIG)/inc/bitos.h
+	cp src/bitos.h $(CONFIG)/inc/bitos.h
 
 #
 #   estLib.o
@@ -209,9 +213,9 @@ DEPS_5 += $(CONFIG)/inc/est.h
 DEPS_5 += $(CONFIG)/inc/bitos.h
 
 $(CONFIG)/obj/estLib.o: \
-    src/cmd/paks/est/estLib.c $(DEPS_5)
+    src/paks/est/estLib.c $(DEPS_5)
 	@echo '   [Compile] $(CONFIG)/obj/estLib.o'
-	$(CC) -c -o $(CONFIG)/obj/estLib.o -arch $(CC_ARCH) $(IFLAGS) src/cmd/paks/est/estLib.c
+	$(CC) -c -o $(CONFIG)/obj/estLib.o -arch $(CC_ARCH) $(IFLAGS) src/paks/est/estLib.c
 
 ifeq ($(BIT_PACK_EST),1)
 #
@@ -230,12 +234,12 @@ endif
 #
 #   ca-crt
 #
-DEPS_7 += src/cmd/paks/est/ca.crt
+DEPS_7 += src/paks/est/ca.crt
 
 $(CONFIG)/bin/ca.crt: $(DEPS_7)
 	@echo '      [Copy] $(CONFIG)/bin/ca.crt'
 	mkdir -p "$(CONFIG)/bin"
-	cp src/cmd/paks/est/ca.crt $(CONFIG)/bin/ca.crt
+	cp src/paks/est/ca.crt $(CONFIG)/bin/ca.crt
 
 #
 #   mpr.h
@@ -243,7 +247,7 @@ $(CONFIG)/bin/ca.crt: $(DEPS_7)
 $(CONFIG)/inc/mpr.h: $(DEPS_8)
 	@echo '      [Copy] $(CONFIG)/inc/mpr.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/paks/mpr/mpr.h $(CONFIG)/inc/mpr.h
+	cp src/paks/mpr/mpr.h $(CONFIG)/inc/mpr.h
 
 #
 #   mprLib.o
@@ -253,9 +257,9 @@ DEPS_9 += $(CONFIG)/inc/mpr.h
 DEPS_9 += $(CONFIG)/inc/bitos.h
 
 $(CONFIG)/obj/mprLib.o: \
-    src/cmd/paks/mpr/mprLib.c $(DEPS_9)
+    src/paks/mpr/mprLib.c $(DEPS_9)
 	@echo '   [Compile] $(CONFIG)/obj/mprLib.o'
-	$(CC) -c -o $(CONFIG)/obj/mprLib.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/mpr/mprLib.c
+	$(CC) -c -o $(CONFIG)/obj/mprLib.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/mpr/mprLib.c
 
 #
 #   libmpr
@@ -277,9 +281,9 @@ DEPS_11 += $(CONFIG)/inc/mpr.h
 DEPS_11 += $(CONFIG)/inc/est.h
 
 $(CONFIG)/obj/mprSsl.o: \
-    src/cmd/paks/mpr/mprSsl.c $(DEPS_11)
+    src/paks/mpr/mprSsl.c $(DEPS_11)
 	@echo '   [Compile] $(CONFIG)/obj/mprSsl.o'
-	$(CC) -c -o $(CONFIG)/obj/mprSsl.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/mpr/mprSsl.c
+	$(CC) -c -o $(CONFIG)/obj/mprSsl.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/mpr/mprSsl.c
 
 #
 #   libmprssl
@@ -312,9 +316,9 @@ DEPS_13 += $(CONFIG)/inc/bit.h
 DEPS_13 += $(CONFIG)/inc/mpr.h
 
 $(CONFIG)/obj/makerom.o: \
-    src/cmd/paks/mpr/makerom.c $(DEPS_13)
+    src/paks/mpr/makerom.c $(DEPS_13)
 	@echo '   [Compile] $(CONFIG)/obj/makerom.o'
-	$(CC) -c -o $(CONFIG)/obj/makerom.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/mpr/makerom.c
+	$(CC) -c -o $(CONFIG)/obj/makerom.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/mpr/makerom.c
 
 #
 #   makerom
@@ -338,7 +342,7 @@ $(CONFIG)/bin/makerom: $(DEPS_14)
 $(CONFIG)/inc/pcre.h: $(DEPS_15)
 	@echo '      [Copy] $(CONFIG)/inc/pcre.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/paks/pcre/pcre.h $(CONFIG)/inc/pcre.h
+	cp src/paks/pcre/pcre.h $(CONFIG)/inc/pcre.h
 
 #
 #   pcre.o
@@ -347,9 +351,9 @@ DEPS_16 += $(CONFIG)/inc/bit.h
 DEPS_16 += $(CONFIG)/inc/pcre.h
 
 $(CONFIG)/obj/pcre.o: \
-    src/cmd/paks/pcre/pcre.c $(DEPS_16)
+    src/paks/pcre/pcre.c $(DEPS_16)
 	@echo '   [Compile] $(CONFIG)/obj/pcre.o'
-	$(CC) -c -o $(CONFIG)/obj/pcre.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/pcre/pcre.c
+	$(CC) -c -o $(CONFIG)/obj/pcre.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/pcre/pcre.c
 
 ifeq ($(BIT_PACK_PCRE),1)
 #
@@ -370,7 +374,7 @@ endif
 $(CONFIG)/inc/http.h: $(DEPS_18)
 	@echo '      [Copy] $(CONFIG)/inc/http.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/paks/http/http.h $(CONFIG)/inc/http.h
+	cp src/paks/http/http.h $(CONFIG)/inc/http.h
 
 #
 #   httpLib.o
@@ -380,9 +384,9 @@ DEPS_19 += $(CONFIG)/inc/http.h
 DEPS_19 += $(CONFIG)/inc/mpr.h
 
 $(CONFIG)/obj/httpLib.o: \
-    src/cmd/paks/http/httpLib.c $(DEPS_19)
+    src/paks/http/httpLib.c $(DEPS_19)
 	@echo '   [Compile] $(CONFIG)/obj/httpLib.o'
-	$(CC) -c -o $(CONFIG)/obj/httpLib.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/http/httpLib.c
+	$(CC) -c -o $(CONFIG)/obj/httpLib.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/http/httpLib.c
 
 #
 #   libhttp
@@ -416,9 +420,9 @@ DEPS_21 += $(CONFIG)/inc/bit.h
 DEPS_21 += $(CONFIG)/inc/http.h
 
 $(CONFIG)/obj/http.o: \
-    src/cmd/paks/http/http.c $(DEPS_21)
+    src/paks/http/http.c $(DEPS_21)
 	@echo '   [Compile] $(CONFIG)/obj/http.o'
-	$(CC) -c -o $(CONFIG)/obj/http.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/http/http.c
+	$(CC) -c -o $(CONFIG)/obj/http.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/http/http.c
 
 #
 #   http
@@ -454,7 +458,7 @@ $(CONFIG)/bin/http: $(DEPS_22)
 $(CONFIG)/inc/ejs.h: $(DEPS_23)
 	@echo '      [Copy] $(CONFIG)/inc/ejs.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/paks/ejs/ejs.h $(CONFIG)/inc/ejs.h
+	cp src/paks/ejs/ejs.h $(CONFIG)/inc/ejs.h
 
 #
 #   ejs.slots.h
@@ -462,7 +466,7 @@ $(CONFIG)/inc/ejs.h: $(DEPS_23)
 $(CONFIG)/inc/ejs.slots.h: $(DEPS_24)
 	@echo '      [Copy] $(CONFIG)/inc/ejs.slots.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/paks/ejs/ejs.slots.h $(CONFIG)/inc/ejs.slots.h
+	cp src/paks/ejs/ejs.slots.h $(CONFIG)/inc/ejs.slots.h
 
 #
 #   ejsByteGoto.h
@@ -470,7 +474,7 @@ $(CONFIG)/inc/ejs.slots.h: $(DEPS_24)
 $(CONFIG)/inc/ejsByteGoto.h: $(DEPS_25)
 	@echo '      [Copy] $(CONFIG)/inc/ejsByteGoto.h'
 	mkdir -p "$(CONFIG)/inc"
-	cp src/cmd/paks/ejs/ejsByteGoto.h $(CONFIG)/inc/ejsByteGoto.h
+	cp src/paks/ejs/ejsByteGoto.h $(CONFIG)/inc/ejsByteGoto.h
 
 #
 #   ejsLib.o
@@ -484,9 +488,9 @@ DEPS_26 += $(CONFIG)/inc/http.h
 DEPS_26 += $(CONFIG)/inc/ejs.slots.h
 
 $(CONFIG)/obj/ejsLib.o: \
-    src/cmd/paks/ejs/ejsLib.c $(DEPS_26)
+    src/paks/ejs/ejsLib.c $(DEPS_26)
 	@echo '   [Compile] $(CONFIG)/obj/ejsLib.o'
-	$(CC) -c -o $(CONFIG)/obj/ejsLib.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/ejs/ejsLib.c
+	$(CC) -c -o $(CONFIG)/obj/ejsLib.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/ejs/ejsLib.c
 
 ifeq ($(BIT_PACK_EJSCRIPT),1)
 #
@@ -528,9 +532,9 @@ DEPS_28 += $(CONFIG)/inc/bit.h
 DEPS_28 += $(CONFIG)/inc/ejs.h
 
 $(CONFIG)/obj/ejs.o: \
-    src/cmd/paks/ejs/ejs.c $(DEPS_28)
+    src/paks/ejs/ejs.c $(DEPS_28)
 	@echo '   [Compile] $(CONFIG)/obj/ejs.o'
-	$(CC) -c -o $(CONFIG)/obj/ejs.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/ejs/ejs.c
+	$(CC) -c -o $(CONFIG)/obj/ejs.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/ejs/ejs.c
 
 ifeq ($(BIT_PACK_EJSCRIPT),1)
 #
@@ -575,9 +579,9 @@ DEPS_30 += $(CONFIG)/inc/bit.h
 DEPS_30 += $(CONFIG)/inc/ejs.h
 
 $(CONFIG)/obj/ejsc.o: \
-    src/cmd/paks/ejs/ejsc.c $(DEPS_30)
+    src/paks/ejs/ejsc.c $(DEPS_30)
 	@echo '   [Compile] $(CONFIG)/obj/ejsc.o'
-	$(CC) -c -o $(CONFIG)/obj/ejsc.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/paks/ejs/ejsc.c
+	$(CC) -c -o $(CONFIG)/obj/ejsc.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/ejs/ejsc.c
 
 ifeq ($(BIT_PACK_EJSCRIPT),1)
 #
@@ -619,7 +623,7 @@ ifeq ($(BIT_PACK_EJSCRIPT),1)
 #
 #   ejs.mod
 #
-DEPS_32 += src/cmd/paks/ejs/ejs.es
+DEPS_32 += src/paks/ejs/ejs.es
 DEPS_32 += $(CONFIG)/inc/mpr.h
 DEPS_32 += $(CONFIG)/inc/bit.h
 DEPS_32 += $(CONFIG)/inc/bitos.h
@@ -643,17 +647,17 @@ DEPS_32 += $(CONFIG)/bin/ejsc
 
 $(CONFIG)/bin/ejs.mod: $(DEPS_32)
 	( \
-	cd src/cmd/paks/ejs; \
-	$(LBIN)/ejsc --out ../../../../$(CONFIG)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
+	cd src/paks/ejs; \
+	$(LBIN)/ejsc --out ../../../$(CONFIG)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
 	)
 endif
 
 #
 #   pak.mod
 #
-DEPS_33 += src/cmd/Package.es
-DEPS_33 += src/cmd/pak.es
-DEPS_33 += src/cmd/paks/ejs-version/Version.es
+DEPS_33 += src/Package.es
+DEPS_33 += src/pak.es
+DEPS_33 += src/paks/ejs-version/Version.es
 DEPS_33 += $(CONFIG)/inc/mpr.h
 DEPS_33 += $(CONFIG)/inc/bit.h
 DEPS_33 += $(CONFIG)/inc/bitos.h
@@ -680,7 +684,7 @@ ifeq ($(BIT_PACK_EJSCRIPT),1)
 endif
 
 $(CONFIG)/bin/pak.mod: $(DEPS_33)
-	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 ./src/cmd/Package.es ./src/cmd/pak.es ./src/cmd/paks/ejs-version/Version.es
+	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 ./src/Package.es ./src/pak.es ./src/paks/ejs-version/Version.es
 
 #
 #   pak.o
@@ -689,9 +693,9 @@ DEPS_34 += $(CONFIG)/inc/bit.h
 DEPS_34 += $(CONFIG)/inc/ejs.h
 
 $(CONFIG)/obj/pak.o: \
-    src/cmd/pak.c $(DEPS_34)
+    src/pak.c $(DEPS_34)
 	@echo '   [Compile] $(CONFIG)/obj/pak.o'
-	$(CC) -c -o $(CONFIG)/obj/pak.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/cmd/pak.c
+	$(CC) -c -o $(CONFIG)/obj/pak.o -arch $(CC_ARCH) $(CFLAGS) $(DFLAGS) $(IFLAGS) src/pak.c
 
 #
 #   pak

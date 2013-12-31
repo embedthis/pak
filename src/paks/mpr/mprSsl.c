@@ -29,7 +29,7 @@
 #define MATRIX_USE_FILE_SYSTEM
 
 /* 
-    Work-around to allow the windows 7.* SDK to be used with VS 2013 
+    Work-around to allow the windows 7.* SDK to be used with VS 2014 
  */
 #if _MSC_VER >= 1700
     #define SAL_SUPP_H
@@ -747,7 +747,7 @@ void matrixsslDummy() {}
 /*
     @copy   default
 
-    Copyright (c) Embedthis Software LLC, 2003-2013. All Rights Reserved.
+    Copyright (c) Embedthis Software LLC, 2003-2014. All Rights Reserved.
 
     This software is distributed under commercial and open source licenses.
     You may use the Embedthis Open Source license or you may acquire a 
@@ -815,7 +815,7 @@ static EstConfig *defaultEstConfig;     /* Default configuration */
 
 /*
     Regenerate using: dh_genprime
-    Generated on 1/1/2013
+    Generated on 1/1/2014
  */
 static char *dhG = "4";
 static char *dhKey =
@@ -1339,7 +1339,7 @@ void estDummy() {}
 /*
     @copy   default
 
-    Copyright (c) Embedthis Software LLC, 2003-2013. All Rights Reserved.
+    Copyright (c) Embedthis Software LLC, 2003-2014. All Rights Reserved.
 
     This software is distributed under commercial and open source licenses.
     You may use the Embedthis Open Source license or you may acquire a 
@@ -2364,7 +2364,7 @@ void opensslDummy() {}
 /*
     @copy   default
 
-    Copyright (c) Embedthis Software LLC, 2003-2013. All Rights Reserved.
+    Copyright (c) Embedthis Software LLC, 2003-2014. All Rights Reserved.
 
     This software is distributed under commercial and open source licenses.
     You may use the Embedthis Open Source license or you may acquire a 
@@ -2908,7 +2908,7 @@ void nanosslDummy() {}
 /*
     @copy   default
 
-    Copyright (c) Embedthis Software LLC, 2003-2013. All Rights Reserved.
+    Copyright (c) Embedthis Software LLC, 2003-2014. All Rights Reserved.
 
     This software is distributed under commercial and open source licenses.
     You may use the Embedthis Open Source license or you may acquire a 
@@ -3093,7 +3093,7 @@ PUBLIC int mprGetSslCipherCode(cchar *cipher)
 /*
     @copy   default
 
-    Copyright (c) Embedthis Software LLC, 2003-2013. All Rights Reserved.
+    Copyright (c) Embedthis Software LLC, 2003-2014. All Rights Reserved.
 
     This software is distributed under commercial and open source licenses.
     You may use the Embedthis Open Source license or you may acquire a 

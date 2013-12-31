@@ -95,10 +95,10 @@
   </Link>
 
   <CustomBuildStep>
-    <Command>cd ..\..\src\cmd\paks\est
+    <Command>cd ..\..\src\paks\est
 if exist $(BinDir)\ca.crt del /Q $(BinDir)\ca.crt
 copy /Y ca.crt $(BinDir)\ca.crt
-cd ..\..\..\..\projects\pak-windows-default</Command>
+cd ..\..\..\projects\pak-windows-default</Command>
     <Outputs>$(BinDir)\ca.crt</Outputs>
   </CustomBuildStep>
   </ItemDefinitionGroup>

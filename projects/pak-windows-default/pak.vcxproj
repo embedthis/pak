@@ -100,7 +100,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ClCompile Include="..\..\src\cmd\pak.c" />
+    <ClCompile Include="..\..\src\pak.c" />
   </ItemGroup>
 
   <ItemGroup>
@@ -115,7 +115,7 @@
 
   <CustomBuildStep>
     <Command>cd ..\..
-copy /Y src\cmd\bitos.h $(IncDir)
+copy /Y src\bitos.h $(IncDir)
 cd projects\pak-windows-default</Command>
     <Outputs>$(BinDir)\pak.exe</Outputs>
   </CustomBuildStep>
