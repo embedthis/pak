@@ -2,35 +2,37 @@
 .SH NAME
 pak \- Embedthis Pak -- Package Manager
 .SH SYNOPSIS
-.B pak [\fI--catalog catalog\fR]
+.B pak 
 [\fI--all\fR]
+[\fI--catalog catalog\fR]
 [\fI--details\fR]
-[\fI--dir\fR]
+[\fI--dir dir\fR]
 [\fI--force\fR]
 .RS 4
 [\fI--log file:level\fR]
 [\fI--paks dir\fR]
 [\fI--quiet\fR]
 [\fI--silent\fR]
+[\fI--verbose\fR]
 .RE
 .RS 4
-[\fI--verbose\fR]
-[\fI--versions\fR]
+[\fI--versions\fR] \\
 .RE
 .RS4
 [cache|cached|config|depend|edit|help|init|install|list|prune|publish|retract|search|uninstall|update|upgrade] paks...
 .RE
 .SH DESCRIPTION
-\fBPak\fR is a simple package manager for embedding components into ESP/EJS applications. 
-It makes it easy to retrieve, integrate and manage components for applications. Pak focusses on embedded applications using ESP and EJS. It provides tested, integrated componens that work together. It is not intended
-as a generic package manager to install complete applications.
+\fBPak\fR is a simple package manager for embedding components into embedded applications. 
+It makes it easy to retrieve, integrate and manage components for applications. Pak focusses on embedded applications using Appweb, ESP and EJS. It provides tested, integrated componens that work together. It is not intended as a generic package manager to install complete applications.
 .PP
 Pak calls packages "paks". This is not a misspelling. 
 
 .PP
 .SH WHY PAK?
 Existing package managers like Bower are excellent, but the published components are typically tuned for enterprise
-environments and not for embedded use. Pak focusses on the embedded ESP and ESP web frameworks and offers components specificially tailored to this environment.
+environments and not for embedded use. There are many files not necessary on smaller embedded systems and they are not
+integrated together. Pak focusses on the embedded ESP web framework and offers components specificially tailored and
+integrated for this environment.
 .PP 
 
 .SH FEATURES
@@ -51,9 +53,9 @@ While Pak has a strong feature set, there are some characteristics that make Pak
 
     . Fast, fast, fast
     . Local cache of paks supports fast offline use
-    . Can publish, modify and retract paks in the global catalog
-    . Web portal to manage your published paks
-    . Integrates with the Bower repository to seamlessly download Bower components
+    . Share paks by publishing to a common public catalog
+    . Catalog web portal to search published paks
+    . Pak integrates with the Bower repository to seamlessly download Bower components
     . Package.json is compatible with nodejs.
 
 .PP
@@ -182,7 +184,7 @@ list installed paks
 prune [paks...]          
 Prune named paks
 .TP
-publish [name uri pass]  
+publish name endpoint password
 publish a pak in a catalog
 .TP
 retract name [pass]      
@@ -195,7 +197,7 @@ uninstall
 Uninstall a pak on the local system
 .TP
 update [paks...]         
-Update the cache with latest version
+Update the pak cache with latest version
 .TP
 upgrade [paks...]        
 Upgrade installed paks
