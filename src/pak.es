@@ -1461,9 +1461,17 @@ http.verifyIssuer = false
         }
         pak.resolve()
         let spec = pak.spec
-        if (!spec.name || !spec.name.match(/^[\w_-]+$/)) {
-            throw 'Invalid package name: ' + spec.name
+        let name = spec.name
+        if (!name || !name.match(/^[\w_-]+$/)) {
+            throw 'Invalid package name: ' + name
         }
+        if (!HOME.join('.embedthis')) {
+            if (name.startsWith('ejs-') ||name.startsWith('esp-') || name.startsWith('bit-') ||
+                name.startsWith('appweb-') || name.startsWith('pak-')) {
+                throw 'Reserved pak name ' + name
+            }
+        }
+        if (spec.name.start)
         if (!spec.description) {
             throw 'Invalid package name: ' + spec.description
         }
