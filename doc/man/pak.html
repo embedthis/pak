@@ -5,27 +5,29 @@ PAK(1)                           User Commands                          PAK(1)
        pak - Embedthis Pak -- Package Manager
 
 <B>SYNOPSIS</B>
-       <B>pak [</B><I>--catalog catalog</I>] [<I>--all</I>] [<I>--details</I>] [<I>--dir</I>] [<I>--force</I>]
-           [<I>--log file:level</I>] [<I>--paks dir</I>] [<I>--quiet</I>] [<I>--silent</I>]
-           [<I>--verbose</I>] [<I>--versions</I>]
+       <B>pak </B>[<I>--all</I>] [<I>--catalog catalog</I>] [<I>--details</I>] [<I>--dir dir</I>] [<I>--force</I>]
+           [<I>--log file:level</I>] [<I>--paks dir</I>] [<I>--quiet</I>] [<I>--silent</I>] [<I>--verbose</I>]
+           [<I>--versions</I>] \
        [cache|cached|config|depend|edit|help|init|install|list|prune|pub-
        lish|retract|search|uninstall|update|upgrade] paks...
 
 <B>DESCRIPTION</B>
-       The <B>pak </B>command is a simple package manager  for  embedding  components
-       into applications. It makes it easy to retrieve,
-        integrate  and  manage  components  for  applications. Pak focusses on
-       embedded applications and components. It is not intended as  a  generic
-       package manager to install complete applications.
+       <B>Pak </B>is a simple package manager for embedding components into  embedded
+       applications.   It makes it easy to retrieve, integrate and manage com-
+       ponents for applications. Pak focusses on embedded  applications  using
+       Appweb, ESP and EJS. It provides tested, integrated componens that work
+       together. It is not intended as a generic package  manager  to  install
+       complete applications.
 
        Pak calls packages "paks". This is not a misspelling.
 
 <B>WHY PAK?</B>
        Existing  package  managers like Bower are excellent, but the published
        components are typically tuned for enterprise environments and not  for
-       embedded  use. Pak focusses on embedded and on publishing packages tai-
-       lored for the embedded environment and especially the ESP C web  frame-
-       work.
+       embedded  use.  There  are many files not necessary on smaller embedded
+       systems and they are not  integrated  together.  Pak  focusses  on  the
+       embedded ESP web framework and offers components specificially tailored
+       and integrated for this environment.
 
 <B>FEATURES</B>
        Pak is implemented primarily as a single script of some 2K lines and is
@@ -46,37 +48,36 @@ PAK(1)                           User Commands                          PAK(1)
 
            . Fast, fast, fast
            . Local cache of paks supports fast offline use
-           . Can publish, modify and retract paks in the global catalog
-           . Web portal to manage your published paks
-           . Integrates with the Bower repository to seamlessly download Bower
-       components
+           . Share paks by publishing to a common public catalog
+           . Catalog web portal to search published paks
+           . Pak integrates with the Bower repository to  seamlessly  download
+       Bower components
            . Package.json is compatible with nodejs.
 
-<B>CONFIGURATION</B>
-       On startup, Pak reads  configuration  from  a  pakrc  file.  This  file
-       defines the operational configuration for Pak. For example:
-        {
-           "catalogs": [
-               "http://localhost:5000/do/pak",
-               "https://bower.herokuapp.com/packages",
-           ],
-           "dirs": {
-               "paks": "paks",
-               "pakcache": "~/.paks",
-           },
-        }
+<B>BASIC USAGE</B>
+       To install paks:
+           pak install Names...
 
-       The "catalogs" property defines sites that index and catalog packs. The
-       "paks" directory is the name of the local directory in which  to  store
-       paks. The "pakcache" directory defines where to cache paks on the local
-       system.
+       To uninstall
+           pak uninstall Names...
 
-       Pak locates a valid pakrc file by searching in order:
+       To list installed paks
+           pak list
 
-           pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, package.json
+       To display pak dependencies
+           pak depend
+
+       To show what paks are present in the cache
+           pak cached
+
+       To download and cache a pak but not install in the local directory
+           pak cache Name
+
+       To prune old versions from the cache
+           pak prune
 
 <B>OVERVIEW</B>
-       A pak is described by a CommonJS package.json file. This provides at  a
+       A  pak is described by a CommonJS package.json file. This provides at a
        minimum the following properties.
 
             {
@@ -105,51 +106,102 @@ PAK(1)                           User Commands                          PAK(1)
            http://wiki.commonjs.org/wiki/Packages/1.1
            https://npmjs.org/doc/json.html
 
-<B>BASIC USAGE</B>
-       To install paks:
-
-           pak install Names...
-
-       To uninstall
-           pak uninstall Names...
-
-       To list installed paks
-           pak list
-
-       To display pak dependencies
-           pak depend
-
-       To show what paks are present in the cache
-           pak cached
-
-       To download and cache a pak but not install in the local directory
-           pak cache Name
-
-       To prune old versions from the cache
-           pak prune
-
 <B>RUNNING</B>
        To run Pak with more verbose trace output, use the --verbose switch. To
-       run with less  trace,  use  the  --quiet  switch.   To  run  completely
+       run  with  less  trace,  use  the  --quiet  switch.   To run completely
        silently except for hard-errors, use --silent.
 
 <B>PUBLISHING</B>
-       To  publish  a  new  pak, run pak inside the directory of the pak to be
-       published:
+       To publish a new pak, create a package.json and then run pak inside the
+       directory of the pak to be published:
 
            pak publish NAME REPOSITORY PASSWORD
 
        Where NAME is the name of pak, REPOSITORY is the GitHub endpoint of the
-       package  and  PASSWORD  is  the password to associate with the pak. You
-       will need this password to modify or retract the  pak  in  the  future.
+       package and PASSWORD is the password to associate  with  the  pak.  You
+       will  need  this  password  to modify or retract the pak in the future.
        Safeguard it well.
+
+<B>CONFIGURATION</B>
+       On startup, Pak reads  configuration  from  a  pakrc  file.  This  file
+       defines the operational configuration for Pak. For example:
+        {
+           "catalogs": [
+               "http://localhost:5000/do/pak",
+               "https://bower.herokuapp.com/packages",
+           ],
+           "dirs": {
+               "paks": "paks",
+               "pakcache": "~/.paks",
+           },
+        }
+
+       The "catalogs" property defines sites that index and catalog packs. The
+       "paks" directory is the name of the local directory in which  to  store
+       paks. The "pakcache" directory defines where to cache paks on the local
+       system.
+
+       Pak locates a valid pakrc file by searching in order:
+
+           pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, package.json
+
+<B>COMMANDS</B>
+       cache [paks...]
+              Populate the cache with paks
+
+       cached [paks...]
+              List paks in the cache
+
+       config Show the Pak configuration
+
+       depend [paks...]
+              Display installed pak dependencies
+
+       edit key[=value]...
+              Edit a pak description file
+
+       help ...
+              Display this usage help
+
+       info paks...
+              Display README for a pak
+
+       init [name [version]]
+              Create a new package.json
+
+       install paks...
+              Install a pak on the local system
+
+       list [paks...]
+              list installed paks
+
+       prune [paks...]
+              Prune named paks
+
+       publish name endpoint password
+              publish a pak in a catalog
+
+       retract name [pass]
+              Unpublish a pak
+
+       search paks...
+              Search for paks in the catalog
+
+       uninstall
+              Uninstall a pak on the local system
+
+       update [paks...]
+              Update the pak cache with latest version
+
+       upgrade [paks...]
+              Upgrade installed paks
 
 <B>OPTIONS</B>
        <B>--all URI</B>
               Show all versions of a pak.
 
        <B>--catalog URI</B>
-              Set  the  catalog  URI  to  use  for install, cache, publish and
+              Set the catalog URI to  use  for  install,  cache,  publish  and
               retract commands.
 
        <B>--details URI</B>
@@ -159,27 +211,27 @@ PAK(1)                           User Commands                          PAK(1)
               Change to the given directory before running.
 
        <B>--force</B>
-              Force the command to continue. This  is  useful  to  install  or
-              cache  a  pak when dependencies cannot be satisfied.  It is also
-              useful to cache or install  an  already  cached/installed  pack.
+              Force  the  command  to  continue.  This is useful to install or
+              cache a pak when dependencies cannot be satisfied.  It  is  also
+              useful  to  cache  or  install an already cached/installed pack.
               Aliased as -f.
 
        <B>--log logName[:logLevel]</B>
-              Specify  a file to log internal execution messages. Bit will log
+              Specify a file to log internal execution messages. Bit will  log
               execution related trace to the log file. The log level specifies
-              the  desired  verbosity  of output. Level 0 is the least verbose
-              and level 9 is the most. The '-v' switch is an alias for  '--log
+              the desired verbosity of output. Level 0 is  the  least  verbose
+              and  level 9 is the most. The '-v' switch is an alias for '--log
               stderr:2'.
 
        <B>--paks directory</B>
-              Specify  the directory to use for the paks cache. This overrides
+              Specify the directory to use for the paks cache. This  overrides
               the values specified in the various pakrc files.
 
        <B>--quiet</B>
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
        <B>--silent</B>
-              Run in silent mode suppressing all but hard errors.  Aliased  as
+              Run  in  silent mode suppressing all but hard errors. Aliased as
               -s.
 
        <B>--versions URI</B>
@@ -189,7 +241,7 @@ PAK(1)                           User Commands                          PAK(1)
        Report bugs to dev@embedthis.com.
 
 <B>COPYRIGHT</B>
-       Copyright  (C)  2004-2013  Embedthis  Software.  Bit and Ejscript are a
+       Copyright (C) 2004-2013 Embedthis Software.  Bit  and  Ejscript  are  a
        trademarks of Embedthis Software.
 
 <B>SEE ALSO</B>

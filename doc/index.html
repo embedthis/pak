@@ -46,7 +46,6 @@
             It makes it easy to retrieve, integrate and manage components for applications using Appweb, ESP and EJS. 
             The Pak catalog provides tested, integrated componens that work together. It is not intended
             as a generic package manager to install complete applications.</p>
-
             <p>Pak implements the CommonJS Package specification and 
                 uses Git as back-end storage for packages. Pak calls packages "paks". This is not a misspelling.</p>
             <h4>Why Pak?</h4>
@@ -80,7 +79,6 @@
             <h2>Download</h2>
             <p>Download from <a href="http://embedthis.com/products/pak/">http://embedthis.com/products/pak/</a> or build
             from source at <a href="https://github.com/embedthis/pak">https://github.com/embedthis/pak</a>.
-
             <h2>Basic Usage</h2>
             <h4>Installing Paks</h4>
             <p>To install named paks:</p>
@@ -90,7 +88,6 @@
             will be automatically installed.
             <p>To install all the paks required by an application as specified in package.json:</p>
             <pre>pak install</pre>
-
             <h4>Removing Paks</h4>
             <pre>pak uninstall PAK...</pre>
             <h4>To list installed paks</h4>
@@ -108,7 +105,6 @@
             <pre>pak cache Name</pre>
             <h4>To prune old versions from the cache</h4>
             <pre>pak prune</pre>
-
             <h2>Configuration</h2>
             <h4>To show the Pak configuration</h4>
             On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak. To
@@ -139,7 +135,6 @@
                 <li>package.json</li>
             </ol>
             <p>The package.json is always loaded if present after any pakrc file.</p>
-
             <h2>Publishing Paks</h2>
             <p>To publish a new pak, create your package.json and then run pak in your application directory.
             <pre>pak publish NAME ENDPOINT PASSWORD</pre>
@@ -150,7 +145,6 @@
             <p>The ENDPOINT is a valid GitHub endpoint that hosts your pak contents. The PASSWORD is the 
             password to use to manage this pak in the catalog. Choose and protect this password carefully and
             then use it to modify or retract your pak in the catalog.</p>
-
             <h2>Package.json</h2>
             <p>The package.json file defines a pak. It defines the package name, version, authoring details
             and dependencies. The format is specified by
@@ -194,7 +188,6 @@
                 <li><a href="http://wiki.commonjs.org/wiki/Packages/1.1">http://wiki.commonjs.org/wiki/Packages/1.1</a></li>
                 <li><a href="https://npmjs.org/doc/json.html">https://npmjs.org/doc/json.html</a></li>
             </ul>
-
             <h2>Commands</h2>
             <p>The Pak command has the following commands:</>
             <ul>
