@@ -1149,7 +1149,7 @@ cd ../src/paks/ejs
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 ${target.cmdfiles}";
+macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 /Users/mob/git/pak/src/Package.es /Users/mob/git/pak/src/pak.es /Users/mob/git/pak/src/paks/ejs-version/Version.es";
 		};
 		D2D67164D2D6811E00000025 /* ShellScript for Prep */ = {
 			isa = PBXShellScriptBuildPhase;

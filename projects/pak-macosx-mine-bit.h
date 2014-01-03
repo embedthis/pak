@@ -16,6 +16,9 @@
 #ifndef BIT_COMPANY
     #define BIT_COMPANY "Embedthis Software"
 #endif
+#ifndef BIT_COMPATIBLE
+    #define BIT_COMPATIBLE "0.8.0"
+#endif
 #ifndef BIT_DEBUG
     #define BIT_DEBUG 1
 #endif
@@ -124,9 +127,6 @@
 #ifndef BIT_MANIFEST
     #define BIT_MANIFEST "package/manifest.bit"
 #endif
-#ifndef BIT_MPR_ALLOC_PARALLEL
-    #define BIT_MPR_ALLOC_PARALLEL 1
-#endif
 #ifndef BIT_MPR_LOGGING
     #define BIT_MPR_LOGGING 1
 #endif
@@ -147,9 +147,6 @@
 #endif
 #ifndef BIT_STATIC
     #define BIT_STATIC 0
-#endif
-#ifndef BIT_SYNC
-    #define BIT_SYNC "bitos,est,mpr,pcre,http,ejs"
 #endif
 #ifndef BIT_TITLE
     #define BIT_TITLE "Embedthis Pak"
