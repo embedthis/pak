@@ -23,7 +23,7 @@
     "dependencies": {
         "bitos": "~0.8",
         "ejs": "~2.3",
-        "ejs-version": "0.8.0",
+        "ejs-version": ">=0.8.0",
         "est": "~0.6",
         "http": "~4.5",
         "mpr": "~4.5",

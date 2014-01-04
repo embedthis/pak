@@ -1,5 +1,8 @@
 {
     "name": "ejs-version",
     "description": "Version parsing for SemVer versions",
-    "version": "0.8.0",
+    "version": "0.8.1",
+    "scripts": {
+        "install": "install.es"
+    }
 }
