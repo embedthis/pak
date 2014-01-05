@@ -99,7 +99,7 @@ class Package {
 
     function setDownload(uri: String) {
         downloadUri = uri
-        dtrace('Set', 'Download uri: ' + downloadUri)
+        vtrace('Set', 'Download uri: ' + downloadUri)
     }
 
     function setCacheVersion(ver: String?) {
@@ -202,7 +202,7 @@ class Package {
         for each (name in PakFiles) {
             let f = path.join(name)
             if (f.exists) {
-                // if (!options.quiet) dtrace('Read', f)
+                // if (!options.quiet) vtrace('Read', f)
                 return deserialize(f.readString())
             }
         }

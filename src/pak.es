@@ -45,7 +45,8 @@ class PakCmd
     /* This layers over App.config */
     private var defaultConfig = {
         catalogs: [ 
-            'https://embedthis.com/catalog/pak',
+            //  TODO SSL
+            'http://embedthis.com/catalog/do/pak',
             'https://bower.herokuapp.com/packages',
         ],
         publish: 'http://embedthis.com/pak/do/catalog/publish',
@@ -702,7 +703,7 @@ class PakCmd
             spec.dirs[k] = Path(v)
             dirs[k] = Path(v)
         }
-        let PAKS = dirs.client ? { PAKS: dirs.paks.trimStart(dirs.client + '/') } : {}
+        let PAKS = dirs.client ? { PAKS: dirs.paks.trimStart(dirs.client + '/') } : {PAKS: 'paks'}
         for each (script in pak.spec['client-scripts']) {
             let scripts = spec['client-scripts'] ||= []
             script = script.expand(PAKS).expand(spec)
@@ -1361,9 +1362,10 @@ http.verifyIssuer = false
         for (let [index, catalog] in catalogs) {
             trace('Info', 'Searching catalog: ' + catalog + ' for ' + pak + ' ' + (pak.searchCriteria || ''))
             try {
-                if (!catalog.contains('bower')) {
-                    catalog += '/list'
+                if (!catalog.toString().contains('bower')) {
+                    catalog = catalog.toString() + '/search'
                 }
+                vtrace('Retrieve', catalog)
                 http.get(catalog)
             } catch (e) {
                 qtrace('Warn', 'Cannot access catalog at: ' + catalog)
