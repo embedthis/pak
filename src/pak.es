@@ -1391,7 +1391,6 @@ http.verifyIssuer = false
                 for each (item in data) {
                     index[item.name] = item.endpoint || item.url
                 }
-dump(data)
                 let remote = index[pak.name]
                 if (remote) {
                     /* Exact match */
