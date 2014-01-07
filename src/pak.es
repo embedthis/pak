@@ -999,6 +999,7 @@ class PakCmd
             //  Better to strip first part of file name and extract into the right place first time
             //  Tar options strip: 1
             tar.extract()
+            removeDir(dest, true)
             dest.parent.join(pak.repName + '-' + pak.cacheVersion).rename(dest)
 
         } finally {
