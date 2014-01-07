@@ -3773,7 +3773,6 @@ typedef struct HttpRoute {
     MprList         *handlers;              /**< List of handlers for this route */
     HttpStage       *connector;             /**< Network connector to use */
     MprHash         *map;                   /**< Map of alternate extensions (gzip|minified) */
-    MprHash         *mappings;              /**< Runtime filename mappings */
     MprHash         *data;                  /**< Hash of extra data configuration */
     MprHash         *vars;                  /**< Route variables. Used to expand Path ${token} refrerences */
     MprHash         *languages;             /**< Languages supported */
@@ -5090,14 +5089,14 @@ PUBLIC int httpSetCacheLink(HttpConn *conn, void *link);
     Set a notification callback to be invoked for session notification events.
     WARNING: the callback may happen on any thread. Use careful locking to synchronize access to data. Take care
             not to block the thread issuing the callback.
-    @param notify MprCacheProc notification callback. Invoked for events of interest on cache items. 
+    @param notifyProc MprCacheProc notification callback. Invoked for events of interest on cache items. 
         The event is set to MPR_CACHE_NOTIFY_REMOVE when items are removed from the cache.  Invoked as:
 
         (*MprCacheProc)(MprCache *cache, cchar *key, cchar *data, int event);
     @ingroup HttpSession
     @stability Prototype
   */
-PUBLIC void httpSetSessionNotify(MprCacheProc notify);
+PUBLIC void httpSetSessionNotify(MprCacheProc notifyProc);
 
 /**
     Set an object into the session state store.

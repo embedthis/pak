@@ -1385,14 +1385,13 @@ http.verifyIssuer = false
                     trace('Skip', 'Missing catalog data')
                     continue
                 }
-                if (data is Array) {
-                    /* Bower index */
-                    for each (item in data) {
-                        index[item.name] = item.url
-                    }
-                } else {
-                    index = data
+                if (!(data is Array)) {
+                    data = data.data
                 }
+                for each (item in data) {
+                    index[item.name] = item.endpoint || item.url
+                }
+dump(data)
                 let remote = index[pak.name]
                 if (remote) {
                     /* Exact match */
