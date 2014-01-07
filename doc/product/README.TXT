@@ -26,10 +26,10 @@ System Requirements
 
 Operating System Support
 
-    * Windows XP, Vista, Windows-7 (x86,x64)
+    * Windows Windows-7,8 (x86,x64)
     * Mac OS X 10.6+ (x64)
-    * Linux 2.4, 2.6 (x86,x64,arm,ppc,sparc,xscale,mips)
-    * VxWorks (x86,arm,ppc,sparc,xscale,mips)
+    * Linux 2.6 (x86,x64,arm,ppc,mips)
+    * VxWorks (x86,arm,ppc,mips)
 
 To install Appweb, your development system will need at least the following:
 
