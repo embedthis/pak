@@ -651,6 +651,7 @@ class PakCmd
             pak = searchPak(pak)
             cachePak(pak)
         }
+        runScripts(pak, 'preinstall')
         let path = Package.getSpecFile('.') || Path(PACKAGE)
         let spec = path.exists ? path.readJSON() : PakTemplate.clone()
         blendPak(spec, pak)
@@ -663,6 +664,7 @@ class PakCmd
             path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
         }
         installPakFiles(pak)
+        runScripts(pak, 'install')
     }
 
     /* 
@@ -865,6 +867,7 @@ class PakCmd
             return pak
         }
         trace('Update', pak + ' to ' + later.cacheVersion)
+        runScripts(pak, 'preupdate')
         cachePak(later)
         return later
     }
@@ -885,6 +888,7 @@ class PakCmd
         }
         qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
         later.resolve(later.cacheVersion)
+        runScripts(pak, 'preupgrade')
         install(later)
     }
 
@@ -1011,29 +1015,44 @@ class PakCmd
         }
     }
 
-    private function runInstallScripts(pak: Package) {
-        if (!pak.spec.scripts) return
-        let script = pak.spec.scripts['install']
-        let path = pak.cachePath.join(script)
-        if (path.exists) {
-            let current = App.dir
-            try {
-                chdir(pak.sourcePath)
-                print("PATH", path)
-                if (path.extension == 'es') {
-                    trace('Run', 'Ejs script', script)
-                    load(path)
-                } else if (path.extension == 'bit') {
-                    trace('Run', 'Bit', script)
-                    out.write(Cmd.run('bit --file ' + path))
-                } else {
-                    trace('Run', 'Shell', script)
-                    out.write(Cmd.run('bash ' + path))
+    /*
+        Events:
+            cache
+            preinstall
+            install
+            uninstall
+            preupdate
+            preupgrade
+     */
+    private function runScripts(pak: Package, event: String) {
+        if (pak.spec.scripts) {
+            let script = pak.spec.scripts[event]
+            let path = pak.cachePath.join(script)
+            if (path.exists) {
+                let current = App.dir
+                try {
+                    chdir(pak.sourcePath)
+                    if (path.extension == 'es') {
+                        trace('Run', 'Ejs script', script)
+                        load(path)
+                    } else if (path.extension == 'bit') {
+                        trace('Run', 'Bit', script)
+                        Cmd.run('bit --file ' + path, {noio: true})
+                    } else {
+                        trace('Run', 'Shell', script)
+                        Cmd.run('bash ' + path, {noio: true})
+                    }
+                } catch (e) {
+                    throw 'Cannot run installion script "' + script + '" for ' + pak + '\n' + e
+                } finally {
+                    chdir(current)
                 }
-            } catch (e) {
-                throw 'Cannot run installion script "' + script + '" for ' + pak + '\n' + e
-            } finally {
-                chdir(current)
+            }
+        } else {
+            path = pak.cachePath.join('start.bit')
+            if (path.exists) {
+                trace('Run', 'bit --file ' + path + ' ' + event)
+                Cmd.run('bit --file ' + path + ' ' + event, {noio: true})
             }
         }
     }
@@ -1064,7 +1083,7 @@ class PakCmd
         }
         pak.resolve()
         cacheDependencies(pak)
-        runInstallScripts(pak)
+        runScripts(pak, 'cache')
         qtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
     }
 
@@ -1233,37 +1252,32 @@ http.verifyIssuer = false
                 throw 'Cannot remove "' + pak + '". It is required by: ' + users.join(', ') + '.'
             }
         }
-        let script = pak.installPath.join('uninstall.es')
-        if (script.exists) {
-            try {
-                qtrace('Run', 'Uninstall script: ' + script)
-                load(script)
-            } catch (e) {
-                throw 'Cannot uninstall "' + pak + '"\n' + e
-            }
-        }
-        removeDir(pak.installPath, true)
+        pak.resolve(pak.installVersion)
+        runScripts(pak, 'uninstall')
         /*
-            Remove entry in dependencies
+            Remove entry in ./package.json dependencies
          */
         let path = Package.getSpecFile('.')
-        let spec = path.readJSON()
-        delete spec.dependencies[pak.name]
-        /*
-            Remove client scripts
-         */
-        if (spec['client-scripts']) {
-            let PAKS = dirs.client ? { PAKS: dirs.paks.trimStart(dirs.client + '/') } : {}
-            for each (script in pak.spec['client-scripts']) {
-                script = script.expand(PAKS).expand(spec)
-                for (let [key,value] in spec['client-scripts']) {
-                    if (value.startsWith(script)) {
-                        delete spec['client-scripts'][key]
+        if (path) {
+            let spec = path.readJSON()
+            delete spec.dependencies[pak.name]
+            /*
+                Remove client scripts
+             */
+            if (spec['client-scripts']) {
+                let PAKS = dirs.client ? { PAKS: dirs.paks.trimStart(dirs.client + '/') } : {}
+                for each (script in pak.spec['client-scripts']) {
+                    script = script.expand(PAKS).expand(spec)
+                    for (let [key,value] in spec['client-scripts']) {
+                        if (value.startsWith(script)) {
+                            delete spec['client-scripts'][key]
+                        }
                     }
                 }
             }
+            path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
         }
-        path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
+        removeDir(pak.installPath, true)
         qtrace('Remove', pak.name)
     }
 
