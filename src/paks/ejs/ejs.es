@@ -15903,7 +15903,6 @@ module ejs.tar {
                 }
                 if (operation == Extract) {
                     for (let [target, path] in links) {
-                        print('cp', Path(path).dirname.join(target), path)
                         Path(path).dirname.join(target).copy(path)
                     }
                 }
