@@ -282,9 +282,10 @@ class PakCmd
                         pak.setSource(name)
                         /* Use name from package.json so directory can be any name */
                         let spec = Package.readSpec(name)
-                        pak.name = spec.name
-
-                        pak.resolve()
+                        if (spec) {
+                            pak.name = spec.name
+                            pak.resolve()
+                        }
                     }
                     cache(pak)
                 }

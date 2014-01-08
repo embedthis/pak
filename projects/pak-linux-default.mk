@@ -684,7 +684,10 @@ ifeq ($(BIT_PACK_EJSCRIPT),1)
 endif
 
 $(CONFIG)/bin/pak.mod: $(DEPS_33)
-	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 ./src/Package.es ./src/pak.es ./src/paks/ejs-version/Version.es
+	( \
+	cd .; \
+	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 ./src/Package.es ./src/pak.es ./src/paks/ejs-version/Version.es ; \
+	)
 
 #
 #   pak.o
@@ -745,33 +748,37 @@ $(CONFIG)/bin/pak: $(DEPS_35)
 #
 stop: $(DEPS_36)
 
+	@echo '   [Install] Complete'
 #
 #   installBinary
 #
 installBinary: $(DEPS_37)
-	mkdir -p "$(BIT_APP_PREFIX)"
-	rm -f "$(BIT_APP_PREFIX)/latest"
-	ln -s "0.8.0" "$(BIT_APP_PREFIX)/latest"
-	mkdir -p "$(BIT_VAPP_PREFIX)/bin"
-	cp $(CONFIG)/bin/pak $(BIT_VAPP_PREFIX)/bin/pak
-	mkdir -p "$(BIT_BIN_PREFIX)"
-	rm -f "$(BIT_BIN_PREFIX)/pak"
-	ln -s "$(BIT_VAPP_PREFIX)/bin/pak" "$(BIT_BIN_PREFIX)/pak"
-	cp $(CONFIG)/bin/ejs $(BIT_VAPP_PREFIX)/bin/ejs
-	cp $(CONFIG)/bin/libejs.so $(BIT_VAPP_PREFIX)/bin/libejs.so
-	cp $(CONFIG)/bin/libest.so $(BIT_VAPP_PREFIX)/bin/libest.so
-	cp $(CONFIG)/bin/libhttp.so $(BIT_VAPP_PREFIX)/bin/libhttp.so
-	cp $(CONFIG)/bin/libmpr.so $(BIT_VAPP_PREFIX)/bin/libmpr.so
-	cp $(CONFIG)/bin/libmprssl.so $(BIT_VAPP_PREFIX)/bin/libmprssl.so
-	cp $(CONFIG)/bin/libpcre.so $(BIT_VAPP_PREFIX)/bin/libpcre.so
-	cp $(CONFIG)/bin/ca.crt $(BIT_VAPP_PREFIX)/bin/ca.crt
-	cp $(CONFIG)/bin/ejs.mod $(BIT_VAPP_PREFIX)/bin/ejs.mod
-	cp $(CONFIG)/bin/pak.mod $(BIT_VAPP_PREFIX)/bin/pak.mod
-	mkdir -p "$(BIT_VAPP_PREFIX)/doc/man/man1"
-	cp doc/man/pak.1 $(BIT_VAPP_PREFIX)/doc/man/man1/pak.1
-	mkdir -p "$(BIT_MAN_PREFIX)/man1"
-	rm -f "$(BIT_MAN_PREFIX)/man1/pak.1"
-	ln -s "$(BIT_VAPP_PREFIX)/doc/man/man1/pak.1" "$(BIT_MAN_PREFIX)/man1/pak.1"
+	( \
+	cd .; \
+	mkdir -p "$(BIT_APP_PREFIX)" ; \
+	rm -f "$(BIT_APP_PREFIX)/latest" ; \
+	ln -s "0.8.0" "$(BIT_APP_PREFIX)/latest" ; \
+	mkdir -p "$(BIT_VAPP_PREFIX)/bin" ; \
+	cp $(CONFIG)/bin/pak $(BIT_VAPP_PREFIX)/bin/pak ; \
+	mkdir -p "$(BIT_BIN_PREFIX)" ; \
+	rm -f "$(BIT_BIN_PREFIX)/pak" ; \
+	ln -s "$(BIT_VAPP_PREFIX)/bin/pak" "$(BIT_BIN_PREFIX)/pak" ; \
+	cp $(CONFIG)/bin/ejs $(BIT_VAPP_PREFIX)/bin/ejs ; \
+	cp $(CONFIG)/bin/libejs.so $(BIT_VAPP_PREFIX)/bin/libejs.so ; \
+	cp $(CONFIG)/bin/libest.so $(BIT_VAPP_PREFIX)/bin/libest.so ; \
+	cp $(CONFIG)/bin/libhttp.so $(BIT_VAPP_PREFIX)/bin/libhttp.so ; \
+	cp $(CONFIG)/bin/libmpr.so $(BIT_VAPP_PREFIX)/bin/libmpr.so ; \
+	cp $(CONFIG)/bin/libmprssl.so $(BIT_VAPP_PREFIX)/bin/libmprssl.so ; \
+	cp $(CONFIG)/bin/libpcre.so $(BIT_VAPP_PREFIX)/bin/libpcre.so ; \
+	cp $(CONFIG)/bin/ca.crt $(BIT_VAPP_PREFIX)/bin/ca.crt ; \
+	cp $(CONFIG)/bin/ejs.mod $(BIT_VAPP_PREFIX)/bin/ejs.mod ; \
+	cp $(CONFIG)/bin/pak.mod $(BIT_VAPP_PREFIX)/bin/pak.mod ; \
+	mkdir -p "$(BIT_VAPP_PREFIX)/doc/man/man1" ; \
+	cp doc/man/pak.1 $(BIT_VAPP_PREFIX)/doc/man/man1/pak.1 ; \
+	mkdir -p "$(BIT_MAN_PREFIX)/man1" ; \
+	rm -f "$(BIT_MAN_PREFIX)/man1/pak.1" ; \
+	ln -s "$(BIT_VAPP_PREFIX)/doc/man/man1/pak.1" "$(BIT_MAN_PREFIX)/man1/pak.1" ; \
+	)
 
 #
 #   start
@@ -793,7 +800,10 @@ install: $(DEPS_39)
 DEPS_40 += stop
 
 uninstall: $(DEPS_40)
-	rm -fr "$(BIT_VAPP_PREFIX)"
-	rm -f "$(BIT_APP_PREFIX)/latest"
-	rmdir -p "$(BIT_APP_PREFIX)" 2>/dev/null ; true
+	( \
+	cd .; \
+	rm -fr "$(BIT_VAPP_PREFIX)" ; \
+	rm -f "$(BIT_APP_PREFIX)/latest" ; \
+	rmdir -p "$(BIT_APP_PREFIX)" 2>/dev/null ; true ; \
+	)
 
