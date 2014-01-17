@@ -149,6 +149,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pak", "pak-windows-default\
 		{863459B7-A581-406C-B6BB-1FFFF0EF5CC4} = {863459B7-A581-406C-B6BB-1FFFF0EF5CC4}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bower.json", "pak-windows-default\bower.json.vcxproj", "{B10C679F-9346-40CF-A29B-0ED545DC9E5C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+EndProject
 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -286,6 +291,14 @@ Global
 {74E7024E-7596-450E-AE71-D91DA0254F2D}.Release|Win32.Build.0 = Release|Win32
 {74E7024E-7596-450E-AE71-D91DA0254F2D}.Release|x64.ActiveCfg = Release|x64
 {74E7024E-7596-450E-AE71-D91DA0254F2D}.Release|x64.Build.0 = Release|x64
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Debug|Win32.ActiveCfg = Debug|Win32
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Debug|Win32.Build.0 = Debug|Win32
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Debug|x64.ActiveCfg = Debug|x64
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Debug|x64.Build.0 = Debug|x64
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Release|Win32.ActiveCfg = Release|Win32
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Release|Win32.Build.0 = Release|Win32
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Release|x64.ActiveCfg = Release|x64
+{B10C679F-9346-40CF-A29B-0ED545DC9E5C}.Release|x64.Build.0 = Release|x64
 EndGlobalSection
 
   GlobalSection(SolutionProperties) = preSolution

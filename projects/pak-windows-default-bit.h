@@ -17,7 +17,7 @@
     #define BIT_COMPANY "Embedthis Software"
 #endif
 #ifndef BIT_COMPATIBLE
-    #define BIT_COMPATIBLE "0.8.0"
+    #define BIT_COMPATIBLE "0.8.1"
 #endif
 #ifndef BIT_DEBUG
     #define BIT_DEBUG 1
@@ -146,7 +146,7 @@
     #define BIT_TUNE "speed"
 #endif
 #ifndef BIT_VERSION
-    #define BIT_VERSION "0.8.0"
+    #define BIT_VERSION "0.8.1"
 #endif
 #ifndef BIT_WITHOUT_ALL
     #define BIT_WITHOUT_ALL "dsi,man,man2html"
@@ -247,10 +247,10 @@
     #define BIT_MINOR_VERSION 8
 #endif
 #ifndef BIT_PATCH_VERSION
-    #define BIT_PATCH_VERSION 0
+    #define BIT_PATCH_VERSION 1
 #endif
 #ifndef BIT_VNUM
-    #define BIT_VNUM 00
+    #define BIT_VNUM 01
 #endif
 
 /* Packs */
