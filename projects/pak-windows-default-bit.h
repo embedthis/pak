@@ -10,6 +10,9 @@
 #ifndef BIT_BIT
     #define BIT_BIT "0.9.3"
 #endif
+#ifndef BIT_BUILD_NUMBER
+    #define BIT_BUILD_NUMBER 0
+#endif
 #ifndef BIT_COMPANY
     #define BIT_COMPANY "Embedthis Software"
 #endif
@@ -33,6 +36,9 @@
 #endif
 #ifndef BIT_EJS_MAPPER
     #define BIT_EJS_MAPPER 0
+#endif
+#ifndef BIT_EJS_SHELL
+    #define BIT_EJS_SHELL 0
 #endif
 #ifndef BIT_EJS_TAR
     #define BIT_EJS_TAR 1
