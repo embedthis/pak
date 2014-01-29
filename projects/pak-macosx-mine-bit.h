@@ -7,23 +7,29 @@
 
 
 /* Settings */
+#ifndef BIT_AUTHOR
+    #define BIT_AUTHOR "Embedthis Software"
+#endif
 #ifndef BIT_BIT
-    #define BIT_BIT "0.9.0"
+    #define BIT_BIT "0.9.3"
 #endif
 #ifndef BIT_BUILD_NUMBER
-    #define BIT_BUILD_NUMBER "0"
+    #define BIT_BUILD_NUMBER 0
 #endif
 #ifndef BIT_COMPANY
-    #define BIT_COMPANY "Embedthis Software"
+    #define BIT_COMPANY "embedthis"
 #endif
 #ifndef BIT_COMPATIBLE
-    #define BIT_COMPATIBLE "0.8.0"
+    #define BIT_COMPATIBLE "0.8.1"
 #endif
 #ifndef BIT_DEBUG
     #define BIT_DEBUG 1
 #endif
 #ifndef BIT_DEPTH
     #define BIT_DEPTH 1
+#endif
+#ifndef BIT_DESCRIPTION
+    #define BIT_DESCRIPTION "Embedthis Pak Package Manager"
 #endif
 #ifndef BIT_DISCOVER
     #define BIT_DISCOVER "dsi,ejscript,man,man2html,pmaker,ssl,zip"
@@ -36,6 +42,9 @@
 #endif
 #ifndef BIT_EJS_MAPPER
     #define BIT_EJS_MAPPER 0
+#endif
+#ifndef BIT_EJS_SHELL
+    #define BIT_EJS_SHELL 0
 #endif
 #ifndef BIT_EJS_TAR
     #define BIT_EJS_TAR 1
@@ -130,6 +139,9 @@
 #ifndef BIT_MPR_LOGGING
     #define BIT_MPR_LOGGING 1
 #endif
+#ifndef BIT_NAME
+    #define BIT_NAME "pak"
+#endif
 #ifndef BIT_PACKS
     #define BIT_PACKS "bits/packs"
 #endif
@@ -155,7 +167,7 @@
     #define BIT_TUNE "speed"
 #endif
 #ifndef BIT_VERSION
-    #define BIT_VERSION "0.8.0"
+    #define BIT_VERSION "0.8.1"
 #endif
 #ifndef BIT_WARN64TO32
     #define BIT_WARN64TO32 1
@@ -184,7 +196,7 @@
     #define BIT_APP_PREFIX "/usr/local/lib/pak"
 #endif
 #ifndef BIT_VAPP_PREFIX
-    #define BIT_VAPP_PREFIX "/usr/local/lib/pak/0.8.0"
+    #define BIT_VAPP_PREFIX "/usr/local/lib/pak/0.8.1"
 #endif
 #ifndef BIT_BIN_PREFIX
     #define BIT_BIN_PREFIX "/usr/local/bin"
@@ -217,7 +229,7 @@
     #define BIT_CACHE_PREFIX "/var/spool/pak/cache"
 #endif
 #ifndef BIT_SRC_PREFIX
-    #define BIT_SRC_PREFIX "pak-0.8.0"
+    #define BIT_SRC_PREFIX "pak-0.8.1"
 #endif
 
 /* Suffixes */
@@ -259,10 +271,10 @@
     #define BIT_MINOR_VERSION 8
 #endif
 #ifndef BIT_PATCH_VERSION
-    #define BIT_PATCH_VERSION 0
+    #define BIT_PATCH_VERSION 1
 #endif
 #ifndef BIT_VNUM
-    #define BIT_VNUM 00
+    #define BIT_VNUM 01
 #endif
 
 /* Packs */
