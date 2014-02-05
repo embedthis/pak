@@ -67,7 +67,7 @@ class Version {
         VER                             Allows prereleases
         ^ VER                           Same as >=1.2.3 <2.0.0 (does not allow prereleases)
         ~ VER                           Same as >=1.2.3 <2.0.0 (allows prereleases)
-        1.2.X                           Any version starting with 1.2
+        1.2.X                           Any version starting with 1.2 (allows prereleases)
         [>, >=, <, <=, ==, !=] VER
         EXPR || EXPR ...
         EXPR && EXPR ...

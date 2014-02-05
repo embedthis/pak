@@ -64,12 +64,39 @@ class Package {
         resolved = true
     }
 
+    /*
+        Sort versions in decreasing version order.
+        Ensure that pre-releases are sorted before production releases
+     */
+    function sortVersions(array, a, b) {
+        let base1 = array[a].basename
+        let base2 = array[b].basename
+        if (base1 == base2) {
+            return 0
+        }
+        let [b1,p1] = base1.toString().split('-')
+        let [b2,p2] = base2.toString().split('-')
+        if (b1 < b2) {
+            return 1
+        } else if (b1 > b2) {
+            return -1
+        } else if (!p1) {
+            /* "a" is not a pre-release, i.e. later version */
+            return -1
+        } else if (!p2) {
+            return 1
+        } else if (p1 < p2) {
+            return 1
+        }
+        return -1
+    }
+   
     function selectCacheVersion(criteria: String) {
         if (!cacheVersion || !cacheVersion.acceptable(criteria)) {
             /*
                 Pick most recent qualifying version
              */
-            for each (path in find(dirs.pakcache, name + '/*', false).reverse()) {
+            for each (path in find(dirs.pakcache, name + '/*', false).sort(sortVersions)) {
                 let candidate = Version(path.basename)
                 if (candidate.acceptable(criteria)) {
                     cacheVersion = candidate
