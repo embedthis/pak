@@ -3,7 +3,7 @@
 #
 
 PRODUCT            := pak
-VERSION            := 0.8.1
+VERSION            := 0.8.2
 PROFILE            := default
 ARCH               := $(shell uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/')
 CC_ARCH            := $(shell echo $(ARCH) | sed 's/x86/i686/;s/x64/x86_64/')
@@ -177,7 +177,7 @@ clobber: clean
 #   version
 #
 version: $(DEPS_1)
-	echo 0.8.1
+	echo 0.8.2
 
 #
 #   est.h
@@ -715,7 +715,7 @@ installBinary: $(DEPS_36)
 	cd .; \
 	mkdir -p "$(BIT_APP_PREFIX)" ; \
 	rm -f "$(BIT_APP_PREFIX)/latest" ; \
-	ln -s "0.8.1" "$(BIT_APP_PREFIX)/latest" ; \
+	ln -s "0.8.2" "$(BIT_APP_PREFIX)/latest" ; \
 	mkdir -p "$(BIT_VAPP_PREFIX)/bin" ; \
 	cp $(CONFIG)/bin/pak $(BIT_VAPP_PREFIX)/bin/pak ; \
 	mkdir -p "$(BIT_BIN_PREFIX)" ; \
