@@ -168,11 +168,13 @@
     },
     "license": "GPL",
     "dependencies": {
-        "name": "version"
+        "jquery": "1.9.x",
+        "angular": "~1.2",
     }
 }</pre>
             <p>At a minimum, a package.json must have a "name", "description" and "version". Other fields
-            are optional.</p>
+            are optional. Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
+                major.minor.patch[-pre-release].</p>
             <h4>Custom Fields</h4>
             <p>Pak supports several custom fields in the package.json file.</p>
             <ul>
@@ -181,6 +183,19 @@
             <li>files &mdash; list of files to include when caching and installing the pak</li>
             <li>ignore &mdash; list of files to exclude when caching and installing the pak</li>
             <li>esp &mdash; properties made available to ESP applications</li>
+            <li>dependencies &mdash; List of paks and the acceptable versions. Version fields may include expressions that
+            describe a range of acceptable versions. For example: 
+                <ul>
+        <li>version &mdash; (allows prereleases)</li>
+        <li>^ version &mdash; (same as >=1.2.3 <2.0.0, does not allow prereleases)</li>
+        <li>~ version &mdash; (same as >=1.2.3 <2.0.0, allows prereleases)</li>
+        <li>1.2.X &mdash; (any version starting with 1.2 (allows prereleases)</li>
+        <li>[>, >=, <, <=, ==, !=] version
+        <li>expression || expression ... (either expression qualifies)</li>
+        <li>expression && expression ... (both expressions must qualify)</li>
+        <li>expression expression ... (same as &&) </li>
+                </ul>
+            </li>
             </ul>
             <p>For more details, see:</p>
             <ul>
