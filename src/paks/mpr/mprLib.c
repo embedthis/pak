@@ -17564,6 +17564,14 @@ static MprList *getDirFiles(cchar *path)
 #endif /* !WIN */
 #endif /* !BIT_ROM */
 
+#if LINUX
+static int sortFiles(MprDirEntry **dp1, MprDirEntry **dp2)
+{
+    return strcmp((*dp1)->name, (*dp2)->name);
+}
+#endif
+
+
 /*
     Find files in the directory "dir". If base is set, use that as the prefix for returned files.
     Returns a list of MprDirEntry objects.
@@ -17602,16 +17610,12 @@ static MprList *findFiles(MprList *list, cchar *dir, cchar *base, int flags)
             mprAddItem(list, dp);
         }
     }
+#if LINUX
+    /* Linux returns directories not sorted */
+    mprSortList(list, (MprSortProc) sortFiles, 0);
+#endif
     return list;
 }
-
-
-#if LINUX
-static int sortFiles(MprDirEntry **dp1, MprDirEntry **dp2)
-{
-    return strcmp((*dp1)->name, (*dp2)->name);
-}
-#endif
 
 
 /*
@@ -17635,10 +17639,6 @@ PUBLIC MprList *mprGetPathFiles(cchar *dir, int flags)
     if ((list = findFiles(mprCreateList(-1, 0), dir, base, flags)) == 0) {
         return 0;
     }
-#if LINUX
-    /* Linux returns directories not sorted */
-    mprSortList(list, (MprSortProc) sortFiles, 0);
-#endif
     return list;
 }
 
