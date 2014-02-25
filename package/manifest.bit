@@ -46,6 +46,7 @@ Bit.load({
                     '${BIN}/libmpr${SHOBJ}',
                     '${BIN}/libmprssl${SHOBJ}',
                     '${BIN}/libpcre${SHOBJ}',
+                    '${BIN}/libzlib${SHOBJ}',
                 ],
                 to:     '${abin}/',
                 set:    'libs',
