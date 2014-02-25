@@ -146,7 +146,7 @@
     #define BIT_PRODUCT "pak"
 #endif
 #ifndef BIT_REQUIRES
-    #define BIT_REQUIRES "winsdk,compiler,lib,link,rc,pcre,ejscript"
+    #define BIT_REQUIRES "winsdk,compiler,lib,link,rc,pcre,zlib,ejscript"
 #endif
 #ifndef BIT_STATIC
     #define BIT_STATIC 0
@@ -322,4 +322,7 @@
 #endif
 #ifndef BIT_PACK_ZIP
     #define BIT_PACK_ZIP 1
+#endif
+#ifndef BIT_PACK_ZLIB
+    #define BIT_PACK_ZLIB 1
 #endif
