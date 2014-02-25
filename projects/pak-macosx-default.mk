@@ -802,6 +802,7 @@ installBinary: $(DEPS_39)
 	cp $(CONFIG)/bin/libmpr.dylib $(BIT_VAPP_PREFIX)/bin/libmpr.dylib ; \
 	cp $(CONFIG)/bin/libmprssl.dylib $(BIT_VAPP_PREFIX)/bin/libmprssl.dylib ; \
 	cp $(CONFIG)/bin/libpcre.dylib $(BIT_VAPP_PREFIX)/bin/libpcre.dylib ; \
+	cp $(CONFIG)/bin/libzlib.dylib $(BIT_VAPP_PREFIX)/bin/libzlib.dylib ; \
 	cp $(CONFIG)/bin/ca.crt $(BIT_VAPP_PREFIX)/bin/ca.crt ; \
 	cp $(CONFIG)/bin/ejs.mod $(BIT_VAPP_PREFIX)/bin/ejs.mod ; \
 	cp $(CONFIG)/bin/pak.mod $(BIT_VAPP_PREFIX)/bin/pak.mod ; \
