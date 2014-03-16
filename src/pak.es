@@ -1,7 +1,7 @@
 #!/usr/bin/env ejs
 
 /*
-    pakcmd.es -- Embedthis Pak Package Manager
+    pak.es -- Embedthis Pak Package Manager
 
     Copyright (c) All Rights Reserved. See details at the end of the file.
  */
@@ -133,6 +133,7 @@ class PakCmd
             cache: { range: String },
             catalog: { range: String },
             code: { range: String },
+            debug: { alias: 'd' },
             details: {},
             dir: { range: String },
             force: { alias: 'f' },
@@ -212,6 +213,9 @@ class PakCmd
 
     function processOptions(args: Args) {
         options = args.options
+        if (options.debug) {
+            options.verbose = true
+        }
         if (options.silent) {
             options.quiet = true
         }
@@ -343,7 +347,11 @@ class PakCmd
                 } else {
                     let spec = Package.readSpec('.')
                     if (spec) {
-                        for (let [name,version] in spec.dependencies) {
+                        let deps = blend({}, spec.dependencies)
+                        if (options.all) {
+                            blend(deps, spec.optionalDependencies)
+                        }
+                        for (let [name,version] in deps) {
                             let pak = Package(name)
                             pak.setSearchCriteria(version)
                             install(pak)
@@ -428,10 +436,14 @@ class PakCmd
                 break
             }
             if (rest.length == 0) {
-                for (let [name,criteria] in spec.dependencies) {
+                let deps = blend({}, spec.dependencies)
+                blend(deps, spec.optionalDependencies)
+                for (let [name,criteria] in deps) {
                     let pak = Package(name)
                     pak.resolve(criteria)
-                    upgrade(pak)
+                    if (pak.installed || !spec.optionalDependencies[pak.name]) {
+                        upgrade(pak)
+                    }
                 }
             } else {
                 for each (name in rest) {
@@ -538,13 +550,14 @@ class PakCmd
                 return
             }
         } else {
-            trace('Info', pak + ' is not yet cached')
+            vtrace('Info', pak + ' is not yet cached')
         }
         if (pak.sourcePath) {
             if (!pak.spec) {
                 qtrace('Skip', pak + ' does not have a valid package.json')
                 return
             }
+            pak.setCacheVersion(pak.spec.version)
         } else {
             pak = searchPak(pak)
         }
@@ -668,6 +681,8 @@ class PakCmd
         runScripts(pak, 'install')
     }
 
+    var blending = {}
+
     /* 
         Blend dependencies bottom up so that lower paks can define dirs
      */
@@ -675,9 +690,14 @@ class PakCmd
         if (!pak.spec) {
             throw 'Pak ' + pak + ' at ' + pak.cachePath + ' is missing a package.json'
         }
+        if (blending[pak.name]) {
+            return
+        }
+        blending[pak.name] = true
         trace('Blend', pak + ' configuration')
         blendDependencies(spec, pak)
         blendSpec(spec, pak)
+        delete blending[pak.name]
     }
 
     private function blendDependencies(spec, pak: Package) {
@@ -724,9 +744,15 @@ class PakCmd
                 vtrace('Blend', 'Property ' + value + ' into ' + key)
             }
         }
-        spec.dependencies ||= {}
-        spec.dependencies[pak.name] ||= '~' + pak.installVersion.compatible
-        Object.sortProperties(spec.dependencies)
+        if (spec.optionalDependencies && spec.optionalDependencies[pak.name]) {
+            spec.optionalDependencies ||= {}
+            spec.optionalDependencies[pak.name] ||= '~' + pak.installVersion.compatible
+            Object.sortProperties(spec.optionalDependencies)
+        } else {
+            spec.dependencies ||= {}
+            spec.dependencies[pak.name] ||= '~' + pak.installVersion.compatible
+            Object.sortProperties(spec.dependencies)
+        }
     }
 
     /*
@@ -747,38 +773,51 @@ class PakCmd
         }
         trace('Mkdir', dest)
         mkdir(dest)
-        copyTree(pak.cachePath, dest, pak.spec.ignore, pak.spec.files, pak.spec.export)
+
+        let export = pak.spec.export
+        if (export && PACKAGE.exists) {
+            //  Should this be read once at startup?
+            let spec = Package.readSpec('.', {quiet: true})
+            if (spec.paks && spec.paks[pak.name] && spec.paks[pak.name].noexport) {
+                export = null
+            }
+        }
+        copyTree(pak.cachePath, dest, pak.spec.ignore, pak.spec.files, export)
+        /* Get updated dependency information in spec */
+        pak.resolve()
         installDependencies(pak)
         trace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
         trace('Info', 'Use "pak info ' + pak.name + '" to view the README')
     }
 
-    private function installDependencies(pak: Package): Boolean {
-        let spec = pak.spec
-        if (!spec.dependencies) {
-            return true
+    private function installDependencies(pak: Package) {
+        for (let [other, criteria] in pak.spec.dependencies) {
+            installDependency(other, criteria, true)
         }
-        for (let [other, criteria] in spec.dependencies) {
-            let dep = Package(other)
-            dep.selectCacheVersion(criteria)
-            dep.resolve()
-            if (!dep.installed) {
-                trace('Info', 'Install required dependency ' + dep.name)
-                try {
-                    installPakFiles(dep)
-                } catch (e) {
-                    print(e)
-                    if (args.options.force) {
-                        qtrace('WARN', 'Cannot install required dependency "' + dep.name + '"' )
-                    } else {
-                        throw 'Cannot install ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
-                    }
+        for (let [other, criteria] in pak.spec.optionalDependencies) {
+            installDependency(other, criteria, false)
+        }
+    }
+
+    private function installDependency(name, criteria, install: Boolean) {
+        let dep = Package(name)
+        dep.selectCacheVersion(criteria)
+        dep.resolve()
+        if (install && !dep.installed) {
+            trace('Info', 'Install required dependency ' + dep.name)
+            try {
+                installPakFiles(dep)
+            } catch (e) {
+                print(e)
+                if (args.options.force) {
+                    qtrace('WARN', 'Cannot install required dependency "' + dep.name + '"' )
+                } else {
+                    throw 'Cannot install ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
                 }
-            } else {
-                trace('Info', 'dependency "' + dep.name + '" is installed')
             }
+        } else {
+            trace('Info', 'dependency "' + dep.name + '" is installed')
         }
-        return true
     }
 
     /*
@@ -799,13 +838,15 @@ class PakCmd
                 sets[pak.name] = pak
             }
         }
+        let spec = Package.readSpec('.')
         for each (pak in sets) {
+            let optional = (spec.optionalDependencies && spec.optionalDependencies[pak.name]) ? ' optional' : ''
             out.write(pak.name)
             if (options.details && pak.spec) {
                 out.write(': ')
                 print(serialize(pak.spec, {pretty: true, indent: 4}))
             } else if (options.versions) {
-                print(' ' + pak.installVersion)
+                print(' ' + pak.installVersion + optional)
             } else {
                 print()
             }
@@ -882,7 +923,7 @@ class PakCmd
         if (!pak.cached) {
             later = update(pak)
         } 
-        if (pak.installVersion && pak.installVersion.same(later.cacheVersion) && !options.force) {
+        if (pak.installed && pak.installVersion && pak.installVersion.same(later.cacheVersion) && !options.force) {
             qtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
                 ' for version requirement ' + pak.searchCriteria)
             return
@@ -906,7 +947,7 @@ class PakCmd
             }
             dep.resolve()
             if (!dep.cached) {
-                if (dep.sourced) {
+                if (dep.sourcePath) {
                     trace('Info', 'Caching required dependency from source at: ' + dep.sourcePath)
                     cachePak(dep)
                 } else {
@@ -924,7 +965,7 @@ class PakCmd
                     }
                 }
             } else {
-                trace('Info', 'dependency "' + dep.name + '" is cached')
+                trace('Info', 'dependency "' + dep.name + '" for "' + pak.name + '" is cached')
             }
         }
         return true
@@ -1049,11 +1090,11 @@ class PakCmd
                     chdir(current)
                 }
             }
-        } else {
-            path = pak.cachePath.join('start.bit')
+        } else if (pak.cachePath) {
+            path = pak.cachePath.join('start.me')
             if (path.exists) {
-                trace('Run', 'bit --file ' + path + ' ' + event)
-                Cmd.run('bit --file ' + path + ' ' + event, {noio: true})
+                trace('Run', 'me --file ' + path + ' ' + event)
+                Cmd.run('me --file ' + path + ' ' + event, {noio: true})
             }
         }
     }
@@ -1083,7 +1124,9 @@ class PakCmd
             throw 'Cannot find package description for ' + pak + ' from ' + pak.cachePath
         }
         pak.resolve()
-        cacheDependencies(pak)
+        if (!pak.sourcePath || options.all) {
+            cacheDependencies(pak)
+        }
         runScripts(pak, 'cache')
         qtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
     }
@@ -1176,7 +1219,7 @@ class PakCmd
             return
         }
         if (!endpoint) {
-            throw 'Missing repository property in pakcage.json.'
+            throw 'Missing repository property in package.json.'
         }
         if (!password) {
             while (true) {
@@ -1256,12 +1299,14 @@ http.verifyIssuer = false
         pak.resolve(pak.installVersion)
         runScripts(pak, 'uninstall')
         /*
-            Remove entry in ./package.json dependencies
+            Remove entry in ./package.json dependencies and optionalDependencies
          */
         let path = Package.getSpecFile('.')
         if (path) {
             let spec = path.readJSON()
             delete spec.dependencies[pak.name]
+            delete spec.optionalDependencies[pak.name]
+
             /*
                 Remove client scripts
              */
@@ -1648,9 +1693,9 @@ http.verifyIssuer = false
     function error(msg) App.log.error(msg)
 
     private var PakTemplate = {
-        name: 'Package name - one word',
-        title: 'Package title - several words',
-        description: 'Package description - one line',
+        name: 'Package Name - unique one word package name',
+        description: 'Full Package Description - one line',
+        title: 'Display Package Title - several words. E.g. Company Product',
         version: '1.0.0',
         keywords: [
             'Put search keywords here',
@@ -1664,10 +1709,15 @@ http.verifyIssuer = false
             email: 'name@example.com',
             url: 'http://example.com/bugs',
         },
-        license: 'GPL',
-        dependencies: {
-            name: 'version',
+        repository: {
+            type: 'git',
+            url: 'git://github.com/user/repo.git',
         },
+        dirs: {
+            paks: './paks',
+        },
+        license: 'GPL',
+        dependencies: {},
     }
 }
 

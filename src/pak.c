@@ -91,7 +91,7 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
             mprSetCmdlineLogging(1);
 
         } else if (smatch(argp, "--version") || smatch(argp, "-V")) {
-            mprPrintf("%s\n", BIT_VERSION);
+            mprPrintf("%s\n", ME_VERSION);
             return 0;
 
         } else {

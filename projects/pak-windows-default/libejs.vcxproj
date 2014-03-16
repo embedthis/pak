@@ -146,13 +146,6 @@ cd ..\..\..\projects\pak-windows-default</Command>
 </ItemGroup>
 
 <ItemGroup>
-  <ProjectReference Include="libzlib.vcxproj">
-  <Project>7c6e2f3b-b745-4c17-a966-1708bb75bb9d</Project>
-  <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-  </ProjectReference>
-</ItemGroup>
-
-<ItemGroup>
   <ProjectReference Include="libmpr.vcxproj">
   <Project>40d07ab8-5586-4eb8-b0e5-29a5aa12297f</Project>
   <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

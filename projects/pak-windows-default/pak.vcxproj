@@ -103,22 +103,11 @@
     <ClCompile Include="..\..\src\pak.c" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ClInclude Include="$(IncDir)\bitos.h" />
-  </ItemGroup>
-
   <ItemDefinitionGroup>
   <Link>
     <AdditionalDependencies>libejs.lib;libhttp.lib;libmpr.lib;libpcre.lib;libzlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <AdditionalLibraryDirectories>$(OutDir);$(Cfg)\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
   </Link>
-
-  <CustomBuildStep>
-    <Command>cd ..\..
-copy /Y src\bitos.h $(IncDir)
-cd projects\pak-windows-default</Command>
-    <Outputs>$(BinDir)\pak.exe</Outputs>
-  </CustomBuildStep>
   </ItemDefinitionGroup>
 
 <ItemGroup>

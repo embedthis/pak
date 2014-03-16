@@ -63,10 +63,10 @@ See [LICENSE.md](https://github.com/embedthis/pak/blob/master/LICENSE.md) for de
 
     make help
 
-### To build with Bit:
+### To build with MakeMe:
 
     ./configure
-    bit
+    me
 
     For a list of configure options:
 
@@ -78,7 +78,7 @@ See [LICENSE.md](https://github.com/embedthis/pak/blob/master/LICENSE.md) for de
 
     or
 
-    sudo bit install
+    sudo me install
 
 ### To uninstall
 
@@ -86,7 +86,7 @@ See [LICENSE.md](https://github.com/embedthis/pak/blob/master/LICENSE.md) for de
 
     or
 
-    sudo bit uninstall
+    sudo me uninstall
 
 Resources
 ---

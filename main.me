@@ -1,0 +1,112 @@
+/*
+    main.me -- Main MakeMe file for Pak
+ */
+
+Me.load({
+    blend: [
+        "src/paks/*/*.me",
+        "doc/doc.me",
+    ],
+
+    customize: [
+        /* 
+            The optional custom.me file is loaded after main.me is fully processed. It can
+            thus override any setting. Feel free to create and customize. 
+         */
+        'custom.me',
+    ],
+
+    settings: {
+        /*
+            Installation prefix set
+         */
+        prefixes: 'package-prefixes',
+        manifest: 'package/manifest.me',
+
+        extensions: {
+            require:  [ 'compiler', 'osdep', 'ejs', 'http', 'mpr', 'pcre', 'zlib' ],
+            discover: [ 'dsi', 'man', 'man2html', 'pmaker', 'ssl', 'zip' ],
+        },
+
+        platforms: [ 'local' ],
+        static: false,
+        tune: 'size',
+
+        ejs: {
+            /*
+                Control if ejs.* is enabled or disabled
+             */
+            db: false,
+            mail: false,
+            mapper: false,
+            shell: false,
+            tar: true,                                                                                     
+            template: false,
+            web: false,
+            zlib: true,
+        }, 
+
+        /*
+            EST SSL stack configuration
+         */
+        est: {
+            camellia: false,
+            padlock: false,
+            sslClient: false,
+            des: false,
+            testCerts: false,
+            xtea: false,
+            romTables: false,
+            genPrime: false,
+        },
+
+        http: {
+            /* Use PAM (Plugable Authentication Module) to store passwords */
+            pam: false,
+        },
+                                                                                                           
+        mpr: {                                                                                             
+            /*                                                                                             
+                Enable logging via mprLog to the log file. Error messages are always enabled.              
+                The default is to enable logging for both debug and release builds.                        
+             */                                                                                            
+            logging: true,                                                                                 
+        },
+
+        tune: 'speed',
+    },
+
+    scripts: {
+        preblend: `
+            me.settings.esflags = (me.platform.profile == 'debug' || me.platform.profile == 'mine') ? '--debug' : ''
+        `,
+    },
+
+    targets: {
+        'pak.mod': {
+            path: '${BIN}/pak.mod',
+            files: [ 'src/*.es', 'src/paks/ejs-version/Version.es' ],
+            //  MOB - should be able to simplify this
+            build: `
+                trace('Compile', 'src/*.es')
+                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 ' + TARGET.cmdfiles)
+            `,
+            'generate-nmake': `"${BIN}\\ejsc" --out "${BIN}/pak.mod" ${settings.esflags} --optimize 9 ${target.cmdfiles}`,
+            'generate-sh': '${LBIN}/ejsc --out ${BIN}/pak.mod --optimize 9 ${target.cmdfiles}',
+            depends: [ 'ejsc' ],
+        },
+
+        'pak': {
+            type: 'exe',
+            path: '${BIN}/pak${EXE}',
+            sources: [ 'src/pak.c' ],
+            depends: [ 'libejs', 'pak.mod' ],
+        },
+
+        projects: {
+            action: "
+                genProjects('', 'default', ['freebsd-x86', 'linux-x86', 'macosx-x64', 'windows-x86'])
+            ",
+        },
+    },
+})

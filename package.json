@@ -21,17 +21,21 @@
         "url": "http://github.com/embedthis/pak/issues"
     },
     "dependencies": {
-        "bitos": "~0.8",
         "ejs": "~2.3",
         "ejs-version": ">=0.8.0",
         "est": "~0.6",
-        "http": "~4.5",
-        "mpr": "~4.5",
+        "http": "~5",
+        "me-dev": "~0.8",
+        "me-doc": "~0.8",
+        "me-package": "~0.8",
+        "mpr": "~5",
+        "osdep": "~0.8",
         "pcre": "~1.0",
+        "sqlite": "~1.0",
         "zlib": "~1.0"
     },
     "devDependencies": {
-        "bit": ">0.9.0"
+        "makeme": ">0.8.0"
     },
     "dirs": {
         "paks": "src/paks",

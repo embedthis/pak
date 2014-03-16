@@ -229,8 +229,10 @@ class Package {
         for each (name in PakFiles) {
             let f = path.join(name)
             if (f.exists) {
-                // if (!options.quiet) vtrace('Read', f)
-                return deserialize(f.readString())
+                let spec = deserialize(f.readString())
+                spec.dependencies ||= {}
+                spec.optionalDependencies ||= {}
+                return spec
             }
         }
         return null
@@ -247,6 +249,10 @@ class Package {
     }
 
     public function toString() name
+
+    public function dump() {
+        print(serialize(this, {hidden: true, pretty: true}))
+    }
 
 } /* class Package */
 } /* ejs.pak */
