@@ -16,16 +16,18 @@ PATH                  := $(LBIN):$(PATH)
 
 ME_EXT_EJS            ?= 1
 ME_EXT_EST            ?= 1
-ME_EXT_HTTP           ?= 1
+ME_EXT_MATRIXSSL      ?= 0
+ME_EXT_NANOSSL        ?= 0
+ME_EXT_OPENSSL        ?= 0
 ME_EXT_PCRE           ?= 1
-ME_EXT_SQLITE         ?= 1
+ME_EXT_SQLITE         ?= 0
 ME_EXT_SSL            ?= 1
 ME_EXT_ZLIB           ?= 1
 
 ME_EXT_COMPILER_PATH  ?= gcc
 ME_EXT_DSI_PATH       ?= dsi
-ME_EXT_EJS_PATH       ?= src/paks/ejs/ejs.me
-ME_EXT_EST_PATH       ?= src/paks/est/est.me
+ME_EXT_EJS_PATH       ?= src/paks/ejs
+ME_EXT_EST_PATH       ?= src/paks/est
 ME_EXT_HTTP_PATH      ?= src/paks/http/http.me
 ME_EXT_LIB_PATH       ?= ar
 ME_EXT_LINK_PATH      ?= ld
@@ -36,15 +38,15 @@ ME_EXT_MPR_PATH       ?= src/paks/mpr/mpr.me
 ME_EXT_NANOSSL_PATH   ?= /usr/src/nanossl
 ME_EXT_OPENSSL_PATH   ?= /usr/src/openssl
 ME_EXT_OSDEP_PATH     ?= src/paks/osdep/osdep.me
-ME_EXT_PCRE_PATH      ?= src/paks/pcre/pcre.me
+ME_EXT_PCRE_PATH      ?= src/paks/pcre
 ME_EXT_VXWORKS_PATH   ?= $(WIND_BASE)
 ME_EXT_ZIP_PATH       ?= zip
-ME_EXT_ZLIB_PATH      ?= src/paks/zlib/zlib.me
+ME_EXT_ZLIB_PATH      ?= src/paks/zlib
 
 export WIND_HOME      ?= $(WIND_BASE)/..
 
 CFLAGS                += -fPIC -w
-DFLAGS                += -D_REENTRANT -DPIC $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_EXT_EJS=$(ME_EXT_EJS) -DME_EXT_EST=$(ME_EXT_EST) -DME_EXT_HTTP=$(ME_EXT_HTTP) -DME_EXT_PCRE=$(ME_EXT_PCRE) -DME_EXT_SQLITE=$(ME_EXT_SQLITE) -DME_EXT_SSL=$(ME_EXT_SSL) -DME_EXT_ZLIB=$(ME_EXT_ZLIB) 
+DFLAGS                += -D_REENTRANT -DPIC $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_EXT_EJS=$(ME_EXT_EJS) -DME_EXT_EST=$(ME_EXT_EST) -DME_EXT_MATRIXSSL=$(ME_EXT_MATRIXSSL) -DME_EXT_NANOSSL=$(ME_EXT_NANOSSL) -DME_EXT_OPENSSL=$(ME_EXT_OPENSSL) -DME_EXT_PCRE=$(ME_EXT_PCRE) -DME_EXT_SQLITE=$(ME_EXT_SQLITE) -DME_EXT_SSL=$(ME_EXT_SSL) -DME_EXT_ZLIB=$(ME_EXT_ZLIB) 
 IFLAGS                += "-I$(CONFIG)/inc"
 LDFLAGS               += '-rdynamic' '-Wl,--enable-new-dtags' '-Wl,-rpath,$$ORIGIN/'
 LIBPATHS              += -L$(CONFIG)/bin
@@ -95,12 +97,6 @@ endif
 TARGETS               += $(CONFIG)/bin/ca.crt
 TARGETS               += $(CONFIG)/bin/http
 TARGETS               += $(CONFIG)/bin/libmprssl.so
-ifeq ($(ME_EXT_SQLITE),1)
-    TARGETS           += $(CONFIG)/bin/libsql.so
-endif
-ifeq ($(ME_EXT_SQLITE),1)
-    TARGETS           += $(CONFIG)/bin/sqlite
-endif
 TARGETS               += $(CONFIG)/bin/pak.mod
 TARGETS               += $(CONFIG)/bin/pak
 
@@ -147,8 +143,6 @@ clean:
 	rm -f "$(CONFIG)/bin/libmprssl.so"
 	rm -f "$(CONFIG)/bin/makerom"
 	rm -f "$(CONFIG)/bin/libpcre.so"
-	rm -f "$(CONFIG)/bin/libsql.so"
-	rm -f "$(CONFIG)/bin/sqlite"
 	rm -f "$(CONFIG)/bin/libzlib.so"
 	rm -f "$(CONFIG)/bin/pak"
 	rm -f "$(CONFIG)/obj/ejsLib.o"
@@ -160,8 +154,6 @@ clean:
 	rm -f "$(CONFIG)/obj/mprSsl.o"
 	rm -f "$(CONFIG)/obj/makerom.o"
 	rm -f "$(CONFIG)/obj/pcre.o"
-	rm -f "$(CONFIG)/obj/sqlite3.o"
-	rm -f "$(CONFIG)/obj/sqlite.o"
 	rm -f "$(CONFIG)/obj/zlib.o"
 	rm -f "$(CONFIG)/obj/pak.o"
 
@@ -562,7 +554,7 @@ $(CONFIG)/obj/http.o: \
 	$(CC) -c -o $(CONFIG)/obj/http.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/http/http.c
 
 #
-#   http
+#   httpcmd
 #
 DEPS_29 += $(CONFIG)/inc/mpr.h
 DEPS_29 += $(CONFIG)/inc/me.h
@@ -610,111 +602,58 @@ DEPS_31 += $(CONFIG)/inc/osdep.h
 DEPS_31 += $(CONFIG)/obj/mprLib.o
 DEPS_31 += $(CONFIG)/bin/libmpr.so
 DEPS_31 += $(CONFIG)/inc/est.h
+DEPS_31 += $(CONFIG)/obj/estLib.o
+ifeq ($(ME_EXT_EST),1)
+    DEPS_31 += $(CONFIG)/bin/libest.so
+endif
 DEPS_31 += $(CONFIG)/obj/mprSsl.o
 
 LIBS_31 += -lmpr
+ifeq ($(ME_EXT_EST),1)
+    LIBS_31 += -lest
+endif
 
 $(CONFIG)/bin/libmprssl.so: $(DEPS_31)
 	@echo '      [Link] $(CONFIG)/bin/libmprssl.so'
 	$(CC) -shared -o $(CONFIG)/bin/libmprssl.so $(LDFLAGS) $(LIBPATHS) "$(CONFIG)/obj/mprSsl.o" $(LIBPATHS_31) $(LIBS_31) $(LIBS_31) $(LIBS) 
 
 #
-#   sqlite3.h
-#
-$(CONFIG)/inc/sqlite3.h: $(DEPS_32)
-	@echo '      [Copy] $(CONFIG)/inc/sqlite3.h'
-	mkdir -p "$(CONFIG)/inc"
-	cp src/paks/sqlite/sqlite3.h $(CONFIG)/inc/sqlite3.h
-
-#
-#   sqlite3.o
-#
-DEPS_33 += $(CONFIG)/inc/me.h
-DEPS_33 += $(CONFIG)/inc/sqlite3.h
-
-$(CONFIG)/obj/sqlite3.o: \
-    src/paks/sqlite/sqlite3.c $(DEPS_33)
-	@echo '   [Compile] $(CONFIG)/obj/sqlite3.o'
-	$(CC) -c -o $(CONFIG)/obj/sqlite3.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/sqlite/sqlite3.c
-
-ifeq ($(ME_EXT_SQLITE),1)
-#
-#   libsql
-#
-DEPS_34 += $(CONFIG)/inc/sqlite3.h
-DEPS_34 += $(CONFIG)/inc/me.h
-DEPS_34 += $(CONFIG)/obj/sqlite3.o
-
-$(CONFIG)/bin/libsql.so: $(DEPS_34)
-	@echo '      [Link] $(CONFIG)/bin/libsql.so'
-	$(CC) -shared -o $(CONFIG)/bin/libsql.so $(LDFLAGS) $(LIBPATHS) "$(CONFIG)/obj/sqlite3.o" $(LIBS) 
-endif
-
-#
-#   sqlite.o
-#
-DEPS_35 += $(CONFIG)/inc/me.h
-DEPS_35 += $(CONFIG)/inc/sqlite3.h
-
-$(CONFIG)/obj/sqlite.o: \
-    src/paks/sqlite/sqlite.c $(DEPS_35)
-	@echo '   [Compile] $(CONFIG)/obj/sqlite.o'
-	$(CC) -c -o $(CONFIG)/obj/sqlite.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/paks/sqlite/sqlite.c
-
-ifeq ($(ME_EXT_SQLITE),1)
-#
-#   sqliteshell
-#
-DEPS_36 += $(CONFIG)/inc/sqlite3.h
-DEPS_36 += $(CONFIG)/inc/me.h
-DEPS_36 += $(CONFIG)/obj/sqlite3.o
-DEPS_36 += $(CONFIG)/bin/libsql.so
-DEPS_36 += $(CONFIG)/obj/sqlite.o
-
-LIBS_36 += -lsql
-
-$(CONFIG)/bin/sqlite: $(DEPS_36)
-	@echo '      [Link] $(CONFIG)/bin/sqlite'
-	$(CC) -o $(CONFIG)/bin/sqlite $(LDFLAGS) $(LIBPATHS) "$(CONFIG)/obj/sqlite.o" $(LIBPATHS_36) $(LIBS_36) $(LIBS_36) $(LIBS) $(LIBS) 
-endif
-
-#
 #   pak.mod
 #
-DEPS_37 += src/Package.es
-DEPS_37 += src/pak.es
-DEPS_37 += src/paks/ejs-version/Version.es
-DEPS_37 += $(CONFIG)/inc/mpr.h
-DEPS_37 += $(CONFIG)/inc/me.h
-DEPS_37 += $(CONFIG)/inc/osdep.h
-DEPS_37 += $(CONFIG)/obj/mprLib.o
-DEPS_37 += $(CONFIG)/bin/libmpr.so
-DEPS_37 += $(CONFIG)/inc/pcre.h
-DEPS_37 += $(CONFIG)/obj/pcre.o
+DEPS_32 += src/Package.es
+DEPS_32 += src/pak.es
+DEPS_32 += src/paks/ejs-version/Version.es
+DEPS_32 += $(CONFIG)/inc/mpr.h
+DEPS_32 += $(CONFIG)/inc/me.h
+DEPS_32 += $(CONFIG)/inc/osdep.h
+DEPS_32 += $(CONFIG)/obj/mprLib.o
+DEPS_32 += $(CONFIG)/bin/libmpr.so
+DEPS_32 += $(CONFIG)/inc/pcre.h
+DEPS_32 += $(CONFIG)/obj/pcre.o
 ifeq ($(ME_EXT_PCRE),1)
-    DEPS_37 += $(CONFIG)/bin/libpcre.so
+    DEPS_32 += $(CONFIG)/bin/libpcre.so
 endif
-DEPS_37 += $(CONFIG)/inc/http.h
-DEPS_37 += $(CONFIG)/obj/httpLib.o
-DEPS_37 += $(CONFIG)/bin/libhttp.so
-DEPS_37 += $(CONFIG)/inc/zlib.h
-DEPS_37 += $(CONFIG)/obj/zlib.o
+DEPS_32 += $(CONFIG)/inc/http.h
+DEPS_32 += $(CONFIG)/obj/httpLib.o
+DEPS_32 += $(CONFIG)/bin/libhttp.so
+DEPS_32 += $(CONFIG)/inc/zlib.h
+DEPS_32 += $(CONFIG)/obj/zlib.o
 ifeq ($(ME_EXT_ZLIB),1)
-    DEPS_37 += $(CONFIG)/bin/libzlib.so
+    DEPS_32 += $(CONFIG)/bin/libzlib.so
 endif
-DEPS_37 += $(CONFIG)/inc/ejs.h
-DEPS_37 += $(CONFIG)/inc/ejs.slots.h
-DEPS_37 += $(CONFIG)/inc/ejsByteGoto.h
-DEPS_37 += $(CONFIG)/obj/ejsLib.o
+DEPS_32 += $(CONFIG)/inc/ejs.h
+DEPS_32 += $(CONFIG)/inc/ejs.slots.h
+DEPS_32 += $(CONFIG)/inc/ejsByteGoto.h
+DEPS_32 += $(CONFIG)/obj/ejsLib.o
 ifeq ($(ME_EXT_EJS),1)
-    DEPS_37 += $(CONFIG)/bin/libejs.so
+    DEPS_32 += $(CONFIG)/bin/libejs.so
 endif
-DEPS_37 += $(CONFIG)/obj/ejsc.o
+DEPS_32 += $(CONFIG)/obj/ejsc.o
 ifeq ($(ME_EXT_EJS),1)
-    DEPS_37 += $(CONFIG)/bin/ejsc
+    DEPS_32 += $(CONFIG)/bin/ejsc
 endif
 
-$(CONFIG)/bin/pak.mod: $(DEPS_37)
+$(CONFIG)/bin/pak.mod: $(DEPS_32)
 	( \
 	cd .; \
 	$(LBIN)/ejsc --out ./$(CONFIG)/bin/pak.mod --optimize 9 ./src/Package.es ./src/pak.es ./src/paks/ejs-version/Version.es ; \
@@ -723,74 +662,74 @@ $(CONFIG)/bin/pak.mod: $(DEPS_37)
 #
 #   pak.o
 #
-DEPS_38 += $(CONFIG)/inc/me.h
-DEPS_38 += $(CONFIG)/inc/ejs.h
+DEPS_33 += $(CONFIG)/inc/me.h
+DEPS_33 += $(CONFIG)/inc/ejs.h
 
 $(CONFIG)/obj/pak.o: \
-    src/pak.c $(DEPS_38)
+    src/pak.c $(DEPS_33)
 	@echo '   [Compile] $(CONFIG)/obj/pak.o'
 	$(CC) -c -o $(CONFIG)/obj/pak.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/pak.c
 
 #
 #   pak
 #
-DEPS_39 += $(CONFIG)/inc/mpr.h
-DEPS_39 += $(CONFIG)/inc/me.h
-DEPS_39 += $(CONFIG)/inc/osdep.h
-DEPS_39 += $(CONFIG)/obj/mprLib.o
-DEPS_39 += $(CONFIG)/bin/libmpr.so
-DEPS_39 += $(CONFIG)/inc/pcre.h
-DEPS_39 += $(CONFIG)/obj/pcre.o
+DEPS_34 += $(CONFIG)/inc/mpr.h
+DEPS_34 += $(CONFIG)/inc/me.h
+DEPS_34 += $(CONFIG)/inc/osdep.h
+DEPS_34 += $(CONFIG)/obj/mprLib.o
+DEPS_34 += $(CONFIG)/bin/libmpr.so
+DEPS_34 += $(CONFIG)/inc/pcre.h
+DEPS_34 += $(CONFIG)/obj/pcre.o
 ifeq ($(ME_EXT_PCRE),1)
-    DEPS_39 += $(CONFIG)/bin/libpcre.so
+    DEPS_34 += $(CONFIG)/bin/libpcre.so
 endif
-DEPS_39 += $(CONFIG)/inc/http.h
-DEPS_39 += $(CONFIG)/obj/httpLib.o
-DEPS_39 += $(CONFIG)/bin/libhttp.so
-DEPS_39 += $(CONFIG)/inc/zlib.h
-DEPS_39 += $(CONFIG)/obj/zlib.o
+DEPS_34 += $(CONFIG)/inc/http.h
+DEPS_34 += $(CONFIG)/obj/httpLib.o
+DEPS_34 += $(CONFIG)/bin/libhttp.so
+DEPS_34 += $(CONFIG)/inc/zlib.h
+DEPS_34 += $(CONFIG)/obj/zlib.o
 ifeq ($(ME_EXT_ZLIB),1)
-    DEPS_39 += $(CONFIG)/bin/libzlib.so
+    DEPS_34 += $(CONFIG)/bin/libzlib.so
 endif
-DEPS_39 += $(CONFIG)/inc/ejs.h
-DEPS_39 += $(CONFIG)/inc/ejs.slots.h
-DEPS_39 += $(CONFIG)/inc/ejsByteGoto.h
-DEPS_39 += $(CONFIG)/obj/ejsLib.o
+DEPS_34 += $(CONFIG)/inc/ejs.h
+DEPS_34 += $(CONFIG)/inc/ejs.slots.h
+DEPS_34 += $(CONFIG)/inc/ejsByteGoto.h
+DEPS_34 += $(CONFIG)/obj/ejsLib.o
 ifeq ($(ME_EXT_EJS),1)
-    DEPS_39 += $(CONFIG)/bin/libejs.so
+    DEPS_34 += $(CONFIG)/bin/libejs.so
 endif
-DEPS_39 += $(CONFIG)/obj/ejsc.o
+DEPS_34 += $(CONFIG)/obj/ejsc.o
 ifeq ($(ME_EXT_EJS),1)
-    DEPS_39 += $(CONFIG)/bin/ejsc
+    DEPS_34 += $(CONFIG)/bin/ejsc
 endif
-DEPS_39 += $(CONFIG)/bin/pak.mod
-DEPS_39 += $(CONFIG)/obj/pak.o
+DEPS_34 += $(CONFIG)/bin/pak.mod
+DEPS_34 += $(CONFIG)/obj/pak.o
 
 ifeq ($(ME_EXT_EJS),1)
-    LIBS_39 += -lejs
+    LIBS_34 += -lejs
 endif
-LIBS_39 += -lhttp
-LIBS_39 += -lmpr
+LIBS_34 += -lhttp
+LIBS_34 += -lmpr
 ifeq ($(ME_EXT_PCRE),1)
-    LIBS_39 += -lpcre
+    LIBS_34 += -lpcre
 endif
 ifeq ($(ME_EXT_ZLIB),1)
-    LIBS_39 += -lzlib
+    LIBS_34 += -lzlib
 endif
 
-$(CONFIG)/bin/pak: $(DEPS_39)
+$(CONFIG)/bin/pak: $(DEPS_34)
 	@echo '      [Link] $(CONFIG)/bin/pak'
-	$(CC) -o $(CONFIG)/bin/pak $(LDFLAGS) $(LIBPATHS) "$(CONFIG)/obj/pak.o" $(LIBPATHS_39) $(LIBS_39) $(LIBS_39) $(LIBS) $(LIBS) 
+	$(CC) -o $(CONFIG)/bin/pak $(LDFLAGS) $(LIBPATHS) "$(CONFIG)/obj/pak.o" $(LIBPATHS_34) $(LIBS_34) $(LIBS_34) $(LIBS) $(LIBS) 
 
 #
 #   stop
 #
-stop: $(DEPS_40)
+stop: $(DEPS_35)
 
 #
 #   installBinary
 #
-installBinary: $(DEPS_41)
+installBinary: $(DEPS_36)
 	( \
 	cd .; \
 	mkdir -p "$(ME_APP_PREFIX)" ; \
@@ -821,23 +760,23 @@ installBinary: $(DEPS_41)
 #
 #   start
 #
-start: $(DEPS_42)
+start: $(DEPS_37)
 
 #
 #   install
 #
-DEPS_43 += stop
-DEPS_43 += installBinary
-DEPS_43 += start
+DEPS_38 += stop
+DEPS_38 += installBinary
+DEPS_38 += start
 
-install: $(DEPS_43)
+install: $(DEPS_38)
 
 #
 #   uninstall
 #
-DEPS_44 += stop
+DEPS_39 += stop
 
-uninstall: $(DEPS_44)
+uninstall: $(DEPS_39)
 	( \
 	cd .; \
 	rm -fr "$(ME_VAPP_PREFIX)" ; \

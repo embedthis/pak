@@ -82,7 +82,7 @@
     #define ME_EXTENSIONS_DISCOVER "dsi,man,man2html,pmaker,ssl,zip"
 #endif
 #ifndef ME_EXTENSIONS_OMIT
-    #define ME_EXTENSIONS_OMIT ""
+    #define ME_EXTENSIONS_OMIT "matrixssl,openssl,nanossl,sqlite"
 #endif
 #ifndef ME_EXTENSIONS_REQUIRE
     #define ME_EXTENSIONS_REQUIRE "winsdk,compiler,lib,link,rc,osdep,ejs,http,mpr,pcre,zlib"
@@ -303,6 +303,9 @@
 #endif
 #ifndef ME_EXT_RC
     #define ME_EXT_RC 0
+#endif
+#ifndef ME_EXT_SQLITE
+    #define ME_EXT_SQLITE 0
 #endif
 #ifndef ME_EXT_SSL
     #define ME_EXT_SSL 1
