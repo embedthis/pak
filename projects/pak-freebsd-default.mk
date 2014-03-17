@@ -9,7 +9,7 @@ ARCH                  ?= $(shell uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm
 CC_ARCH               ?= $(shell echo $(ARCH) | sed 's/x86/i686/;s/x64/x86_64/')
 OS                    ?= freebsd
 CC                    ?= gcc
-LD                    ?= link
+LD                    ?= ld
 CONFIG                ?= $(OS)-$(ARCH)-$(PROFILE)
 LBIN                  ?= $(CONFIG)/bin
 PATH                  := $(LBIN):$(PATH)
@@ -24,25 +24,23 @@ ME_EXT_ZLIB           ?= 1
 
 ME_EXT_COMPILER_PATH  ?= gcc
 ME_EXT_DSI_PATH       ?= dsi
-ME_EXT_EJS_PATH       ?= src/paks/ejs
-ME_EXT_EST_PATH       ?= src/paks/est/estLib.c
-ME_EXT_HTTP_PATH      ?= src/paks/http
+ME_EXT_EJS_PATH       ?= src/paks/ejs/ejs.me
+ME_EXT_EST_PATH       ?= src/paks/est/est.me
+ME_EXT_HTTP_PATH      ?= src/paks/http/http.me
 ME_EXT_LIB_PATH       ?= ar
-ME_EXT_LINK_PATH      ?= link
+ME_EXT_LINK_PATH      ?= ld
 ME_EXT_MAN_PATH       ?= man
 ME_EXT_MAN2HTML_PATH  ?= man2html
 ME_EXT_MATRIXSSL_PATH ?= /usr/src/matrixssl
-ME_EXT_MPR_PATH       ?= src/paks/mpr
+ME_EXT_MPR_PATH       ?= src/paks/mpr/mpr.me
 ME_EXT_NANOSSL_PATH   ?= /usr/src/nanossl
 ME_EXT_OPENSSL_PATH   ?= /usr/src/openssl
-ME_EXT_OSDEP_PATH     ?= src/paks/osdep
-ME_EXT_PCRE_PATH      ?= src/paks/pcre
-ME_EXT_PMAKER_PATH    ?= pmaker
-ME_EXT_SSL_PATH       ?= ssl
+ME_EXT_OSDEP_PATH     ?= src/paks/osdep/osdep.me
+ME_EXT_PCRE_PATH      ?= src/paks/pcre/pcre.me
+ME_EXT_PMAKER_PATH    ?= [function Function]
 ME_EXT_VXWORKS_PATH   ?= $(WIND_BASE)
-ME_EXT_WINSDK_PATH    ?= winsdk
 ME_EXT_ZIP_PATH       ?= zip
-ME_EXT_ZLIB_PATH      ?= src/paks/zlib
+ME_EXT_ZLIB_PATH      ?= src/paks/zlib/zlib.me
 
 export WIND_HOME      ?= $(WIND_BASE)/..
 
@@ -106,7 +104,6 @@ ifeq ($(ME_EXT_SQLITE),1)
 endif
 TARGETS               += $(CONFIG)/bin/pak.mod
 TARGETS               += $(CONFIG)/bin/pak
-TARGETS               += bower.json
 
 unexport CDPATH
 
@@ -155,7 +152,6 @@ clean:
 	rm -f "$(CONFIG)/bin/sqlite"
 	rm -f "$(CONFIG)/bin/libzlib.so"
 	rm -f "$(CONFIG)/bin/pak"
-	rm -f "bower.json"
 	rm -f "$(CONFIG)/obj/ejsLib.o"
 	rm -f "$(CONFIG)/obj/ejsc.o"
 	rm -f "$(CONFIG)/obj/estLib.o"
@@ -615,16 +611,9 @@ DEPS_31 += $(CONFIG)/inc/osdep.h
 DEPS_31 += $(CONFIG)/obj/mprLib.o
 DEPS_31 += $(CONFIG)/bin/libmpr.so
 DEPS_31 += $(CONFIG)/inc/est.h
-DEPS_31 += $(CONFIG)/obj/estLib.o
-ifeq ($(ME_EXT_EST),1)
-    DEPS_31 += $(CONFIG)/bin/libest.so
-endif
 DEPS_31 += $(CONFIG)/obj/mprSsl.o
 
 LIBS_31 += -lmpr
-ifeq ($(ME_EXT_EST),1)
-    LIBS_31 += -lest
-endif
 
 $(CONFIG)/bin/libmprssl.so: $(DEPS_31)
 	@echo '      [Link] $(CONFIG)/bin/libmprssl.so'
@@ -795,24 +784,14 @@ $(CONFIG)/bin/pak: $(DEPS_39)
 	$(CC) -o $(CONFIG)/bin/pak $(LIBPATHS) "$(CONFIG)/obj/pak.o" $(LIBPATHS_39) $(LIBS_39) $(LIBS_39) $(LIBS) $(LIBS) 
 
 #
-#   bower.json
-#
-DEPS_40 += package.json
-
-bower.json: $(DEPS_40)
-	@echo '      [Copy] bower.json'
-	mkdir -p "."
-	cp package.json bower.json
-
-#
 #   stop
 #
-stop: $(DEPS_41)
+stop: $(DEPS_40)
 
 #
 #   installBinary
 #
-installBinary: $(DEPS_42)
+installBinary: $(DEPS_41)
 	( \
 	cd .; \
 	mkdir -p "$(ME_APP_PREFIX)" ; \
@@ -843,23 +822,23 @@ installBinary: $(DEPS_42)
 #
 #   start
 #
-start: $(DEPS_43)
+start: $(DEPS_42)
 
 #
 #   install
 #
-DEPS_44 += stop
-DEPS_44 += installBinary
-DEPS_44 += start
+DEPS_43 += stop
+DEPS_43 += installBinary
+DEPS_43 += start
 
-install: $(DEPS_44)
+install: $(DEPS_43)
 
 #
 #   uninstall
 #
-DEPS_45 += stop
+DEPS_44 += stop
 
-uninstall: $(DEPS_45)
+uninstall: $(DEPS_44)
 	( \
 	cd .; \
 	rm -fr "$(ME_VAPP_PREFIX)" ; \

@@ -311,7 +311,7 @@
     #define ME_EXT_PCRE 1
 #endif
 #ifndef ME_EXT_PMAKER
-    #define ME_EXT_PMAKER 1
+    #define ME_EXT_PMAKER 0
 #endif
 #ifndef ME_EXT_SQLITE
     #define ME_EXT_SQLITE 1
@@ -323,7 +323,7 @@
     #define ME_EXT_VXWORKS 1
 #endif
 #ifndef ME_EXT_WINSDK
-    #define ME_EXT_WINSDK 1
+    #define ME_EXT_WINSDK 0
 #endif
 #ifndef ME_EXT_ZIP
     #define ME_EXT_ZIP 1
