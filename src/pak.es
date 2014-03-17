@@ -41,6 +41,7 @@ class PakCmd
     private var git: Path
     private var searchPath: String
     private var tempFile: Path?
+    private var installed: Object?
 
     /* This layers over App.config */
     private var defaultConfig = {
@@ -677,7 +678,8 @@ class PakCmd
         if (path.exists) {
             path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
         }
-        installPakFiles(pak)
+        installed = {}
+        installPak(pak)
         runScripts(pak, 'install')
     }
 
@@ -759,7 +761,11 @@ class PakCmd
         Install pak files top down. We don't overwrite existing (perhaps user-modified) files, 
         so lower packs won't modify the files of upper paks
      */
-    private function installPakFiles(pak: Package): Void {
+    private function installPak(pak: Package): Void {
+        if (installed[pak.name]) {
+            return
+        }
+        install[pak.name] = true
         qtrace('Install', pak.name, pak.cacheVersion)
         if (!pak.cached) {
             cachePak(pak)
@@ -794,8 +800,10 @@ class PakCmd
         for (let [other, criteria] in pak.spec.dependencies) {
             installDependency(other, criteria, true)
         }
-        for (let [other, criteria] in pak.spec.optionalDependencies) {
-            installDependency(other, criteria, false)
+        if (options.all) {
+            for (let [other, criteria] in pak.spec.optionalDependencies) {
+                installDependency(other, criteria, false)
+            }
         }
     }
 
@@ -806,7 +814,7 @@ class PakCmd
         if (install && !dep.installed) {
             trace('Info', 'Install required dependency ' + dep.name)
             try {
-                installPakFiles(dep)
+                installPak(dep)
             } catch (e) {
                 print(e)
                 if (args.options.force) {
