@@ -232,7 +232,7 @@ function setupPackagePrefixes(kind, package) {
 }
 
 
-function setupPackage(kind) {
+public function setupPackage(kind) {
     if (me.settings.manifest) {
         b.loadMeFile(me.dir.src.join(me.settings.manifest))
         b.runScript(me.scripts, "loaded")
