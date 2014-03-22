@@ -20,7 +20,7 @@ Me.load({
                     settings.title + ' ' + settings.version + '<'))
                 for each (path in Path('.').files('**.html', {exclude: /Bare.html|dsi/})) {
                     vtrace('Patch', path)
-                    run([me.extensions.dsi.path, '-I ', path])
+                    run(['dsi', '-I ', path])
                 }
             "
         },

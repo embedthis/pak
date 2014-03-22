@@ -26,59 +26,59 @@ CONFIG                = $(OS)-$(ARCH)-$(PROFILE)
 
 LBIN                  = $(CONFIG)\bin
 
-!IF "$(ME_EXT_EJS)" == ""
-ME_EXT_EJS            = 1
+!IF "$(ME_COM_EJS)" == ""
+ME_COM_EJS            = 1
 !ENDIF
-!IF "$(ME_EXT_EST)" == ""
-ME_EXT_EST            = 1
+!IF "$(ME_COM_EST)" == ""
+ME_COM_EST            = 1
 !ENDIF
-!IF "$(ME_EXT_MATRIXSSL)" == ""
-ME_EXT_MATRIXSSL      = 0
+!IF "$(ME_COM_MATRIXSSL)" == ""
+ME_COM_MATRIXSSL      = 0
 !ENDIF
-!IF "$(ME_EXT_NANOSSL)" == ""
-ME_EXT_NANOSSL        = 0
+!IF "$(ME_COM_NANOSSL)" == ""
+ME_COM_NANOSSL        = 0
 !ENDIF
-!IF "$(ME_EXT_OPENSSL)" == ""
-ME_EXT_OPENSSL        = 0
+!IF "$(ME_COM_OPENSSL)" == ""
+ME_COM_OPENSSL        = 0
 !ENDIF
-!IF "$(ME_EXT_PCRE)" == ""
-ME_EXT_PCRE           = 1
+!IF "$(ME_COM_PCRE)" == ""
+ME_COM_PCRE           = 1
 !ENDIF
-!IF "$(ME_EXT_SQLITE)" == ""
-ME_EXT_SQLITE         = 0
+!IF "$(ME_COM_SQLITE)" == ""
+ME_COM_SQLITE         = 0
 !ENDIF
-!IF "$(ME_EXT_SSL)" == ""
-ME_EXT_SSL            = 1
+!IF "$(ME_COM_SSL)" == ""
+ME_COM_SSL            = 1
 !ENDIF
-!IF "$(ME_EXT_ZLIB)" == ""
-ME_EXT_ZLIB           = 1
+!IF "$(ME_COM_ZLIB)" == ""
+ME_COM_ZLIB           = 1
 !ENDIF
 
-ME_EXT_COMPILER_PATH  = cl
-ME_EXT_DSI_PATH       = dsi
-ME_EXT_EJS_PATH       = src/paks/ejs
-ME_EXT_EST_PATH       = src/paks/est
-ME_EXT_HTTP_PATH      = src/paks/http/http.me
-ME_EXT_LIB_PATH       = lib.exe
-ME_EXT_LINK_PATH      = link.exe
-ME_EXT_MAN_PATH       = man
-ME_EXT_MAN2HTML_PATH  = man2html
-ME_EXT_MATRIXSSL_PATH = /usr/src/matrixssl
-ME_EXT_MPR_PATH       = src/paks/mpr/mpr.me
-ME_EXT_NANOSSL_PATH   = /usr/src/nanossl
-ME_EXT_OPENSSL_PATH   = /usr/src/openssl
-ME_EXT_OSDEP_PATH     = src/paks/osdep/osdep.me
-ME_EXT_PCRE_PATH      = src/paks/pcre
-ME_EXT_RC_PATH        = rc.exe
-ME_EXT_VXWORKS_PATH   = $(WIND_BASE)
-ME_EXT_ZIP_PATH       = zip
-ME_EXT_ZLIB_PATH      = src/paks/zlib
+ME_COM_COMPILER_PATH  = cl
+ME_COM_DSI_PATH       = dsi
+ME_COM_EJS_PATH       = src/paks/ejs
+ME_COM_EST_PATH       = src/paks/est
+ME_COM_HTTP_PATH      = src/paks/http/http.me
+ME_COM_LIB_PATH       = lib.exe
+ME_COM_LINK_PATH      = link.exe
+ME_COM_MAN_PATH       = man
+ME_COM_MAN2HTML_PATH  = man2html
+ME_COM_MATRIXSSL_PATH = /usr/src/matrixssl
+ME_COM_MPR_PATH       = src/paks/mpr/mpr.me
+ME_COM_NANOSSL_PATH   = /usr/src/nanossl
+ME_COM_OPENSSL_PATH   = /usr/src/openssl
+ME_COM_OSDEP_PATH     = src/paks/osdep/osdep.me
+ME_COM_PCRE_PATH      = src/paks/pcre
+ME_COM_RC_PATH        = rc.exe
+ME_COM_VXWORKS_PATH   = $(WIND_BASE)
+ME_COM_ZIP_PATH       = zip
+ME_COM_ZLIB_PATH      = src/paks/zlib
 
 CC                    = cl
 LD                    = link
 RC                    = rc
 CFLAGS                = -nologo -GR- -W3  -MD
-DFLAGS                = -D_REENTRANT -D_MT -DME_EXT_EJS=$(ME_EXT_EJS) -DME_EXT_EST=$(ME_EXT_EST) -DME_EXT_MATRIXSSL=$(ME_EXT_MATRIXSSL) -DME_EXT_NANOSSL=$(ME_EXT_NANOSSL) -DME_EXT_OPENSSL=$(ME_EXT_OPENSSL) -DME_EXT_PCRE=$(ME_EXT_PCRE) -DME_EXT_SQLITE=$(ME_EXT_SQLITE) -DME_EXT_SSL=$(ME_EXT_SSL) -DME_EXT_ZLIB=$(ME_EXT_ZLIB) 
+DFLAGS                = -D_REENTRANT -D_MT -DME_COM_EJS=$(ME_COM_EJS) -DME_COM_EST=$(ME_COM_EST) -DME_COM_MATRIXSSL=$(ME_COM_MATRIXSSL) -DME_COM_NANOSSL=$(ME_COM_NANOSSL) -DME_COM_OPENSSL=$(ME_COM_OPENSSL) -DME_COM_PCRE=$(ME_COM_PCRE) -DME_COM_SQLITE=$(ME_COM_SQLITE) -DME_COM_SSL=$(ME_COM_SSL) -DME_COM_ZLIB=$(ME_COM_ZLIB) 
 IFLAGS                = -I$(CONFIG)\inc
 LDFLAGS               = -nologo -nodefaultlib -incremental:no -machine:$(ARCH)
 LIBPATHS              = "-libpath:$(CONFIG)\bin"
@@ -102,16 +102,16 @@ ME_CACHE_PREFIX       = $(ME_VAPP_PREFIX)\cache
 ME_SRC_PREFIX         = $(ME_VAPP_PREFIX)\src
 
 
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 TARGETS               = $(TARGETS) $(CONFIG)\bin\libejs.dll
 !ENDIF
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 TARGETS               = $(TARGETS) $(CONFIG)\bin\ejsc.exe
 !ENDIF
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 TARGETS               = $(TARGETS) $(CONFIG)\bin\ejs.mod
 !ENDIF
-!IF "$(ME_EXT_EST)" == "1"
+!IF "$(ME_COM_EST)" == "1"
 TARGETS               = $(TARGETS) $(CONFIG)\bin\libest.dll
 !ENDIF
 TARGETS               = $(TARGETS) $(CONFIG)\bin\ca.crt
@@ -279,7 +279,7 @@ $(CONFIG)\obj\pcre.obj: \
 	@echo '   [Compile] $(CONFIG)/obj/pcre.obj'
 	"$(CC)" -c -Fo$(CONFIG)\obj\pcre.obj -Fd$(CONFIG)\obj\pcre.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\paks\pcre\pcre.c
 
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 #
 #   libpcre
 #
@@ -322,14 +322,14 @@ DEPS_12 = $(DEPS_12) $(CONFIG)\obj\mprLib.obj
 DEPS_12 = $(DEPS_12) $(CONFIG)\bin\libmpr.dll
 DEPS_12 = $(DEPS_12) $(CONFIG)\inc\pcre.h
 DEPS_12 = $(DEPS_12) $(CONFIG)\obj\pcre.obj
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 DEPS_12 = $(DEPS_12) $(CONFIG)\bin\libpcre.dll
 !ENDIF
 DEPS_12 = $(DEPS_12) $(CONFIG)\inc\http.h
 DEPS_12 = $(DEPS_12) $(CONFIG)\obj\httpLib.obj
 
 LIBS_12 = $(LIBS_12) libmpr.lib
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 LIBS_12 = $(LIBS_12) libpcre.lib
 !ENDIF
 
@@ -356,7 +356,7 @@ $(CONFIG)\obj\zlib.obj: \
 	@echo '   [Compile] $(CONFIG)/obj/zlib.obj'
 	"$(CC)" -c -Fo$(CONFIG)\obj\zlib.obj -Fd$(CONFIG)\obj\zlib.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\paks\zlib\zlib.c
 
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 #
 #   libzlib
 #
@@ -410,7 +410,7 @@ $(CONFIG)\obj\ejsLib.obj: \
 	@echo '   [Compile] $(CONFIG)/obj/ejsLib.obj'
 	"$(CC)" -c -Fo$(CONFIG)\obj\ejsLib.obj -Fd$(CONFIG)\obj\ejsLib.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\paks\ejs\ejsLib.c
 
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 #
 #   libejs
 #
@@ -421,7 +421,7 @@ DEPS_20 = $(DEPS_20) $(CONFIG)\obj\mprLib.obj
 DEPS_20 = $(DEPS_20) $(CONFIG)\bin\libmpr.dll
 DEPS_20 = $(DEPS_20) $(CONFIG)\inc\pcre.h
 DEPS_20 = $(DEPS_20) $(CONFIG)\obj\pcre.obj
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 DEPS_20 = $(DEPS_20) $(CONFIG)\bin\libpcre.dll
 !ENDIF
 DEPS_20 = $(DEPS_20) $(CONFIG)\inc\http.h
@@ -429,7 +429,7 @@ DEPS_20 = $(DEPS_20) $(CONFIG)\obj\httpLib.obj
 DEPS_20 = $(DEPS_20) $(CONFIG)\bin\libhttp.dll
 DEPS_20 = $(DEPS_20) $(CONFIG)\inc\zlib.h
 DEPS_20 = $(DEPS_20) $(CONFIG)\obj\zlib.obj
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 DEPS_20 = $(DEPS_20) $(CONFIG)\bin\libzlib.dll
 !ENDIF
 DEPS_20 = $(DEPS_20) $(CONFIG)\inc\ejs.h
@@ -439,10 +439,10 @@ DEPS_20 = $(DEPS_20) $(CONFIG)\obj\ejsLib.obj
 
 LIBS_20 = $(LIBS_20) libhttp.lib
 LIBS_20 = $(LIBS_20) libmpr.lib
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 LIBS_20 = $(LIBS_20) libpcre.lib
 !ENDIF
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 LIBS_20 = $(LIBS_20) libzlib.lib
 !ENDIF
 
@@ -462,7 +462,7 @@ $(CONFIG)\obj\ejsc.obj: \
 	@echo '   [Compile] $(CONFIG)/obj/ejsc.obj'
 	"$(CC)" -c -Fo$(CONFIG)\obj\ejsc.obj -Fd$(CONFIG)\obj\ejsc.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\paks\ejs\ejsc.c
 
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 #
 #   ejsc
 #
@@ -473,7 +473,7 @@ DEPS_22 = $(DEPS_22) $(CONFIG)\obj\mprLib.obj
 DEPS_22 = $(DEPS_22) $(CONFIG)\bin\libmpr.dll
 DEPS_22 = $(DEPS_22) $(CONFIG)\inc\pcre.h
 DEPS_22 = $(DEPS_22) $(CONFIG)\obj\pcre.obj
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 DEPS_22 = $(DEPS_22) $(CONFIG)\bin\libpcre.dll
 !ENDIF
 DEPS_22 = $(DEPS_22) $(CONFIG)\inc\http.h
@@ -481,7 +481,7 @@ DEPS_22 = $(DEPS_22) $(CONFIG)\obj\httpLib.obj
 DEPS_22 = $(DEPS_22) $(CONFIG)\bin\libhttp.dll
 DEPS_22 = $(DEPS_22) $(CONFIG)\inc\zlib.h
 DEPS_22 = $(DEPS_22) $(CONFIG)\obj\zlib.obj
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 DEPS_22 = $(DEPS_22) $(CONFIG)\bin\libzlib.dll
 !ENDIF
 DEPS_22 = $(DEPS_22) $(CONFIG)\inc\ejs.h
@@ -494,10 +494,10 @@ DEPS_22 = $(DEPS_22) $(CONFIG)\obj\ejsc.obj
 LIBS_22 = $(LIBS_22) libejs.lib
 LIBS_22 = $(LIBS_22) libhttp.lib
 LIBS_22 = $(LIBS_22) libmpr.lib
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 LIBS_22 = $(LIBS_22) libpcre.lib
 !ENDIF
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 LIBS_22 = $(LIBS_22) libzlib.lib
 !ENDIF
 
@@ -506,7 +506,7 @@ $(CONFIG)\bin\ejsc.exe: $(DEPS_22)
 	"$(LD)" -out:$(CONFIG)\bin\ejsc.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(CONFIG)\obj\ejsc.obj" $(LIBPATHS_22) $(LIBS_22) $(LIBS_22) $(LIBS) 
 !ENDIF
 
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 #
 #   ejs.mod
 #
@@ -518,7 +518,7 @@ DEPS_23 = $(DEPS_23) $(CONFIG)\obj\mprLib.obj
 DEPS_23 = $(DEPS_23) $(CONFIG)\bin\libmpr.dll
 DEPS_23 = $(DEPS_23) $(CONFIG)\inc\pcre.h
 DEPS_23 = $(DEPS_23) $(CONFIG)\obj\pcre.obj
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 DEPS_23 = $(DEPS_23) $(CONFIG)\bin\libpcre.dll
 !ENDIF
 DEPS_23 = $(DEPS_23) $(CONFIG)\inc\http.h
@@ -526,7 +526,7 @@ DEPS_23 = $(DEPS_23) $(CONFIG)\obj\httpLib.obj
 DEPS_23 = $(DEPS_23) $(CONFIG)\bin\libhttp.dll
 DEPS_23 = $(DEPS_23) $(CONFIG)\inc\zlib.h
 DEPS_23 = $(DEPS_23) $(CONFIG)\obj\zlib.obj
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 DEPS_23 = $(DEPS_23) $(CONFIG)\bin\libzlib.dll
 !ENDIF
 DEPS_23 = $(DEPS_23) $(CONFIG)\inc\ejs.h
@@ -563,7 +563,7 @@ $(CONFIG)\obj\estLib.obj: \
 	@echo '   [Compile] $(CONFIG)/obj/estLib.obj'
 	"$(CC)" -c -Fo$(CONFIG)\obj\estLib.obj -Fd$(CONFIG)\obj\estLib.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\paks\est\estLib.c
 
-!IF "$(ME_EXT_EST)" == "1"
+!IF "$(ME_COM_EST)" == "1"
 #
 #   libest
 #
@@ -608,7 +608,7 @@ DEPS_29 = $(DEPS_29) $(CONFIG)\obj\mprLib.obj
 DEPS_29 = $(DEPS_29) $(CONFIG)\bin\libmpr.dll
 DEPS_29 = $(DEPS_29) $(CONFIG)\inc\pcre.h
 DEPS_29 = $(DEPS_29) $(CONFIG)\obj\pcre.obj
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 DEPS_29 = $(DEPS_29) $(CONFIG)\bin\libpcre.dll
 !ENDIF
 DEPS_29 = $(DEPS_29) $(CONFIG)\inc\http.h
@@ -618,7 +618,7 @@ DEPS_29 = $(DEPS_29) $(CONFIG)\obj\http.obj
 
 LIBS_29 = $(LIBS_29) libhttp.lib
 LIBS_29 = $(LIBS_29) libmpr.lib
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 LIBS_29 = $(LIBS_29) libpcre.lib
 !ENDIF
 
@@ -668,13 +668,13 @@ DEPS_33 = $(DEPS_33) $(CONFIG)\obj\mprLib.obj
 DEPS_33 = $(DEPS_33) $(CONFIG)\bin\libmpr.dll
 DEPS_33 = $(DEPS_33) $(CONFIG)\inc\est.h
 DEPS_33 = $(DEPS_33) $(CONFIG)\obj\estLib.obj
-!IF "$(ME_EXT_EST)" == "1"
+!IF "$(ME_COM_EST)" == "1"
 DEPS_33 = $(DEPS_33) $(CONFIG)\bin\libest.dll
 !ENDIF
 DEPS_33 = $(DEPS_33) $(CONFIG)\obj\mprSsl.obj
 
 LIBS_33 = $(LIBS_33) libmpr.lib
-!IF "$(ME_EXT_EST)" == "1"
+!IF "$(ME_COM_EST)" == "1"
 LIBS_33 = $(LIBS_33) libest.lib
 !ENDIF
 
@@ -695,7 +695,7 @@ DEPS_34 = $(DEPS_34) $(CONFIG)\obj\mprLib.obj
 DEPS_34 = $(DEPS_34) $(CONFIG)\bin\libmpr.dll
 DEPS_34 = $(DEPS_34) $(CONFIG)\inc\pcre.h
 DEPS_34 = $(DEPS_34) $(CONFIG)\obj\pcre.obj
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 DEPS_34 = $(DEPS_34) $(CONFIG)\bin\libpcre.dll
 !ENDIF
 DEPS_34 = $(DEPS_34) $(CONFIG)\inc\http.h
@@ -703,18 +703,18 @@ DEPS_34 = $(DEPS_34) $(CONFIG)\obj\httpLib.obj
 DEPS_34 = $(DEPS_34) $(CONFIG)\bin\libhttp.dll
 DEPS_34 = $(DEPS_34) $(CONFIG)\inc\zlib.h
 DEPS_34 = $(DEPS_34) $(CONFIG)\obj\zlib.obj
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 DEPS_34 = $(DEPS_34) $(CONFIG)\bin\libzlib.dll
 !ENDIF
 DEPS_34 = $(DEPS_34) $(CONFIG)\inc\ejs.h
 DEPS_34 = $(DEPS_34) $(CONFIG)\inc\ejs.slots.h
 DEPS_34 = $(DEPS_34) $(CONFIG)\inc\ejsByteGoto.h
 DEPS_34 = $(DEPS_34) $(CONFIG)\obj\ejsLib.obj
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 DEPS_34 = $(DEPS_34) $(CONFIG)\bin\libejs.dll
 !ENDIF
 DEPS_34 = $(DEPS_34) $(CONFIG)\obj\ejsc.obj
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 DEPS_34 = $(DEPS_34) $(CONFIG)\bin\ejsc.exe
 !ENDIF
 
@@ -744,7 +744,7 @@ DEPS_36 = $(DEPS_36) $(CONFIG)\obj\mprLib.obj
 DEPS_36 = $(DEPS_36) $(CONFIG)\bin\libmpr.dll
 DEPS_36 = $(DEPS_36) $(CONFIG)\inc\pcre.h
 DEPS_36 = $(DEPS_36) $(CONFIG)\obj\pcre.obj
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 DEPS_36 = $(DEPS_36) $(CONFIG)\bin\libpcre.dll
 !ENDIF
 DEPS_36 = $(DEPS_36) $(CONFIG)\inc\http.h
@@ -752,32 +752,32 @@ DEPS_36 = $(DEPS_36) $(CONFIG)\obj\httpLib.obj
 DEPS_36 = $(DEPS_36) $(CONFIG)\bin\libhttp.dll
 DEPS_36 = $(DEPS_36) $(CONFIG)\inc\zlib.h
 DEPS_36 = $(DEPS_36) $(CONFIG)\obj\zlib.obj
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 DEPS_36 = $(DEPS_36) $(CONFIG)\bin\libzlib.dll
 !ENDIF
 DEPS_36 = $(DEPS_36) $(CONFIG)\inc\ejs.h
 DEPS_36 = $(DEPS_36) $(CONFIG)\inc\ejs.slots.h
 DEPS_36 = $(DEPS_36) $(CONFIG)\inc\ejsByteGoto.h
 DEPS_36 = $(DEPS_36) $(CONFIG)\obj\ejsLib.obj
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 DEPS_36 = $(DEPS_36) $(CONFIG)\bin\libejs.dll
 !ENDIF
 DEPS_36 = $(DEPS_36) $(CONFIG)\obj\ejsc.obj
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 DEPS_36 = $(DEPS_36) $(CONFIG)\bin\ejsc.exe
 !ENDIF
 DEPS_36 = $(DEPS_36) $(CONFIG)\bin\pak.mod
 DEPS_36 = $(DEPS_36) $(CONFIG)\obj\pak.obj
 
-!IF "$(ME_EXT_EJS)" == "1"
+!IF "$(ME_COM_EJS)" == "1"
 LIBS_36 = $(LIBS_36) libejs.lib
 !ENDIF
 LIBS_36 = $(LIBS_36) libhttp.lib
 LIBS_36 = $(LIBS_36) libmpr.lib
-!IF "$(ME_EXT_PCRE)" == "1"
+!IF "$(ME_COM_PCRE)" == "1"
 LIBS_36 = $(LIBS_36) libpcre.lib
 !ENDIF
-!IF "$(ME_EXT_ZLIB)" == "1"
+!IF "$(ME_COM_ZLIB)" == "1"
 LIBS_36 = $(LIBS_36) libzlib.lib
 !ENDIF
 

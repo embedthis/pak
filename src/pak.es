@@ -131,7 +131,7 @@ class PakCmd
     private var argTemplate = {
         options: {
             all: { alias: 'a'},
-            cache: { range: String },
+            cache: { alias: 'c', range: String },
             catalog: { range: String },
             code: { range: String },
             debug: { alias: 'd' },
@@ -139,6 +139,7 @@ class PakCmd
             dir: { range: String },
             force: { alias: 'f' },
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
+            paks: { alias: 'p', range: String },
             quiet: { alias: 'q' },
             silent: { alias: 's' },
             verbose: { alias: 'v' },
@@ -172,7 +173,8 @@ class PakCmd
             '    upgrade [paks...]        # Upgrade installed paks\n' +
             '  General options:\n' + 
             '    --catalog catalog        # Catalog to use instead of defaults\n' +
-            '    --dir                    # Change to directory before running\n' +
+            '    --cache dir              # Director to use for the Pak cache\n' +
+            '    --dir dir                # Change to directory before running\n' +
             '    --force                  # Ignore dependencies and continue\n' +
             '    --log file:level         # Send output to a file at a given level\n' + 
             '    --paks dir               # Use given directory for paks cache\n' +
@@ -223,6 +225,9 @@ class PakCmd
         if (options.version) {
             print(Config.version)
             App.exit(0)
+        }
+        if (options.paks) {
+            dirs.paks = Path(options.paks)
         }
         if (options.cache) {
             dirs.pakcache = Path(options.cache)
@@ -1305,6 +1310,9 @@ http.verifyIssuer = false
             }
         }
         pak.resolve(pak.installVersion)
+        if (!pak.spec) {
+            throw 'Cannot remove "' + pak + '". Missing package.json'
+        }
         runScripts(pak, 'uninstall')
         /*
             Remove entry in ./package.json dependencies and optionalDependencies
@@ -1664,6 +1672,12 @@ http.verifyIssuer = false
                 }
                 break
             }
+        }
+        if (options.paks) {
+            dirs.paks = Path(options.paks)
+        }
+        if (options.cache) {
+            dirs.pakcache = Path(options.cache)
         }
         for (let [field, value] in dirs) {
             dirs[field] = Path(value).replace('~', HOME)

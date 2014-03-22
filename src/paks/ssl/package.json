@@ -1,22 +1,15 @@
 {
-    "name": "mpr",
-    "description": "Embedthis Multithreaded Portable Runtime",
-    "title": "Embedthis MPR",
-    "version": "5.0.0",
+    "name": "ssl",
+    "description": "Embedthis SSL Interface",
+    "title": "Embedthis Development",
+    "version": "0.8.0",
     "dirs": {
         "paks": "src/paks"
     },
     "dependencies": {
-        "est": "~0.6",
-        "me-dev": "~0.8",
-        "me-doc": "~0.8",
-        "me-package": "~0.8",
-        "osdep": "~0.8",
-        "ssl": "~0.8"
     },
     "keywords": [
-        "mpr",
-        "runtime"
+        "me-plugin",
     ],
     "author": {
         "name": "Embedthis Software",
@@ -25,14 +18,11 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/embedthis/mpr-4.git"
+        "url": "git://github.com/embedthis/ssl.git"
     },
     "bugs": {
-        "url": "http://github.com/embedthis/mpr-4/issues"
+        "url": "http://github.com/embedthis/ssl/issues"
     },
-    "export": [
-        "doc/**"
-    ],
     "licenses": [
         {
             "type": "GPL",

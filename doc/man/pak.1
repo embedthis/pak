@@ -5,6 +5,7 @@ pak \- Embedthis Pak -- Package Manager
 .B pak 
 [\fI--all\fR]
 [\fI--catalog catalog\fR]
+[\fI--cache dir\fR]
 [\fI--details\fR]
 [\fI--dir dir\fR]
 [\fI--force\fR]
@@ -208,6 +209,11 @@ Upgrade installed paks
 Show all versions of a pak.
 
 .TP
+\fB\--cache directory\fR
+Specify the directory to use for the paks cache. This overrides the values specified in the various pakrc 
+or package.json files.
+
+.TP
 \fB\--catalog URI\fR
 Set the catalog URI to use for install, cache, publish and retract commands.
 
@@ -232,7 +238,8 @@ an alias for '--log stderr:2'.
 
 .TP
 \fB\--paks directory\fR
-Specify the directory to use for the paks cache. This overrides the values specified in the various pakrc files.
+Specify the directory to use for the paks. This overrides the values specified in the various pakrc 
+or package.json files.
 
 .TP
 \fB\--quiet\fR
