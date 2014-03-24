@@ -15,6 +15,54 @@
 #ifndef ME_COMPATIBLE
     #define ME_COMPATIBLE "0.8.2"
 #endif
+#ifndef ME_COMPILER_HAS_ATOMIC
+    #define ME_COMPILER_HAS_ATOMIC 1
+#endif
+#ifndef ME_COMPILER_HAS_ATOMIC64
+    #define ME_COMPILER_HAS_ATOMIC64 1
+#endif
+#ifndef ME_COMPILER_HAS_DOUBLE_BRACES
+    #define ME_COMPILER_HAS_DOUBLE_BRACES 1
+#endif
+#ifndef ME_COMPILER_HAS_DYN_LOAD
+    #define ME_COMPILER_HAS_DYN_LOAD 1
+#endif
+#ifndef ME_COMPILER_HAS_LIB_EDIT
+    #define ME_COMPILER_HAS_LIB_EDIT 0
+#endif
+#ifndef ME_COMPILER_HAS_LIB_RT
+    #define ME_COMPILER_HAS_LIB_RT 0
+#endif
+#ifndef ME_COMPILER_HAS_MMU
+    #define ME_COMPILER_HAS_MMU 1
+#endif
+#ifndef ME_COMPILER_HAS_MTUNE
+    #define ME_COMPILER_HAS_MTUNE 1
+#endif
+#ifndef ME_COMPILER_HAS_PAM
+    #define ME_COMPILER_HAS_PAM 0
+#endif
+#ifndef ME_COMPILER_HAS_STACK_PROTECTOR
+    #define ME_COMPILER_HAS_STACK_PROTECTOR 1
+#endif
+#ifndef ME_COMPILER_HAS_SYNC
+    #define ME_COMPILER_HAS_SYNC 0
+#endif
+#ifndef ME_COMPILER_HAS_SYNC64
+    #define ME_COMPILER_HAS_SYNC64 0
+#endif
+#ifndef ME_COMPILER_HAS_SYNC_CAS
+    #define ME_COMPILER_HAS_SYNC_CAS 0
+#endif
+#ifndef ME_COMPILER_HAS_UNNAMED_UNIONS
+    #define ME_COMPILER_HAS_UNNAMED_UNIONS 1
+#endif
+#ifndef ME_COMPILER_WARN64TO32
+    #define ME_COMPILER_WARN64TO32 0
+#endif
+#ifndef ME_COMPILER_WARN_UNUSED
+    #define ME_COMPILER_WARN_UNUSED 0
+#endif
 #ifndef ME_DEBUG
     #define ME_DEBUG 1
 #endif
@@ -78,57 +126,6 @@
 #ifndef ME_EST_XTEA
     #define ME_EST_XTEA 0
 #endif
-#ifndef ME_COMENSIONS_DISCOVER
-    #define ME_COMENSIONS_DISCOVER "dsi,man,man2html,pmaker,ssl,zip"
-#endif
-#ifndef ME_COMENSIONS_OMIT
-    #define ME_COMENSIONS_OMIT "matrixssl,openssl,nanossl,sqlite"
-#endif
-#ifndef ME_COMENSIONS_REQUIRE
-    #define ME_COMENSIONS_REQUIRE "compiler,lib,link,osdep,ejs,http,mpr,pcre,zlib"
-#endif
-#ifndef ME_HAS_ATOMIC
-    #define ME_HAS_ATOMIC 1
-#endif
-#ifndef ME_HAS_ATOMIC64
-    #define ME_HAS_ATOMIC64 1
-#endif
-#ifndef ME_HAS_DOUBLE_BRACES
-    #define ME_HAS_DOUBLE_BRACES 1
-#endif
-#ifndef ME_HAS_DYN_LOAD
-    #define ME_HAS_DYN_LOAD 1
-#endif
-#ifndef ME_HAS_LIB_EDIT
-    #define ME_HAS_LIB_EDIT 0
-#endif
-#ifndef ME_HAS_LIB_RT
-    #define ME_HAS_LIB_RT 0
-#endif
-#ifndef ME_HAS_MMU
-    #define ME_HAS_MMU 1
-#endif
-#ifndef ME_HAS_MTUNE
-    #define ME_HAS_MTUNE 1
-#endif
-#ifndef ME_HAS_PAM
-    #define ME_HAS_PAM 0
-#endif
-#ifndef ME_HAS_STACK_PROTECTOR
-    #define ME_HAS_STACK_PROTECTOR 1
-#endif
-#ifndef ME_HAS_SYNC
-    #define ME_HAS_SYNC 0
-#endif
-#ifndef ME_HAS_SYNC64
-    #define ME_HAS_SYNC64 0
-#endif
-#ifndef ME_HAS_SYNC_CAS
-    #define ME_HAS_SYNC_CAS 0
-#endif
-#ifndef ME_HAS_UNNAMED_UNIONS
-    #define ME_HAS_UNNAMED_UNIONS 1
-#endif
 #ifndef ME_HTTP_PAM
     #define ME_HTTP_PAM 0
 #endif
@@ -158,12 +155,6 @@
 #endif
 #ifndef ME_VERSION
     #define ME_VERSION "0.8.2"
-#endif
-#ifndef ME_WARN64TO32
-    #define ME_WARN64TO32 0
-#endif
-#ifndef ME_WARN_UNUSED
-    #define ME_WARN_UNUSED 0
 #endif
 
 /* Prefixes */
@@ -264,12 +255,9 @@
     #define ME_VNUM 02
 #endif
 
-/* Extensions */
+/* Components */
 #ifndef ME_COM_CC
     #define ME_COM_CC 1
-#endif
-#ifndef ME_COM_DSI
-    #define ME_COM_DSI 1
 #endif
 #ifndef ME_COM_EJS
     #define ME_COM_EJS 1
@@ -282,15 +270,6 @@
 #endif
 #ifndef ME_COM_LIB
     #define ME_COM_LIB 1
-#endif
-#ifndef ME_COM_LINK
-    #define ME_COM_LINK 1
-#endif
-#ifndef ME_COM_MAN
-    #define ME_COM_MAN 1
-#endif
-#ifndef ME_COM_MAN2HTML
-    #define ME_COM_MAN2HTML 1
 #endif
 #ifndef ME_COM_MATRIXSSL
     #define ME_COM_MATRIXSSL 0
@@ -310,9 +289,6 @@
 #ifndef ME_COM_PCRE
     #define ME_COM_PCRE 1
 #endif
-#ifndef ME_COM_PMAKER
-    #define ME_COM_PMAKER 1
-#endif
 #ifndef ME_COM_SQLITE
     #define ME_COM_SQLITE 0
 #endif
@@ -320,13 +296,10 @@
     #define ME_COM_SSL 1
 #endif
 #ifndef ME_COM_VXWORKS
-    #define ME_COM_VXWORKS 1
+    #define ME_COM_VXWORKS 0
 #endif
 #ifndef ME_COM_WINSDK
-    #define ME_COM_WINSDK 0
-#endif
-#ifndef ME_COM_ZIP
-    #define ME_COM_ZIP 1
+    #define ME_COM_WINSDK 1
 #endif
 #ifndef ME_COM_ZLIB
     #define ME_COM_ZLIB 1

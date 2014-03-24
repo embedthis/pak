@@ -152,6 +152,13 @@ cd ..\..\..\projects\pak-windows-default</Command>
   </ProjectReference>
 </ItemGroup>
 
+<ItemGroup>
+  <ProjectReference Include="libzlib.vcxproj">
+  <Project>7c6e2f3b-b745-4c17-a966-1708bb75bb9d</Project>
+  <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+  </ProjectReference>
+</ItemGroup>
+
   <Import Project="$(VCTargetsPath)Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
