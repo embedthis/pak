@@ -816,7 +816,7 @@ class PakCmd
         let dep = Package(name)
         dep.selectCacheVersion(criteria)
         dep.resolve()
-        if (install && !dep.installed) {
+        if (install && (!dep.installed || args.options.force)) {
             trace('Info', 'Install required dependency ' + dep.name)
             try {
                 installPak(dep)
