@@ -41,7 +41,7 @@ class PakCmd
     private var git: Path
     private var searchPath: String
     private var tempFile: Path?
-    private var installed: Object?
+    private var installed: Object = {}
 
     /* This layers over App.config */
     private var defaultConfig = {
@@ -683,7 +683,6 @@ class PakCmd
         if (path.exists) {
             path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
         }
-        installed = {}
         installPak(pak)
         runScripts(pak, 'install')
     }
@@ -770,7 +769,7 @@ class PakCmd
         if (installed[pak.name]) {
             return
         }
-        install[pak.name] = true
+        installed[pak.name] = true
         qtrace('Install', pak.name, pak.cacheVersion)
         if (!pak.cached) {
             cachePak(pak)
@@ -813,6 +812,9 @@ class PakCmd
     }
 
     private function installDependency(name, criteria, install: Boolean) {
+        if (installed[name]) {
+            return
+        }
         let dep = Package(name)
         dep.selectCacheVersion(criteria)
         dep.resolve()
