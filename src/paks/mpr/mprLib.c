@@ -1286,7 +1286,7 @@ static void sweep()
 {
     MprRegion   *region, *nextRegion, *prior, *rp;
     MprMem      *mp, *next;
-    int         joinBlocks;
+    int         joinBlocks, rcount;
 
     if (!heap->gcEnabled) {
         mprTrace(0, "DEBUG: sweep: Abort sweep - GC disabled");
@@ -1309,6 +1309,7 @@ static void sweep()
         the front of heap->regions. This code is the only code that frees regions.
      */
     prior = NULL;
+    rcount = 0;
     for (region = heap->regions; region; region = nextRegion) {
         nextRegion = region->next;
         joinBlocks = heap->stats.bytesFree >= heap->stats.cacheHeap;
@@ -1380,8 +1381,10 @@ static void sweep()
             INC(unpins);
         } else {
             prior = region;
+            rcount++;
         }
     }
+    heap->stats.heapRegions = rcount;
 #if (ME_MPR_ALLOC_STATS && ME_MPR_ALLOC_DEBUG) && KEEP
     printf("GC: Marked %lld / %lld, Swept %lld / %lld, freed %lld, bytesFree %lld (prior %lld)\n"
                  "    WeightedCount %d / %d, allocated blocks %lld allocated bytes %lld\n"
@@ -1780,8 +1783,8 @@ static void printMemReport()
         printf("  Heap redline      %14u MB (%.2f %%)\n", 
             (int) (ap->warnHeap / (1024 * 1024)), ap->bytesAllocated * 100.0 / ap->warnHeap);
     }
-    printf("  Heap cache        %14u MB (%.2f %%)\n",    (int) (ap->cacheHeap / (1024 * 1024)), ap->cacheHeap * 100.0 / ap->maxHeap);
-    printf("  Allocation errors %14d\n",               (int) ap->errors);
+    printf("  Heap cache        %14u MB (%.2f %%)\n",   (int) (ap->cacheHeap / (1024 * 1024)), ap->cacheHeap * 100.0 / ap->maxHeap);
+    printf("  Allocation errors %14d\n",                (int) ap->errors);
     printf("\n");
 
 #if ME_MPR_ALLOC_STATS
@@ -2120,10 +2123,14 @@ PUBLIC MprMemStats *mprGetMemStats()
     int64 ram, usermem;
     mib[1] = HW_PHYSMEM;
 #endif
+#if MACOSX
+    sysctlbyname("hw.memsize", &ram, &len, NULL, 0);
+#else
     mib[0] = CTL_HW;
     len = sizeof(ram);
     ram = 0;
     sysctl(mib, 2, &ram, &len, NULL, 0);
+#endif
     heap->stats.ram = ram;
 
     mib[0] = CTL_HW;
