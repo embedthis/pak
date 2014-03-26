@@ -1132,6 +1132,8 @@ typedef struct MprMemStats {
     uint            numCpu;                 /**< Number of CPUs */
     uint            pageSize;               /**< System page size */
     uint            heapRegions;            /**< Heap region count */
+    uint            sweeps;                 /**< Number of GC sweeps */
+    uint64          cpu;                    /**< Process CPU usage in ticks */
     uint64          cacheHeap;              /**< Heap cache. Try to keep at least this amount in the free queues  */
     uint64          bytesAllocated;         /**< Bytes currently allocated. Includes active and free. */
     uint64          bytesFree;              /**< Bytes currently free and retained in the heap queues */
@@ -1210,7 +1212,6 @@ typedef struct MprHeap {
     int              gcEnabled;             /**< GC is enabled */
     int              gcRequested;           /**< GC has been requested */
     int              hasError;              /**< Memory allocation error */
-    int              iteration;             /**< GC iteration counter (debug only) */
     int              marking;               /**< Actually marking objects now */
     int              mustYield;             /**< Threads must yield for GC which is due */
     int              nextSeqno;             /**< Next sequence number */
@@ -1260,6 +1261,14 @@ PUBLIC struct Mpr *mprCreateMemService(MprManager manager, int flags);
     @stability Stable.
  */
 PUBLIC void *mprAllocMem(size_t size, int flags);
+
+/**
+    Return the process CPU usage.
+    @returns The total number of ticks of cpu usage since process tart
+    @ingroup MprMem
+    @stability Prototype.
+ */
+PUBLIC uint64 mprGetCPU();
 
 /**
     Return the current allocation memory statistics block

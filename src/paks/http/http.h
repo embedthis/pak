@@ -794,6 +794,7 @@ typedef struct HttpStats {
     uint64  totalSweeps;                /**< Total GC sweeps */
     uint64  totalRequests;              /**< Total requests served */
     uint64  totalConnections;           /**< Total connections accepted */
+    uint64  cpu;                        /**< CPU usage */
 
     int     cpus;
 } HttpStats;

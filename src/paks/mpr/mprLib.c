@@ -1385,6 +1385,7 @@ static void sweep()
         }
     }
     heap->stats.heapRegions = rcount;
+    heap->stats.sweeps++;
 #if (ME_MPR_ALLOC_STATS && ME_MPR_ALLOC_DEBUG) && KEEP
     printf("GC: Marked %lld / %lld, Swept %lld / %lld, freed %lld, bytesFree %lld (prior %lld)\n"
                  "    WeightedCount %d / %d, allocated blocks %lld allocated bytes %lld\n"
@@ -2141,6 +2142,7 @@ PUBLIC MprMemStats *mprGetMemStats()
     heap->stats.user = usermem;
 #endif
     heap->stats.rss = mprGetMem();
+    heap->stats.cpu = mprGetCPU();
     return &heap->stats;
 }
 
@@ -2190,6 +2192,40 @@ PUBLIC size_t mprGetMem()
         size = (size_t) heap->stats.bytesAllocated;
     }
     return size;
+}
+
+
+PUBLIC uint64 mprGetCPU()
+{
+    uint64     ticks;
+
+    ticks = 0;
+#if LINUX
+    int fd;
+    char path[ME_MAX_PATH];
+    sprintf(path, "/proc/%d/stat", getpid());
+    if ((fd = open(path, O_RDONLY)) >= 0) {
+        char buf[ME_MAX_BUFFER];
+        int nbytes = read(fd, buf, sizeof(buf) - 1);
+        close(fd);
+        if (nbytes > 0) {
+            ulong utime, stime;
+            buf[nbytes] = '\0';
+            sscanf(buf, "%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %lu %lu", &utime, &stime);
+            ticks = (utime + stime) * MPR_TICKS_PER_SEC / sysconf(_SC_CLK_TCK);
+        }
+    }
+#elif MACOSX
+    struct task_basic_info info;
+    mach_msg_type_number_t count = TASK_BASIC_INFO_COUNT;
+    if (task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t) &info, &count) == KERN_SUCCESS) {
+        uint64 utime, stime;
+        utime = info.user_time.seconds * MPR_TICKS_PER_SEC + info.user_time.microseconds / 1000;
+        stime = info.system_time.seconds * MPR_TICKS_PER_SEC + info.system_time.microseconds / 1000;
+        ticks = utime + stime;
+    }
+#endif
+    return ticks;
 }
 
 
