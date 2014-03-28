@@ -702,7 +702,11 @@ class PakCmd
         blending[pak.name] = true
         trace('Blend', pak + ' configuration')
         blendDependencies(spec, pak)
-        blendSpec(spec, pak)
+        //  TODO - document
+        let paks = spec.paks
+        if (!(paks && (paks.noblend || (paks[pak.name] && paks[pak.name].noblend)))) {
+            blendSpec(spec, pak)
+        }
         delete blending[pak.name]
     }
 
@@ -786,9 +790,10 @@ class PakCmd
 
         let export = pak.spec.export
         if (export && PACKAGE.exists) {
-            //  Should this be read once at startup?
+            //  TODO This should be read once at startup?
+            //  TODO - document
             let spec = Package.readSpec('.', {quiet: true})
-            if (spec.paks && spec.paks[pak.name] && spec.paks[pak.name].noexport) {
+            if (spec.paks && (spec.paks.noexport || (spec.paks[pak.name] && spec.paks[pak.name].noexport))) {
                 export = null
             }
         }
@@ -1082,7 +1087,7 @@ class PakCmd
             preupgrade
      */
     private function runScripts(pak: Package, event: String) {
-        if (pak.spec.scripts) {
+        if (pak.spec && pak.spec.scripts) {
             let script = pak.spec.scripts[event]
             let path = pak.cachePath.join(script)
             if (path.exists) {

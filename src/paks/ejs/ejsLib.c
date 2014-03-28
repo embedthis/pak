@@ -31111,11 +31111,7 @@ static EjsObj *cmd_start(Ejs *ejs, EjsCmd *cmd, int argc, EjsObj **argv)
         ejsThrowError(ejs, "Command failed: %s\nError Output: %s", cmd->argv[0], err);
         return 0;
     }
-    if (flags & MPR_CMD_DETACH) {
-#if ME_WIN_LIKE
-        mprStartWinPollTimer(cmd->mc);
-#endif
-    } else {
+    if (!(flags & MPR_CMD_DETACH)) {
         assert(cmd->mc);
         mprFinalizeCmd(cmd->mc);
         if (mprWaitForCmd(cmd->mc, cmd->timeout) < 0) {
@@ -33593,7 +33589,7 @@ PUBLIC EjsObj *writeFile(Ejs *ejs, EjsFile *fp, int argc, EjsObj **argv)
             break;
         }
         if (mprWriteFile(fp->file, buf, len) != len) {
-            mprLog(0, "Write IO error %d\n", mprGetOsError());
+            mprLog(0, "Write IO error %d", mprGetOsError());
             ejsThrowIOError(ejs, "Cannot write to %s", fp->path);
             return 0;
         }
