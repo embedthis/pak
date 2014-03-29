@@ -800,7 +800,19 @@ class PakCmd
         copyTree(pak.cachePath, dest, pak.spec.ignore, pak.spec.files, export)
         /* Get updated dependency information in spec */
         pak.resolve()
-        installDependencies(pak)
+
+        let installDeps = true
+        if (PACKAGE.exists) {
+            //  TODO This should be read once at startup?
+            //  TODO - document
+            let spec = Package.readSpec('.', {quiet: true})
+            if (spec.paks && (spec.paks.nodeps || (spec.paks[pak.name] && spec.paks[pak.name].nodeps))) {
+                installDeps = false
+            }
+        }
+        if (installDeps) {
+            installDependencies(pak)
+        }
         trace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
         trace('Info', 'Use "pak info ' + pak.name + '" to view the README')
     }
