@@ -33,3 +33,4 @@ projects/pak*mine.xcodeproj
 windows*.bit
 
 /start.me
+/linux-*
