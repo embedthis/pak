@@ -544,8 +544,6 @@ static MprMem *allocMem(size_t required)
             qindex = retryIndex;
             goto retry;
         }
-        if (heap->stats.bytesFree > required) {
-        }
     }
     return growHeap(required);
 }
@@ -712,7 +710,6 @@ static ME_INLINE bool linkBlock(MprMem *mp)
      */
     if (!acquire(freeq)) {
         ATOMIC_INC(tryFails);
-//MOB WHAT IS THIS????
         mp->mark = !mp->mark;
         assert(!mp->free);
         return 0;
