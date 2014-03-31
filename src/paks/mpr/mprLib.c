@@ -435,7 +435,7 @@ static int initQueues()
     for (freeq = heap->freeq, qindex = 0; freeq < &heap->freeq[MPR_ALLOC_NUM_QUEUES]; freeq++, qindex++) {
         /* Size includes MprMem header */
         freeq->minSize = (MprMemSize) qtosize(qindex);
-#if (ME_MPR_ALLOC_STATS && ME_MPR_ALLOC_DEBUG)
+#if (ME_MPR_ALLOC_STATS && ME_MPR_ALLOC_DEBUG) && KEEP
         printf("Queue: %d, usize %u  size %u\n",
             (int) (freeq - heap->freeq), (int) freeq->minSize - (int) sizeof(MprMem), (int) freeq->minSize);
 #endif
@@ -593,6 +593,15 @@ static MprMem *growHeap(size_t required)
     }
     mprAtomicListInsert((void**) &heap->regions, (void**) &region->next, region);
     ATOMIC_ADD(bytesAllocated, size);
+    /*
+        Tolerate races
+     */
+    if (heap->stats.bytesAllocated > heap->stats.bytesMax) {
+        heap->stats.bytesMax = heap->stats.bytesAllocated;
+#if (ME_MPR_ALLOC_STATS && ME_MPR_ALLOC_DEBUG)
+        printf("MPR: Heap new max %lld request %lu\n", heap->stats.bytesMax, required);
+#endif
+    }
     CHECK(mp);
     ATOMIC_INC(allocs);
     return mp;
@@ -1400,6 +1409,9 @@ static void sweep()
         heap->stats.freed, heap->stats.bytesFree, heap->priorFree, heap->priorWeightedCount, heap->workQuota,
         heap->stats.sweepVisited - heap->stats.swept, heap->stats.bytesAllocated, heap->stats.unpins, 
         heap->stats.collections);
+#if KEEP
+    printf("SWEPT %lld %lld\n\n", heap->stats.swept, heap->stats.sweptBytes);
+#endif
 #endif
     if (heap->printStats) {
         printMemReport();
@@ -1755,9 +1767,9 @@ static void printGCStats()
             regionCount, (int) available, tag);
     }
     printf("\nGC Stats\n");
-    printf("  Active:  %9d blocks, %12ld bytes\n", activeCount, activeBytes);
-    printf("  Eternal: %9d blocks, %12ld bytes\n", eternalCount, eternalBytes);
-    printf("  Free:    %9d blocks, %12ld bytes\n", freeCount, freeBytes);
+    printf("  Active:  %9d blocks, %12lld bytes\n", activeCount, activeBytes);
+    printf("  Eternal: %9d blocks, %12lld bytes\n", eternalCount, eternalBytes);
+    printf("  Free:    %9d blocks, %12lld bytes\n", freeCount, freeBytes);
 }
 #endif /* ME_MPR_ALLOC_STATS */
 
@@ -1780,6 +1792,7 @@ static void printMemReport()
     printf("  Total app memory  %14u K\n",             (int) (mprGetMem() / 1024));
     printf("  Allocated memory  %14u K\n",             (int) (ap->bytesAllocated / 1024));
     printf("  Free heap memory  %14u K\n",             (int) (ap->bytesFree / 1024));
+    printf("  Max allocated     %14u K\n",             (int) (ap->bytesMax / 1024));
 
     if (ap->maxHeap == (size_t) -1) {
         printf("  Memory limit           unlimited\n");

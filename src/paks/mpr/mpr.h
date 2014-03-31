@@ -1141,6 +1141,7 @@ typedef struct MprMemStats {
     uint64          cacheHeap;              /**< Heap cache. Try to keep at least this amount in the free queues  */
     uint64          bytesAllocated;         /**< Bytes currently allocated. Includes active and free. */
     uint64          bytesFree;              /**< Bytes currently free and retained in the heap queues */
+    uint64          bytesMax;               /**< Max ever bytes allocated */
     uint64          errors;                 /**< Allocation errors */
     uint64          lowHeap;                /**< Low memory level at which to initiate a collection */
     uint64          maxHeap;                /**< Max memory that can be allocated */
