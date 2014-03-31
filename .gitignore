@@ -31,3 +31,5 @@ releases
 src/catalog/db/init.es
 projects/pak*mine.xcodeproj
 windows*.bit
+
+/start.me
