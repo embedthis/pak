@@ -6240,6 +6240,10 @@ PUBLIC void mprRescheduleEvent(MprEvent *event, MprTicks period);
  */
 PUBLIC void mprRelayEvent(MprDispatcher *dispatcher, void *proc, void *data, MprEvent *event);
 
+//  MOB
+PUBLIC int mprStartDispatcher(MprDispatcher *dispatcher);
+PUBLIC int mprStopDispatcher(MprDispatcher *dispatcher);
+
 /* Internal API */
 PUBLIC MprEvent *mprCreateEventQueue();
 PUBLIC MprEventService *mprCreateEventService();
@@ -6254,7 +6258,6 @@ PUBLIC MprDispatcher *mprGetNonBlockDispatcher();
 PUBLIC void mprInitEventQ(MprEvent *q);
 PUBLIC void mprQueueTimerEvent(MprDispatcher *dispatcher, MprEvent *event);
 PUBLIC void mprReleaseWorkerFromDispatcher(MprDispatcher *dispatcher, struct MprWorker *worker);
-PUBLIC int  mprRunDispatcher(MprDispatcher *dispatcher);
 PUBLIC void mprScheduleDispatcher(MprDispatcher *dispatcher);
 PUBLIC void mprRescheduleDispatcher(MprDispatcher *dispatcher);
 PUBLIC void mprSetDispatcherImmediate(MprDispatcher *dispatcher);

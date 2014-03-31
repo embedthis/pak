@@ -486,7 +486,7 @@ static MprMem *allocMem(size_t required)
          */
         for (bindex = baseBindex; bindex < MPR_ALLOC_NUM_BITMAPS; bitmap++, bindex++) {
             /* Mask queues lower than the base queue */
-            localMap = heap->bitmap[bindex] & ((size_t) -1 << max(0, (qindex - (MPR_ALLOC_BITMAP_BITS * bindex))));
+            localMap = heap->bitmap[bindex] & ((size_t) ((uint64) -1 << max(0, (qindex - (MPR_ALLOC_BITMAP_BITS * bindex)))));
 
             while (localMap) {
                 qindex = (bindex * MPR_ALLOC_BITMAP_BITS) + findFirstBit(localMap) - 1;
@@ -526,6 +526,7 @@ static MprMem *allocMem(size_t required)
                             release(freeq);
                         }
                     } else {
+                        /* Contention on this queue */
                         ATOMIC_INC(tryFails);
                         if (freeq->count > 0 && retryIndex < 0) {
                             retryIndex = qindex;
@@ -542,6 +543,8 @@ static MprMem *allocMem(size_t required)
             ATOMIC_INC(retries);
             qindex = retryIndex;
             goto retry;
+        }
+        if (heap->stats.bytesFree > required) {
         }
     }
     return growHeap(required);
@@ -709,6 +712,7 @@ static ME_INLINE bool linkBlock(MprMem *mp)
      */
     if (!acquire(freeq)) {
         ATOMIC_INC(tryFails);
+//MOB WHAT IS THIS????
         mp->mark = !mp->mark;
         assert(!mp->free);
         return 0;
@@ -6186,6 +6190,12 @@ PUBLIC int mprWaitForCmd(MprCmd *cmd, MprTicks timeout)
              */
             mprServiceEvents(10, MPR_SERVICE_NO_BLOCK);
         } else {
+            if (cmd->dispatcher->owner != mprGetCurrentOsThread()) {
+#if ME_DEBUG
+                mprLog(0, "WARNING: non-owning thread waiting on dispatcher");
+#endif
+                delay = 10;
+            }
             mprWaitForEvent(cmd->dispatcher, delay);
         }
         remaining = (expires - mprGetTicks());
@@ -9506,7 +9516,6 @@ PUBLIC void mprDestroyDispatcher(MprDispatcher *dispatcher)
             }
         }
         dequeueDispatcher(dispatcher);
-        dispatcher->owner = 0;
         dispatcher->flags |= MPR_DISPATCHER_DESTROYED;
         unlock(es);
     }
@@ -9752,25 +9761,49 @@ PUBLIC int mprDispatchersAreIdle()
  */
 PUBLIC void mprRelayEvent(MprDispatcher *dispatcher, void *proc, void *data, MprEvent *event)
 {
-    MprOsThread     priorOwner;
-
-    if (!canRun(dispatcher)) {
-        mprError("Relay to a running dispatcher owned by another thread");
+    if (mprStartDispatcher(dispatcher) < 0) {
+        return;
     }
-    if (event) {
-        event->timestamp = dispatcher->service->now;
+    if (proc) {
+        if (event) {
+            event->timestamp = dispatcher->service->now;
+        }
+        ((MprEventProc) proc)(data, event);
     }
-    priorOwner = dispatcher->owner;
-    assert(priorOwner == 0 || priorOwner == mprGetCurrentOsThread());
+    mprStopDispatcher(dispatcher);
+}
 
+
+PUBLIC int mprStartDispatcher(MprDispatcher *dispatcher)
+{
+    if (dispatcher->owner && dispatcher->owner != mprGetCurrentOsThread()) {
+        mprError("Cannot start dispatcher - owned by another thread");
+        return MPR_ERR_BAD_STATE;
+    }
+    if (isRunning(dispatcher)) {
+        mprError("Cannot start a running dispatcher");
+        return MPR_ERR_BAD_STATE;
+    }
     queueDispatcher(dispatcher->service->runQ, dispatcher);
-
     dispatcher->owner = mprGetCurrentOsThread();
-    ((MprEventProc) proc)(data, event);
-    dispatcher->owner = priorOwner;
+    return 0;
+}
 
+
+PUBLIC int mprStopDispatcher(MprDispatcher *dispatcher)
+{
+    if (dispatcher->owner != mprGetCurrentOsThread()) {
+        mprError("Cannot stop dispatcher - owned by another thread");
+        return MPR_ERR_BAD_STATE;
+    }
+    if (!isRunning(dispatcher)) {
+        mprError("Cannot stop a stopped dispatcher");
+        return MPR_ERR_BAD_STATE;
+    }
+    dispatcher->owner = 0;
     dequeueDispatcher(dispatcher);
     mprScheduleDispatcher(dispatcher);
+    return 0;
 }
 
 
@@ -9865,10 +9898,13 @@ static int dispatchEvents(MprDispatcher *dispatcher)
         mprTrace(7, "Call event %s", event->name);
         assert(!(event->flags & MPR_EVENT_RUNNING));
         event->flags |= MPR_EVENT_RUNNING;
-        assert(event->proc);
 
+        assert(event->proc);
         (event->proc)(event->data, event);
 
+        if (dispatcher->flags & MPR_DISPATCHER_DESTROYED) {
+            break;
+        }
         event->flags &= ~MPR_EVENT_RUNNING;
 
         lock(es);
@@ -9888,6 +9924,7 @@ static int dispatchEvents(MprDispatcher *dispatcher)
         }
         es->eventCount++;
         unlock(es);
+        assert(dispatcher->owner == mprGetCurrentOsThread());
     }
     dispatcher->owner = priorOwner;
     return count;
