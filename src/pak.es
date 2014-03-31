@@ -1054,7 +1054,7 @@ class PakCmd
     private function fetchPak(pak: Package) {
         let http = new Http
         let current = App.dir
-        let tempName = Path('.').temp()
+        let tempName = Path('').temp()
         let tarName = tempName.joinExt('tar', true)
         let tgzName = tarName.joinExt('gz', true)
         let dest = pak.cachePath
