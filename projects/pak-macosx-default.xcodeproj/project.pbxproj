@@ -7,30 +7,30 @@
     objects = {
 
 /* Begin PBXAggregateTarget section */
-		D2D67164D2D6811E00000006 /* ca-crt */ = {
+		D2D67164D2D6811E00000006 /* ejs.mod */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = D2D67164D2D6811E00000005 /* Build configuration list for PBXAggregateTarget "ca-crt" */;
+			buildConfigurationList = D2D67164D2D6811E00000005 /* Build configuration list for PBXAggregateTarget "ejs.mod" */;
 			buildPhases = (
 				D2D67164D2D6811E00000007,
 			);
 			dependencies = (
-				D2D67164D2D6811E00000008 /* PBXTargetDependency Prep */,
-			);
-			name = ca-crt;
-			productName = ca-crt;
-		};
-		D2D67164D2D6811E0000000A /* ejs.mod */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = D2D67164D2D6811E00000009 /* Build configuration list for PBXAggregateTarget "ejs.mod" */;
-			buildPhases = (
-				D2D67164D2D6811E0000000B,
-			);
-			dependencies = (
-				D2D67164D2D6811E0000000C /* PBXTargetDependency ejsc */,
-				D2D67164D2D6811E0000000D /* PBXTargetDependency Prep */,
+				D2D67164D2D6811E00000008 /* PBXTargetDependency ejsc */,
+				D2D67164D2D6811E00000009 /* PBXTargetDependency Prep */,
 			);
 			name = ejs.mod;
 			productName = ejs.mod;
+		};
+		D2D67164D2D6811E0000000B /* http-ca-crt */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D2D67164D2D6811E0000000A /* Build configuration list for PBXAggregateTarget "http-ca-crt" */;
+			buildPhases = (
+				D2D67164D2D6811E0000000C,
+			);
+			dependencies = (
+				D2D67164D2D6811E0000000D /* PBXTargetDependency Prep */,
+			);
+			name = http-ca-crt;
+			productName = http-ca-crt;
 		};
 		D2D67164D2D6811E0000000F /* pak.mod */ = {
 			isa = PBXAggregateTarget;
@@ -52,9 +52,9 @@
 				
 			);
 			dependencies = (
-				D2D67164D2D6811E00000015 /* PBXTargetDependency ca-crt */,
-				D2D67164D2D6811E00000016 /* PBXTargetDependency ejs.mod */,
-				D2D67164D2D6811E00000017 /* PBXTargetDependency ejsc */,
+				D2D67164D2D6811E00000015 /* PBXTargetDependency ejs.mod */,
+				D2D67164D2D6811E00000016 /* PBXTargetDependency ejsc */,
+				D2D67164D2D6811E00000017 /* PBXTargetDependency http-ca-crt */,
 				D2D67164D2D6811E00000018 /* PBXTargetDependency libejs */,
 				D2D67164D2D6811E00000019 /* PBXTargetDependency libest */,
 				D2D67164D2D6811E0000001A /* PBXTargetDependency libhttp */,
@@ -112,103 +112,103 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		D2D67164D2D6811E0000004E /* PBXContainerItemProxy Prep from ca-crt */ = {
+		D2D67164D2D6811E0000004E /* PBXContainerItemProxy Prep from ejs.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D2D67164D2D6811E00000022;
 			remoteInfo = Prep;
 		};
-		D2D67164D2D6811E0000004F /* PBXContainerItemProxy Prep from ejs.mod */ = {
+		D2D67164D2D6811E0000004F /* PBXContainerItemProxy libmpr from ejs.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000022;
-			remoteInfo = Prep;
-		};
-		D2D67164D2D6811E00000050 /* PBXContainerItemProxy libmpr from ejs.mod */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
 			remoteInfo = libmpr;
 		};
-		D2D67164D2D6811E00000052 /* PBXContainerItemProxy libpcre from ejs.mod */ = {
+		D2D67164D2D6811E00000051 /* PBXContainerItemProxy libpcre from ejs.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000053;
+			remoteGlobalIDString = D2D67164D2D6811E00000052;
 			remoteInfo = libpcre;
 		};
-		D2D67164D2D6811E00000054 /* PBXContainerItemProxy libhttp from ejs.mod */ = {
+		D2D67164D2D6811E00000053 /* PBXContainerItemProxy libhttp from ejs.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000055;
+			remoteGlobalIDString = D2D67164D2D6811E00000054;
 			remoteInfo = libhttp;
 		};
-		D2D67164D2D6811E00000056 /* PBXContainerItemProxy libzlib from ejs.mod */ = {
+		D2D67164D2D6811E00000055 /* PBXContainerItemProxy libzlib from ejs.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000057;
+			remoteGlobalIDString = D2D67164D2D6811E00000056;
 			remoteInfo = libzlib;
 		};
-		D2D67164D2D6811E00000058 /* PBXContainerItemProxy libejs from ejs.mod */ = {
+		D2D67164D2D6811E00000057 /* PBXContainerItemProxy libejs from ejs.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000059;
+			remoteGlobalIDString = D2D67164D2D6811E00000058;
 			remoteInfo = libejs;
 		};
-		D2D67164D2D6811E0000005A /* PBXContainerItemProxy ejsc from ejs.mod */ = {
+		D2D67164D2D6811E00000059 /* PBXContainerItemProxy ejsc from ejs.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E0000005B;
+			remoteGlobalIDString = D2D67164D2D6811E0000005A;
 			remoteInfo = ejsc;
 		};
-		D2D67164D2D6811E0000005C /* PBXContainerItemProxy Prep from ejsc */ = {
+		D2D67164D2D6811E0000005B /* PBXContainerItemProxy Prep from ejsc */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D2D67164D2D6811E00000022;
 			remoteInfo = Prep;
 		};
-		D2D67164D2D6811E0000005D /* PBXContainerItemProxy libmpr from ejsc */ = {
+		D2D67164D2D6811E0000005C /* PBXContainerItemProxy libmpr from ejsc */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
 			remoteInfo = libmpr;
 		};
-		D2D67164D2D6811E0000005E /* PBXContainerItemProxy libpcre from ejsc */ = {
+		D2D67164D2D6811E0000005D /* PBXContainerItemProxy libpcre from ejsc */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000053;
+			remoteGlobalIDString = D2D67164D2D6811E00000052;
 			remoteInfo = libpcre;
 		};
-		D2D67164D2D6811E0000005F /* PBXContainerItemProxy libhttp from ejsc */ = {
+		D2D67164D2D6811E0000005E /* PBXContainerItemProxy libhttp from ejsc */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000055;
+			remoteGlobalIDString = D2D67164D2D6811E00000054;
 			remoteInfo = libhttp;
 		};
-		D2D67164D2D6811E00000060 /* PBXContainerItemProxy libzlib from ejsc */ = {
+		D2D67164D2D6811E0000005F /* PBXContainerItemProxy libzlib from ejsc */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000057;
+			remoteGlobalIDString = D2D67164D2D6811E00000056;
 			remoteInfo = libzlib;
 		};
-		D2D67164D2D6811E00000061 /* PBXContainerItemProxy libejs from ejsc */ = {
+		D2D67164D2D6811E00000060 /* PBXContainerItemProxy libejs from ejsc */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000059;
+			remoteGlobalIDString = D2D67164D2D6811E00000058;
 			remoteInfo = libejs;
+		};
+		D2D67164D2D6811E00000061 /* PBXContainerItemProxy Prep from http-ca-crt */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E00000022;
+			remoteInfo = Prep;
 		};
 		D2D67164D2D6811E00000062 /* PBXContainerItemProxy Prep from libejs */ = {
 			isa = PBXContainerItemProxy;
@@ -221,28 +221,28 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
 			remoteInfo = libmpr;
 		};
 		D2D67164D2D6811E00000064 /* PBXContainerItemProxy libpcre from libejs */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000053;
+			remoteGlobalIDString = D2D67164D2D6811E00000052;
 			remoteInfo = libpcre;
 		};
 		D2D67164D2D6811E00000065 /* PBXContainerItemProxy libhttp from libejs */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000055;
+			remoteGlobalIDString = D2D67164D2D6811E00000054;
 			remoteInfo = libhttp;
 		};
 		D2D67164D2D6811E00000066 /* PBXContainerItemProxy libzlib from libejs */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000057;
+			remoteGlobalIDString = D2D67164D2D6811E00000056;
 			remoteInfo = libzlib;
 		};
 		D2D67164D2D6811E00000067 /* PBXContainerItemProxy Prep from libest */ = {
@@ -263,14 +263,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
 			remoteInfo = libmpr;
 		};
 		D2D67164D2D6811E0000006A /* PBXContainerItemProxy libpcre from libhttp */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000053;
+			remoteGlobalIDString = D2D67164D2D6811E00000052;
 			remoteInfo = libpcre;
 		};
 		D2D67164D2D6811E0000006B /* PBXContainerItemProxy Prep from libmpr */ = {
@@ -291,7 +291,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
 			remoteInfo = libmpr;
 		};
 		D2D67164D2D6811E0000006E /* PBXContainerItemProxy libest from libmprssl */ = {
@@ -326,42 +326,42 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
 			remoteInfo = libmpr;
 		};
 		D2D67164D2D6811E00000074 /* PBXContainerItemProxy libpcre from pak */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000053;
+			remoteGlobalIDString = D2D67164D2D6811E00000052;
 			remoteInfo = libpcre;
 		};
 		D2D67164D2D6811E00000075 /* PBXContainerItemProxy libhttp from pak */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000055;
+			remoteGlobalIDString = D2D67164D2D6811E00000054;
 			remoteInfo = libhttp;
 		};
 		D2D67164D2D6811E00000076 /* PBXContainerItemProxy libzlib from pak */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000057;
+			remoteGlobalIDString = D2D67164D2D6811E00000056;
 			remoteInfo = libzlib;
 		};
 		D2D67164D2D6811E00000077 /* PBXContainerItemProxy libejs from pak */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000059;
+			remoteGlobalIDString = D2D67164D2D6811E00000058;
 			remoteInfo = libejs;
 		};
 		D2D67164D2D6811E00000078 /* PBXContainerItemProxy ejsc from pak */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E0000005B;
+			remoteGlobalIDString = D2D67164D2D6811E0000005A;
 			remoteInfo = ejsc;
 		};
 		D2D67164D2D6811E00000079 /* PBXContainerItemProxy pak.mod from pak */ = {
@@ -382,42 +382,42 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
 			remoteInfo = libmpr;
 		};
 		D2D67164D2D6811E0000007C /* PBXContainerItemProxy libpcre from pak.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000053;
+			remoteGlobalIDString = D2D67164D2D6811E00000052;
 			remoteInfo = libpcre;
 		};
 		D2D67164D2D6811E0000007D /* PBXContainerItemProxy libhttp from pak.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000055;
+			remoteGlobalIDString = D2D67164D2D6811E00000054;
 			remoteInfo = libhttp;
 		};
 		D2D67164D2D6811E0000007E /* PBXContainerItemProxy libzlib from pak.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000057;
+			remoteGlobalIDString = D2D67164D2D6811E00000056;
 			remoteInfo = libzlib;
 		};
 		D2D67164D2D6811E0000007F /* PBXContainerItemProxy libejs from pak.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000059;
+			remoteGlobalIDString = D2D67164D2D6811E00000058;
 			remoteInfo = libejs;
 		};
 		D2D67164D2D6811E00000080 /* PBXContainerItemProxy ejsc from pak.mod */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E0000005B;
+			remoteGlobalIDString = D2D67164D2D6811E0000005A;
 			remoteInfo = ejsc;
 		};
 		D2D67164D2D6811E00000081 /* PBXContainerItemProxy Prep from All */ = {
@@ -427,61 +427,61 @@
 			remoteGlobalIDString = D2D67164D2D6811E00000022;
 			remoteInfo = Prep;
 		};
-		D2D67164D2D6811E00000082 /* PBXContainerItemProxy ca-crt from All */ = {
+		D2D67164D2D6811E00000082 /* PBXContainerItemProxy libmpr from All */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E00000050;
+			remoteInfo = libmpr;
+		};
+		D2D67164D2D6811E00000083 /* PBXContainerItemProxy libpcre from All */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E00000052;
+			remoteInfo = libpcre;
+		};
+		D2D67164D2D6811E00000084 /* PBXContainerItemProxy libhttp from All */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E00000054;
+			remoteInfo = libhttp;
+		};
+		D2D67164D2D6811E00000085 /* PBXContainerItemProxy libzlib from All */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E00000056;
+			remoteInfo = libzlib;
+		};
+		D2D67164D2D6811E00000086 /* PBXContainerItemProxy libejs from All */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E00000058;
+			remoteInfo = libejs;
+		};
+		D2D67164D2D6811E00000087 /* PBXContainerItemProxy ejsc from All */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E0000005A;
+			remoteInfo = ejsc;
+		};
+		D2D67164D2D6811E00000088 /* PBXContainerItemProxy ejs.mod from All */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D2D67164D2D6811E00000006;
-			remoteInfo = ca-crt;
-		};
-		D2D67164D2D6811E00000083 /* PBXContainerItemProxy libmpr from All */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000051;
-			remoteInfo = libmpr;
-		};
-		D2D67164D2D6811E00000084 /* PBXContainerItemProxy libpcre from All */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000053;
-			remoteInfo = libpcre;
-		};
-		D2D67164D2D6811E00000085 /* PBXContainerItemProxy libhttp from All */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000055;
-			remoteInfo = libhttp;
-		};
-		D2D67164D2D6811E00000086 /* PBXContainerItemProxy libzlib from All */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000057;
-			remoteInfo = libzlib;
-		};
-		D2D67164D2D6811E00000087 /* PBXContainerItemProxy libejs from All */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E00000059;
-			remoteInfo = libejs;
-		};
-		D2D67164D2D6811E00000088 /* PBXContainerItemProxy ejsc from All */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E0000005B;
-			remoteInfo = ejsc;
-		};
-		D2D67164D2D6811E00000089 /* PBXContainerItemProxy ejs.mod from All */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2D67164D2D6811E0000000A;
 			remoteInfo = ejs.mod;
+		};
+		D2D67164D2D6811E00000089 /* PBXContainerItemProxy http-ca-crt from All */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2D67164D2D6811E00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2D67164D2D6811E0000000B;
+			remoteInfo = http-ca-crt;
 		};
 		D2D67164D2D6811E0000008A /* PBXContainerItemProxy libest from All */ = {
 			isa = PBXContainerItemProxy;
@@ -777,7 +777,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D2D67164D2D6811E0000005B /* ejsc */ = {
+		D2D67164D2D6811E0000005A /* ejsc */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2D67164D2D6811E000000B1 /* Build configuration list for PBXNativeTarget "ejsc" */;
 			buildPhases = (
@@ -799,7 +799,7 @@
 			productReference = D2D67164D2D6811E00000092 /* ejsc */;
 			productType = "com.apple.product-type.tool";
 		};
-		D2D67164D2D6811E00000059 /* libejs */ = {
+		D2D67164D2D6811E00000058 /* libejs */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2D67164D2D6811E000000B9 /* Build configuration list for PBXNativeTarget "libejs" */;
 			buildPhases = (
@@ -837,7 +837,7 @@
 			productReference = D2D67164D2D6811E00000048 /* libest */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		D2D67164D2D6811E00000055 /* libhttp */ = {
+		D2D67164D2D6811E00000054 /* libhttp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2D67164D2D6811E000000C3 /* Build configuration list for PBXNativeTarget "libhttp" */;
 			buildPhases = (
@@ -856,7 +856,7 @@
 			productReference = D2D67164D2D6811E00000039 /* libhttp */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		D2D67164D2D6811E00000051 /* libmpr */ = {
+		D2D67164D2D6811E00000050 /* libmpr */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2D67164D2D6811E000000C8 /* Build configuration list for PBXNativeTarget "libmpr" */;
 			buildPhases = (
@@ -892,7 +892,7 @@
 			productReference = D2D67164D2D6811E0000009A /* libmprssl */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		D2D67164D2D6811E00000053 /* libpcre */ = {
+		D2D67164D2D6811E00000052 /* libpcre */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2D67164D2D6811E000000D0 /* Build configuration list for PBXNativeTarget "libpcre" */;
 			buildPhases = (
@@ -909,7 +909,7 @@
 			productReference = D2D67164D2D6811E0000003D /* libpcre */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		D2D67164D2D6811E00000057 /* libzlib */ = {
+		D2D67164D2D6811E00000056 /* libzlib */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2D67164D2D6811E000000D3 /* Build configuration list for PBXNativeTarget "libzlib" */;
 			buildPhases = (
@@ -953,26 +953,7 @@
 /* End PBXNativeTarget section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		D2D67164D2D6811E00000007 /* ShellScript for ca-crt */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-../src/paks/est/ca.crt
-			);
-			outputPaths = (
-../macosx-x64-default/bin/ca.crt
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "PATH=$PATH:/usr/local/bin
-cd ../src/paks/est
-mkdir -p ../../${OUT_DIR}/bin
-cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
-";
-		};
-		D2D67164D2D6811E0000000B /* ShellScript for ejs.mod */ = {
+		D2D67164D2D6811E00000007 /* ShellScript for ejs.mod */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -988,6 +969,25 @@ cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ../src/paks/ejs
 ../../../macosx-x64-default/bin/ejsc --out ../../../macosx-x64-default/bin/ejs.mod --optimize 9 --bind --require null ejs.es";
+		};
+		D2D67164D2D6811E0000000C /* ShellScript for http-ca-crt */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+../src/paks/http/ca.crt
+			);
+			outputPaths = (
+../macosx-x64-default/bin/ca.crt
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "PATH=$PATH:/usr/local/bin
+cd ../src/paks/http
+mkdir -p ../../${OUT_DIR}/bin
+cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
+";
 		};
 		D2D67164D2D6811E00000010 /* ShellScript for pak.mod */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1076,17 +1076,17 @@ fi";
 			targets = (
 				D2D67164D2D6811E00000014 /* All */,
 				D2D67164D2D6811E00000022 /* Prep */,
-				D2D67164D2D6811E00000059 /* libejs */,
+				D2D67164D2D6811E00000058 /* libejs */,
 				D2D67164D2D6811E0000006F /* libest */,
-				D2D67164D2D6811E00000055 /* libhttp */,
-				D2D67164D2D6811E00000051 /* libmpr */,
+				D2D67164D2D6811E00000054 /* libhttp */,
+				D2D67164D2D6811E00000050 /* libmpr */,
 				D2D67164D2D6811E0000008C /* libmprssl */,
-				D2D67164D2D6811E00000053 /* libpcre */,
-				D2D67164D2D6811E00000057 /* libzlib */,
-				D2D67164D2D6811E0000005B /* ejsc */,
+				D2D67164D2D6811E00000052 /* libpcre */,
+				D2D67164D2D6811E00000056 /* libzlib */,
+				D2D67164D2D6811E0000005A /* ejsc */,
 				D2D67164D2D6811E0000008F /* pak */,
-				D2D67164D2D6811E00000006 /* ca-crt */,
-				D2D67164D2D6811E0000000A /* ejs.mod */,
+				D2D67164D2D6811E00000006 /* ejs.mod */,
+				D2D67164D2D6811E0000000B /* http-ca-crt */,
 				D2D67164D2D6811E0000000F /* pak.mod */,
 			);
 		};
@@ -1168,74 +1168,74 @@ fi";
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		D2D67164D2D6811E00000008 /* PBXTargetDependency ca-crt depends on Prep */ = {
+		D2D67164D2D6811E00000009 /* PBXTargetDependency ejs.mod depends on Prep */ = {
 			isa = PBXTargetDependency;
 			target = D2D67164D2D6811E00000022 /* Prep */;
 			targetProxy = D2D67164D2D6811E0000004E /* PBXContainerItemProxy */;
 		};
-		D2D67164D2D6811E0000000D /* PBXTargetDependency ejs.mod depends on Prep */ = {
-			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000022 /* Prep */;
-			targetProxy = D2D67164D2D6811E0000004F /* PBXContainerItemProxy */;
-		};
 		D2D67164D2D6811E000000DF /* PBXTargetDependency ejs.mod depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
-			targetProxy = D2D67164D2D6811E00000050 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
+			targetProxy = D2D67164D2D6811E0000004F /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E0 /* PBXTargetDependency ejs.mod depends on libpcre */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000053 /* libpcre */;
-			targetProxy = D2D67164D2D6811E00000052 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000052 /* libpcre */;
+			targetProxy = D2D67164D2D6811E00000051 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E1 /* PBXTargetDependency ejs.mod depends on libhttp */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000055 /* libhttp */;
-			targetProxy = D2D67164D2D6811E00000054 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000054 /* libhttp */;
+			targetProxy = D2D67164D2D6811E00000053 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E2 /* PBXTargetDependency ejs.mod depends on libzlib */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000057 /* libzlib */;
-			targetProxy = D2D67164D2D6811E00000056 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000056 /* libzlib */;
+			targetProxy = D2D67164D2D6811E00000055 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E3 /* PBXTargetDependency ejs.mod depends on libejs */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000059 /* libejs */;
-			targetProxy = D2D67164D2D6811E00000058 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000058 /* libejs */;
+			targetProxy = D2D67164D2D6811E00000057 /* PBXContainerItemProxy */;
 		};
-		D2D67164D2D6811E0000000C /* PBXTargetDependency ejs.mod depends on ejsc */ = {
+		D2D67164D2D6811E00000008 /* PBXTargetDependency ejs.mod depends on ejsc */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E0000005B /* ejsc */;
-			targetProxy = D2D67164D2D6811E0000005A /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E0000005A /* ejsc */;
+			targetProxy = D2D67164D2D6811E00000059 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000B2 /* PBXTargetDependency ejsc depends on Prep */ = {
 			isa = PBXTargetDependency;
 			target = D2D67164D2D6811E00000022 /* Prep */;
-			targetProxy = D2D67164D2D6811E0000005C /* PBXContainerItemProxy */;
+			targetProxy = D2D67164D2D6811E0000005B /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000B3 /* PBXTargetDependency ejsc depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
-			targetProxy = D2D67164D2D6811E0000005D /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
+			targetProxy = D2D67164D2D6811E0000005C /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000B4 /* PBXTargetDependency ejsc depends on libpcre */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000053 /* libpcre */;
-			targetProxy = D2D67164D2D6811E0000005E /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000052 /* libpcre */;
+			targetProxy = D2D67164D2D6811E0000005D /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000B5 /* PBXTargetDependency ejsc depends on libhttp */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000055 /* libhttp */;
-			targetProxy = D2D67164D2D6811E0000005F /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000054 /* libhttp */;
+			targetProxy = D2D67164D2D6811E0000005E /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000B6 /* PBXTargetDependency ejsc depends on libzlib */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000057 /* libzlib */;
-			targetProxy = D2D67164D2D6811E00000060 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000056 /* libzlib */;
+			targetProxy = D2D67164D2D6811E0000005F /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000B7 /* PBXTargetDependency ejsc depends on libejs */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000059 /* libejs */;
+			target = D2D67164D2D6811E00000058 /* libejs */;
+			targetProxy = D2D67164D2D6811E00000060 /* PBXContainerItemProxy */;
+		};
+		D2D67164D2D6811E0000000D /* PBXTargetDependency http-ca-crt depends on Prep */ = {
+			isa = PBXTargetDependency;
+			target = D2D67164D2D6811E00000022 /* Prep */;
 			targetProxy = D2D67164D2D6811E00000061 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000BA /* PBXTargetDependency libejs depends on Prep */ = {
@@ -1245,22 +1245,22 @@ fi";
 		};
 		D2D67164D2D6811E000000BB /* PBXTargetDependency libejs depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
 			targetProxy = D2D67164D2D6811E00000063 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000BC /* PBXTargetDependency libejs depends on libpcre */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000053 /* libpcre */;
+			target = D2D67164D2D6811E00000052 /* libpcre */;
 			targetProxy = D2D67164D2D6811E00000064 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000BD /* PBXTargetDependency libejs depends on libhttp */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000055 /* libhttp */;
+			target = D2D67164D2D6811E00000054 /* libhttp */;
 			targetProxy = D2D67164D2D6811E00000065 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000BE /* PBXTargetDependency libejs depends on libzlib */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000057 /* libzlib */;
+			target = D2D67164D2D6811E00000056 /* libzlib */;
 			targetProxy = D2D67164D2D6811E00000066 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000C1 /* PBXTargetDependency libest depends on Prep */ = {
@@ -1275,12 +1275,12 @@ fi";
 		};
 		D2D67164D2D6811E000000C5 /* PBXTargetDependency libhttp depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
 			targetProxy = D2D67164D2D6811E00000069 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000C6 /* PBXTargetDependency libhttp depends on libpcre */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000053 /* libpcre */;
+			target = D2D67164D2D6811E00000052 /* libpcre */;
 			targetProxy = D2D67164D2D6811E0000006A /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000C9 /* PBXTargetDependency libmpr depends on Prep */ = {
@@ -1295,7 +1295,7 @@ fi";
 		};
 		D2D67164D2D6811E000000CD /* PBXTargetDependency libmprssl depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
 			targetProxy = D2D67164D2D6811E0000006D /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000CE /* PBXTargetDependency libmprssl depends on libest */ = {
@@ -1320,32 +1320,32 @@ fi";
 		};
 		D2D67164D2D6811E000000D8 /* PBXTargetDependency pak depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
 			targetProxy = D2D67164D2D6811E00000073 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000D9 /* PBXTargetDependency pak depends on libpcre */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000053 /* libpcre */;
+			target = D2D67164D2D6811E00000052 /* libpcre */;
 			targetProxy = D2D67164D2D6811E00000074 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000DA /* PBXTargetDependency pak depends on libhttp */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000055 /* libhttp */;
+			target = D2D67164D2D6811E00000054 /* libhttp */;
 			targetProxy = D2D67164D2D6811E00000075 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000DB /* PBXTargetDependency pak depends on libzlib */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000057 /* libzlib */;
+			target = D2D67164D2D6811E00000056 /* libzlib */;
 			targetProxy = D2D67164D2D6811E00000076 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000DC /* PBXTargetDependency pak depends on libejs */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000059 /* libejs */;
+			target = D2D67164D2D6811E00000058 /* libejs */;
 			targetProxy = D2D67164D2D6811E00000077 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000DD /* PBXTargetDependency pak depends on ejsc */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E0000005B /* ejsc */;
+			target = D2D67164D2D6811E0000005A /* ejsc */;
 			targetProxy = D2D67164D2D6811E00000078 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000DE /* PBXTargetDependency pak depends on pak.mod */ = {
@@ -1360,32 +1360,32 @@ fi";
 		};
 		D2D67164D2D6811E000000E4 /* PBXTargetDependency pak.mod depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
 			targetProxy = D2D67164D2D6811E0000007B /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E5 /* PBXTargetDependency pak.mod depends on libpcre */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000053 /* libpcre */;
+			target = D2D67164D2D6811E00000052 /* libpcre */;
 			targetProxy = D2D67164D2D6811E0000007C /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E6 /* PBXTargetDependency pak.mod depends on libhttp */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000055 /* libhttp */;
+			target = D2D67164D2D6811E00000054 /* libhttp */;
 			targetProxy = D2D67164D2D6811E0000007D /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E7 /* PBXTargetDependency pak.mod depends on libzlib */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000057 /* libzlib */;
+			target = D2D67164D2D6811E00000056 /* libzlib */;
 			targetProxy = D2D67164D2D6811E0000007E /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E8 /* PBXTargetDependency pak.mod depends on libejs */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000059 /* libejs */;
+			target = D2D67164D2D6811E00000058 /* libejs */;
 			targetProxy = D2D67164D2D6811E0000007F /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E00000011 /* PBXTargetDependency pak.mod depends on ejsc */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E0000005B /* ejsc */;
+			target = D2D67164D2D6811E0000005A /* ejsc */;
 			targetProxy = D2D67164D2D6811E00000080 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E000000E9 /* PBXTargetDependency All depends on Prep */ = {
@@ -1393,44 +1393,44 @@ fi";
 			target = D2D67164D2D6811E00000022 /* Prep */;
 			targetProxy = D2D67164D2D6811E00000081 /* PBXContainerItemProxy */;
 		};
-		D2D67164D2D6811E00000015 /* PBXTargetDependency All depends on ca-crt */ = {
-			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000006 /* ca-crt */;
-			targetProxy = D2D67164D2D6811E00000082 /* PBXContainerItemProxy */;
-		};
 		D2D67164D2D6811E0000001B /* PBXTargetDependency All depends on libmpr */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000051 /* libmpr */;
-			targetProxy = D2D67164D2D6811E00000083 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000050 /* libmpr */;
+			targetProxy = D2D67164D2D6811E00000082 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E0000001D /* PBXTargetDependency All depends on libpcre */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000053 /* libpcre */;
-			targetProxy = D2D67164D2D6811E00000084 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000052 /* libpcre */;
+			targetProxy = D2D67164D2D6811E00000083 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E0000001A /* PBXTargetDependency All depends on libhttp */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000055 /* libhttp */;
-			targetProxy = D2D67164D2D6811E00000085 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000054 /* libhttp */;
+			targetProxy = D2D67164D2D6811E00000084 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E0000001E /* PBXTargetDependency All depends on libzlib */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000057 /* libzlib */;
-			targetProxy = D2D67164D2D6811E00000086 /* PBXContainerItemProxy */;
+			target = D2D67164D2D6811E00000056 /* libzlib */;
+			targetProxy = D2D67164D2D6811E00000085 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E00000018 /* PBXTargetDependency All depends on libejs */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E00000059 /* libejs */;
+			target = D2D67164D2D6811E00000058 /* libejs */;
+			targetProxy = D2D67164D2D6811E00000086 /* PBXContainerItemProxy */;
+		};
+		D2D67164D2D6811E00000016 /* PBXTargetDependency All depends on ejsc */ = {
+			isa = PBXTargetDependency;
+			target = D2D67164D2D6811E0000005A /* ejsc */;
 			targetProxy = D2D67164D2D6811E00000087 /* PBXContainerItemProxy */;
 		};
-		D2D67164D2D6811E00000017 /* PBXTargetDependency All depends on ejsc */ = {
+		D2D67164D2D6811E00000015 /* PBXTargetDependency All depends on ejs.mod */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E0000005B /* ejsc */;
+			target = D2D67164D2D6811E00000006 /* ejs.mod */;
 			targetProxy = D2D67164D2D6811E00000088 /* PBXContainerItemProxy */;
 		};
-		D2D67164D2D6811E00000016 /* PBXTargetDependency All depends on ejs.mod */ = {
+		D2D67164D2D6811E00000017 /* PBXTargetDependency All depends on http-ca-crt */ = {
 			isa = PBXTargetDependency;
-			target = D2D67164D2D6811E0000000A /* ejs.mod */;
+			target = D2D67164D2D6811E0000000B /* http-ca-crt */;
 			targetProxy = D2D67164D2D6811E00000089 /* PBXContainerItemProxy */;
 		};
 		D2D67164D2D6811E00000019 /* PBXTargetDependency All depends on libest */ = {
@@ -1595,7 +1595,7 @@ fi";
 		D2D67164D2D6811E000000EA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = ca-crt;
+				PRODUCT_NAME = ejs.mod;
 
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ME_DEBUG",
@@ -1607,7 +1607,7 @@ fi";
 		D2D67164D2D6811E000000EB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = ca-crt;
+				PRODUCT_NAME = ejs.mod;
 
 
 			};
@@ -1616,7 +1616,7 @@ fi";
 		D2D67164D2D6811E000000EC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = ejs.mod;
+				PRODUCT_NAME = ejsc;
 
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ME_DEBUG",
@@ -1628,7 +1628,7 @@ fi";
 		D2D67164D2D6811E000000ED /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = ejs.mod;
+				PRODUCT_NAME = ejsc;
 
 
 			};
@@ -1637,7 +1637,7 @@ fi";
 		D2D67164D2D6811E000000EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = ejsc;
+				PRODUCT_NAME = http-ca-crt;
 
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ME_DEBUG",
@@ -1649,7 +1649,7 @@ fi";
 		D2D67164D2D6811E000000EF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = ejsc;
+				PRODUCT_NAME = http-ca-crt;
 
 
 			};
@@ -1902,7 +1902,7 @@ fi";
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D2D67164D2D6811E00000005 /* Build configuration list for PBXNativeTarget "ca-crt" */ = {
+		D2D67164D2D6811E00000005 /* Build configuration list for PBXNativeTarget "ejs.mod" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D2D67164D2D6811E000000EA /* Debug */,
@@ -1911,7 +1911,7 @@ fi";
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D2D67164D2D6811E00000009 /* Build configuration list for PBXNativeTarget "ejs.mod" */ = {
+		D2D67164D2D6811E000000B1 /* Build configuration list for PBXNativeTarget "ejsc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D2D67164D2D6811E000000EC /* Debug */,
@@ -1920,7 +1920,7 @@ fi";
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D2D67164D2D6811E000000B1 /* Build configuration list for PBXNativeTarget "ejsc" */ = {
+		D2D67164D2D6811E0000000A /* Build configuration list for PBXNativeTarget "http-ca-crt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D2D67164D2D6811E000000EE /* Debug */,
