@@ -81,7 +81,8 @@ Me.load({
         loaded: `
             me.targets.makerom.enable = false
             me.targets.httpcmd.enable = false
-        `
+            me.targets.ejscmd.enable = false
+        `,
         preblend: `
             me.settings.esflags = (me.platform.profile == 'debug' || me.platform.profile == 'mine') ? '--debug' : ''
         `,
