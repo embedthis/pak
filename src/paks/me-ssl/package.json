@@ -1,13 +1,17 @@
 {
-    "name": "est",
-    "description": "Embedthis Security Transport",
-    "title": "Embethis EST",
-    "version": "0.6.2",
+    "name": "me-ssl",
+    "description": "Embedthis SSL Interface",
+    "title": "Embedthis Development",
+    "version": "0.8.0",
     "keywords": [
-        "est",
+        "me",
         "ssl",
-        "tls"
     ],
+    "dirs": {
+        "paks": "src/paks"
+    },
+    "dependencies": {
+    },
     "author": {
         "name": "Embedthis Software",
         "email": "dev@embedthis.com",
@@ -15,11 +19,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/embedthis/est.git"
+        "url": "git://github.com/embedthis/me-ssl.git"
     },
     "bugs": {
-        "email": "dev@embedthis.com",
-        "url": "http://github.com/embedthis/est/issues"
+        "url": "http://github.com/embedthis/me-ssl/issues"
     },
     "licenses": [
         {
@@ -30,13 +33,5 @@
             "type": "Commercial",
             "url": "http://embedthis.com/licensing/"
         }
-    ],
-    "dependencies": {
-        "me-dev": "~0.8",
-        "me-ssl": "~0.8",
-        "osdep": "~0.8"
-    },
-    "dirs": {
-        "paks": "src/paks"
-    }
+    ]
 }
