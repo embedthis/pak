@@ -672,6 +672,7 @@ class PakCmd
             cachePak(pak)
         }
         runScripts(pak, 'preinstall')
+        installPak(pak)
         let path = Package.getSpecFile('.') || Path(PACKAGE)
         let spec = path.exists ? path.readJSON() : PakTemplate.clone()
         blendPak(spec, pak)
@@ -683,7 +684,6 @@ class PakCmd
         if (path.exists) {
             path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
         }
-        installPak(pak)
         runScripts(pak, 'install')
     }
 
@@ -694,7 +694,7 @@ class PakCmd
      */
     private function blendPak(spec, pak: Package) {
         if (!pak.spec) {
-            throw 'Pak ' + pak + ' at ' + pak.cachePath + ' is missing a package.json'
+            throw new Error('Pak ' + pak + ' at ' + pak.cachePath + ' is missing a package.json')
         }
         if (blending[pak.name]) {
             return
