@@ -46,11 +46,10 @@ class PakCmd
     /* This layers over App.config */
     private var defaultConfig = {
         catalogs: [ 
-            //  TODO SSL
-            'http://embedthis.com/catalog/do/pak',
+            'https://embedthis.com/catalog/do/pak',
             'https://bower.herokuapp.com/packages',
         ],
-        publish: 'http://embedthis.com/pak/do/catalog/publish',
+        publish: 'https://embedthis.com/pak/do/catalog/publish',
         dirs: {
             paks: Path('paks'),
             pakcache: Path('~/.paks'),
@@ -1272,8 +1271,7 @@ class PakCmd
         http.setHeader('Content-Type', 'application/json');
         try {
             qtrace('Publish', pak.name + ' ' + pak.cacheVersion + ' at ' + uri)
-//  TODO - while using a test cert
-http.verifyIssuer = false
+//http.verifyIssuer = false
             http.post(uri + '/publish', serialize(data))
             let response = deserialize(http.response)
             if (response.error) {
@@ -1462,6 +1460,9 @@ http.verifyIssuer = false
                     catalog = catalog.toString() + '/search'
                 }
                 vtrace('Retrieve', catalog)
+
+//MOB
+//http.verify = false
                 http.get(catalog)
             } catch (e) {
                 qtrace('Warn', 'Cannot access catalog at: ' + catalog)
@@ -1475,7 +1476,7 @@ http.verifyIssuer = false
                 try {
                     data = deserialize(http.response)
                 } catch {
-                    trace('Skip', 'Bad response from catalog: ' + catalog)
+                    trace('Skip', 'Bad response from catalog: ' + catalog + '\n' + http.response)
                 }
                 if (!data) {
                     trace('Skip', 'Missing catalog data')
