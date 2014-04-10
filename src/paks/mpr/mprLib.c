@@ -22848,7 +22848,7 @@ PUBLIC int mprParseSocketAddress(cchar *address, char **pip, int *pport, int *ps
         defaultPort = 80;
     }
     if (psecure) {
-        *psecure = sncmp(address, "https", 5);
+        *psecure = sncmp(address, "https", 5) == 0;
     }
     ip = sclone(address);
     if ((cp = strchr(ip, ' ')) != 0) {

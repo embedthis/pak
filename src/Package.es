@@ -96,14 +96,22 @@ class Package {
             /*
                 Pick most recent qualifying version
              */
+print("NAME", name)
             for each (path in find(dirs.pakcache, name + '/*', false).sort(sortVersions)) {
+print("PATH", path)
                 let candidate = Version(path.basename)
+print("CRITERIA", criteria)
+print("XX CANDIDATE", candidate)
                 if (candidate.acceptable(criteria)) {
                     cacheVersion = candidate
+print("CANDIDATE", candidate)
                     break
+                } else {
+print("NO MATCH");
                 }
             }
         }
+print("CV", cacheVersion)
         setCachePath()
     }
 

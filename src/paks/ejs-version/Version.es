@@ -101,7 +101,10 @@ class Version {
         let op, ver, partial, base, pre
         try {
             [,op,partial] = expr.match(SemExpr)
-            if (partial == '*') partial = 'x'
+            if (partial == '*') {
+                op = '~'
+                partial = 'x'
+            }
             ver = complete(partial)
             [,base,pre] = ver.match(SemCriteria)
             if (op == '~' || op == '^') {
