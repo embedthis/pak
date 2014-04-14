@@ -671,9 +671,13 @@ class PakCmd
             cachePak(pak)
         }
         runScripts(pak, 'preinstall')
-        installPak(pak)
+
+        //  MOB - should be done once at init time
         let path = Package.getSpecFile('.') || Path(PACKAGE)
         let spec = path.exists ? path.readJSON() : PakTemplate.clone()
+        installed[spec.name] = true
+
+        installPak(pak)
         blendPak(spec, pak)
         if (!path.exists) {
             qtrace('Create', path)
