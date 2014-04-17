@@ -15455,7 +15455,7 @@ PUBLIC int mprStartLogging(cchar *logSpec, int showConfig)
         } else {
             MprPath     info;
             int         mode;
-            mode = (MPR->flags & MPR_LOG_APPEND)  ? O_APPEND : O_TRUNC;
+            mode = (MPR->flags & MPR_LOG_APPEND) ? O_APPEND : O_TRUNC;
             mode |= O_CREAT | O_WRONLY | O_TEXT;
             if (MPR->logBackup > 0) {
                 mprGetPathInfo(path, &info);
