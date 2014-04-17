@@ -8,8 +8,8 @@ NAME
 SYNOPSIS
        pak  [--all]  [--catalog catalog] [--cache dir] [--details] [--dir dir]
        [--force]
-           [--log file:level] [--paks dir] [--quiet] [--silent] [--verbose]
-           [--versions] \
+           [--log file:level] [--nodeps] [--paks dir] [--quiet] [--silent]
+           [--verbose] [--versions] \
        [cache|cached|config|depend|edit|help|init|install|list|prune|pub-
        lish|retract|search|uninstall|update|upgrade] paks...
 
@@ -249,6 +249,10 @@ OPTIONS
               the  desired  verbosity  of output. Level 0 is the least verbose
               and level 9 is the most. The '-v' switch is an alias for  '--log
               stderr:2'.
+
+
+       --nodeps
+              Used to suppress installing or upgrading dependent packages.
 
 
        --paks directory

@@ -138,6 +138,7 @@ class PakCmd
             dir: { range: String },
             force: { alias: 'f' },
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
+            nodeps: {},
             paks: { alias: 'p', range: String },
             quiet: { alias: 'q' },
             silent: { alias: 's' },
@@ -176,6 +177,7 @@ class PakCmd
             '    --dir dir                # Change to directory before running\n' +
             '    --force                  # Ignore dependencies and continue\n' +
             '    --log file:level         # Send output to a file at a given level\n' + 
+            '    --nodeps                 # Do not install or upgrade dependencies\n' +
             '    --paks dir               # Use given directory for paks cache\n' +
             '    -q, --quiet              # Run in quiet mode\n' +
             '    -s, --silent             # Run in totally silent mode\n' +
@@ -810,6 +812,9 @@ class PakCmd
             //  TODO - document
             let spec = Package.readSpec('.', {quiet: true})
             if (spec.paks && (spec.paks.nodeps || (spec.paks[pak.name] && spec.paks[pak.name].nodeps))) {
+                installDeps = false
+            }
+            if (options.nodeps) {
                 installDeps = false
             }
         }

@@ -11,12 +11,13 @@ pak \- Embedthis Pak -- Package Manager
 [\fI--force\fR]
 .RS 4
 [\fI--log file:level\fR]
+[\fI--nodeps\fR]
 [\fI--paks dir\fR]
 [\fI--quiet\fR]
 [\fI--silent\fR]
-[\fI--verbose\fR]
 .RE
 .RS 4
+[\fI--verbose\fR]
 [\fI--versions\fR] \\
 .RE
 .RS4
@@ -235,6 +236,10 @@ It is also useful to cache or install an already cached/installed pack. Aliased 
 Specify a file to log internal execution messages. Bit will log execution related trace to the log file. The log level
 specifies the desired verbosity of output. Level 0 is the least verbose and level 9 is the most. The '-v' switch is
 an alias for '--log stderr:2'.
+
+.TP
+\fB\--nodeps\fR
+Used to suppress installing or upgrading dependent packages.
 
 .TP
 \fB\--paks directory\fR
