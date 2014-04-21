@@ -526,19 +526,45 @@ class PakCmd
         }
     }
 
-    function edit(args): Void {
+    function getValue(rest): Void {
+        let obj = Package.readSpec('.')
+        let key = rest[0]
+        for each (thisKey in key.split('.')) {
+            obj = obj[thisKey]
+        }
+        if (Object.getOwnPropertyCount(obj) > 0) {
+            print(obj.toJSON())
+        } else {
+            print(obj)
+        }
+    }
+
+    function setValue(rest): Void {
         let spec = Package.readSpec('.')
+        let key = rest[0]
+        let value = rest[1]
+        let obj = spec
+        for each (thisKey in key.split('.')) {
+            if (Object.getOwnPropertyCount(obj[thisKey]) == 0) {
+                key = thisKey
+                break
+            }
+            obj = obj[thisKey]
+        }
+        obj[key] = value
+        path = Package.getSpecFile('.')
+        path.write(serialize(spec, {pretty: true}) + '\n')
+    }
+
+    function edit(args): Void {
         for each (arg in args) {
             let [key,value] = arg.split('=')
             if (value) {
-                spec[key] = value
+                setValue(key, value)
             } else {
-                /* Missing value so display current value */
-                print(spec[key])
+                getValue(key)
             }
         }
-        path = Package.getSpecFile('.')
-        path.write(serialize(spec, {pretty: true}) + '\n')
     }
 
     /*
@@ -1369,7 +1395,6 @@ class PakCmd
         qtrace('Remove', pak.name)
     }
 
-
     //  MOB - order functions
     private function requiredCachedPak(pak: Package): Array? {
         let users = []
@@ -1469,9 +1494,6 @@ class PakCmd
                     catalog = catalog.toString() + '/search'
                 }
                 vtrace('Retrieve', catalog)
-
-//MOB
-//http.verify = false
                 http.get(catalog)
             } catch (e) {
                 qtrace('Warn', 'Cannot access catalog at: ' + catalog)
