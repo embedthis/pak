@@ -215,10 +215,10 @@ class Package {
             spec = Package.readSpec(path)
         } else if (sourcePath && sourcePath.exists) {
             spec = Package.readSpec(sourcePath)
-        } else if (installPath && installPath.exists) {
-            spec = Package.readSpec(installPath)
         } else if (cachePath && cachePath.exists) {
             spec = Package.readSpec(cachePath, {quiet: true})
+        } else if (installPath && installPath.exists) {
+            spec = Package.readSpec(installPath)
         }
     }
 
