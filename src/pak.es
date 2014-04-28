@@ -140,7 +140,7 @@ class PakCmd
             dir: { range: String },
             force: { alias: 'f' },
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
-            nodeps: {},
+            nodeps: { alias: 'n' },
             paks: { alias: 'p', range: String },
             quiet: { alias: 'q' },
             silent: { alias: 's' },
