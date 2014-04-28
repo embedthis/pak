@@ -13711,6 +13711,8 @@ PUBLIC cchar *mprGetJson(MprJson *obj, cchar *key, int flags)
     if ((result = mprGetJsonObj(obj, key, flags)) != 0) {
         if (result->type & MPR_JSON_VALUE) {
             return result->value;
+        } else {
+            return mprJsonToString(result, 0);
         }
     }
     return 0;
