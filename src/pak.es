@@ -178,7 +178,7 @@ class PakCmd
             '    --catalog catalog        # Catalog to use instead of defaults\n' +
             '    --cache dir              # Director to use for the Pak cache\n' +
             '    --dir dir                # Change to directory before running\n' +
-            '    --force                  # Ignore dependencies and continue\n' +
+            '    --force                  # Force requested action\n' +
             '    --log file:level         # Send output to a file at a given level\n' + 
             '    --nodeps                 # Do not install or upgrade dependencies\n' +
             '    --paks dir               # Use given directory for paks cache\n' +
@@ -208,7 +208,7 @@ class PakCmd
             } else {
                 msg = e.message
                 error(msg)
-                if (!args || args.options.verbose) {
+                if (!args || options.verbose) {
                     print(e)
                 }
             }
@@ -514,7 +514,9 @@ class PakCmd
         Print pak dependencies. Pak is a bare pak name or a versioned pak name
      */
     function depend(patterns): Void {
+        /* UNUSED
         let options = args.options
+        */
         if (options.help) {
             //  TODO - not implemented
             dependHelp()
@@ -607,7 +609,7 @@ class PakCmd
             return
         }
         if (pak.cached) {
-            if (!args.options.force) {
+            if (!options.force) {
                 qtrace('Info', pak + ' ' + pak.cacheVersion + ' is already cached')
                 return
             }
@@ -633,7 +635,9 @@ class PakCmd
             --details      # List pak details
      */
     function cached(patterns: Array): Void {
+        /* UNUSED
         let options = args.options
+        */
         if (options.help) {
             //  TODO - not implemented
             listHelp()
@@ -710,6 +714,8 @@ class PakCmd
             let [name, version] = args
             pspec.name = name
             pspec.version = version
+        } else {
+            pspec.name = App.dir.basename.toLowerCase()
         }
         Path(PACKAGE).write(serialize(pspec, {pretty: true, indent: 4}))
     }
@@ -718,7 +724,7 @@ class PakCmd
         pak.resolve(pak.searchCriteria || '*')
         if (pak.cached) {
             if (pak.installed && Version(pak.spec.version).acceptable(pak.searchCriteria)) {
-                if (!args.options.force) {
+                if (!options.force) {
                     qtrace('Info', pak + ' is already installed')
                     return
                 }
@@ -736,9 +742,7 @@ class PakCmd
         } else {
             qtrace('Update', path)
         }
-        if (path.exists) {
-            path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
-        }
+        path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
         runScripts(pak, 'install')
     }
 
@@ -781,14 +785,14 @@ class PakCmd
         }
 
         /* 
-            Expand JSLIB in client-scripts 
+            Expand LIB in client-scripts 
             TODO: Genericize this
          */
-        let jslib = dirs.jslib ? { JSLIB: dirs.jslib.trimStart(dirs.client + '/') } : {JSLIB: 'lib'}
+        let lib = dirs.lib ? { LIB: dirs.lib.trimStart(dirs.client + '/') } : {LIB: 'lib'}
         if (pak.spec['client-scripts']) {
             let scripts = pak.spec['client-scripts'].clone()
             for (let [key,value] in scripts) {
-                scripts[key] = value.expand(jslib)
+                scripts[key] = value.expand(lib)
             }
             spec['client-scripts'] ||= []
             blend(spec, {'+client-scripts': scripts}, {combine: true})
@@ -883,13 +887,13 @@ class PakCmd
         let dep = Package(name)
         dep.selectCacheVersion(criteria)
         dep.resolve()
-        if (install && (!dep.installed || args.options.force)) {
+        if (install && (!dep.installed || options.force)) {
             trace('Info', 'Install required dependency ' + dep.name)
             try {
                 installPak(dep)
             } catch (e) {
                 print(e)
-                if (args.options.force) {
+                if (options.force) {
                     qtrace('WARN', 'Cannot install required dependency "' + dep.name + '"' )
                 } else {
                     throw 'Cannot install ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
@@ -906,7 +910,9 @@ class PakCmd
             --details      # List pak details
      */
     function list(patterns: Array): Void {
+        /* UNUSED
         let options = args.options
+        */
         if (options.help) {
             listHelp()
         }
@@ -1036,7 +1042,7 @@ class PakCmd
                     } catch (e) {
                         //  TODO - should test if present and must display (e)
                         print(e)
-                        if (args.options.force) {
+                        if (options.force) {
                             qtrace('WARN', 'Cannot cache required dependency "' + dep.name + '"' )
                         } else {
                             throw 'Cannot cache ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
@@ -1050,7 +1056,7 @@ class PakCmd
         return true
     }
 
-    function copyTree(pak, fromDir: Path, toDir: Path, ignore: Array?, include: Array?, export: Array?) {
+    function copyTree(pak, fromDir: Path, toDir: Path, ignore: Array?, include: Array?, exportList: Array?) {
         if (include) {
             include.push('package.json')
             if (fromDir.join('README.md').exists) {
@@ -1078,12 +1084,12 @@ class PakCmd
                 files.push(f)
             }
         }
-        let emap = {}
-        for each (pat in export) {
+        let export = {}
+        for each (pat in exportList) {
             /*
                 Defaults:
                     overwrite: false,
-                    to: ${JSLIB}/pak.name
+                    to: '.'
              */
             if (pat is String) {
                 pat = { from: pat.from, to: '.', overwrite: true}
@@ -1095,18 +1101,16 @@ class PakCmd
                     pat.overwrite = true
                 }
             }
+            let to = pat.to.expand({LIB: dirs.lib})
             for each (from in pat.from) {
                 for each (f in fromDir.files(from, {relative: true})) {
-                    let to = pat.to.expand({JSLIB: dirs.jslib})
-                    emap[f] = { overwrite: pat.overwrite, to: to }
+                    export[f] = { overwrite: pat.overwrite, to: to }
                 }
             }
         }
         for each (f in files) {
-            let target = toDir.join(f.trimStart(fromDir + '/'))
             let from = fromDir.join(f)
-            let base:Path = toDir
-            let to = base.join(f)
+            let to = toDir.join(f)
             if (from.isDir) {
                 makeDir(to)
             } else {
@@ -1118,13 +1122,16 @@ class PakCmd
                     trace('Exists', to)
                 }
             }
-            if (emap[f]) {
-                let base: Path = emap[f].to
+        }
+        for each (f in files) {
+            if (export[f]) {
+                let from = fromDir.join(f)
+                let base: Path = export[f].to
                 let to = base.join(f)
                 if (from.isDir) {
                     makeDir(to)
                 } else {
-                    if (!to.exists || emap[f].overwrite) {
+                    if (!to.exists || export[f].overwrite) {
                         makeDir(to.dirname)
                         from.copy(to)
                         trace('Export', to)
@@ -1410,7 +1417,7 @@ class PakCmd
     }
 
     function uninstallPak(pak: Package): Void {
-        if (!args.options.force) {
+        if (!options.force) {
             if (users = requiredInstalledPak(pak)) {
                 throw 'Cannot remove "' + pak + '". It is required by: ' + users.join(', ') + '.'
             }
@@ -1432,9 +1439,9 @@ class PakCmd
                 Remove client scripts
              */
             if (spec['client-scripts']) {
-                let jslib = dirs.jslib ? { JSLIB: dirs.jslib.trimStart(dirs.client + '/') } : {JSLIB: 'lib'}
+                let lib = dirs.lib ? { LIB: dirs.lib.trimStart(dirs.client + '/') } : {LIB: 'lib'}
                 for each (script in pak.spec['client-scripts']) {
-                    script = script.expand(jslib).expand(spec)
+                    script = script.expand(lib).expand(spec)
                     for (let [key,value] in spec['client-scripts']) {
                         if (value.startsWith(script)) {
                             delete spec['client-scripts'][key]
@@ -1702,7 +1709,7 @@ class PakCmd
             if (matchPakName(pak.name, patterns)) {
                 list.push(pak)
                 if (!pak.installed) {
-                    if (!args.options.force) {
+                    if (!options.force) {
                         throw 'Pak "' + pak + '" is not installed'
                     }
                 }
@@ -1786,7 +1793,7 @@ class PakCmd
             dirs[field] = Path(value).replace('~', HOME)
         }
         dirs.client ||= Path('client')
-        dirs.jslib ||= dirs.client.join('lib')
+        dirs.lib ||= dirs.client.join('lib')
     }
 
     function makeDir(path: String): Void
@@ -1807,8 +1814,8 @@ class PakCmd
 
     private var PakTemplate = {
         name: 'Package Name - unique one word package name',
-        description: 'Full Package Description - one line',
         title: 'Display Package Title - several words. E.g. Company Product',
+        description: 'Full Package Description - one line',
         version: '1.0.0',
         keywords: [
             'Put search keywords here',
@@ -1827,7 +1834,7 @@ class PakCmd
             url: 'git://github.com/user/repo.git',
         },
         dirs: {
-            paks: './paks',
+            paks: 'paks',
         },
         license: 'GPL',
         dependencies: {},
