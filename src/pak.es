@@ -24,7 +24,7 @@ var PakFiles = [ PACKAGE, BOWER ]
 var spec: Object
 
 var catalogs: Array
-var dirs: Object
+var directories: Object
 var files: Object
 var extensions: Object
 var options: Object
@@ -52,7 +52,7 @@ class PakCmd
             'https://bower.herokuapp.com/packages',
         ],
         publish: 'https://embedthis.com/pak/do/catalog/publish',
-        dirs: {
+        directories: {
             paks: Path('paks'),
             pakcache: Path('~/.paks'),
         },
@@ -115,7 +115,7 @@ class PakCmd
         App.log.name = 'pak'
         config = App.config
         blend(App.config, defaultConfig, {overwrite: false})
-        dirs = App.config.dirs
+        directories = App.config.dirs
         catalogs = App.config.catalogs
         files = App.config.files
         extensions = App.config.extensions
@@ -231,10 +231,10 @@ class PakCmd
             App.exit(0)
         }
         if (options.paks) {
-            dirs.paks = Path(options.paks)
+            directories.paks = Path(options.paks)
         }
         if (options.cache) {
-            dirs.pakcache = Path(options.cache)
+            directories.pakcache = Path(options.cache)
         }
         if (options.search) {
             //  TODO - no search switch defined
@@ -261,14 +261,14 @@ class PakCmd
                 catalogs[c] = Uri(catalogs[c])
             }
         }
-        for (d in dirs) {
-            dirs[d] = Path(dirs[d])
+        for (d in directories) {
+            directories[d] = Path(directories[d])
         }
-        for (let [d,value] in dirs) {
-            dirs[d] = Path(value.toString().replace('~', HOME))
+        for (let [d,value] in directories) {
+            directories[d] = Path(value.toString().replace('~', HOME))
         }
-        if (!dirs.pakcache.exist) {
-            makeDir(dirs.pakcache)
+        if (!directories.pakcache.exist) {
+            makeDir(directories.pakcache)
         }
         git = Cmd.locate('git')
 
@@ -414,7 +414,7 @@ class PakCmd
         case 'prune':
             if (rest.length == 0) {
                 let pak
-                for each (path in dirs.pakcache.files('*/*')) {
+                for each (path in directories.pakcache.files('*/*')) {
                     pak = Package(path.dirname.basename)
                     pak.setVersion(path.basename)
                     prune(pak)
@@ -422,7 +422,7 @@ class PakCmd
             } else {
                 let pak
                 for each (name in rest) {
-                    for each (path in dirs.pakcache.join(name).files('*')) {
+                    for each (path in directories.pakcache.join(name).files('*')) {
                         pak = Package(name)
                         pak.setSearchCriteria(path.basename)
                         prune(pak)
@@ -450,7 +450,7 @@ class PakCmd
 
         case 'update':
             if (rest.length == 0) {
-                for each (path in ls(dirs.pakcache, true)) {
+                for each (path in ls(directories.pakcache, true)) {
                     update(Package(path))
                 }
             } else for each (name in rest) {
@@ -522,7 +522,7 @@ class PakCmd
             dependHelp()
         }
         let list = []
-        for each (path in dirs.paks.files('*')) {
+        for each (path in directories.paks.files('*')) {
             let pak = Package(path)
             pak.resolve()
             if (matchPakName(pak.name, patterns)) {
@@ -538,7 +538,7 @@ class PakCmd
             /*
                 Look instead at cached packs
              */
-            for each (path in dirs.pakcache.files('*')) {
+            for each (path in directories.pakcache.files('*')) {
                 let pak = Package(path.basename)
                 for each (v in path.files('*').reverse()) {
                     pak.setCacheVersion(v.basename)
@@ -643,7 +643,7 @@ class PakCmd
             listHelp()
         }
         let sets = {}
-        for each (path in dirs.pakcache.files('*/*').sort()) {
+        for each (path in directories.pakcache.files('*/*').sort()) {
             let pak = Package(path.dirname.basename)
             pak.setCacheVersion(path.basename)
             if (matchPakName(pak.name, patterns)) {
@@ -749,7 +749,7 @@ class PakCmd
     var blending = {}
 
     /* 
-        Blend dependencies bottom up so that lower paks can define dirs
+        Blend dependencies bottom up so that lower paks can define directories
      */
     private function blendPak(pak: Package) {
         if (!pak.spec) {
@@ -768,10 +768,20 @@ class PakCmd
     }
 
     private function blendSpec(pak: Package) {
+        let lib = directories.lib ? { LIB: directories.lib.trimStart(directories.client + '/') } : {LIB: 'lib'}
+        try {
+            let scripts = pak.spec.app.client['+scripts']
+            if (scripts) {
+                for (let [key,value] in scripts) {
+                    scripts[key] = value.expand(lib)
+                }
+            }
+        } catch {}
+
         /*
-            Special assist for esp, ejs and dirs.
+            Blend directories and app
          */
-        let toblend = blend({dirs:'dirs', esp:'esp', ejs:'ejs'}, pak.spec.blend)
+        let toblend = blend({directories:'directories', app:'app'}, pak.spec.blend)
         for (let [key,value] in toblend) {
             if (pak.spec[value]) {
                 spec[key] ||= {}
@@ -779,24 +789,11 @@ class PakCmd
                 vtrace('Blend', 'Property ' + value + ' into ' + key)
             }
         }
-        for (let [k,v] in spec.dirs) {
-            spec.dirs[k] = Path(v)
-            dirs[k] = Path(v)
+        for (let [k,v] in spec.directories) {
+            spec.directories[k] = Path(v)
+            directories[k] = Path(v)
         }
 
-        /* 
-            Expand LIB in client-scripts 
-            TODO: Genericize this
-         */
-        let lib = dirs.lib ? { LIB: dirs.lib.trimStart(dirs.client + '/') } : {LIB: 'lib'}
-        if (pak.spec['client-scripts']) {
-            let scripts = pak.spec['client-scripts'].clone()
-            for (let [key,value] in scripts) {
-                scripts[key] = value.expand(lib)
-            }
-            spec['client-scripts'] ||= []
-            blend(spec, {'+client-scripts': scripts}, {combine: true})
-        }
         if (topDeps[pak.name]) {
             if (spec.optionalDependencies && spec.optionalDependencies[pak.name]) {
                 spec.optionalDependencies ||= {}
@@ -917,7 +914,7 @@ class PakCmd
             listHelp()
         }
         let sets = {}
-        for each (path in dirs.paks.files('*')) {
+        for each (path in directories.paks.files('*')) {
             let pak = Package(path)
             pak.resolve()
             if (matchPakName(pak.name, patterns)) {
@@ -945,7 +942,7 @@ class PakCmd
      */
     function prune(pak: Package) {
         pak.resolve()
-        var latest = dirs.pakcache.join(pak.name).files('*').reverse()[0]
+        var latest = directories.pakcache.join(pak.name).files('*').reverse()[0]
         if (!latest) {
             throw 'Nothing to prune for "' + pak + '"'
         }
@@ -972,13 +969,13 @@ class PakCmd
 
     function showConfig() {
         let obj = App.config.clone()
-        let preserve = ['dirs', 'catalogs']
+        let preserve = ['directories', 'catalogs']
         for (let [key,value] in obj) {
             if (!preserve.contains(key)) {
                 delete obj[key]
             }
         }
-        delete obj.dirs.cache
+        delete obj.directories.cache
         print('Pak configuration: ' + serialize(obj, {pretty: true, quotes: false}))
     }
 
@@ -1101,7 +1098,7 @@ class PakCmd
                     pat.overwrite = true
                 }
             }
-            let to = pat.to.expand({LIB: dirs.lib})
+            let to = pat.to.expand({LIB: directories.lib})
             for each (from in pat.from) {
                 for each (f in fromDir.files(from, {relative: true})) {
                     export[f] = { overwrite: pat.overwrite, to: to }
@@ -1439,7 +1436,8 @@ class PakCmd
                 Remove client scripts
              */
             if (spec['client-scripts']) {
-                let lib = dirs.lib ? { LIB: dirs.lib.trimStart(dirs.client + '/') } : {LIB: 'lib'}
+                let lib = directories.lib ? 
+                    { LIB: directories.lib.trimStart(directories.client + '/') } : {LIB: 'lib'}
                 for each (script in pak.spec['client-scripts']) {
                     script = script.expand(lib).expand(spec)
                     for (let [key,value] in spec['client-scripts']) {
@@ -1458,7 +1456,7 @@ class PakCmd
     //  MOB - order functions
     private function requiredCachedPak(pak: Package): Array? {
         let users = []
-        for each (path in dirs.pakcache.files('*/*')) {
+        for each (path in directories.pakcache.files('*/*')) {
             let name = path.dirname.basename.toString()
             if (name != pak.name) {
                 let pspec = Package.readSpec(path, {quiet: true})
@@ -1480,7 +1478,7 @@ class PakCmd
             See if any installed paks has a dependency on pak
          */
         pak.resolve()
-        for each (path in ls(dirs.paks, true)) {
+        for each (path in ls(directories.paks, true)) {
             let name = path.basename.toString()
             if (name != pak.name) {
                 let pspec = Package.readSpec(path, {quiet: true})
@@ -1703,7 +1701,7 @@ class PakCmd
 
     function uninstall(patterns): Void {
         let list = []
-        for each (path in dirs.paks.files('*')) {
+        for each (path in directories.paks.files('*')) {
             let pak = Package(path)
             pak.setInstallPath();
             if (matchPakName(pak.name, patterns)) {
@@ -1735,7 +1733,7 @@ class PakCmd
     }
 
     /*
-        Search order: pakrc : .pakrc : ../.../[pakrc|.pakrc] : package.json (for dirs only)
+        Search order: pakrc : .pakrc : ../.../[pakrc|.pakrc] : package.json (for directories only)
      */
     function setDefaults() {
         if (RC.exists) {
@@ -1774,8 +1772,8 @@ class PakCmd
             if (f) {
                 let pspec = f.readJSON()
                 vtrace('Read', 'Configuration from: ' + f)
-                for (let [field, value] in pspec.dirs) {
-                    dirs[field] = f.dirname.join(value)
+                for (let [field, value] in pspec.directories) {
+                    directories[field] = f.dirname.join(value)
                 }
                 if (pspec.catalogs) {
                     catalogs = pspec.catalogs
@@ -1784,16 +1782,16 @@ class PakCmd
             }
         }
         if (options.paks) {
-            dirs.paks = Path(options.paks)
+            directories.paks = Path(options.paks)
         }
         if (options.cache) {
-            dirs.pakcache = Path(options.cache)
+            directories.pakcache = Path(options.cache)
         }
-        for (let [field, value] in dirs) {
-            dirs[field] = Path(value).replace('~', HOME)
+        for (let [field, value] in directories) {
+            directories[field] = Path(value).replace('~', HOME)
         }
-        dirs.client ||= Path('client')
-        dirs.lib ||= dirs.client.join('lib')
+        directories.client ||= Path('client')
+        directories.lib ||= directories.client.join('lib')
     }
 
     function makeDir(path: String): Void
@@ -1813,7 +1811,7 @@ class PakCmd
     function error(msg) App.log.error(msg)
 
     private var PakTemplate = {
-        name: 'Package Name - unique one word package name',
+        name: App.dir.basename.toLowerCase()
         title: 'Display Package Title - several words. E.g. Company Product',
         description: 'Full Package Description - one line',
         version: '1.0.0',
@@ -1832,9 +1830,6 @@ class PakCmd
         repository: {
             type: 'git',
             url: 'git://github.com/user/repo.git',
-        },
-        dirs: {
-            paks: 'paks',
         },
         license: 'GPL',
         dependencies: {},

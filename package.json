@@ -37,7 +37,7 @@
     "devDependencies": {
         "makeme": ">0.8.0"
     },
-    "dirs": {
+    "directories": {
         "paks": "src/paks",
         "client": "client"
     },
@@ -50,10 +50,5 @@
             "type": "Commercial",
             "url": "http://embedthis.com/licensing/"
         }
-    ],
-    "esp": {
-        "serverPrefix": "/do"
-    },
-    "client-scripts": [
     ]
 }

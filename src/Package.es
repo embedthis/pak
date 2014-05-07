@@ -96,7 +96,7 @@ class Package {
             /*
                 Pick most recent qualifying version
              */
-            for each (path in find(dirs.pakcache, name + '/*', false).sort(sortVersions)) {
+            for each (path in find(directories.pakcache, name + '/*', false).sort(sortVersions)) {
                 let candidate = Version(path.basename)
                 if (candidate.acceptable(criteria)) {
                     cacheVersion = candidate
@@ -111,7 +111,7 @@ class Package {
         if (path) {
             cachePath = path
         } else if (cacheVersion && cacheVersion.valid) {
-            cachePath = dirs.pakcache.join(name, cacheVersion.toString())
+            cachePath = directories.pakcache.join(name, cacheVersion.toString())
         } else {
             cachePath = null
         }
@@ -139,7 +139,7 @@ class Package {
     } 
 
     public function setInstallPath() {
-        installPath = dirs.paks.join(name)
+        installPath = directories.paks.join(name)
         installed = installPath.exists
     }
 
