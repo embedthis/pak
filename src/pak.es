@@ -115,7 +115,7 @@ class PakCmd
         App.log.name = 'pak'
         config = App.config
         blend(App.config, defaultConfig, {overwrite: false})
-        directories = App.config.dirs
+        directories = App.config.directories
         catalogs = App.config.catalogs
         files = App.config.files
         extensions = App.config.extensions
