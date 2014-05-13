@@ -2669,8 +2669,16 @@ static void postParse(HttpRoute *route)
     /*
         Apply defaults for when unspecified
      */
-    if (smatch(route->mode, "debug") && mprGetJson(route->config, "app.http.showErrors") == 0) {
-        httpSetRouteShowErrors(route, 1);
+    if (smatch(route->mode, "debug")) {
+        if (mprGetJson(route->config, "app.http.showErrors") == 0) {
+            httpSetRouteShowErrors(route, 1);
+        }
+        if (mprGetJson(route->config, "app.http.update") == 0) {
+            route->update = 1;
+        }
+        if (mprGetJson(route->config, "app.http.keepSource") == 0) {
+            route->keepSource = 1;
+        }
     }
     if (mprGetJson(route->config, "app.http.xsrf") == 0) {
         httpSetRouteXsrf(route, 1);
