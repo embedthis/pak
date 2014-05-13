@@ -3362,6 +3362,9 @@ static void createRedirectAlias(HttpRoute *route, int status, cchar *from, cchar
     HttpRoute   *alias;
     cchar       *pattern;
 
+    if (from == 0 || *from == '\0') {
+        from = "/";
+    }
     if (sends(from, "/")) {
         pattern = sfmt("^%s(.*)$", from);
     } else {
@@ -3369,6 +3372,7 @@ static void createRedirectAlias(HttpRoute *route, int status, cchar *from, cchar
         pattern = sfmt("^%s(?:/)*(.*)$", from);
     }
     alias = httpCreateAliasRoute(route, pattern, 0, 0);
+    httpSetRouteMethods(alias, "*");
     httpSetRouteTarget(alias, "redirect", sfmt("%d %s/$1", status, to));
     if (sstarts(to, "https")) {
         httpAddRouteCondition(alias, "secure", 0, HTTP_ROUTE_NOT);
