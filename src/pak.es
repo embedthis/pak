@@ -742,7 +742,9 @@ class PakCmd
         } else {
             qtrace('Update', path)
         }
-        path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
+        if (!options.nodeps) {
+            path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
+        }
         runScripts(pak, 'install')
     }
 
@@ -1095,7 +1097,7 @@ class PakCmd
                     pat.from = [pat.from]
                 }
                 if (pat.overwrite == undefined) {
-                    pat.overwrite = true
+                    pat.overwrite = false
                 }
             }
             let to = pat.to.expand({LIB: directories.lib})
