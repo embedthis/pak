@@ -5,18 +5,45 @@ PAK(1)                           User Commands                          PAK(1)
        pak - Embedthis Pak -- Package Manager
 
 <B>SYNOPSIS</B>
-       <B>pak  </B>[<I>--all</I>]  [<I>--catalog catalog</I>] [<I>--cache dir</I>] [<I>--details</I>] [<I>--dir dir</I>]
-       [<I>--force</I>]
-           [<I>--log file:level</I>] [<I>--nodeps</I>] [<I>--paks dir</I>] [<I>--quiet</I>] [<I>--silent</I>]
-           [<I>--verbose</I>] [<I>--versions</I>] \
-       [cache|cached|config|depend|edit|help|init|install|list|prune|pub-
-       lish|retract|search|uninstall|update|upgrade] paks...
+       <B>pak</B>
+           <B>--all</B>
+           <B>--catalog catalog</B>
+           <B>--cache dir</B>
+           <B>--details</B>
+           <B>--dir dir</B>
+           <B>--force</B>
+           <B>--log file:level</B>
+           <B>--nodeps</B>
+           <B>--paks dir</B>
+           <B>--quiet</B>
+           <B>--silent</B>
+           <B>--verbose</B>
+           <B>--versions</B>
+           <B>commands ...</B>
+
+       <B>Commands:</B>
+           cache paks...
+           cached paks...
+           config
+           depend paks...
+           edit key[=value]
+           help
+           init [name [version]]
+           install paks...
+           list paks...
+           prune paks...
+           publish [name uri pass]
+           retract name [password]
+           search paks...
+           uninstall paks...
+           update paks...
+           upgrade paks...
 
 <B>DESCRIPTION</B>
-       <B>Pak  </B>is a simple package manager for embedding components into embedded
-       applications.  It makes it easy to retrieve, integrate and manage  com-
-       ponents  for  applications. Pak focusses on embedded applications using
-       Appweb, ESP and EJS. It provides tested, integrated componens that work
+       <B>Pak  </B>is  a  simple  package manager of components for embedded applica-
+       tions.  It makes it easy to retrieve, integrate and  manage  components
+       for  applications.  Pak focusses on embedded applications using Appweb,
+       ESP and  EJS.  It  provides  tested,  integrated  componens  that  work
        together.  It  is  not intended as a generic package manager to install
        complete applications.
 
