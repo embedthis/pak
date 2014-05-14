@@ -274,6 +274,10 @@ class PakCmd
 
         let path = Package.getSpecFile('.') || Path(PACKAGE)
         spec = path.exists ? path.readJSON() : PakTemplate.clone()
+        if (spec.pak && !Version(Config.Version).acceptable(spec.pak)) {
+            throw '' + spec.title + ' requires Pak ' + spec.pak + '. Pak version ' + Config.Version +
+                            ' is not compatible with this requirement.' + '\n'
+        }
     }
 
     function process() {
