@@ -574,9 +574,7 @@ class PakCmd
         }
     }
 
-    function setValue(rest): Void {
-        let key = rest[0]
-        let value = rest[1]
+    function setValue(key, value): Void {
         let obj = spec
         for each (thisKey in key.split('.')) {
             if (Object.getOwnPropertyCount(obj[thisKey]) == 0) {

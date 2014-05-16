@@ -2,7 +2,7 @@
     "name": "pak",
     "description": "Embedthis Pak Package Manager",
     "title": "Embedthis Pak",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "keywords": [
         "pak",
         "package"
