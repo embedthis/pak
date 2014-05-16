@@ -518,9 +518,6 @@ class PakCmd
         Print pak dependencies. Pak is a bare pak name or a versioned pak name
      */
     function depend(patterns): Void {
-        /* UNUSED
-        let options = args.options
-        */
         if (options.help) {
             //  TODO - not implemented
             dependHelp()
@@ -544,7 +541,7 @@ class PakCmd
              */
             for each (path in directories.pakcache.files('*')) {
                 let pak = Package(path.basename)
-                for each (v in path.files('*').reverse()) {
+                for each (v in Version(path.files('*')).sort()) {
                     pak.setCacheVersion(v.basename)
                     pak.resolve()
                     if (matchPakName(pak.name, patterns)) {
@@ -636,9 +633,6 @@ class PakCmd
             --details      # List pak details
      */
     function cached(patterns: Array): Void {
-        /* UNUSED
-        let options = args.options
-        */
         if (options.help) {
             //  TODO - not implemented
             listHelp()
@@ -664,7 +658,7 @@ class PakCmd
                     versions.append(pak.cacheVersion)
                 }
                 pak = pakset[0]
-                out.write(pak.name + ' ' + versions.join(', '))
+                out.write(pak.name + ' ' + Version.sort(versions).join(', '))
             } else {
                 /* Pick last pak (highest version) */
                 pak = pakset[pakset.length - 1]
@@ -945,7 +939,7 @@ class PakCmd
      */
     function prune(pak: Package) {
         pak.resolve()
-        var latest = directories.pakcache.join(pak.name).files('*').reverse()[0]
+        var latest = Version.sort(directories.pakcache.join(pak.name).files('*'), -1)[0]
         if (!latest) {
             throw 'Nothing to prune for "' + pak + '"'
         }
@@ -1514,7 +1508,7 @@ class PakCmd
             filter(function(e) !e.match(/\{/))
         let found 
         pak.versions = []
-        for each (v in versions.reverse()) {
+        for each (v in Version.sort(versions, -1)) {
             if (v && Version(v).acceptable(criteria)) {
                 pak.versions.push(v)
                 if (!found) {
