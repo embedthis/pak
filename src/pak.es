@@ -562,9 +562,8 @@ class PakCmd
         }
     }
 
-    function getValue(rest): Void {
+    function getValue(key): Void {
         let obj = Package.readSpec('.')
-        let key = rest[0]
         for each (thisKey in key.split('.')) {
             obj = obj[thisKey]
         }
