@@ -167,6 +167,7 @@ class PakCmd
             '    install paks...          # Install a pak on the local system\n' +
             '    license paks...          # Display LICENSE for paks\n' +
             '    list [paks...]           # list installed paks\n' +
+            '    lockdown                 # Lockdown dependencies\n' +
             '    prune [paks...]          # Prune named paks\n' +
             '    publish [name uri pass]  # publish a pak in a catalog\n' +
             '    retract name [pass]      # Unpublish a pak\n' +
@@ -411,8 +412,8 @@ class PakCmd
             list(rest)
             break
 
-        case 'publish':
-            publish(rest)
+        case 'lockdown':
+            lockdown()
             break
 
         case 'prune':
@@ -436,6 +437,10 @@ class PakCmd
                     qtrace('Info', 'Nothing to prune')
                 }
             }
+            break
+
+        case 'publish':
+            publish(rest)
             break
 
         case 'retract': case 'unpublish':
@@ -904,9 +909,6 @@ class PakCmd
             --details      # List pak details
      */
     function list(patterns: Array): Void {
-        /* UNUSED
-        let options = args.options
-        */
         if (options.help) {
             listHelp()
         }
@@ -930,6 +932,29 @@ class PakCmd
                 print()
             }
         }
+    }
+
+    /*
+        Lockdown the dependency versions. This moves all optional dependencies that are installed into
+        dependencies and assigns a compatible version expression.
+     */
+    function lockdown(): Void {
+        let deps = blend({}, spec.dependencies)
+        blend(deps, spec.optionalDependencies)
+        for (let [name,criteria] in deps) {
+            let pak = Package(name)
+            pak.resolve(criteria)
+            if (pak.installed) {
+                trace('Lockdown', pak.name + ' to ' + pak.installVersion.compatible + 
+                    ' (was ' + spec.dependencies[pak.name] + ')')
+                spec.dependencies[pak.name] = '~' + pak.installVersion.compatible
+                delete spec.optionalDependencies[pak.name]
+            } else {
+                trace('Info', pak.name + ' is not installed')
+            }
+        }
+        let path = Package.getSpecFile('.')
+        path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
     }
 
     /*

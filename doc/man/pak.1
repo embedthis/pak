@@ -28,6 +28,7 @@ pak \- Embedthis Pak -- Package Manager
     init [name [version]]
     install paks...
     list paks...
+    lockdown    
     prune paks...
     publish [name uri pass]
     retract name [password]
@@ -195,6 +196,12 @@ Install a pak on the local system
 .TP
 list [paks...]           
 list installed paks
+.TP
+lockdown
+Lockdown the version criteria for all dependencies. This rewrites the
+package.json to define a compatible version expression for all installed
+dependencies.
+.TP
 .TP
 prune [paks...]          
 Prune named paks
