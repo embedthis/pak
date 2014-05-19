@@ -32,7 +32,6 @@ var out: File = App.outputStream
 
 class PakCmd 
 {
-    //  TODO - move above as constants
     private const RC: String = 'pakrc'
     private const DOTRC: String = '.pakrc'
     private const DIR_PERMS: Number = 0775
@@ -152,7 +151,6 @@ class PakCmd
         onerror: 'exit',
     }
 
-    //  TODO - need search
     function usage(): Void {
         print('\nUsage: pak ' + ' [options] [commands] ...\n' +
             '  Commands:\n' + 
@@ -396,12 +394,14 @@ class PakCmd
                 if (pak.cachePath.join('LICENSE.md')) {
                     let readme = pak.cachePath.join('LICENSE.md')
                     let text = readme.readString()
-                    if (Config.OS == 'macosx') {
+                    if (Config.OS == 'macosx' && rest.length == 1) {
                         try {
                             Cmd.run('open ' + readme)
                         } catch {
                             print(text)
                         }
+                    } else {
+                        print(text)
                     }
                 }
             }
@@ -523,10 +523,6 @@ class PakCmd
         Print pak dependencies. Pak is a bare pak name or a versioned pak name
      */
     function depend(patterns): Void {
-        if (options.help) {
-            //  TODO - not implemented
-            dependHelp()
-        }
         let list = []
         for each (path in directories.paks.files('*')) {
             let pak = Package(path)
@@ -620,11 +616,11 @@ class PakCmd
             vtrace('Info', pak + ' is not yet cached')
         }
         if (pak.sourcePath) {
-            if (!pak.spec) {
+            if (!pak.source) {
                 qtrace('Skip', pak + ' does not have a valid package.json')
                 return
             }
-            pak.setCacheVersion(pak.spec.version)
+            pak.setCacheVersion(pak.source.version)
         } else {
             pak = searchPak(pak)
         }
@@ -638,10 +634,6 @@ class PakCmd
             --details      # List pak details
      */
     function cached(patterns: Array): Void {
-        if (options.help) {
-            //  TODO - not implemented
-            listHelp()
-        }
         let sets = {}
         for each (path in directories.pakcache.files('*/*').sort()) {
             let pak = Package(path.dirname.basename)
@@ -671,7 +663,7 @@ class PakCmd
             }
             if (options.details) {
                 out.write(': ')
-                print(serialize(pak.spec, {pretty: true, indent: 4}))
+                print(serialize(pak.cache, {pretty: true, indent: 4}))
             }
             print()
         }
@@ -723,7 +715,7 @@ class PakCmd
     function install(pak: Package) {
         pak.resolve(pak.searchCriteria || '*')
         if (pak.cached) {
-            if (pak.installed && Version(pak.spec.version).acceptable(pak.searchCriteria)) {
+            if (pak.installed && Version(pak.cache.version).acceptable(pak.searchCriteria)) {
                 if (!options.force) {
                     qtrace('Info', pak + ' is already installed')
                     return
@@ -754,7 +746,7 @@ class PakCmd
         Blend dependencies bottom up so that lower paks can define directories
      */
     private function blendPak(pak: Package) {
-        if (!pak.spec) {
+        if (!pak.cache) {
             throw new Error('Pak ' + pak + ' at ' + pak.cachePath + ' is missing a package.json')
         }
         if (blending[pak.name]) {
@@ -772,7 +764,7 @@ class PakCmd
     private function blendSpec(pak: Package) {
         let lib = directories.lib ? { LIB: directories.lib.trimStart(directories.client + '/') } : {LIB: 'lib'}
         try {
-            let scripts = pak.spec.app.client['+scripts']
+            let scripts = pak.cache.app.client['+scripts']
             if (scripts) {
                 for (let [key,value] in scripts) {
                     scripts[key] = value.expand(lib)
@@ -783,11 +775,11 @@ class PakCmd
         /*
             Blend directories and app
          */
-        let toblend = blend({directories:'directories', app:'app'}, pak.spec.blend)
+        let toblend = blend({directories:'directories', app:'app'}, pak.cache.blend)
         for (let [key,value] in toblend) {
-            if (pak.spec[value]) {
+            if (pak.cache[value]) {
                 spec[key] ||= {}
-                blend(spec[key], pak.spec[value], {combine: true})
+                blend(spec[key], pak.cache[value], {combine: true})
                 vtrace('Blend', 'Property ' + value + ' into ' + key)
             }
         }
@@ -799,13 +791,14 @@ class PakCmd
         if (topDeps[pak.name]) {
             if (spec.optionalDependencies && spec.optionalDependencies[pak.name]) {
                 spec.optionalDependencies ||= {}
-                spec.optionalDependencies[pak.name] ||= '~' + pak.installVersion.compatible
+                spec.optionalDependencies[pak.name] ||= '~' + pak.cachelVersion.compatible
                 Object.sortProperties(spec.optionalDependencies)
             } else {
-                //  MOB - need option to not update package.json
-                spec.dependencies ||= {}
-                spec.dependencies[pak.name] ||= '~' + pak.installVersion.compatible
-                Object.sortProperties(spec.dependencies)
+                if (!options.nodeps) {
+                    spec.dependencies ||= {}
+                    spec.dependencies[pak.name] ||= '~' + pak.cacheVersion.compatible
+                    Object.sortProperties(spec.dependencies)
+                }
             }
         }
     }
@@ -825,9 +818,6 @@ class PakCmd
 
         let installDeps = true
         if (PACKAGE.exists) {
-            //  TODO This should be read once at startup?
-            //  TODO - document
-            // let spec = Package.readSpec('.', {quiet: true})
             if (spec.paks && (spec.paks.nodeps || (spec.paks[pak.name] && spec.paks[pak.name].nodeps))) {
                 installDeps = false
             }
@@ -854,26 +844,23 @@ class PakCmd
             trace('Mkdir', dest)
             mkdir(dest)
         }
-        let export = pak.spec.export
+        let export = pak.cache.export
         if (export && PACKAGE.exists) {
-            //  TODO This should be read once at startup?
-            //  TODO - document
-            // let spec = Package.readSpec('.', {quiet: true})
             if (spec.paks && (spec.paks.noexport || (spec.paks[pak.name] && spec.paks[pak.name].noexport))) {
                 export = null
             }
         }
-        copyTree(pak, pak.cachePath, dest, pak.spec.ignore, pak.spec.files, export)
+        copyTree(pak, pak.cachePath, dest, pak.cache.ignore, pak.cache.files, export)
         trace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
         trace('Info', 'Use "pak info ' + pak.name + '" to view the README')
     }
 
     private function installDependencies(pak: Package) {
-        for (let [other, criteria] in pak.spec.dependencies) {
+        for (let [other, criteria] in pak.cache.dependencies) {
             installDependency(other, criteria, true)
         }
         if (options.all) {
-            for (let [other, criteria] in pak.spec.optionalDependencies) {
+            for (let [other, criteria] in pak.cache.optionalDependencies) {
                 installDependency(other, criteria, false)
             }
         }
@@ -909,9 +896,6 @@ class PakCmd
             --details      # List pak details
      */
     function list(patterns: Array): Void {
-        if (options.help) {
-            listHelp()
-        }
         let sets = {}
         for each (path in directories.paks.files('*')) {
             let pak = Package(path)
@@ -923,9 +907,9 @@ class PakCmd
         for each (pak in sets) {
             let optional = (spec.optionalDependencies && spec.optionalDependencies[pak.name]) ? ' optional' : ''
             out.write(pak.name)
-            if (options.details && pak.spec) {
+            if (options.details && pak.install) {
                 out.write(': ')
-                print(serialize(pak.spec, {pretty: true, indent: 4}))
+                print(serialize(pak.install, {pretty: true, indent: 4}))
             } else if (options.versions) {
                 print(' ' + pak.installVersion + optional)
             } else {
@@ -968,7 +952,7 @@ class PakCmd
         if (!latest) {
             throw 'Nothing to prune for "' + pak + '"'
         }
-        if (pak.spec && pak.spec.precious && !options.force) {
+        if (pak.cache && pak.cache.precious && !options.force) {
             qtrace('Warn', 'Cannot prune "' + pak + '" designated as precious. Use --force to force pruning.')
             return
         }
@@ -1039,7 +1023,7 @@ class PakCmd
     }
 
     private function cacheDependencies(pak: Package): Boolean {
-        let pspec = pak.spec
+        let pspec = pak.cache
         if (!pspec.dependencies) {
             return false
         }
@@ -1059,7 +1043,6 @@ class PakCmd
                         dep = searchPak(dep)
                         cachePak(dep)
                     } catch (e) {
-                        //  TODO - should test if present and must display (e)
                         print(e)
                         if (options.force) {
                             qtrace('WARN', 'Cannot cache required dependency "' + dep.name + '"' )
@@ -1210,8 +1193,8 @@ class PakCmd
             preupgrade
      */
     private function runScripts(pak: Package, event: String) {
-        if (pak.spec && pak.spec.scripts) {
-            let script = pak.spec.scripts[event]
+        if (pak.cache && pak.cache.scripts) {
+            let script = pak.cache.scripts[event]
             let path = pak.cachePath.join(script)
             if (path.exists) {
                 let current = App.dir
@@ -1247,7 +1230,7 @@ class PakCmd
 
     private function copyPak(pak: Package) {
         trace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
-        copyTree(pak, pak.sourcePath, pak.cachePath, pak.spec.ignore, pak.spec.files)
+        copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
     }
 
     private function cachePak(pak: Package) {
@@ -1308,9 +1291,11 @@ class PakCmd
     }
 
     private function getDeps(pak: Package, deps = {}, level: Number = 0) {
+        let version = pak.installVersion || pak.cacheVersion
+        pak.setCacheVersion(version)
         pak.resolve()
         if (options.all || level == 0) {
-            for (let [name,criteria] in pak.spec.dependencies) {
+            for (let [name,criteria] in pak.cache.dependencies) {
                 let dep = Package(name)
                 dep.selectCacheVersion(criteria)
                 getDeps(dep, deps, level + 1)
@@ -1324,6 +1309,7 @@ class PakCmd
 
     private function printDeps(pak: Package, prefix: String = '') {
         let version = pak.installVersion || pak.cacheVersion
+        pak.setCacheVersion(version)
         print('\n' + pak.name + ' ' + version + ' dependencies:')
         let deps = getDeps(pak)
         if (Object.getOwnPropertyCount(deps) == 0) {
@@ -1442,7 +1428,7 @@ class PakCmd
             }
         }
         pak.resolve(pak.installVersion)
-        if (!pak.spec) {
+        if (!pak.install) {
             throw 'Cannot remove "' + pak + '". Missing package.json'
         }
         runScripts(pak, 'uninstall')
@@ -1457,14 +1443,16 @@ class PakCmd
             /*
                 Remove client scripts
              */
-            if (spec['client-scripts']) {
+            if (spec.app && spec.app.client && spec.app.client.scripts) {
                 let lib = directories.lib ? 
                     { LIB: directories.lib.trimStart(directories.client + '/') } : {LIB: 'lib'}
-                for each (script in pak.spec['client-scripts']) {
+                let app = blend({}, pak.install.app.client, {combine: true})
+                dump(app)
+                for each (script in app.scripts) {
                     script = script.expand(lib).expand(spec)
-                    for (let [key,value] in spec['client-scripts']) {
+                    for (let [key,value] in spec.app.client.scripts) {
                         if (value.startsWith(script)) {
-                            delete spec['client-scripts'][key]
+                            delete spec.app.client.scripts[key]
                         }
                     }
                 }
@@ -1475,7 +1463,6 @@ class PakCmd
         qtrace('Remove', pak.name)
     }
 
-    //  MOB - order functions
     private function requiredCachedPak(pak: Package): Array? {
         let users = []
         for each (path in directories.pakcache.files('*/*')) {
@@ -1667,7 +1654,7 @@ class PakCmd
             }
         }
         pak.resolve()
-        let pspec = pak.spec
+        let pspec = pak.source
         let name = pspec.name
         if (!name || !name.match(/^[\w_-]+$/)) {
             throw 'Invalid package name: ' + name

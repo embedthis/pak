@@ -10,10 +10,13 @@ require ejs.version
 class Package {
     use default namespace public
     var name: String            //  Bare name without version information
-    var installPath: Path?      //  Path to installed copy of the pak
-    var installed: Boolean      //  True if installed locally
+    var cache: Object           //  Package description from cache
     var cachePath: Path?        //  Path to pak in paks cache (includes version)
     var cached: Boolean         //  True if present in the cache
+    var installPath: Path?      //  Path to installed copy of the pak
+    var installed: Boolean      //  True if installed locally
+    var install: Object         //  Package description from installed paks
+    var source: Object          //  Package description from source
     var sourcePath: Path        //  Source for the package
     var sourced: Boolean        //  True if source present
     var remoteUri: String       //  Remote repository location
@@ -23,11 +26,11 @@ class Package {
     var owner: String
     var repName: String
     var repTag: String          //  Repository tag for this version
-    var spec: Object            //  Package description spec data
     var resolved: Boolean
 
     var versions: Array?        //  List of available versions
     var installVersion: Version?
+    var sourceVersion: Version?
     var cacheVersion: Version?
     var remoteVersion: Version?
     var searchCriteria: String?
@@ -58,45 +61,15 @@ class Package {
             setCachePath()
         }
         loadSpec()
-        if (spec && spec.version) {
-            installVersion = Version(spec.version)
-        }
         resolved = true
     }
 
-    /*
-        Sort versions in decreasing version order.
-        Ensure that pre-releases are sorted before production releases
-     */
-    function sortVersions(array, a, b) {
-        let base1 = array[a].basename
-        let base2 = array[b].basename
-        if (base1 == base2) {
-            return 0
-        }
-        let [b1,p1] = base1.toString().split('-')
-        let [b2,p2] = base2.toString().split('-')
-        if (b1 < b2) {
-            return 1
-        } else if (b1 > b2) {
-            return -1
-        } else if (!p1) {
-            /* "a" is not a pre-release, i.e. later version */
-            return -1
-        } else if (!p2) {
-            return 1
-        } else if (p1 < p2) {
-            return 1
-        }
-        return -1
-    }
-   
     function selectCacheVersion(criteria: String) {
         if (!cacheVersion || !cacheVersion.acceptable(criteria)) {
             /*
                 Pick most recent qualifying version
              */
-            for each (path in find(directories.pakcache, name + '/*', false).sort(sortVersions)) {
+            for each (path in Version.sort(find(directories.pakcache, name + '/*'), -1)) {
                 let candidate = Version(path.basename)
                 if (candidate.acceptable(criteria)) {
                     cacheVersion = candidate
@@ -213,14 +186,29 @@ class Package {
     private function loadSpec(path: Path? = null) {
         if (path) {
             spec = Package.readSpec(path)
-        } else if (sourcePath && sourcePath.exists) {
-            spec = Package.readSpec(sourcePath)
-        } else if (cachePath && cachePath.exists) {
-            spec = Package.readSpec(cachePath, {quiet: true})
-        } else if (installPath && installPath.exists) {
-            spec = Package.readSpec(installPath)
+            throw "BOOM - unsupported"
+        } else {
+            if (sourcePath && sourcePath.exists) {
+                source = Package.readSpec(sourcePath)
+                if (source && source.version) {
+                    sourceVersion = Version(source.version)
+                }
+            }
+            if (cachePath && cachePath.exists) {
+                cache = Package.readSpec(cachePath, {quiet: true})
+                if (cache && cache.version) {
+                    cacheVersion = Version(cache.version)
+                }
+            } 
+            if (installPath && installPath.exists) {
+                install = Package.readSpec(installPath)
+                if (install && install.version) {
+                    installVersion = Version(install.version)
+                }
+            }
         }
     }
+
 
     static function readSpec(path: Path?, options = {}): Object {
         if (!path) {
