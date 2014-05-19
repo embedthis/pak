@@ -272,9 +272,13 @@ class Version {
             if (b.pre != '') {
                 return 1
             }
+        } else if (b.pre == '') {
+            return -1
         } else {
-            if (b.pre == '') {
+            if (a.pre < b.pre) {
                 return -1
+            } else if (a.pre > b.pre) {
+                return 1
             }
         }
         return 0
