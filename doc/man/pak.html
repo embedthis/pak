@@ -31,6 +31,7 @@ PAK(1)                           User Commands                          PAK(1)
            init [name [version]]
            install paks...
            list paks...
+           lockdown
            prune paks...
            publish [name uri pass]
            retract name [password]
@@ -203,6 +204,11 @@ PAK(1)                           User Commands                          PAK(1)
        list [paks...]
               list installed paks
 
+       lockdown
+              Lockdown   the  version  criteria  for  all  dependencies.  This
+              rewrites the package.json to define a compatible version expres-
+              sion for all installed dependencies.
+
        prune [paks...]
               Prune named paks
 
@@ -229,12 +235,13 @@ PAK(1)                           User Commands                          PAK(1)
               Show all versions of a pak.
 
        <B>--cache directory</B>
-              Specify  the directory to use for the paks cache. This overrides
-              the values specified in the various pakrc or package.json files.
+              Specify  the  directory  to  use for the paks cache. This
+              overrides the values specified in the  various  pakrc  or
+              package.json files.
 
        <B>--catalog URI</B>
-              Set  the  catalog  URI  to  use  for install, cache, publish and
-              retract commands.
+              Set  the  catalog  URI to use for install, cache, publish
+              and retract commands.
 
        <B>--details URI</B>
               Show more pak details. Useful with pak list.
@@ -243,31 +250,34 @@ PAK(1)                           User Commands                          PAK(1)
               Change to the given directory before running.
 
        <B>--force</B>
-              Force the command to continue. This  is  useful  to  install  or
-              cache  a  pak when dependencies cannot be satisfied.  It is also
-              useful to cache or install  an  already  cached/installed  pack.
-              Aliased as -f.
+              Force the command to continue. This is useful to  install
+              or cache a pak when dependencies cannot be satisfied.  It
+              is  also  useful  to  cache   or   install   an   already
+              cached/installed pack. Aliased as -f.
 
        <B>--log logName[:logLevel]</B>
-              Specify  a file to log internal execution messages. Bit will log
-              execution related trace to the log file. The log level specifies
-              the  desired  verbosity  of output. Level 0 is the least verbose
-              and level 9 is the most. The '-v' switch is an alias for  '--log
-              stderr:2'.
+              Specify  a  file  to log internal execution messages. Bit
+              will log execution related trace to the log file. The log
+              level  specifies the desired verbosity of output. Level 0
+              is the least verbose and level 9 is the  most.  The  '-v'
+              switch is an alias for '--log stderr:2'.
 
        <B>--nodeps</B>
-              Used to suppress installing or upgrading dependent packages.
+              Used  to suppress installing or upgrading dependent pack-
+              ages.
 
        <B>--paks directory</B>
-              Specify  the  directory  to use for the paks. This overrides the
-              values specified in the various pakrc or package.json files.
+              Specify the directory to use for the paks. This overrides
+              the values specified in the various pakrc or package.json
+              files.
 
        <B>--quiet</B>
-              Run in quiet mode with less verbose otuput. Aliased as -q.
+              Run in quiet mode with less verbose  otuput.  Aliased  as
+              -q.
 
        <B>--silent</B>
-              Run in silent mode suppressing all but hard errors.  Aliased  as
-              -s.
+              Run  in  silent  mode  suppressing  all  but hard errors.
+              Aliased as -s.
 
        <B>--versions URI</B>
               Show pak version information.
@@ -276,8 +286,8 @@ PAK(1)                           User Commands                          PAK(1)
        Report bugs to dev@embedthis.com.
 
 <B>COPYRIGHT</B>
-       Copyright  (C)  2004-2014  Embedthis  Software.  Bit and Ejscript are a
-       trademarks of Embedthis Software.
+       Copyright (C) 2004-2014 Embedthis Software. Bit and Ejscript are
+       a trademarks of Embedthis Software.
 
 <B>SEE ALSO</B>
        ejs, bit, http://embedthis.com/products/pak/
