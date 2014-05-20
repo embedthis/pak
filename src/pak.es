@@ -374,13 +374,17 @@ class PakCmd
                 }
             } else {
                 topDeps = {}
-                for each (name in rest) {
+                for each (vname in rest) {
+                    let [name,version] = vname.split('#')
                     topDeps[name] = true
                 }
-                for each (name in rest) {
-                    let criteria = (spec && spec.dependencies && spec.dependencies[name]) || '*'
-                    let pak = Package(name)
-                    pak.resolve(criteria)
+                for each (vname in rest) {
+                    let [name,version] = vname.split('#')
+                    if (!version && spec.dependencies && spec.dependencies[name]) {
+                        vname += '#' + spec.dependencies[name]
+                    }
+                    let pak = Package(vname)
+                    pak.resolve()
                     install(pak)
                 }
             }
@@ -1447,7 +1451,6 @@ class PakCmd
                 let lib = directories.lib ? 
                     { LIB: directories.lib.trimStart(directories.client + '/') } : {LIB: 'lib'}
                 let app = blend({}, pak.install.app.client, {combine: true})
-                dump(app)
                 for each (script in app.scripts) {
                     script = script.expand(lib).expand(spec)
                     for (let [key,value] in spec.app.client.scripts) {
