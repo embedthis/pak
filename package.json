@@ -22,7 +22,7 @@
     },
     "dependencies": {
         "ejs": "~2.4",
-        "ejs-version": ">=0.8.0",
+        "ejs-version": "~0.8",
         "est": "~0.6",
         "http": "~5",
         "me-dev": "~0.8",
