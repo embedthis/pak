@@ -41,7 +41,7 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
     mprAddStandardSignals();
 
     if (mprStart(mpr) < 0) {
-        mprError("pak", "Cannot start mpr services");
+        mprLog("pak", 0, "Cannot start mpr services");
         return EJS_ERR;
     }
     err = 0;
@@ -60,7 +60,7 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
             } else {
                 homeDir = argv[++nextArg];
                 if (chdir((char*) homeDir) < 0) {
-                    mprError("pak", "Cannot change directory to %s", homeDir);
+                    mprLog("pak", 0, "Cannot change directory to %s", homeDir);
                 }
             }
 
@@ -99,7 +99,7 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
         }
     }
     if ((app->script = findPakScript()) == 0) {
-        mprError("pak", "Cannot find pak.es or pak.mod");
+        mprLog("pak", 0, "Cannot find pak.es or pak.mod");
         return MPR_ERR_CANT_FIND;
     }
     mprLog("pak", 2, "Using pak script %s", app->script);
