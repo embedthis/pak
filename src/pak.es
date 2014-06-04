@@ -1064,12 +1064,10 @@ class PakCmd
 
     function copyTree(pak, fromDir: Path, toDir: Path, ignore: Array?, include: Array?, exportList: Array?) {
         if (include) {
-            include.push('package.json')
-            if (fromDir.join('README.md').exists) {
-                include.push('README.md')
-            }
-            if (fromDir.join('LICENSE.md').exists) {
-                include.push('LICENSE.md')
+            for each (name in [ 'package.json', 'README.md', 'LICENSE.md' ]) {
+                if (fromDir.join(name).exists && !include.contains(name)) {
+                    include.push(name)
+                }
             }
         }
         include ||= ['**']
