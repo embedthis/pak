@@ -655,7 +655,12 @@ PUBLIC void httpSetTraceFormat(HttpTrace *trace, cchar *format);
  */
 PUBLIC void httpSetTraceLevel(int level);
 
-//  MOB
+/**
+    Get the current tracing level
+    @return The tracing level 0-5
+    @ingroup HttpTrace
+    @stability Prototype
+ */
 PUBLIC int httpGetTraceLevel();
 
 /**
@@ -672,6 +677,7 @@ PUBLIC void httpSetTraceEventLevel(HttpTrace *trace, cchar *event, int level);
 /**
     Set the maximum content size to trace
     @description Tracing will be suspended for files that are larger than this size. 
+    @param trace Tracing object
     @param size Maximum content size to trace
     @ingroup HttpTrace
     @stability Prototype.
