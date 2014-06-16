@@ -1096,7 +1096,7 @@ class PakCmd
                     to: '.'
              */
             if (pat is String) {
-                pat = { from: pat.from, to: '.', overwrite: true}
+                pat = { from: [pat], to: '.', overwrite: true}
             } else {
                 if (!(pat.from is Array)) {
                     pat.from = [pat.from]
