@@ -515,19 +515,19 @@
 
 /* Begin PBXFileReference section */
 		1E9E76781E9E832400000025 /* ejsc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsc.c; path = src/paks/ejs/ejsc.c; sourceTree = "<group>"; };
-		1E9E76781E9E832400000090 /* me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = me.h; path = macosx-x64-default/inc/me.h; sourceTree = "<group>"; };
-		1E9E76781E9E832400000091 /* ejs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.h; path = macosx-x64-default/inc/ejs.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000090 /* me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = me.h; path = build/macosx-x64-default/inc/me.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000091 /* ejs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.h; path = build/macosx-x64-default/inc/ejs.h; sourceTree = "<group>"; };
 		1E9E76781E9E832400000092 /* ejsc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ejsc; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9E76781E9E832400000027 /* ejsLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsLib.c; path = src/paks/ejs/ejsLib.c; sourceTree = "<group>"; };
-		1E9E76781E9E832400000093 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpr.h; path = macosx-x64-default/inc/mpr.h; sourceTree = "<group>"; };
-		1E9E76781E9E832400000094 /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcre.h; path = macosx-x64-default/inc/pcre.h; sourceTree = "<group>"; };
-		1E9E76781E9E832400000095 /* osdep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osdep.h; path = macosx-x64-default/inc/osdep.h; sourceTree = "<group>"; };
-		1E9E76781E9E832400000096 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = macosx-x64-default/inc/http.h; sourceTree = "<group>"; };
-		1E9E76781E9E832400000097 /* ejs.slots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.slots.h; path = macosx-x64-default/inc/ejs.slots.h; sourceTree = "<group>"; };
-		1E9E76781E9E832400000098 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = macosx-x64-default/inc/zlib.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000093 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpr.h; path = build/macosx-x64-default/inc/mpr.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000094 /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcre.h; path = build/macosx-x64-default/inc/pcre.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000095 /* osdep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osdep.h; path = build/macosx-x64-default/inc/osdep.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000096 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = build/macosx-x64-default/inc/http.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000097 /* ejs.slots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.slots.h; path = build/macosx-x64-default/inc/ejs.slots.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000098 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = build/macosx-x64-default/inc/zlib.h; sourceTree = "<group>"; };
 		1E9E76781E9E832400000037 /* libejs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libejs.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9E76781E9E832400000029 /* estLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = estLib.c; path = src/paks/est/estLib.c; sourceTree = "<group>"; };
-		1E9E76781E9E832400000099 /* est.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = est.h; path = macosx-x64-default/inc/est.h; sourceTree = "<group>"; };
+		1E9E76781E9E832400000099 /* est.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = est.h; path = build/macosx-x64-default/inc/est.h; sourceTree = "<group>"; };
 		1E9E76781E9E832400000048 /* libest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libest.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9E76781E9E83240000002B /* httpLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = httpLib.c; path = src/paks/http/httpLib.c; sourceTree = "<group>"; };
 		1E9E76781E9E832400000039 /* libhttp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libhttp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -959,16 +959,16 @@
 			files = (
 			);
 			inputPaths = (
-../src/paks/ejs/ejs.es
+/Users/mob/git/pak/src/paks/ejs/ejs.es
 			);
 			outputPaths = (
-../macosx-x64-default/bin/ejs.mod
+../build/macosx-x64-default/bin/ejs.mod
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ../src/paks/ejs
-../../../macosx-x64-default/bin/ejsc --out ../../../macosx-x64-default/bin/ejs.mod --optimize 9 --bind --require null ejs.es";
+../../../build/macosx-x64-default/bin/ejsc --out ../../../build/macosx-x64-default/bin/ejs.mod --optimize 9 --bind --require null ejs.es";
 		};
 		1E9E76781E9E83240000000C /* ShellScript for http-ca-crt */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -976,10 +976,10 @@ cd ../src/paks/ejs
 			files = (
 			);
 			inputPaths = (
-../src/paks/http/ca.crt
+/Users/mob/git/pak/src/paks/http/ca.crt
 			);
 			outputPaths = (
-../macosx-x64-default/bin/ca.crt
+../build/macosx-x64-default/bin/ca.crt
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
@@ -995,18 +995,18 @@ cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
 			files = (
 			);
 			inputPaths = (
-../src/Package.es,
-../src/pak.es,
-../src/paks/ejs-version/Version.es
+/Users/mob/git/pak/src/Package.es,
+/Users/mob/git/pak/src/pak.es,
+/Users/mob/git/pak/src/paks/ejs-version/Version.es
 			);
 			outputPaths = (
-../macosx-x64-default/bin/pak.mod
+../build/macosx-x64-default/bin/pak.mod
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 /Users/mob/git/pak/src/Package.es /Users/mob/git/pak/src/pak.es /Users/mob/git/pak/src/paks/ejs-version/Version.es";
+build/macosx-x64-default/bin/ejsc --out build/macosx-x64-default/bin/pak.mod --optimize 9 /Users/mob/git/pak/src/Package.es /Users/mob/git/pak/src/pak.es /Users/mob/git/pak/src/paks/ejs-version/Version.es";
 		};
 		1E9E76781E9E832400000023 /* ShellScript for Prep */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1023,10 +1023,41 @@ macosx-x64-default/bin/ejsc --out macosx-x64-default/bin/pak.mod --optimize 9 /U
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 [ ! -x ${INC_DIR} ] && mkdir -p ${INC_DIR} ${OBJ_DIR} ${LIB_DIR} ${BIN_DIR}
-[ ! -f ${INC_DIR}/me.h ] && cp pak-macosx-default-me.h ${INC_DIR}/me.h
-[ ! -f ${INC_DIR}/osdep.h ] && cp ${SRC_DIR}/src/paks/osdep/osdep.h ${INC_DIR}/osdep.h
-if ! diff ${INC_DIR}/me.h pak-macosx-default-me.h >/dev/null ; then
+[ ! -f ${INC_DIR}/me.h -a -f cp pak-macosx-default-me.h ] && cp pak-macosx-default-me.h ${INC_DIR}/me.h
+if [ -f pak-macosx-default-me.h ] ; then
+if ! diff ${INC_DIR}/me.h pak-macosx-default-me.h >/dev/null 2>&1 ; then
 cp pak-macosx-default-me.h ${INC_DIR}/me.h
+fi
+fi
+if [ ../src/paks/ejs/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
+cp ../src/paks/ejs/ejs.h ${OUT_DIR}/inc/ejs.h
+fi
+if [ ../src/paks/ejs/ejs.slots.h -nt ${OUT_DIR}/inc/ejs.slots.h ] ; then
+cp ../src/paks/ejs/ejs.slots.h ${OUT_DIR}/inc/ejs.slots.h
+fi
+if [ ../src/paks/ejs/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
+cp ../src/paks/ejs/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
+fi
+if [ ../src/paks/est/est.h -nt ${OUT_DIR}/inc/est.h ] ; then
+cp ../src/paks/est/est.h ${OUT_DIR}/inc/est.h
+fi
+if [ ../src/paks/http/http.h -nt ${OUT_DIR}/inc/http.h ] ; then
+cp ../src/paks/http/http.h ${OUT_DIR}/inc/http.h
+fi
+if [ ${OUT_DIR}/inc/me.h -nt ${OUT_DIR}/inc/me.h ] ; then
+cp ${OUT_DIR}/inc/me.h ${OUT_DIR}/inc/me.h
+fi
+if [ ../src/paks/mpr/mpr.h -nt ${OUT_DIR}/inc/mpr.h ] ; then
+cp ../src/paks/mpr/mpr.h ${OUT_DIR}/inc/mpr.h
+fi
+if [ ../src/paks/osdep/osdep.h -nt ${OUT_DIR}/inc/osdep.h ] ; then
+cp ../src/paks/osdep/osdep.h ${OUT_DIR}/inc/osdep.h
+fi
+if [ ../src/paks/pcre/pcre.h -nt ${OUT_DIR}/inc/pcre.h ] ; then
+cp ../src/paks/pcre/pcre.h ${OUT_DIR}/inc/pcre.h
+fi
+if [ ../src/paks/zlib/zlib.h -nt ${OUT_DIR}/inc/zlib.h ] ; then
+cp ../src/paks/zlib/zlib.h ${OUT_DIR}/inc/zlib.h
 fi
 if [ ../src/paks/ejs/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
 cp ../src/paks/ejs/ejs.h ${OUT_DIR}/inc/ejs.h
@@ -1473,14 +1504,14 @@ fi";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 
-                OUT_DIR = "../macosx-x64-default";
-                BIN_DIR = "../macosx-x64-default/bin";
-                LIB_DIR = "../macosx-x64-default/bin";
-                INC_DIR = "../macosx-x64-default/inc";
-                OBJ_DIR = "../macosx-x64-default/obj";
+                OUT_DIR = "../build/macosx-x64-default";
+                BIN_DIR = "../build/macosx-x64-default/bin";
+                LIB_DIR = "../build/macosx-x64-default/bin";
+                INC_DIR = "../build/macosx-x64-default/inc";
+                OBJ_DIR = "../build/macosx-x64-default/obj";
                 SRC_DIR = "..";
 
-                CONFIGURATION_TEMP_DIR = "$(OBJ_DIR)/tmp/$(CONFIGURATION)";
+                CONFIGURATION_TEMP_DIR = "$(OBJ_DIR)/pak-xcode/$(CONFIGURATION)";
                 CONFIGURATION_BUILD_DIR = "$(BIN_DIR)";
                 INSTALL_PATH = "/usr/lib/pak";
                 DSTROOT = "/tmp/pak.dst";
@@ -1502,7 +1533,7 @@ fi";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"../macosx-x64-default/inc",
+					"/Users/mob/git/pak/build/macosx-x64-default/inc",
 					"$(inherited)"
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1510,7 +1541,7 @@ fi";
 					"$(inherited)"
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"../macosx-x64-default/bin",
+					"/Users/mob/git/pak/build/macosx-x64-default/bin",
 					"$(inherited)"
 				);
 				OTHER_LDFLAGS = (
@@ -1542,14 +1573,14 @@ fi";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 
-                OUT_DIR = "../macosx-x64-default";
-                BIN_DIR = "../macosx-x64-default/bin";
-                LIB_DIR = "../macosx-x64-default/bin";
-                INC_DIR = "../macosx-x64-default/inc";
-                OBJ_DIR = "../macosx-x64-default/obj";
+                OUT_DIR = "../build/macosx-x64-default";
+                BIN_DIR = "../build/macosx-x64-default/bin";
+                LIB_DIR = "../build/macosx-x64-default/bin";
+                INC_DIR = "../build/macosx-x64-default/inc";
+                OBJ_DIR = "../build/macosx-x64-default/obj";
                 SRC_DIR = "..";
 
-                CONFIGURATION_TEMP_DIR = "$(OBJ_DIR)/tmp/$(CONFIGURATION)";
+                CONFIGURATION_TEMP_DIR = "$(OBJ_DIR)/pak-xcode/$(CONFIGURATION)";
                 CONFIGURATION_BUILD_DIR = "$(BIN_DIR)";
                 INSTALL_PATH = "/usr/lib/pak";
                 DSTROOT = "/tmp/pak.dst";
@@ -1572,12 +1603,12 @@ fi";
 				GCC_OPTIMIZATION_LEVEL = s;
                 GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				HEADER_SEARCH_PATHS = (
-					"../macosx-x64-default/inc",
+					"/Users/mob/git/pak/build/macosx-x64-default/inc",
 					"$(inherited)"
 				);
 
 				LIBRARY_SEARCH_PATHS = (
-					"../macosx-x64-default/bin",
+					"/Users/mob/git/pak/build/macosx-x64-default/bin",
 					"$(inherited)"
 				);
 				OTHER_LDFLAGS = (

@@ -956,7 +956,7 @@ static int upgradeEst(MprSocket *sp, MprSsl *ssl, cchar *peerName)
     est->sock = sp;
     sp->sslSocket = est;
     sp->ssl = ssl;
-    verifyMode = (sp->flags & MPR_SOCKET_SERVER && !ssl->verifyPeer) ? SSL_VERIFY_NO_CHECK : SSL_VERIFY_OPTIONAL;
+    verifyMode = ssl->verifyPeer ? SSL_VERIFY_OPTIONAL : SSL_VERIFY_NO_CHECK;
 
     lock(ssl);
     if (ssl->config && !ssl->changed) {
@@ -975,7 +975,7 @@ static int upgradeEst(MprSocket *sp, MprSsl *ssl, cchar *peerName)
             /*
                 Load a PEM format certificate file
              */
-            if (x509parse_crtfile(&cfg->cert, ssl->certFile) != 0) {
+            if (x509parse_crtfile(&cfg->cert, (char*) ssl->certFile) != 0) {
                 sp->errorMsg = sfmt("Unable to parse certificate %s", ssl->certFile); 
                 unlock(ssl);
                 return MPR_ERR_CANT_READ;
@@ -986,7 +986,7 @@ static int upgradeEst(MprSocket *sp, MprSsl *ssl, cchar *peerName)
                 Load a decrypted PEM format private key
                 Last arg is password if you need to use an encrypted private key
              */
-            if (x509parse_keyfile(&cfg->rsa, ssl->keyFile, 0) != 0) {
+            if (x509parse_keyfile(&cfg->rsa, (char*) ssl->keyFile, 0) != 0) {
                 sp->errorMsg = sfmt("Unable to parse key file %s", ssl->keyFile); 
                 unlock(ssl);
                 return MPR_ERR_CANT_READ;
@@ -998,7 +998,7 @@ static int upgradeEst(MprSocket *sp, MprSsl *ssl, cchar *peerName)
                 unlock(ssl);
                 return MPR_ERR_CANT_READ;
             }
-            if (x509parse_crtfile(&cfg->ca, ssl->caFile) != 0) {
+            if (x509parse_crtfile(&cfg->ca, (char*) ssl->caFile) != 0) {
                 sp->errorMsg = sfmt("Unable to open or parse certificate authority file %s", ssl->caFile); 
                 unlock(ssl);
                 return MPR_ERR_CANT_READ;
@@ -1617,14 +1617,18 @@ static OpenConfig *createOpenSslConfig(MprSocket *sp)
     RAND_bytes(resume, sizeof(resume));
     SSL_CTX_set_session_id_context(context, resume, sizeof(resume));
 
-    verifyMode = (sp->flags & MPR_SOCKET_SERVER && !ssl->verifyPeer) ? SSL_VERIFY_NONE : 
-        SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT;
+    if (ssl->verifyPeer && !(ssl->caFile || ssl->caPath)) {
+        sp->errorMsg = sfmt("Cannot verify peer due to undefined CA certificates");
+        SSL_CTX_free(context);
+        return 0;
+    }
+    verifyMode = ssl->verifyPeer ? SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT : SSL_VERIFY_NONE;
 
     /*
         Configure the certificates
      */
     if (ssl->keyFile || ssl->certFile) {
-        if (configureCertificateFiles(ssl, context, ssl->keyFile, ssl->certFile) != 0) {
+        if (configureCertificateFiles(ssl, context, (char*) ssl->keyFile, (char*) ssl->certFile) != 0) {
             SSL_CTX_free(context);
             return 0;
         }
@@ -1637,7 +1641,7 @@ static OpenConfig *createOpenSslConfig(MprSocket *sp)
             SSL_CTX_free(context);
             return 0;
         }
-        if ((!SSL_CTX_load_verify_locations(context, ssl->caFile, ssl->caPath)) ||
+        if ((!SSL_CTX_load_verify_locations(context, (char*) ssl->caFile, (char*) ssl->caPath)) ||
                 (!SSL_CTX_set_default_verify_paths(context))) {
             sp->errorMsg = sfmt("Unable to set certificate locations: %s: %s", ssl->caFile, ssl->caPath); 
             SSL_CTX_free(context);
