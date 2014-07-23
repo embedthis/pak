@@ -18,14 +18,14 @@
 /**
     mem.c - Memory Allocator and Garbage Collector. 
 
-    This is the MPR memory allocation service. It provides an application specific memory allocator to use instead of malloc. 
-    This allocator is tailored to the needs of embedded applications and is faster than most general purpose malloc allocators. 
-    It is deterministic and allocates and frees in constant time O(1). It exhibits very low fragmentation and accurate
-    coalescing.
+    This is the MPR memory allocation service. It provides an application specific memory allocator to use instead 
+    of malloc. This allocator is tailored to the needs of embedded applications and is faster than most general 
+    purpose malloc allocators. It is deterministic and allocates and frees in constant time O(1). It exhibits very 
+    low fragmentation and accurate coalescing.
 
     The allocator uses a garbage collector for freeing unused memory. The collector is a cooperative, non-compacting,
-    parallel collector.  The allocator is optimized for frequent allocations of small blocks (< 4K) and uses a scheme
-    of free queues for fast allocation.
+    parallel collector.  The allocator is optimized for frequent allocations of small blocks (< 4K) and uses a 
+    scheme of free queues for fast allocation.
     
     The allocator handles memory allocation errors globally. The application may configure a memory limit so that
     memory depletion can be proactively detected and handled before memory allocations actually fail.
@@ -9710,14 +9710,6 @@ PUBLIC int mprWaitForEvent(MprDispatcher *dispatcher, MprTicks timeout)
     }
     return signalled ? 0 : MPR_ERR_TIMEOUT;
 }
-
-
-#if UNUSED
-PUBLIC void mprResetCompletion(MprDispatcher *dispatcher)
-{
-    dispatcher->flags &= ~MPR_DISPATCHER_COMPLETE;
-}
-#endif
 
 
 PUBLIC void mprSignalCompletion(MprDispatcher *dispatcher)
