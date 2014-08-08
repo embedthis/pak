@@ -3,7 +3,7 @@
 #
 
 NAME                  = pak
-VERSION               = 0.9.4
+VERSION               = 0.9.5
 
 OS                    = windows
 PA                    = $(PROCESSOR_ARCHITECTURE)
@@ -599,7 +599,6 @@ build\$(CONFIG)\bin\libest.dll: $(DEPS_26)
 #
 DEPS_27 = $(DEPS_27) build\$(CONFIG)\inc\me.h
 DEPS_27 = $(DEPS_27) build\$(CONFIG)\inc\mpr.h
-DEPS_27 = $(DEPS_27) build\$(CONFIG)\inc\est.h
 
 build\$(CONFIG)\obj\mprSsl.obj: \
     src\paks\mpr\mprSsl.c $(DEPS_27)
@@ -840,5 +839,5 @@ uninstall: $(DEPS_38)
 #   version
 #
 version: $(DEPS_39)
-	echo 0.9.4
+	echo 0.9.5
 
