@@ -1207,10 +1207,10 @@ class PakCmd
                         load(path)
                     } else if (path.extension == 'me') {
                         trace('Run', 'MakeMe', script)
-                        Cmd.run('Me --file ' + path, {noio: true})
+                        Cmd.run('me -q --file ' + path, {noio: true})
                     } else if (path.extension == 'bit') {
                         trace('Run', 'Bit', script)
-                        Cmd.run('bit --file ' + path, {noio: true})
+                        Cmd.run('bit -q --file ' + path, {noio: true})
                     } else {
                         trace('Run', 'Shell', script)
                         Cmd.run('bash ' + path, {noio: true})
@@ -1224,8 +1224,8 @@ class PakCmd
         } else if (pak.cachePath) {
             path = pak.cachePath.join('start.me')
             if (path.exists) {
-                vtrace('Run', 'me --file ' + path + ' ' + event)
-                Cmd.run('me --file ' + path + ' ' + event, {noio: true})
+                vtrace('Run', 'me -q --file ' + path + ' ' + event)
+                Cmd.run('me -q --file ' + path + ' ' + event, {noio: true})
             }
         }
     }
