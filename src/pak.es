@@ -499,8 +499,6 @@ class PakCmd
                     topDeps[name] = true
                 }
                 for each (name in rest) {
-dump(spec)
-print("NAME", name)
                     let criteria = spec.dependencies[name] || spec.optionalDependencies[name]
                     let pak = Package(name)
                     pak.resolve(criteria)
