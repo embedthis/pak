@@ -128,6 +128,7 @@ PUBLIC Http *httpCreate(int flags)
     http->monitorMinPeriod = MAXINT;
     http->secret = mprGetRandomString(HTTP_MAX_SECRET);
     http->trace = httpCreateTrace(0);
+    http->startLevel = 2;
     http->localPlatform = slower(sfmt("%s-%s-%s", ME_OS, ME_CPU, ME_PROFILE));
     httpSetPlatform(http->localPlatform);
 
@@ -5636,7 +5637,7 @@ PUBLIC HttpConn *httpAcceptConn(HttpEndpoint *endpoint, MprEvent *event)
     assert(conn->state == HTTP_STATE_BEGIN);
     httpSetState(conn, HTTP_STATE_CONNECTED);
 
-    httpTrace(conn, "connection.accept.new", "context", "msg: 'new connection', peer: '%s', endpoint: '%s:%d'", 
+    httpTrace(conn, "connection.accept.new", "context", "peer:'%s',endpoint:'%s:%d'", 
         conn->ip, sock->acceptIp, sock->acceptPort);
     
     event->mask = MPR_READABLE;
@@ -5664,7 +5665,11 @@ static void readPeerData(HttpConn *conn)
             conn->errorMsg = conn->sock->errorMsg;
             conn->keepAliveCount = 0;
             conn->lastRead = 0;
-            httpTrace(conn, "connection.close", "context", "msg: '%s'", conn->errorMsg ? conn->errorMsg : "");
+            if (conn->errorMsg) {
+                httpTrace(conn, "connection.close", "context", "msg: '%s'", conn->errorMsg);
+            } else {
+                httpTrace(conn, "connection.close", "context", NULL);
+            }
         }
     }
 }
@@ -7456,9 +7461,9 @@ PUBLIC int httpStartEndpoint(HttpEndpoint *endpoint)
     proto = endpoint->ssl ? "HTTPS" : "HTTP";
     ip = *endpoint->ip ? endpoint->ip : "*";
     if (mprIsSocketV6(endpoint->sock)) {
-        mprLog("info http", 2, "Started %s service on [%s]:%d", proto, ip, endpoint->port);
+        mprLog("info http", HTTP->startLevel, "Started %s service on [%s]:%d", proto, ip, endpoint->port);
     } else {
-        mprLog("info http", 2, "Started %s service on %s:%d", proto, ip, endpoint->port);
+        mprLog("info http", HTTP->startLevel, "Started %s service on %s:%d", proto, ip, endpoint->port);
     }
     return 0;
 }
@@ -7675,6 +7680,11 @@ PUBLIC HttpHost *httpLookupHostOnEndpoint(HttpEndpoint *endpoint, cchar *hostHea
     return 0;
 }
 
+
+PUBLIC void httpSetEndpointStartLevel(int level)
+{
+    HTTP->startLevel = level;
+}
 
 /*
     @copy   default
@@ -10846,7 +10856,7 @@ PUBLIC void httpCreateTxPipeline(HttpConn *conn, HttpRoute *route)
 
     if (conn->endpoint) {
         httpTrace(conn, "request.pipeline", "context",  
-            "route: '%s', handler: '%s', target: '%s', endpoint: '%s:%d', host: '%s', referrer: '%s', filename: '%s'",
+            "route:'%s',handler:'%s',target:'%s',endpoint:'%s:%d',host:'%s',referrer:'%s',filename:'%s'",
             rx->route->name, tx->handler->name, rx->route->targetRule, conn->endpoint->ip, conn->endpoint->port,
             conn->host->name ? conn->host->name : "default", rx->referrer ? rx->referrer : "", 
             tx->filename ? tx->filename : "");
@@ -15797,8 +15807,7 @@ static bool parseRequestLine(HttpConn *conn, HttpPacket *packet)
 {
     HttpRx      *rx;
     HttpLimits  *limits;
-    char        *uri, *protocol;
-    cchar       *endp;
+    char        *method, *uri, *protocol, *start;
     MprBuf      *content;
     ssize       len;
 
@@ -15811,7 +15820,10 @@ static bool parseRequestLine(HttpConn *conn, HttpPacket *packet)
     conn->startMark = mprGetHiResTicks();
     conn->started = conn->http->now;
 
-    rx->originalMethod = rx->method = supper(getToken(conn, 0));
+    content = packet->content;
+    start = content->start;
+    method = getToken(conn, 0);
+    rx->originalMethod = rx->method = supper(method);
     parseMethod(conn);
 
     uri = getToken(conn, 0);
@@ -15824,18 +15836,16 @@ static bool parseRequestLine(HttpConn *conn, HttpPacket *packet)
             "Bad request. URI too long. Length %zd vs limit %zd", len, limits->uriSize);
         return 0;
     }
-    protocol = conn->protocol = supper(getToken(conn, "\r\n"));
-    if (strcmp(protocol, "HTTP/1.0") == 0) {
+    protocol = getToken(conn, "\r\n");
+    conn->protocol = supper(protocol);
+    if (strcmp(conn->protocol, "HTTP/1.0") == 0) {
         if (rx->flags & (HTTP_POST|HTTP_PUT)) {
             rx->remainingContent = MAXINT;
             rx->needInputPipeline = 1;
         }
         conn->http10 = 1;
         conn->mustClose = 1;
-        conn->protocol = protocol;
-    } else if (strcmp(protocol, "HTTP/1.1") == 0) {
-        conn->protocol = protocol;
-    } else {
+    } else if (strcmp(protocol, "HTTP/1.1") != 0) {
         conn->protocol = sclone("HTTP/1.1");
         httpBadRequestError(conn, HTTP_ABORT | HTTP_CODE_NOT_ACCEPTABLE, "Unsupported HTTP protocol");
         return 0;
@@ -15848,12 +15858,13 @@ static bool parseRequestLine(HttpConn *conn, HttpPacket *packet)
     httpSetState(conn, HTTP_STATE_FIRST);
 
     if (httpTracing(conn)) {
-        httpTrace(conn, "rx.first.server", "request", "method: '%s', uri: '%s', protocol: '%s', peer: '%s'", 
-            rx->method, rx->uri, conn->protocol, conn->ip);
-        content = packet->content;
-        endp = strstr((char*) content->start, "\r\n\r\n");
-        len = (endp) ? (int) (endp - content->start + 2) : 0;
-        httpTraceContent(conn, "rx.headers.server", "context", content->start, len, NULL);
+        httpTrace(conn, "rx.first.server", "request", "method:'%s',uri:'%s',protocol:'%s'", 
+            rx->method, rx->uri, conn->protocol);
+        uri[-1] = ' ';
+        protocol[-1] = ' ';
+        content->start[-2] = '\r';
+        content->start[-1] = '\n';
+        httpTraceContent(conn, "rx.headers.server", "context", start, rx->headerPacketLength, NULL);
     }
     return 1;
 }
@@ -16667,12 +16678,12 @@ static bool processCompletion(HttpConn *conn)
 #if MPR_HIGH_RES_TIMER
         httpTrace(conn, 
             "request.completion", "result",
-            "status: %d, error: %d, connError: %d, elapsed: %llu, elapsedTicks: %llu, received: %lld, sent: %lld", 
+            "status:%d,error:%d,connError:%d,elapsed:%llu,elapsedTicks:%llu,received:%lld,sent:%lld",
             status, conn->error, conn->connError, elapsed, mprGetHiResTicks() - conn->startMark, 
             received, tx->bytesWritten);
 #else
         httpTrace(conn, "request.completion", "result", 
-            "status: %d, error: %d, connError: %d, elapsed: %llu, received: %lld, sent: %lld", 
+            "status:%d,error:%d,connError:%d,elapsed:%llu,received:%lld,sent:%lld",
             status, conn->error, conn->connError, elapsed, received, tx->bytesWritten);
 #endif
     }
@@ -18326,7 +18337,7 @@ PUBLIC HttpStage *httpCreateConnector(cchar *name, MprModule *module)
     trace.c -- Trace data
     Copyright (c) All Rights Reserved. See copyright notice at the bottom of the file.
 
-    Event type default levels:
+    Event type default labels:
 
         request: 1
         result:  2
@@ -18334,114 +18345,6 @@ PUBLIC HttpStage *httpCreateConnector(cchar *name, MprModule *module)
         form:    4
         body:    5
         debug:   5
-
-    Event names object model:
-
-    auth
-        check
-        digest
-            error           # error
-        login
-            authenticated   # context
-            error           # error
-
-    cache
-        sendcache           # context
-        cached              # context
-        big                 # context
-        none                # context
-        reload              # context
-
-    connection
-        accept
-            error           # error
-            new             # context
-        peer                # context
-        reuse               # context
-        upgrade
-            error           # error
-        ssl
-        close
-        io
-            error           # error
-
-    timeout
-        inactivity
-        duration
-        parse
-
-    request
-        error
-        pipeline
-        completion          # result
-        map
-        method
-        errordoc
-        session
-            create
-        xsrf
-            error
-        redirect
-        document
-            error
-        upload
-            file
-        websockets
-            data            # body
-            error
-
-    rx
-        first
-            client          # result
-            server          # request
-        headers
-            client          # context
-            server          # context
-
-        body
-            form            # form
-            data            # body
-
-        websockets      
-            packet          # context
-            data            # body
-            close           # body
-            error           # error
-
-    tx
-        first
-            client          # request
-        headers
-            client          # context
-            server          # context
-
-        body
-            form            # form
-            data            # body
-
-        websockets      
-            close           # body
-            packet          # body
-
-    monitor
-        ban
-            remove
-        delay
-            start
-            stop
-
-    esp
-        email
-            error
-        error
-        singular
-            clear
-            set
-        xsrf
-            error
-
-    cgi
-        error
  */
 
 /********************************* Includes ***********************************/
@@ -18821,35 +18724,35 @@ PUBLIC void httpDetailTraceFormatter(HttpTrace *trace, HttpConn *conn, cchar *ev
     if (conn) {
         now = mprGetTime();
         if (trace->lastMark < (now + TPS)) {
-            trace->lastTime = mprGetDate(MPR_LOG_DATE);
+            trace->lastTime = mprGetDate("%T");
             trace->lastMark = now;
         }
         client = conn->address ? conn->address->seqno : 0;
         sessionSeqno = conn->rx->session ? (int) stoi(conn->rx->session->id) : 0;
-        mprPutToBuf(buf, "\n%s: \n\ttime: %s\n\tfrom: %d-%d-%d-%d\n", event, trace->lastTime, client, sessionSeqno, 
-            conn->seqno, conn->rx->seqno);
+        mprPutToBuf(buf, "\n%s %d-%d-%d-%d %s", trace->lastTime, client, sessionSeqno, conn->seqno, conn->rx->seqno, event);
     } else {
-        mprPutToBuf(buf, "\n%s: \n", event);
+        mprPutToBuf(buf, "\n%s: %s", trace->lastTime, event);
     }
     if (values) {
-        mprPutCharToBuf(buf, '\t');
+        mprPutCharToBuf(buf, ' ');
         for (cp = (char*) values; *cp; cp++) {
-            if (cp[0] == ',' && cp[1] == ' ') {
-                cp[0] = '\n';
-                cp[1] = '\t';
+            if (cp[0] == ':') {
+                cp[0] = '=';
+            } else if (cp[0] == ',') {
+                cp[0] = ' ';
             }
         }
         mprPutStringToBuf(buf, values);
         mprPutCharToBuf(buf, '\n');
     }
     if (data) {
-        mprPutStringToBuf(buf, "----\n");
+        mprPutToBuf(buf, "\n----\n");
         data = httpMakePrintable(trace, conn, event, data, &len);
         mprPutBlockToBuf(buf, data, len);
         if (len > 0 && data[len - 1] != '\n') {
             mprPutCharToBuf(buf, '\n');
         }
-        mprPutStringToBuf(buf, "----\n");
+        mprPutToBuf(buf, "----\n");
     }
     httpWriteTrace(trace, mprGetBufStart(buf), mprGetBufLength(buf));
     unlock(trace);
