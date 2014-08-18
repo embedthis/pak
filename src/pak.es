@@ -277,6 +277,8 @@ class PakCmd
             throw '' + spec.title + ' requires Pak ' + spec.pak + '. Pak version ' + Config.Version +
                             ' is not compatible with this requirement.' + '\n'
         }
+        spec.dependencies ||= {}
+        spec.optionalDependencies ||= {}
     }
 
     function process() {
@@ -497,7 +499,9 @@ class PakCmd
                     topDeps[name] = true
                 }
                 for each (name in rest) {
-                    let criteria = spec.dependencies[name]
+dump(spec)
+print("NAME", name)
+                    let criteria = spec.dependencies[name] || spec.optionalDependencies[name]
                     let pak = Package(name)
                     pak.resolve(criteria)
                     upgrade(pak)
