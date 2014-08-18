@@ -278,7 +278,6 @@ class PakCmd
                             ' is not compatible with this requirement.' + '\n'
         }
         spec.dependencies ||= {}
-        spec.optionalDependencies ||= {}
     }
 
     function process() {
