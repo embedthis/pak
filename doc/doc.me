@@ -1,62 +1,35 @@
 /*
-    doc.me -- MakeMe file for Pak documentation
+    doc.me -- MakeMe file for Appweb documentation
  */
 
 Me.load({
     targets: {
-        patch: {
-            action: "
-                trace('Patch', 'Patch version string ${settings.version}')
-                let path = Path('product/version.html')
-                let settings = me.settings
-                path.write(path.readString().replace(/<body>.*<.body>/, '<body>' + settings.version + '</body>'))
-                path = Path('dsi/head.html')
-                path.write(path.readString().replace(/<title>.*<.title>/, 
-                    '<title>' + settings.title + ' ' + settings.version + ' Documentation</title>'))
+        validate: {
+            depends: [ 'gen-doc' ],
+            action: `
+                for each (f in Path('final').files('**/*.html')) {
+                    let data = f.readString()
+                    data = data.replace('700|Open', '').
+                        replace(/appweb.download.html/g, 'download/appweb.html').
+                        replace(/pak.download.html/g, 'download/pak.html').
+                        replace(/developers.contributors.html/g, 'scripts/contributors.esp').
+                        replace(/nowrap="nowrap"/g, '').
+                        replace(/https:..embedthis.com.pak.licensing.html/g, 'https://embedthis.com/').
+                        replace(/https:..embedthis.com.me.doc.guide.me.source.building.htm/g, 'https://embedthis.com/').
+                        replace(/https:..embedthis.com.me.doc.source.building.htm/g, 'https://embedthis.com/').
+                        replace(/https:..embedthis.com.me.doc.source/g, 'https://embedthis.com/').
+                        replace(/https:..embedthis.com.developers./g, 'https://embedthis.com/').
 
-                trace('Patch', 'Expand DSI')
-                let path = Path('dsi/head.html')
-                path.write(path.readString().replace(/version\">.*</, 'version\">' + 
-                    settings.title + ' ' + settings.version + '<'))
-                for each (path in Path('.').files('**.html', {exclude: /Bare.html|dsi/})) {
-                    vtrace('Patch', path)
-                    run(['dsi', '-I ', path])
+                        replace(/nowrap/g, '')
+                    trace('Patch', f)
+                    f.write(data)
                 }
-            "
-        },
-
-        tidy: {
-            action: "
-                for each (path in Path('.').files('**.html', { exclude: /\\/$|dsi|Base|Bare/ })) {
-                    trace('Tidy', path)
-                    run('tidy -q -config tidy.conf ' + path)
+                for each (f in Path('final/man').files('*.html')) {
+                    f.write(f.readString().toLowerCase())
                 }
-            ",
+                trace('Listen', 'exp --nowatch')
+                Cmd.run('exp --nowatch')
+            `
         },
-
-        'validate-doc': {
-            action: "
-                let vdir = me.dir.cfg.join('validate')
-                vdir.removeAll()
-                for each (file in Path('.').files('**', { exclude: /\\/$|dsi|Base|Bare/ })) {
-                    let out = vdir.join(file)
-                    out.dirname.makeDir()
-                    if (file.extension == 'html') {
-                        out.write(file.readString().replace(/<pre>((?!pre>)(?:.|\\s))*pre>/mg, '<pre>DELETED</pre>'))
-                    } else {
-                        out.write(file.readString())
-                    }
-                }
-                trace('Prepare', vdir)
-            ",
-        },
-
-        'clean-doc': {
-            type: 'clean',
-            action: "
-                rmdir(['../doc/api/html', '../doc/api/xml'])
-            "
-        },
-    
     },
 })
