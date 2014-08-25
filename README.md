@@ -53,7 +53,7 @@ See [LICENSE.md](https://github.com/embedthis/pak/blob/master/LICENSE.md) for de
 
 ### Documentation:
 
-    Coming soon at https://embedthis.com/products/pak/doc/product/index.html
+    Coming soon at https://embedthis.com/pak/doc/index.html
 
 ### To build with make:
 
@@ -90,5 +90,5 @@ See [LICENSE.md](https://github.com/embedthis/pak/blob/master/LICENSE.md) for de
 
 Resources
 ---
-  - [Pak Web Site](https://embedthis.com/products/pak/)
+  - [Pak Web Site](https://embedthis.com/pak/)
   - [Pak GitHub repository](https://github.com/embedthis/pak)
