@@ -484,6 +484,7 @@ class PakCmd
             if (rest.length == 0) {
                 let deps = blend({}, spec.dependencies)
                 blend(deps, spec.optionalDependencies)
+                spec.optionalDependencies ||= {}
                 topDeps = deps
                 for (let [name,criteria] in deps) {
                     let pak = Package(name)
@@ -735,9 +736,9 @@ class PakCmd
 
         let path = Package.getSpecFile('.') || Path(PACKAGE)
         if (!path.exists) {
-            qtrace('Create', path)
+            vtrace('Create', path)
         } else {
-            qtrace('Update', path)
+            vtrace('Update', path)
         }
         if (!options.nodeps) {
             path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
@@ -758,10 +759,12 @@ class PakCmd
             return
         }
         blending[pak.name] = true
-        trace('Blend', pak + ' configuration')
+        vtrace('Blend', pak + ' configuration')
         let paks = spec.paks
-        if (!(paks && (paks.noblend || (paks[pak.name] && paks[pak.name].noblend)))) {
-            blendSpec(pak)
+        if (spec.import == true) {
+            if (!(paks && (paks.noblend || (paks[pak.name] && paks[pak.name].noblend)))) {
+                blendSpec(pak)
+            }
         }
         delete blending[pak.name]
     }
@@ -840,24 +843,47 @@ class PakCmd
         }
         blendPak(pak)
         let dest = pak.installPath
-        trace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
+        vtrace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
         if (dest.exists) {
             vtrace('Rmdir', dest)
             removeDir(dest, true)
         }
         if (!dest.exists) {
-            trace('Mkdir', dest)
+            vtrace('Mkdir', dest)
             mkdir(dest)
         }
+        let ignore = pak.cache.ignore || []
         let export = pak.cache.export
         if (export && PACKAGE.exists) {
-            if (spec.paks && (spec.paks.noexport || (spec.paks[pak.name] && spec.paks[pak.name].noexport))) {
+            if (!spec.import) {
                 export = null
+            } else if (spec.paks) {
+                if (spec.paks.noexport || spec.paks.noimport) {
+                    export = null
+                } else if (spec.paks[pak.name]) {
+                    let pspec = spec.paks[pak.name]
+                    if (pspec.noexport || pspec.noimport) {
+                        export = null
+                    } else if (pspec.ignore) {
+                        let pattern = pspec.ignore
+                        if (!(pattern is Array)) {
+                            pattern = [pattern]
+                        }
+                        ignore += pattern
+                    }
+                }
+                if (spec.paks["*"]) {
+                    let pattern = spec.paks['*'].ignore
+                    if (!(pattern is Array)) {
+                        pattern = [pattern]
+                    }
+                    ignore += pattern
+                }
             }
         }
-        copyTree(pak, pak.cachePath, dest, pak.cache.ignore, pak.cache.files, export)
-        trace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
-        trace('Info', 'Use "pak info ' + pak.name + '" to view the README')
+        copyTree(pak, pak.cachePath, dest, ignore, pak.cache.files, export)
+        vtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
+        vtrace('Info', 'Use "pak info ' + pak.name + '" to view the README')
     }
 
     private function installDependencies(pak: Package) {
@@ -879,7 +905,7 @@ class PakCmd
         dep.selectCacheVersion(criteria)
         dep.resolve()
         if (install && (!dep.installed || options.force)) {
-            trace('Info', 'Install required dependency ' + dep.name)
+            vtrace('Info', 'Install required dependency ' + dep.name)
             try {
                 installPak(dep)
             } catch (e) {
@@ -891,7 +917,7 @@ class PakCmd
                 }
             }
         } else {
-            trace('Info', 'dependency "' + dep.name + '" is installed')
+            vtrace('Info', 'dependency "' + dep.name + '" is installed')
         }
     }
 
@@ -998,7 +1024,7 @@ class PakCmd
         trace('Search', 'Latest version of ' + pak)
         let later = searchPak(pak)
         if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion)) {
-            qtrace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
+            vtrace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
             return pak
         }
         trace('Update', pak + ' to ' + later.cacheVersion)
@@ -1017,7 +1043,7 @@ class PakCmd
             later = update(pak)
         } 
         if (pak.installed && pak.installVersion && pak.installVersion.same(later.cacheVersion) && !options.force) {
-            qtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
+            vtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
                 ' for version requirement ' + pak.searchCriteria)
             return
         }
@@ -1075,7 +1101,10 @@ class PakCmd
         fromDir = fromDir.relative
         let ignoreSet = {}
         for each (pat in ignore) {
-            for each (file in Path(fromDir).files(pat)) {
+            if (fromDir.join(pat).isDir) {
+                pat = pat.toString() + '/**'
+            }
+            for each (file in fromDir.files(pat, { descend: true, relative: true})) {
                 ignoreSet[file] = true
             }
         }
@@ -1122,9 +1151,9 @@ class PakCmd
                 if (!to.exists || options.force) {
                     makeDir(to.dirname)
                     from.copy(to)
-                    trace('Copy', to)
+                    vtrace('Copy', to)
                 } else {
-                    trace('Exists', to)
+                    vtrace('Exists', to)
                 }
             }
         }
@@ -1139,9 +1168,9 @@ class PakCmd
                     if (!to.exists || export[f].overwrite) {
                         makeDir(to.dirname)
                         from.copy(to)
-                        trace('Export', to)
+                        vtrace('Export', to)
                     } else {
-                        trace('Exists', to)
+                        vtrace('Exists', to)
                     }
                 }
             }
@@ -1232,7 +1261,7 @@ class PakCmd
     }
 
     private function copyPak(pak: Package) {
-        trace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
+        vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
         copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
     }
 

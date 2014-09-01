@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Publishing Paks</title>
+    <!-- Copyright Embedthis Software, LLC, 2003-2014. All Rights Reserved. -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="keywords" content="package, package manager, embedded, npm" />
+    <meta name="description" content="Package manager for Embedded Applications" />
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700'
+        rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
+    <link href="../lib/semantic/packaged/css/semantic.css" rel="stylesheet" type="text/css" />
+    <link href="../css/all.css" rel="stylesheet" type="text/css" />
+    <link href="../images/favicon.ico" rel="shortcut icon" />
+
+</head>
+<body>
+        
+    <div class="ui large left vertical inverted labeled overlay sidebar menu">
+        <div class="item">
+            <a href="/index.html" class="logo">Pak Docs</a>
+        </div>
+        <div class="item">
+            <a href="../index.html">
+                <b>General</b>
+            </a>
+            <div class="menu">
+                <a class="item" href="../index.html">Pak Overview</a>
+                <a class="item" href="../users/features.html">Pak Features</a>
+                <a class="item" href="https://embedthis.com/pak/download.html">Download</a> 
+                <a class="item" href="../licensing/index.html">Licensing</a>
+            </div>
+        </div>
+        <div class="item">
+            <a href="../start/index.html">
+                <b>Getting Started</b>
+            </a>
+            <div class="menu">
+                <a class="item" href="../start/quick.html">Quick Start</a>
+                <a class="item" href="../start/installing.html">Installing Pak</a>
+                <a class="item" href="../start/releaseNotes.html">Release Notes</a>
+                <a class="item" href="../start/source.html">Building from Source</a>
+            </div>
+        </div>
+        <div class="item">
+            <a href="../users/index.html"><b>User's Guide</b></a>
+            <div class="menu">
+                <a class="item" href="../users/commands.html">Pak Commands</a>
+                <a class="item" href="../users/configuration.html">Pak Configuration</a>
+                <a class="item" href="../users/catalog.html">Pak Catalog</a>
+                <a class="item" href="../users/publishing.html">Publishing Paks</a>
+            </div>
+        </div>
+        <div class="item">
+            <a href="../users/project.html">Project Resources</a>
+            <div class="menu">
+                <a class="item" href="http://goo.gl/t5tTNO">Official Pak News</a>
+                <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
+                <a class="item" href="https://embedthis.com/catalog/#/">Online Pak Catalog</a>
+                <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
+                <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
+                <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
+                <a class="item" href="https://github.com/embedthis/pak/milestones">Roadmap</a>
+                <a class="item" href="https://embedthis.com/developers/contributors.html">Contributors Agreement</a>
+            </div>
+        </div>
+        <div class="item">
+            <b>Links</b>
+            <div class="menu">
+                <a class="item" href="https://embedthis.com/">Embedthis Web Site</a>
+                <a class="item" href="https://embedthis.com/blog/">Embedthis Blog</a>
+                <a class="item" href="http://twitter.com/mobstream">Twitter</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui inverted masthead">
+         
+        <div class="column">
+            <div class="ui inverted menu">
+                <div class="ui black small launch right attached toggle button">
+                    <i class="icon list layout"></i>
+                </div>
+                <div class="right menu">
+                    <a class="item" href="https://embedthis.com/">Embedthis</a>
+                    <a class="item" href="https://embedthis.com/appweb/">Appweb Site</a>
+                    <a class="item" href="http://goo.gl/dGRDl4">Appweb News</a>
+                    <a class="item" href="https://github.com/embedthis/appweb">Repository</a>
+                    <a class="item" href="https://embedthis.com/blog/">Blog</a>
+                    <a class="item" href="https://twitter.com/mobstream">Twitter</a>
+                </div>
+            </div>
+            
+            <div class="ui breadcrumb">
+                <a class="section" href="../">Home</a>
+                
+                <div class="divider">/</div>
+                <a class="section" href="index.html">
+                    User's Guide
+                </a>
+                
+                <div class="divider">/</div>
+                <a class="section active" href="publishing.html">Publishing Paks</a>
+            </div>
+            
+            <div class="ui right floated basic segment version">
+                v0.9.5
+            </div>
+        </div>
+
+    </div>
+    <div class="content">
+
+            <h1>Publishing Paks</h1>
+
+            <p>To publish a new pak, create your package.json and then run pak in your application directory.
+            <pre class="ui code segment">pak publish NAME ENDPOINT PASSWORD</pre>
+            <p>The NAME is the globally unique name for your pak. It may contain "-", "_" or "." characters.
+            Pak names that start with "appweb", "esp", "ejs", "embedthis", "exp", "me" and "pak" are reserved.
+            Check the <a href="http://embedthis.com/catalog">Pak Catalog</a> for currently published Pak
+            names.</p>
+            <p>The ENDPOINT is a valid GitHub endpoint that hosts your pak contents. The PASSWORD is the 
+            password to use to manage this pak in the catalog. Choose and protect this password carefully and
+            then use it to modify or retract your pak in the catalog.</p>
+
+            <h2>Package.json</h2>
+            <p>The package.json file defines a pak. It defines the package name, version, authoring details
+            and dependencies. The format is specified by
+                <a href="http://wiki.commonjs.org/wiki/Packages/1.1">
+                http://wiki.commonjs.org/wiki/Packages/1.1</a>. For example:
+<pre class="ui code segment">{
+    "name": "Package name - one word"
+    "description": "Package description - one line"
+    "version": "1.2.3",
+    "keywords": [
+        "comms", "websockets", "sockets", "ssl",
+    ],
+    "author": {
+        "name": "Your name",
+        "email": "Your email",
+        "url": "Your web site"
+    },
+    "bugs": {
+        "email": "name@example.com",
+        "url": "http://example.com/bugs"
+    },
+    "license": "GPL",
+    "dependencies": {
+        "jquery": "1.9.x",
+        "angular": "~1.2",
+    }
+}</pre>
+            <p>At a minimum, a package.json must have a "name", "description" and "version". Other fields
+            are optional. Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
+                major.minor.patch[-pre-release].</p>
+            <h2>Custom Fields</h2>
+            <p>Pak supports several custom fields in the package.json file.</p>
+            <ul>
+            <li>client-scripts &mdash; this is the list of Javascripts that a web application would like
+                served. The ESP web framework automatically includes these when rendering a scripts() call.</li>
+            <li>files &mdash; list of files to include when caching and installing the pak</li>
+            <li>ignore &mdash; list of files to exclude when caching and installing the pak</li>
+            <li>esp &mdash; properties made available to ESP applications</li>
+            <li>dependencies &mdash; List of paks and the acceptable versions. Version fields may include expressions that
+            describe a range of acceptable versions. For example: 
+                <ul>
+        <li>version &mdash; (allows prereleases)</li>
+        <li>^ version &mdash; (same as &gt;=1.2.3 &lt;2.0.0, does not allow prereleases)</li>
+        <li>~ version &mdash; (same as &gt;=1.2.3 &lt;2.0.0, allows prereleases)</li>
+        <li>1.2.X &mdash; (any version starting with 1.2 (allows prereleases)</li>
+        <li>[&gt;, &gt;=, &lt;, &lt;=, ==, !=] version</li>
+        <li>expression || expression ... (either expression qualifies)</li>
+        <li>expression &amp;&amp; expression ... (both expressions must qualify)</li>
+        <li>expression expression ... (same as &amp;&amp;) </li>
+                </ul>
+            </li>
+            </ul>
+            <h2>Want More?</h2>
+            <p>For more details, see:</p>
+            <ul>
+                <li><a href=" http://package.json.nodejitsu.com">http://package.json.nodejitsu.com</a></li>
+                <li><a href="http://wiki.commonjs.org/wiki/Packages/1.1">http://wiki.commonjs.org/wiki/Packages/1.1</a></li>
+                <li><a href="https://npmjs.org/doc/json.html">https://npmjs.org/doc/json.html</a></li>
+            </ul>
+
+    </div>
+    <div class="terms ui basic center aligned segment">
+        <p>&copy; Embedthis Software, 2003-2014. All rights reserved.
+            Generated on Aug 31, 2014.
+        </p>
+    </div>
+
+     
+    <script src="../lib/jquery/jquery.js"></script>
+    <script src="../lib/semantic/packaged/javascript/semantic.js"></script>
+    <script>
+        $('.sidebar').sidebar({overlay: false}).sidebar('toggle');
+        $('.sidebar').first().sidebar('attach events', '.toggle.button');
+        $(function() {
+            var active = $('.sidebar a[href$="' + window.location.pathname +'"]');
+            active.addClass('active');
+            var sidebar = $(".sidebar");
+            var height = sidebar.height();
+            if (active.offset().top >= height) {
+                var diff = height - active.offset().top;
+                sidebar.scrollTop(height);
+            }
+        });
+    </script>
+
+</body>
+</html>

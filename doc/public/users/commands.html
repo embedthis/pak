@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pak commands</title>
+    <!-- Copyright Embedthis Software, LLC, 2003-2014. All Rights Reserved. -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="keywords" content="package, package manager, embedded, npm" />
+    <meta name="description" content="Package manager for Embedded Applications" />
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700'
+        rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
+    <link href="../lib/semantic/packaged/css/semantic.css" rel="stylesheet" type="text/css" />
+    <link href="../css/all.css" rel="stylesheet" type="text/css" />
+    <link href="../images/favicon.ico" rel="shortcut icon" />
+
+</head>
+<body>
+        
+    <div class="ui large left vertical inverted labeled overlay sidebar menu">
+        <div class="item">
+            <a href="/index.html" class="logo">Pak Docs</a>
+        </div>
+        <div class="item">
+            <a href="../index.html">
+                <b>General</b>
+            </a>
+            <div class="menu">
+                <a class="item" href="../index.html">Pak Overview</a>
+                <a class="item" href="../users/features.html">Pak Features</a>
+                <a class="item" href="https://embedthis.com/pak/download.html">Download</a> 
+                <a class="item" href="../licensing/index.html">Licensing</a>
+            </div>
+        </div>
+        <div class="item">
+            <a href="../start/index.html">
+                <b>Getting Started</b>
+            </a>
+            <div class="menu">
+                <a class="item" href="../start/quick.html">Quick Start</a>
+                <a class="item" href="../start/installing.html">Installing Pak</a>
+                <a class="item" href="../start/releaseNotes.html">Release Notes</a>
+                <a class="item" href="../start/source.html">Building from Source</a>
+            </div>
+        </div>
+        <div class="item">
+            <a href="../users/index.html"><b>User's Guide</b></a>
+            <div class="menu">
+                <a class="item" href="../users/commands.html">Pak Commands</a>
+                <a class="item" href="../users/configuration.html">Pak Configuration</a>
+                <a class="item" href="../users/catalog.html">Pak Catalog</a>
+                <a class="item" href="../users/publishing.html">Publishing Paks</a>
+            </div>
+        </div>
+        <div class="item">
+            <a href="../users/project.html">Project Resources</a>
+            <div class="menu">
+                <a class="item" href="http://goo.gl/t5tTNO">Official Pak News</a>
+                <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
+                <a class="item" href="https://embedthis.com/catalog/#/">Online Pak Catalog</a>
+                <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
+                <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
+                <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
+                <a class="item" href="https://github.com/embedthis/pak/milestones">Roadmap</a>
+                <a class="item" href="https://embedthis.com/developers/contributors.html">Contributors Agreement</a>
+            </div>
+        </div>
+        <div class="item">
+            <b>Links</b>
+            <div class="menu">
+                <a class="item" href="https://embedthis.com/">Embedthis Web Site</a>
+                <a class="item" href="https://embedthis.com/blog/">Embedthis Blog</a>
+                <a class="item" href="http://twitter.com/mobstream">Twitter</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui inverted masthead">
+         
+        <div class="column">
+            <div class="ui inverted menu">
+                <div class="ui black small launch right attached toggle button">
+                    <i class="icon list layout"></i>
+                </div>
+                <div class="right menu">
+                    <a class="item" href="https://embedthis.com/">Embedthis</a>
+                    <a class="item" href="https://embedthis.com/appweb/">Appweb Site</a>
+                    <a class="item" href="http://goo.gl/dGRDl4">Appweb News</a>
+                    <a class="item" href="https://github.com/embedthis/appweb">Repository</a>
+                    <a class="item" href="https://embedthis.com/blog/">Blog</a>
+                    <a class="item" href="https://twitter.com/mobstream">Twitter</a>
+                </div>
+            </div>
+            
+            <div class="ui breadcrumb">
+                <a class="section" href="../">Home</a>
+                
+                <div class="divider">/</div>
+                <a class="section" href="index.html">
+                    User's Guide
+                </a>
+                
+                <div class="divider">/</div>
+                <a class="section active" href="commands.html">Pak commands</a>
+            </div>
+            
+            <div class="ui right floated basic segment version">
+                v0.9.5
+            </div>
+        </div>
+
+    </div>
+    <div class="content">
+
+            <h1>Pak Commands</h1>
+
+            <h2>Installing Paks</h2>
+            <p>To install named paks:</p>
+            <pre class="ui code segment">pak install PAK...</pre>
+            <p>A PAK can be the name of a package published in the Pak catalog. It can also be the path to a local pak directory.
+            A PAK name may also have a "#version" suffix that nominates a specific version to install. All required dependent paks
+            will be automatically installed.
+            <p>To install all the paks required by an application as specified in package.json:</p>
+            <pre class="ui code segment">pak install</pre>
+
+            <h2>Removing Paks</h2>
+            <p>To uninstall a pak from your local directory:</p>
+            <pre class="ui code segment">pak uninstall PAK...</pre>
+
+            <h2>List Paks</h2>
+            <p>To list installed paks in your local directory:</p>
+            <pre class="ui code segment">pak list</pre>
+
+            <h2>Pak Dependencies</h2>
+            <p>To display dependencies for installed paks in your local directory</p>
+            <pre class="ui code segment">pak depend</pre>
+            <p>This will display the installed paks and their dependencies with versions.</p>
+    
+            <h2>Cached Paks</h2>
+            <p>When pak installs a package, it keeps a copy of the pak in the Pak cache which is typically at "~/.paks".
+            The cache stores all versions downloaded of a Pak.</p>
+            <pre class="ui code segment">pak cached</pre>
+
+            <h2>Pre-Caching</h2>
+            <p>To download and cache a pak but not install in the local directory</p>
+            <pre class="ui code segment">pak cache Name</pre>
+
+            <h2>Pruning Paks</h2>
+            <p>To prune old versions from the cache</p>
+            <pre class="ui code segment">pak prune</pre>
+
+    </div>
+    <div class="terms ui basic center aligned segment">
+        <p>&copy; Embedthis Software, 2003-2014. All rights reserved.
+            Generated on Aug 31, 2014.
+        </p>
+    </div>
+
+     
+    <script src="../lib/jquery/jquery.js"></script>
+    <script src="../lib/semantic/packaged/javascript/semantic.js"></script>
+    <script>
+        $('.sidebar').sidebar({overlay: false}).sidebar('toggle');
+        $('.sidebar').first().sidebar('attach events', '.toggle.button');
+        $(function() {
+            var active = $('.sidebar a[href$="' + window.location.pathname +'"]');
+            active.addClass('active');
+            var sidebar = $(".sidebar");
+            var height = sidebar.height();
+            if (active.offset().top >= height) {
+                var diff = height - active.offset().top;
+                sidebar.scrollTop(height);
+            }
+        });
+    </script>
+
+</body>
+</html>
