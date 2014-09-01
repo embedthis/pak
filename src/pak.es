@@ -28,6 +28,7 @@ var directories: Object
 var files: Object
 var extensions: Object
 var options: Object
+var state: Object
 var out: File = App.outputStream
 
 class PakCmd 
@@ -118,6 +119,7 @@ class PakCmd
         catalogs = App.config.catalogs
         files = App.config.files
         extensions = App.config.extensions
+        state = {}
 
         if (Config.OS == 'macosx') {
             extensions.lib = 'dylib'
@@ -721,8 +723,10 @@ class PakCmd
     function install(pak: Package) {
         pak.resolve(pak.searchCriteria || '*')
         if (pak.cached) {
-            if (pak.installed && Version(pak.cache.version).acceptable(pak.searchCriteria)) {
-                if (!options.force) {
+            if (pak.installed && !options.force) {
+                if (pak.installVersion.same(pak.cacheVersion)) {
+                    qtrace('Info', pak + ' is already installed')
+                } else if (Version(pak.cache.version).acceptable(pak.searchCriteria) && !state.upgrade) {
                     qtrace('Info', pak + ' is already installed')
                     return
                 }
@@ -836,7 +840,7 @@ class PakCmd
         if (installDeps) {
             installDependencies(pak)
         }
-        qtrace('Install', pak.name, pak.cacheVersion)
+        qtrace(state.reinstall ? 'Reinstall': 'Install', pak.name, pak.cacheVersion)
         if (!pak.cached) {
             cachePak(pak)
             pak.resolve()
@@ -936,15 +940,24 @@ class PakCmd
             }
         }
         for each (pak in sets) {
-            let optional = (spec.optionalDependencies && spec.optionalDependencies[pak.name]) ? ' optional' : ''
+            spec.optionalDependencies ||= {}
+            let optional = spec.optionalDependencies[pak.name] ? ' optional' : ''
             out.write(pak.name)
-            if (options.details && pak.install) {
+            if (!spec.dependencies[pak.name] && !spec.optionalDependencies[pak.name]) {
+                out.write(': ')
+                print('Present locally but missing in dependencies')
+            } else if (options.details && pak.install) {
                 out.write(': ')
                 print(serialize(pak.install, {pretty: true, indent: 4}))
             } else if (options.versions) {
                 print(' ' + pak.installVersion + optional)
             } else {
                 print()
+            }
+        }
+        for (name in spec.dependencies) {
+            if (!directories.paks.join(name).exists) {
+                out.write(name + ': not installed\n')
             }
         }
     }
@@ -1042,15 +1055,23 @@ class PakCmd
         if (!pak.cached) {
             later = update(pak)
         } 
-        if (pak.installed && pak.installVersion && pak.installVersion.same(later.cacheVersion) && !options.force) {
-            vtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
-                ' for version requirement ' + pak.searchCriteria)
-            return
+        if (pak.installed && pak.installVersion && pak.installVersion.same(later.cacheVersion)) {
+            if (!options.force) {
+                vtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
+                    ' for version requirement ' + pak.searchCriteria)
+                return
+            }
+        } else {
+            qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
         }
-        qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
+        if (options.force && pak.installVersion.same(pak.cacheVersion)) {
+            state.reinstall = true
+        }
         later.resolve(later.cacheVersion)
         runScripts(pak, 'preupgrade')
+        state.upgrade = true
         install(later, true)
+        delete state.upgrade
     }
 
     private function cacheDependencies(pak: Package): Boolean {

@@ -238,8 +238,8 @@ class Package {
 
     public function toString() name
 
-    public function dump() {
-        print(serialize(this, {hidden: true, pretty: true}))
+    public function dump(msg: String = '') {
+        print(msg + serialize(this, {hidden: true, pretty: true}))
     }
 
 } /* class Package */
