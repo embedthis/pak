@@ -30995,11 +30995,13 @@ static int parseOptions(Ejs *ejs, EjsCmd *cmd)
     cmd->throw = 0;    
     flags = MPR_CMD_IN | MPR_CMD_OUT | MPR_CMD_ERR;
     if (cmd->options) {
+#if DEPRECATE || 1
         if ((value = ejsGetPropertyByName(ejs, cmd->options, EN("noio"))) != 0) {
             if (value == ESV(true)) {
                 flags &= ~(MPR_CMD_OUT | MPR_CMD_ERR);
             }
         }
+#endif
         if ((value = ejsGetPropertyByName(ejs, cmd->options, EN("detach"))) != 0) {
             if (value == ESV(true)) {
                 flags |= MPR_CMD_DETACH;
@@ -31011,7 +31013,7 @@ static int parseOptions(Ejs *ejs, EjsCmd *cmd)
                 mprSetCmdDir(cmd->mc, path->value);
             }
         }
-        if ((value = ejsGetPropertyByName(ejs, cmd->options, EN("exception"))) != 0) {
+        if ((value = ejsGetPropertyByName(ejs, cmd->options, EN("exceptions"))) != 0) {
             if (value == ESV(true)) {
                 cmd->throw = 1;
             }
@@ -64463,7 +64465,7 @@ static int initializeModule(Ejs *ejs, EjsModule *mp)
             }
             if (!(ejs->flags & EJS_FLAG_NO_INIT)) {
                 if (mp->checksum != 0 && nativeModule->checksum != mp->checksum) {
-                    ejsThrowIOError(ejs, "Module \"%s\" XXX does not match native code (%d, %d)", mp->path, 
+                    ejsThrowIOError(ejs, "Module \"%s\" does not match native code (%d, %d)", mp->path,
                         nativeModule->checksum, mp->checksum);
                     return MPR_ERR_BAD_STATE;
                 }
