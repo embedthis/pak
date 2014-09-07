@@ -17,9 +17,8 @@ PATH                  := $(LBIN):$(PATH)
 ME_COM_EJS            ?= 1
 ME_COM_EST            ?= 1
 ME_COM_HTTP           ?= 1
-ME_COM_MATRIXSSL      ?= 0
-ME_COM_NANOSSL        ?= 0
 ME_COM_OPENSSL        ?= 0
+ME_COM_OSDEP          ?= 1
 ME_COM_PCRE           ?= 1
 ME_COM_SQLITE         ?= 0
 ME_COM_SSL            ?= 1
@@ -28,12 +27,6 @@ ME_COM_WINSDK         ?= 1
 ME_COM_ZLIB           ?= 1
 
 ifeq ($(ME_COM_EST),1)
-    ME_COM_SSL := 1
-endif
-ifeq ($(ME_COM_MATRIXSSL),1)
-    ME_COM_SSL := 1
-endif
-ifeq ($(ME_COM_NANOSSL),1)
     ME_COM_SSL := 1
 endif
 ifeq ($(ME_COM_OPENSSL),1)
@@ -45,12 +38,10 @@ endif
 
 ME_COM_COMPILER_PATH  ?= gcc
 ME_COM_LIB_PATH       ?= ar
-ME_COM_MATRIXSSL_PATH ?= /usr/src/matrixssl
-ME_COM_NANOSSL_PATH   ?= /usr/src/nanossl
 ME_COM_OPENSSL_PATH   ?= /usr/src/openssl
 
 CFLAGS                += -fPIC -w
-DFLAGS                += -D_REENTRANT -DPIC $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_COM_EJS=$(ME_COM_EJS) -DME_COM_EST=$(ME_COM_EST) -DME_COM_HTTP=$(ME_COM_HTTP) -DME_COM_MATRIXSSL=$(ME_COM_MATRIXSSL) -DME_COM_NANOSSL=$(ME_COM_NANOSSL) -DME_COM_OPENSSL=$(ME_COM_OPENSSL) -DME_COM_PCRE=$(ME_COM_PCRE) -DME_COM_SQLITE=$(ME_COM_SQLITE) -DME_COM_SSL=$(ME_COM_SSL) -DME_COM_VXWORKS=$(ME_COM_VXWORKS) -DME_COM_WINSDK=$(ME_COM_WINSDK) -DME_COM_ZLIB=$(ME_COM_ZLIB) 
+DFLAGS                += -D_REENTRANT -DPIC $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_COM_EJS=$(ME_COM_EJS) -DME_COM_EST=$(ME_COM_EST) -DME_COM_HTTP=$(ME_COM_HTTP) -DME_COM_OPENSSL=$(ME_COM_OPENSSL) -DME_COM_OSDEP=$(ME_COM_OSDEP) -DME_COM_PCRE=$(ME_COM_PCRE) -DME_COM_SQLITE=$(ME_COM_SQLITE) -DME_COM_SSL=$(ME_COM_SSL) -DME_COM_VXWORKS=$(ME_COM_VXWORKS) -DME_COM_WINSDK=$(ME_COM_WINSDK) -DME_COM_ZLIB=$(ME_COM_ZLIB) 
 IFLAGS                += "-Ibuild/$(CONFIG)/inc"
 LDFLAGS               += '-rdynamic' '-Wl,--enable-new-dtags' '-Wl,-rpath,$$ORIGIN/'
 LIBPATHS              += -Lbuild/$(CONFIG)/bin
@@ -152,6 +143,8 @@ clobber: clean
 #
 #   mpr.h
 #
+DEPS_1 += src/paks/mpr/mpr.h
+
 build/$(CONFIG)/inc/mpr.h: $(DEPS_1)
 	@echo '      [Copy] build/$(CONFIG)/inc/mpr.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -166,6 +159,8 @@ build/$(CONFIG)/inc/me.h: $(DEPS_2)
 #
 #   osdep.h
 #
+DEPS_3 += src/paks/osdep/osdep.h
+
 build/$(CONFIG)/inc/osdep.h: $(DEPS_3)
 	@echo '      [Copy] build/$(CONFIG)/inc/osdep.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -198,6 +193,8 @@ build/$(CONFIG)/bin/libmpr.so: $(DEPS_5)
 #
 #   pcre.h
 #
+DEPS_6 += src/paks/pcre/pcre.h
+
 build/$(CONFIG)/inc/pcre.h: $(DEPS_6)
 	@echo '      [Copy] build/$(CONFIG)/inc/pcre.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -230,6 +227,8 @@ endif
 #
 #   http.h
 #
+DEPS_9 += src/paks/http/http.h
+
 build/$(CONFIG)/inc/http.h: $(DEPS_9)
 	@echo '      [Copy] build/$(CONFIG)/inc/http.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -277,6 +276,8 @@ endif
 #
 #   zlib.h
 #
+DEPS_12 += src/paks/zlib/zlib.h
+
 build/$(CONFIG)/inc/zlib.h: $(DEPS_12)
 	@echo '      [Copy] build/$(CONFIG)/inc/zlib.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -309,6 +310,8 @@ endif
 #
 #   ejs.h
 #
+DEPS_15 += src/paks/ejs/ejs.h
+
 build/$(CONFIG)/inc/ejs.h: $(DEPS_15)
 	@echo '      [Copy] build/$(CONFIG)/inc/ejs.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -317,6 +320,8 @@ build/$(CONFIG)/inc/ejs.h: $(DEPS_15)
 #
 #   ejs.slots.h
 #
+DEPS_16 += src/paks/ejs/ejs.slots.h
+
 build/$(CONFIG)/inc/ejs.slots.h: $(DEPS_16)
 	@echo '      [Copy] build/$(CONFIG)/inc/ejs.slots.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -325,6 +330,8 @@ build/$(CONFIG)/inc/ejs.slots.h: $(DEPS_16)
 #
 #   ejsByteGoto.h
 #
+DEPS_17 += src/paks/ejs/ejsByteGoto.h
+
 build/$(CONFIG)/inc/ejsByteGoto.h: $(DEPS_17)
 	@echo '      [Copy] build/$(CONFIG)/inc/ejsByteGoto.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -487,7 +494,8 @@ DEPS_22 += build/$(CONFIG)/bin/ejsc
 build/$(CONFIG)/bin/ejs.mod: $(DEPS_22)
 	( \
 	cd src/paks/ejs; \
-	../../../$(LBIN)/ejsc --out ../../../build/$(CONFIG)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
+	echo '   [Compile] ejs.mod' ; \
+	../../../build/$(CONFIG)/bin/ejsc --out ../../../build/$(CONFIG)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
 	)
 endif
 
@@ -505,6 +513,8 @@ build/$(CONFIG)/bin/ca.crt: $(DEPS_23)
 #
 #   est.h
 #
+DEPS_24 += src/paks/est/est.h
+
 build/$(CONFIG)/inc/est.h: $(DEPS_24)
 	@echo '      [Copy] build/$(CONFIG)/inc/est.h'
 	mkdir -p "build/$(CONFIG)/inc"
@@ -545,7 +555,7 @@ DEPS_27 += build/$(CONFIG)/inc/mpr.h
 build/$(CONFIG)/obj/mprSsl.o: \
     src/paks/mpr/mprSsl.c $(DEPS_27)
 	@echo '   [Compile] build/$(CONFIG)/obj/mprSsl.o'
-	$(CC) -c -o build/$(CONFIG)/obj/mprSsl.o $(CFLAGS) $(DFLAGS) $(IFLAGS) "-I$(ME_COM_OPENSSL_PATH)/include" "-I$(ME_COM_MATRIXSSL_PATH)" "-I$(ME_COM_MATRIXSSL_PATH)/matrixssl" "-I$(ME_COM_NANOSSL_PATH)/src" src/paks/mpr/mprSsl.c
+	$(CC) -c -o build/$(CONFIG)/obj/mprSsl.o $(CFLAGS) $(DFLAGS) $(IFLAGS) "-I$(ME_COM_OPENSSL_PATH)/include" src/paks/mpr/mprSsl.c
 
 #
 #   libmprssl
@@ -574,18 +584,10 @@ endif
 ifeq ($(ME_COM_EST),1)
     LIBS_28 += -lest
 endif
-ifeq ($(ME_COM_MATRIXSSL),1)
-    LIBS_28 += -lmatrixssl
-    LIBPATHS_28 += -L$(ME_COM_MATRIXSSL_PATH)
-endif
-ifeq ($(ME_COM_NANOSSL),1)
-    LIBS_28 += -lssls
-    LIBPATHS_28 += -L$(ME_COM_NANOSSL_PATH)/bin
-endif
 
 build/$(CONFIG)/bin/libmprssl.so: $(DEPS_28)
 	@echo '      [Link] build/$(CONFIG)/bin/libmprssl.so'
-	$(CC) -shared -o build/$(CONFIG)/bin/libmprssl.so $(LDFLAGS) $(LIBPATHS)    "build/$(CONFIG)/obj/mprSsl.o" $(LIBPATHS_28) $(LIBS_28) $(LIBS_28) $(LIBS) 
+	$(CC) -shared -o build/$(CONFIG)/bin/libmprssl.so $(LDFLAGS) $(LIBPATHS)  "build/$(CONFIG)/obj/mprSsl.o" $(LIBPATHS_28) $(LIBS_28) $(LIBS_28) $(LIBS) 
 
 #
 #   pak.mod
@@ -628,7 +630,7 @@ endif
 build/$(CONFIG)/bin/pak.mod: $(DEPS_29)
 	( \
 	cd .; \
-	$(LBIN)/ejsc --out ./build/$(CONFIG)/bin/pak.mod --optimize 9 ./src/Package.es ./src/pak.es ./src/paks/ejs-version/Version.es ; \
+	./build/$(CONFIG)/bin/ejsc  --out ./build/$(CONFIG)/bin/pak.mod --optimize 9 src/Package.es src/pak.es src/paks/ejs-version/Version.es ; \
 	)
 
 #
@@ -733,7 +735,7 @@ installBinary: $(DEPS_33)
 	cp build/$(CONFIG)/bin/ejs.mod $(ME_VAPP_PREFIX)/bin/ejs.mod ; \
 	cp build/$(CONFIG)/bin/pak.mod $(ME_VAPP_PREFIX)/bin/pak.mod ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/doc/man/man1" ; \
-	cp doc/man/pak.1 $(ME_VAPP_PREFIX)/doc/man/man1/pak.1 ; \
+	cp doc/public/man/pak.1 $(ME_VAPP_PREFIX)/doc/man/man1/pak.1 ; \
 	mkdir -p "$(ME_MAN_PREFIX)/man1" ; \
 	rm -f "$(ME_MAN_PREFIX)/man1/pak.1" ; \
 	ln -s "$(ME_VAPP_PREFIX)/doc/man/man1/pak.1" "$(ME_MAN_PREFIX)/man1/pak.1" ; \

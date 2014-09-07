@@ -958,7 +958,7 @@
 			files = (
 			);
 			inputPaths = (
-/Users/mob/git/pak/src/paks/ejs/ejs.es
+../src/paks/ejs/ejs.es
 			);
 			outputPaths = (
 ../build/macosx-x64-default/bin/ejs.mod
@@ -967,7 +967,8 @@
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ../src/paks/ejs
-../../../build/macosx-x64-default/bin/ejsc --out ../../../build/macosx-x64-default/bin/ejs.mod --optimize 9 --bind --require null ejs.es";
+	../../${OUT_DIR}/bin/ejsc --out ../../${OUT_DIR}/bin/ejs.mod --optimize 9 --bind --require null ejs.es
+";
 		};
 		1E9E76781E9E83240000000C /* ShellScript for http-ca-crt */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -975,7 +976,7 @@ cd ../src/paks/ejs
 			files = (
 			);
 			inputPaths = (
-/Users/mob/git/pak/src/paks/http/ca.crt
+../src/paks/http/ca.crt
 			);
 			outputPaths = (
 ../build/macosx-x64-default/bin/ca.crt
@@ -994,9 +995,9 @@ cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
 			files = (
 			);
 			inputPaths = (
-/Users/mob/git/pak/src/Package.es,
-/Users/mob/git/pak/src/pak.es,
-/Users/mob/git/pak/src/paks/ejs-version/Version.es
+../src/Package.es,
+../src/pak.es,
+../src/paks/ejs-version/Version.es
 			);
 			outputPaths = (
 ../build/macosx-x64-default/bin/pak.mod
@@ -1005,7 +1006,8 @@ cp -r ca.crt ../../${OUT_DIR}/bin/ca.crt
 			shellPath = /bin/bash;
 			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-build/macosx-x64-default/bin/ejsc --out build/macosx-x64-default/bin/pak.mod --optimize 9 /Users/mob/git/pak/src/Package.es /Users/mob/git/pak/src/pak.es /Users/mob/git/pak/src/paks/ejs-version/Version.es";
+	build/macosx-x64-default/bin/ejsc  --out build/macosx-x64-default/bin/pak.mod --optimize 9 src/Package.es src/pak.es src/paks/ejs-version/Version.es
+";
 		};
 		1E9E76781E9E832400000023 /* ShellScript for Prep */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1532,7 +1534,7 @@ fi";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/Users/mob/git/pak/build/macosx-x64-default/inc",
+					"../build/macosx-x64-default/inc",
 					"$(inherited)"
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1540,7 +1542,7 @@ fi";
 					"$(inherited)"
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"/Users/mob/git/pak/build/macosx-x64-default/bin",
+					"../build/macosx-x64-default/bin",
 					"$(inherited)"
 				);
 				OTHER_LDFLAGS = (
@@ -1602,12 +1604,12 @@ fi";
 				GCC_OPTIMIZATION_LEVEL = s;
                 GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				HEADER_SEARCH_PATHS = (
-					"/Users/mob/git/pak/build/macosx-x64-default/inc",
+					"../build/macosx-x64-default/inc",
 					"$(inherited)"
 				);
 
 				LIBRARY_SEARCH_PATHS = (
-					"/Users/mob/git/pak/build/macosx-x64-default/bin",
+					"../build/macosx-x64-default/bin",
 					"$(inherited)"
 				);
 				OTHER_LDFLAGS = (
