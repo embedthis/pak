@@ -92,13 +92,10 @@ Me.load({
         'pak.mod': {
             path: '${BIN}/pak.mod',
             files: [ 'src/*.es', 'src/paks/ejs-version/Version.es' ],
-            //  MOB - should be able to simplify this
             build: `
                 trace('Compile', 'src/*.es')
-                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 ' + TARGET.cmdfiles)
+                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 ${FILES}')
             `,
-            'generate-nmake': `"${BIN}\\ejsc" --out "${BIN}/pak.mod" ${settings.esflags} --optimize 9 ${target.cmdfiles}`,
-            'generate-sh': '${LBIN}/ejsc --out ${BIN}/pak.mod --optimize 9 ${target.cmdfiles}',
             depends: [ 'ejsc' ],
         },
 
