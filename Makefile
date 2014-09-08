@@ -62,6 +62,17 @@ deploy:
 version:
 	@$(MAKE) -f projects/$(NAME)-$(OS)-$(PROFILE).$(EXT) $@
 
+boot:
+	if [ -f ~/.paks/openssl/1.0.1i ] ; then \
+		mkdir -p ~/.paks/openssl/1.0.1i ; \
+		cd ~/.paks/openssl ; \
+		git clone git@github.com:embedthis/openssl 1.0.1i ; \
+		cd openssl 1.0.1i ; \
+		me cache ; \
+	fi ; \
+	./configure --release
+	me
+
 help:
 	@echo '' >&2
 	@echo 'usage: make [clean, compile, deploy, install, run, uninstall]' >&2
