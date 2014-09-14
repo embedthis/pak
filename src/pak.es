@@ -945,7 +945,7 @@ class PakCmd
             out.write(pak.name)
             if (!spec.dependencies[pak.name] && !spec.optionalDependencies[pak.name]) {
                 out.write(': ')
-                print('Present locally but missing in dependencies')
+                print(pak.installVersion + optional)
             } else if (options.details && pak.install) {
                 out.write(': ')
                 print(serialize(pak.install, {pretty: true, indent: 4}))
@@ -1311,7 +1311,7 @@ class PakCmd
         if (!pak.sourcePath || options.all) {
             cacheDependencies(pak)
         }
-        runScripts(pak, 'cache')
+        runScripts(pak, 'postcache')
         qtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
     }
 
