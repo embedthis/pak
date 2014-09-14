@@ -1301,6 +1301,7 @@ static void invokeDestructors()
 
 static void invokeAllDestructors()
 {
+#if FUTURE
     MprRegion   *region;
     MprMem      *mp;
     MprManager  mgr;
@@ -1319,6 +1320,7 @@ static void invokeAllDestructors()
             }
         }
     }
+#endif
 }
 
 
@@ -15939,17 +15941,6 @@ PUBLIC void mprDefaultLogHandler(cchar *tags, int level, cchar *msg)
     if (MPR->flags & MPR_LOG_DETAILED && tags && *tags) {
         fmt(tbuf, sizeof(tbuf), "%s %d %s, ", mprGetDate(MPR_LOG_DATE), level, tags);
         mprWriteFileString(file, tbuf);
-#if UNUSED
-        ssize len = slen(tbuf);
-        width = 40;
-        if (len < width) {
-            mprWriteFile(file, "                                          ", width - len);
-        }
-#endif
-#if UNUSED
-    } else if (tags && level == 0) {
-        mprWriteFileString(file, "error: ");
-#endif
     }
     mprWriteFileString(file, msg);
     mprWriteFileString(file, "\n");
@@ -27906,7 +27897,6 @@ static void manageWaitService(MprWaitService *ws, int flags)
 
 PUBLIC void mprStopWaitService()
 {
-    Mpr             *mpr;
 #if ME_WIN_LIKE
     MprWaitService  *ws;
 
@@ -29498,7 +29488,8 @@ PUBLIC void mprWriteToOsLog(cchar *message, int level)
         if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, wide(logName), 0, NULL, 0, KEY_ALL_ACCESS, NULL, 
                 &hkey, &exists) == ERROR_SUCCESS) {
             value = "%SystemRoot%\\System32\\netmsg.dll";
-            if (RegSetValueEx(hkey, UT("EventMessageFile"), 0, REG_EXPAND_SZ, (uchar*) value, (int) slen(value) + 1) != ERROR_SUCCESS) {
+            if (RegSetValueEx(hkey, UT("EventMessageFile"), 0, REG_EXPAND_SZ, (uchar*) value, 
+                    (int) slen(value) + 1) != ERROR_SUCCESS) {
                 RegCloseKey(hkey);
                 return;
             }
