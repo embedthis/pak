@@ -9,19 +9,26 @@
             <h2>Installing Paks</h2>
             <p>To install named paks:</p>
             <pre class="ui code segment">pak install PAK...</pre>
-            <p>A PAK can be the name of a package published in the Pak catalog. It can also be the path to a local pak directory.
-            A PAK name may also have a "#version" suffix that nominates a specific version to install. All required dependent paks
-            will be automatically installed.
+            <p>A PAK can be the name of a package published in the Pak catalog a GitHub repository endpoint or 
+            a path to a local pak directory. 
+            <pre class="ui code segment">pak install jquery
+pak install https://github.com/embedthis/jquery.git
+pak install embedthis/jquery</pre>
+            <p>A PAK name may have a "#version" suffix that nominates a 
+            specific version to install. All required dependent paks will be automatically installed.</p>
             <p>To install all the paks required by an application as specified in package.json:</p>
             <pre class="ui code segment">pak install</pre>
 
             <h2>Removing Paks</h2>
-            <p>To uninstall a pak from your local directory:</p>
+            <p>To uninstall a pak from your local directory. The pak will remain in the local Pak cache.</p>
             <pre class="ui code segment">pak uninstall PAK...</pre>
 
             <h2>List Paks</h2>
             <p>To list installed paks in your local directory:</p>
             <pre class="ui code segment">pak list</pre>
+            <p>The list will display the pak name and installed version. Paks may designated as optional
+            if the package.json describes them in the 'optionalDependencies' list. Paks may be shown as 
+            'foreign' if they are installed but not present in the package.json.</p>
 
             <h2>Pak Dependencies</h2>
             <p>To display dependencies for installed paks in your local directory</p>

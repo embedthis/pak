@@ -215,7 +215,9 @@ COMMANDS
               Create a new package.json
 
        install paks...
-              Install a pak on the local system
+              Install a pak on the local system. The pak name can be a name in
+              the Pak online catalog or it can be a GitHub endpoint URL or  of
+              the form 'account/repositiory'.
 
        list [paks...]
               list installed paks
