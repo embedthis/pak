@@ -343,15 +343,15 @@ class PakCmd
                 let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
                 let pak = Package(name)
                 pak.resolve(criteria)
-                if (pak.cachePath.join('README.md')) {
+                if (!pak.cached) {
+                    pak = searchPak(pak)
+                }
+                if (pak && pak.cachePath.join('README.md')) {
                     let readme = pak.cachePath.join('README.md')
-                    let text = readme.readString()
-                    if (Config.OS == 'macosx') {
-                        try {
-                            Cmd.run('open ' + readme)
-                        } catch {
-                            print(text)
-                        }
+                    if (!readme.exists) {
+                        throw 'Pak is missing a README.md file'
+                    } else {
+                        print(readme.readString())
                     }
                 }
             }
@@ -763,7 +763,8 @@ class PakCmd
         blending[pak.name] = true
         vtrace('Blend', pak + ' configuration')
         let paks = spec.paks
-        if (spec.import == true) {
+        //  MOB - must blend spec to update dependencies
+        if (true || spec.import === true) {
             if (!(paks && (paks.noblend || (paks[pak.name] && paks[pak.name].noblend)))) {
                 blendSpec(pak)
             }
@@ -943,7 +944,7 @@ class PakCmd
             out.write(pak.name)
             if (!spec.dependencies[pak.name] && !spec.optionalDependencies[pak.name]) {
                 out.write(': ')
-                print(pak.installVersion + optional)
+                print(pak.installVersion + ' foreign ' + optional)
             } else if (options.details && pak.install) {
                 out.write(': ')
                 print(serialize(pak.install, {pretty: true, indent: 4}))
@@ -1583,7 +1584,7 @@ class PakCmd
         }
         if (!found) {
             if (options.force) {
-                trace('Warn', 'Desired version not found in catalog for ' + pak.name + ' ' + criteria)
+                trace('Warn', 'Suitable release version not found for ' + pak.name + ' ' + criteria)
                 pak.setRemoteVersion(versions[versions.length - 1])
                 pak.setCachePath()
             } else {
@@ -1602,6 +1603,14 @@ class PakCmd
         Pak specifies a name and optional version 
      */
     private function searchPaks(pak: Package, exactName: Boolean = false): Array {
+        /* Test if pak path is a github endpoint */
+        if (pak.setRemoteEndpoint(pak.path)) {
+            let criteria = pak.searchCriteria || (options.all ? '*' : '^*')
+            try {
+                selectRemoteVersion(pak, criteria, pak.path)
+                return [pak]
+            } catch {}
+        }
         let http = new Http
         let matches = []
         for (let [index, catalog] in catalogs) {

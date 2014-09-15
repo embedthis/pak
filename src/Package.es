@@ -24,6 +24,7 @@ class Package {
     var protocol: String
     var host: String
     var owner: String
+    var path: String            //  Original full path provided to specify the pak
     var repName: String
     var repTag: String          //  Repository tag for this version
     var resolved: Boolean
@@ -43,7 +44,8 @@ class Package {
             [path, ver] = path.toString().split('#')
             searchCriteria = ver
         }
-        name = Path(path).basename
+        this.name = Path(path).basename.trimExt()
+        this.path = path
     }
 
     /*
@@ -139,10 +141,17 @@ class Package {
      */
     function setRemoteEndpoint(remote: String) {
         let matches
+        if (!remote.endsWith('.git')) {
+            remote += '.git'
+        }
         if (remote.contains('://')) {
             matches = RegExp('([^:]+):\/\/([^\/]+)\/([^\/]+)\/([^\/]+).git').exec(remote)
-        } else {
+        } else if (remote.contains('@')) {
             matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+).git').exec(remote)
+        } else {
+            let rest = RegExp('([^\/]+)\/([^\/]+).git').exec(remote)
+            remote = 'https://github.com/' + remote
+            matches = [remote, 'https', 'github.com' ] + rest.slice(1)
         }
         if (!matches) {
             return false
