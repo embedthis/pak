@@ -154,7 +154,7 @@ class PakCmd
     }
 
     function usage(): Void {
-        print('\nUsage: pak ' + ' [options] [commands] ...\n' +
+        print('\nUsage: pak ' + ' [options] [commands] ...\n\n' +
             '  Commands:\n' + 
             '    cache [paks...]          # Populate the cache with paks\n' +
             '    cached [paks...]         # List paks in the cache\n' +
@@ -174,7 +174,7 @@ class PakCmd
             '    search paks...           # Search for paks in the catalog\n' +
             '    uninstall                # Uninstall a pak on the local system\n' +
             '    update [paks...]         # Update the cache with latest version\n' +
-            '    upgrade [paks...]        # Upgrade installed paks\n' +
+            '    upgrade [paks...]        # Upgrade installed paks\n\n' +
             '  General options:\n' + 
             '    --catalog catalog        # Catalog to use instead of defaults\n' +
             '    --cache dir              # Director to use for the Pak cache\n' +
@@ -183,9 +183,9 @@ class PakCmd
             '    --log file:level         # Send output to a file at a given level\n' + 
             '    --nodeps                 # Do not install or upgrade dependencies\n' +
             '    --paks dir               # Use given directory for paks cache\n' +
-            '    -q, --quiet              # Run in quiet mode\n' +
-            '    -s, --silent             # Run in totally silent mode\n' +
-            '    -v, --verbose            # Run in verbose mode\n' +
+            '    --quiet, -q              # Run in quiet mode\n' +
+            '    --silent, -s             # Run in totally silent mode\n' +
+            '    --verbose, -v            # Run in verbose mode\n\n' +
             '  List options:\n' + 
             '    -a, --all                # Show all versions for a pak\n' +
             '    --details                # Show pak details\n' +
@@ -398,17 +398,15 @@ class PakCmd
                 let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
                 let pak = Package(name)
                 pak.resolve(criteria)
-                if (pak.cachePath.join('LICENSE.md')) {
-                    let readme = pak.cachePath.join('LICENSE.md')
-                    let text = readme.readString()
-                    if (Config.OS == 'macosx' && rest.length == 1) {
-                        try {
-                            Cmd.run('open ' + readme)
-                        } catch {
-                            print(text)
-                        }
+                if (!pak.cached) {
+                    pak = searchPak(pak)
+                }
+                if (pak && pak.cachePath.join('LICENSE.md')) {
+                    let license = pak.cachePath.join('LICENSE.md')
+                    if (!license.exists) {
+                        throw 'Pak is missing a LICENSE.md file'
                     } else {
-                        print(text)
+                        print(license.readString())
                     }
                 }
             }
@@ -1601,7 +1599,7 @@ class PakCmd
 
     /*
         Search for matching paks in a remote catalog
-        Pak specifies a nmae and optional version 
+        Pak specifies a name and optional version 
      */
     private function searchPaks(pak: Package, exactName: Boolean = false): Array {
         let http = new Http
