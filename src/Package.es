@@ -150,6 +150,9 @@ class Package {
             matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+).git').exec(remote)
         } else {
             let rest = RegExp('([^\/]+)\/([^\/]+).git').exec(remote)
+            if (!rest) {
+                return false
+            }
             remote = 'https://github.com/' + remote
             matches = [remote, 'https', 'github.com' ] + rest.slice(1)
         }
