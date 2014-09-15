@@ -36,3 +36,4 @@ windows*.bit
 /linux-*
 *.guid
 .gitattributes
+/build
