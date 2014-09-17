@@ -248,9 +248,11 @@ class PakCmd
         if (options.dir) {
             App.chdir(options.dir)
         }
+/* UNUSED
         if (options.all || !options.quiet) {
             options.versions = true
         }
+*/
     }
 
     function setup() {
@@ -645,17 +647,16 @@ class PakCmd
             let pak = Package(path.dirname.basename)
             pak.setCacheVersion(path.basename)
             if (matchPakName(pak.name, patterns)) {
-                let index = (options.all) ? pak.namever : pak.name
                 /* Aggregate the set of installed versions of each pak */
                 let pakset = sets[pak.name]
                 pakset ||= []
-                sets[index] = pakset
+                sets[pak.name] = pakset
                 pakset.append(pak)
             }
         }
         for each (pakset in sets) {
             let pak = pakset[0]
-            if (options.versions) {
+            if (options.all) {
                 versions = []
                 for each (pak in pakset) {
                     versions.append(pak.cacheVersion)
@@ -665,9 +666,10 @@ class PakCmd
             } else {
                 /* Pick last pak (highest version) */
                 pak = pakset[pakset.length - 1]
-                out.write(pak.name)
+                out.write(pak.name + ' ' + pak.cacheVersion)
             }
-            if (options.details) {
+            pak.resolve()
+            if (options.details && pak.cache) {
                 out.write(': ')
                 print(serialize(pak.cache, {pretty: true, indent: 4}))
             }
