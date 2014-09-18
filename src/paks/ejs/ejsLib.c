@@ -41868,22 +41868,32 @@ PUBLIC int ejsSetPathAttributes(Ejs *ejs, cchar *path, EjsObj *attributes)
  */
 static EjsObj *copyPath(Ejs *ejs, EjsPath *fp, int argc, EjsObj **argv)
 {
-    MprFile     *from, *to;
-    MprPath     info;
-    EjsObj      *options;
-    cchar       *toPath;
-    ssize       bytes;
-    char        *buf;
+    MprFileSystem   *fs;
+    MprFile         *from, *to;
+    MprPath         info;
+    EjsObj          *options;
+    cchar           *fromPath, *toPath;
+    ssize           bytes, len;
+    char            *buf, lastc;
 
     assert(argc >= 1);
     options = (argc >= 2) ? argv[1] : 0;
+    fromPath = fp->value;
 
     from = to = 0;
     if ((toPath = getPathString(ejs, argv[0])) == 0) {
         return 0;
     }
-    if ((from = mprOpenFile(fp->value, O_RDONLY | O_BINARY, 0)) == 0) {
-        ejsThrowIOError(ejs, "Cannot open %s", fp->value);
+    if ((fs = mprLookupFileSystem(toPath)) == 0) {
+        return 0;
+    }
+    len = slen(toPath);
+    lastc = (len > 0) ? toPath[len - 1] : '\0';
+    if (mprIsPathDir(toPath) || (lastc == fs->separators[0] || lastc == fs->separators[1])) {
+        toPath = mprJoinPath(toPath, mprGetPathBase(fromPath));
+    }
+    if ((from = mprOpenFile(fromPath, O_RDONLY | O_BINARY, 0)) == 0) {
+        ejsThrowIOError(ejs, "Cannot open %s", fromPath);
         return 0;
     }
     if ((to = mprOpenFile(toPath, O_CREAT | O_WRONLY | O_TRUNC | O_BINARY, EJS_FILE_PERMS)) == 0) {
@@ -41892,7 +41902,7 @@ static EjsObj *copyPath(Ejs *ejs, EjsPath *fp, int argc, EjsObj **argv)
         return 0;
     }
     /* Keep perms of original file, don't inherit user/group (may not have permissions to create) */
-    if (mprGetPathInfo(fp->value, &info) >= 0 && info.valid) {
+    if (mprGetPathInfo(fromPath, &info) >= 0 && info.valid) {
         chmod(toPath, info.perms);
     }
     if (options) {
@@ -42057,8 +42067,8 @@ PUBLIC EjsArray *ejsGetPathFiles(Ejs *ejs, EjsPath *fp, int argc, EjsObj **argv)
     EjsObj          *options;
     EjsArray        *result, *patterns;
     EjsRegExp       *exclude, *include;
+    cchar           *path, *base, *pat;
     char            *pattern, *start, *special;
-    cchar           *path, *base;
     int             flags, i;
 
     options = (argc >= 2) ? argv[1]: 0;
@@ -42085,12 +42095,20 @@ PUBLIC EjsArray *ejsGetPathFiles(Ejs *ejs, EjsPath *fp, int argc, EjsObj **argv)
             flags |= FILES_HIDDEN;
         }
         exclude = ejsGetPropertyByName(ejs, options, EN("exclude"));
-        if (exclude && !ejsIs(ejs, exclude, RegExp)) {
-            if (ejsIsDefined(ejs, exclude)) {
-                ejsThrowArgError(ejs, "Exclude option must be a regular expression");
-                return 0;
+        if (exclude) {
+            if (ejsIs(ejs, exclude, String)) {
+                pat = ejsToMulti(ejs, exclude);
+                if (smatch(pat, "directories")) {
+                    exclude = ejsParseRegExp(ejs, "/\\/$/");
+                }
+            } 
+            if (exclude && !ejsIs(ejs, exclude, RegExp)) {
+                if (ejsIsDefined(ejs, exclude)) {
+                    ejsThrowArgError(ejs, "Exclude option must be a regular expression");
+                    return 0;
+                }
+                exclude = 0;
             }
-            exclude = 0;
         }
         include = ejsGetPropertyByName(ejs, options, EN("include"));
         if (include && !ejsIs(ejs, include, RegExp)) {
