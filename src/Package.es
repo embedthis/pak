@@ -115,7 +115,7 @@ class Package {
 
     public function setInstallPath() {
         installPath = directories.paks.join(name)
-        installed = installPath.exists
+        installed = (installPath.exists && installPath.join('package.json').exists)
     }
 
     function setInstalledVersion(ver: String?) {

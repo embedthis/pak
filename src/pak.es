@@ -1065,7 +1065,7 @@ class PakCmd
         } else {
             qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
         }
-        if (options.force && pak.installVersion.same(pak.cacheVersion)) {
+        if (options.force && pak.installVersion && pak.installVersion.same(pak.cacheVersion)) {
             state.reinstall = true
         }
         later.resolve(later.cacheVersion)
@@ -1111,36 +1111,13 @@ class PakCmd
         return true
     }
 
-    function copyTree(pak, fromDir: Path, toDir: Path, ignore: Array?, include: Array?, exportList: Array?) {
-        if (include) {
-            for each (name in [ 'package.json', 'README.md', 'LICENSE.md' ]) {
-                if (fromDir.join(name).exists && !include.contains(name)) {
-                    include.push(name)
-                }
-            }
+    function copyTree(pak, fromDir: Path, toDir: Path, ignore: Array?, files: Array?, exportList: Array?) {
+        files ||= ['**']
+        files += ['package.json', 'README.md', 'LICENSE.md']
+        for each (item in ignore) {
+            files.push('!' + item)
         }
-        include ||= ['**']
-        fromDir = fromDir.relative
-        let ignoreSet = {}
-        for each (pat in ignore) {
-            if (fromDir.join(pat).isDir) {
-                pat = pat.toString() + '/**'
-            }
-            for each (file in fromDir.files(pat, { descend: true, relative: true})) {
-                ignoreSet[file] = true
-            }
-        }
-        let files = []
-        for each (pat in include) {
-            for each (f in find(fromDir, pat, {descend: true, relative: true})) {
-                let skip = false
-                if (ignoreSet[f]) {
-                    continue
-                }
-                files.push(f)
-            }
-        }
-        let export = {}
+        var export = {}
         for each (pat in exportList) {
             /*
                 Defaults:
@@ -1158,37 +1135,31 @@ class PakCmd
                 }
             }
             let to = pat.to.expand({LIB: directories.lib})
-            for each (from in pat.from) {
-                for each (f in fromDir.files(from, {relative: true})) {
-                    export[f] = { overwrite: pat.overwrite, to: to }
-                }
+            for each (f in fromDir.files(pat.from)) {
+                export[f] = { overwrite: pat.overwrite, to: to }
             }
         }
-        for each (f in files) {
-            let from = fromDir.join(f)
-            let to = toDir.join(f)
+        var self = this
+        fromDir.tree(files, toDir, {action: function(from, to, options) {
             if (from.isDir) {
-                makeDir(to)
+                self.makeDir(to)
             } else {
                 if (!to.exists || options.force) {
-                    makeDir(to.dirname)
+                    self.makeDir(to.dirname)
                     from.copy(to)
                     vtrace('Copy', to)
                 } else {
                     vtrace('Exists', to)
                 }
             }
-        }
-        for each (f in files) {
-            if (export[f]) {
-                let from = fromDir.join(f)
-                let base: Path = export[f].to
-                let to = base.join(f)
+            if (export[from]) {
+                let base: Path = export[from].to
+                let to = base.join(from.relativeTo(fromDir))
                 if (from.isDir) {
-                    makeDir(to)
+                    self.makeDir(to)
                 } else {
-                    if (!to.exists || export[f].overwrite) {
-                        makeDir(to.dirname)
+                    if (!to.exists || export[from].overwrite) {
+                        self.makeDir(to.dirname)
                         from.copy(to)
                         vtrace('Export', to)
                     } else {
@@ -1196,7 +1167,7 @@ class PakCmd
                     }
                 }
             }
-        }
+        }})
     }
 
     private function fetchPak(pak: Package) {
