@@ -1,18 +1,12 @@
 /*
-    ejs.slots.h -- Embedthis Ejscript Object Slot Definitions
-
-    This file is a catenation of all the source code. Amalgamating into a
-    single file makes embedding simpler and the resulting application faster.
-
-    Prepared by: orion.local
+ * Embedthis Ejscript Object Slot Definitions
  */
 
 
-/************************************************************************/
-/*
-    Start of file "build/macosx-x64-debug/inc/ejs.cache.local.slots.h"
- */
-/************************************************************************/
+
+
+/********* Start of file build/macosx-x64-debug/inc/ejs.cache.local.slots.h ************/
+
 
 /*
    ejs.cache.local.slots.h -- Native property slot definitions for the "ejs.cache.local" module
@@ -116,11 +110,10 @@
 
 #endif
 
-/************************************************************************/
-/*
-    Start of file "build/macosx-x64-debug/inc/ejs.db.sqlite.slots.h"
- */
-/************************************************************************/
+
+
+/********* Start of file build/macosx-x64-debug/inc/ejs.db.sqlite.slots.h ************/
+
 
 /*
    ejs.db.sqlite.slots.h -- Native property slot definitions for the "ejs.db.sqlite" module
@@ -187,11 +180,10 @@
 
 #endif
 
-/************************************************************************/
-/*
-    Start of file "build/macosx-x64-debug/inc/ejs.slots.h"
- */
-/************************************************************************/
+
+
+/********* Start of file build/macosx-x64-debug/inc/ejs.slots.h ************/
+
 
 /*
    /Users/mob/git/ejs/build/macosx-x64-debug/inc/ejs.slots.h -- Native property slot definitions for the "ejs" module
@@ -2621,15 +2613,14 @@
 #define ES_XMLList_NUM_INSTANCE_PROP                                   20
 #define ES_XMLList_NUM_INHERITED_PROP                                  0
 
-#define _ES_CHECKSUM_ejs   1545255
+#define _ES_CHECKSUM_ejs   1547603
 
 #endif
 
-/************************************************************************/
-/*
-    Start of file "build/macosx-x64-debug/inc/ejs.web.slots.h"
- */
-/************************************************************************/
+
+
+/********* Start of file build/macosx-x64-debug/inc/ejs.web.slots.h ************/
+
 
 /*
    ejs.web.slots.h -- Native property slot definitions for the "ejs.web" module
@@ -3256,11 +3247,10 @@
 
 #endif
 
-/************************************************************************/
-/*
-    Start of file "build/macosx-x64-debug/inc/ejs.zlib.slots.h"
- */
-/************************************************************************/
+
+
+/********* Start of file build/macosx-x64-debug/inc/ejs.zlib.slots.h ************/
+
 
 /*
    ejs.zlib.slots.h -- Native property slot definitions for the "ejs.zlib" module
