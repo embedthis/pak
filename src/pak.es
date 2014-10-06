@@ -31,7 +31,7 @@ var options: Object
 var state: Object
 var out: File = App.outputStream
 
-class PakCmd 
+class Pak
 {
     private const RC: String = 'pakrc'
     private const DOTRC: String = '.pakrc'
@@ -111,7 +111,7 @@ class PakCmd
     }
 
 
-    function PakCmd() {
+    function Pak() {
         App.log.name = 'pak'
         config = App.config
         blend(App.config, defaultConfig, {overwrite: false})
@@ -1119,11 +1119,6 @@ class PakCmd
         }
         var export = {}
         for each (pat in exportList) {
-            /*
-                Defaults:
-                    overwrite: false,
-                    to: '.'
-             */
             if (pat is String) {
                 pat = { from: [pat], to: '.', overwrite: true}
             } else {
@@ -1139,35 +1134,32 @@ class PakCmd
                 export[f] = { overwrite: pat.overwrite, to: to }
             }
         }
-        var self = this
-        fromDir.tree(files, toDir, {action: function(from, to, options) {
-            if (from.isDir) {
-                self.makeDir(to)
-            } else {
+        fromDir.operate(files, toDir, {
+            pre: function(from, to, options) {
                 if (!to.exists || options.force) {
-                    self.makeDir(to.dirname)
-                    from.copy(to)
                     vtrace('Copy', to)
                 } else {
                     vtrace('Exists', to)
                 }
-            }
-            if (export[from]) {
-                let base: Path = export[from].to
-                let to = base.join(from.relativeTo(fromDir))
-                if (from.isDir) {
-                    self.makeDir(to)
-                } else {
-                    if (!to.exists || export[from].overwrite) {
-                        self.makeDir(to.dirname)
-                        from.copy(to)
-                        vtrace('Export', to)
+            },
+            post: function(from, to, options) {
+                if (export[from]) {
+                    let base: Path = export[from].to
+                    let to = base.join(from.relativeTo(fromDir))
+                    if (from.isDir) {
+                        global.pak.makeDir(to)
                     } else {
-                        vtrace('Exists', to)
+                        if (!to.exists || export[from].overwrite) {
+                            global.pak.makeDir(to.dirname)
+                            from.copy(to)
+                            vtrace('Export', to)
+                        } else {
+                            vtrace('Exists', to)
+                        }
                     }
                 }
             }
-        }})
+        })
     }
 
     private function fetchPak(pak: Package) {
@@ -1835,7 +1827,7 @@ class PakCmd
         directories.lib ||= directories.client.join('lib')
     }
 
-    function makeDir(path: String): Void
+    public function makeDir(path: String): Void
         mkdir(path, DIR_PERMS)
 
     function removeDir(path: Path, contents: Boolean = false) {
@@ -1904,7 +1896,8 @@ function vtrace(tag: String, ...args) {
     }
 }
 
-PakCmd().main()
+public var pak = new Pak
+pak.main()
 
 } /* ejs.pak module */
 
