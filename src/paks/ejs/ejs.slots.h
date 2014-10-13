@@ -3,11 +3,6 @@
  */
 
 
-
-
-/********* Start of file build/macosx-x64-debug/inc/ejs.cache.local.slots.h ************/
-
-
 /*
    ejs.cache.local.slots.h -- Native property slot definitions for the "ejs.cache.local" module
   
@@ -110,11 +105,6 @@
 
 #endif
 
-
-
-/********* Start of file build/macosx-x64-debug/inc/ejs.db.sqlite.slots.h ************/
-
-
 /*
    ejs.db.sqlite.slots.h -- Native property slot definitions for the "ejs.db.sqlite" module
   
@@ -179,11 +169,6 @@
 #define _ES_CHECKSUM_ejs_db_sqlite   73576
 
 #endif
-
-
-
-/********* Start of file build/macosx-x64-debug/inc/ejs.slots.h ************/
-
 
 /*
    /Users/mob/git/ejs/build/macosx-x64-debug/inc/ejs.slots.h -- Native property slot definitions for the "ejs" module
@@ -2613,14 +2598,9 @@
 #define ES_XMLList_NUM_INSTANCE_PROP                                   20
 #define ES_XMLList_NUM_INHERITED_PROP                                  0
 
-#define _ES_CHECKSUM_ejs   1547603
+#define _ES_CHECKSUM_ejs   1547592
 
 #endif
-
-
-
-/********* Start of file build/macosx-x64-debug/inc/ejs.web.slots.h ************/
-
 
 /*
    ejs.web.slots.h -- Native property slot definitions for the "ejs.web" module
@@ -3246,11 +3226,6 @@
 #define _ES_CHECKSUM_ejs_web   834053
 
 #endif
-
-
-
-/********* Start of file build/macosx-x64-debug/inc/ejs.zlib.slots.h ************/
-
 
 /*
    ejs.zlib.slots.h -- Native property slot definitions for the "ejs.zlib" module

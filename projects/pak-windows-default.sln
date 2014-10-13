@@ -1,6 +1,9 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prep", "pak-windows-default\prep.vcxproj", "{C29B740D-1A14-47B8-8D2D-55B7CCD461B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpr", "pak-windows-default\libmpr.vcxproj", "{40D07AB8-5586-4EB8-B0E5-29A5AA12297F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -133,9 +136,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmprssl", "pak-windows-de
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
-		{28B90510-C3EA-4A67-BF51-9F0D663CD8C1} = {28B90510-C3EA-4A67-BF51-9F0D663CD8C1}
-	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
 		{EF48ABF7-0F8D-4603-A44A-629059BF2956} = {EF48ABF7-0F8D-4603-A44A-629059BF2956}
 	EndProjectSection
 EndProject
@@ -203,14 +203,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "removeFiles", "pak-windows-
 	EndProjectSection
 EndProject
 
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		Debug|x64 = Debug|x64
-		Release|Win32 = Release|Win32
-		Release|x64 = Release|x64
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+    Global
+        GlobalSection(SolutionConfigurationPlatforms) = preSolution
+            Debug|Win32 = Debug|Win32
+            Debug|x64 = Debug|x64
+            Release|Win32 = Release|Win32
+            Release|x64 = Release|x64
+        EndGlobalSection
+        GlobalSection(ProjectConfigurationPlatforms) = postSolution
 {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}.Debug|Win32.ActiveCfg = Debug|Win32
 {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}.Debug|Win32.Build.0 = Debug|Win32
 {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}.Debug|x64.ActiveCfg = Debug|x64
@@ -325,7 +325,7 @@ Global
 {31E0E4C5-EDDE-4B84-8070-D2BAE6C7B793}.Release|x64.Build.0 = Release|x64
 EndGlobalSection
 
-  GlobalSection(SolutionProperties) = preSolution
-    HideSolutionNode = FALSE
-  EndGlobalSection
-EndGlobal
+      GlobalSection(SolutionProperties) = preSolution
+        HideSolutionNode = FALSE
+      EndGlobalSection
+    EndGlobal

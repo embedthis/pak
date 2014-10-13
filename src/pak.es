@@ -1033,7 +1033,7 @@ class Pak
     /*
         Update cached packs
      */
-    function update(pak: Package? = null): Pak {
+    function update(pak: Package? = null): Package {
         pak.resolve(pak.searchCriteria || '*')
         trace('Search', 'Latest version of ' + pak)
         let later = searchPak(pak)
@@ -1643,7 +1643,7 @@ class Pak
         return matches
     }
 
-    private function searchPak(pak: Package, exact: Boolean = true): Pak
+    private function searchPak(pak: Package, exact: Boolean = true): Package
         searchPaks(pak, exact)[0]
 
     /*

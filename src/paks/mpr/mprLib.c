@@ -18140,7 +18140,6 @@ PUBLIC bool mprMatchPath(cchar *path, cchar *pattern)
     MprFileSystem   *fs;
     cchar           *nextPartPattern;
     char            *cp, *name;
-    bool            isDir;
 
     fs = mprLookupFileSystem(path);
     if (!path || !pattern) {

@@ -139,7 +139,7 @@
     #define ME_TUNE "speed"
 #endif
 #ifndef ME_VERSION
-    #define ME_VERSION "0.9.6"
+    #define ME_VERSION "0.9.7"
 #endif
 
 /* Prefixes */
@@ -147,55 +147,55 @@
     #define ME_ROOT_PREFIX "C:"
 #endif
 #ifndef ME_PROGRAMFILES_PREFIX
-    #define ME_PROGRAMFILES_PREFIX "C:/Program Files"
+    #define ME_PROGRAMFILES_PREFIX "${prefixes.root}Program Files"
 #endif
 #ifndef ME_PROGRAMFILES32_PREFIX
-    #define ME_PROGRAMFILES32_PREFIX "C:/Program Files"
+    #define ME_PROGRAMFILES32_PREFIX "${prefixes.root}Program Files"
 #endif
 #ifndef ME_BASE_PREFIX
-    #define ME_BASE_PREFIX "C:/Program Files"
+    #define ME_BASE_PREFIX "${prefixes.programFiles}"
 #endif
 #ifndef ME_APP_PREFIX
-    #define ME_APP_PREFIX "C:/Program Files/Embedthis Pak"
+    #define ME_APP_PREFIX "${prefixes.base}/Embedthis Pak"
 #endif
 #ifndef ME_VAPP_PREFIX
-    #define ME_VAPP_PREFIX "C:/Program Files/Embedthis Pak"
+    #define ME_VAPP_PREFIX "${prefixes.app}"
 #endif
 #ifndef ME_DATA_PREFIX
-    #define ME_DATA_PREFIX "C:/Program Files/Embedthis Pak"
+    #define ME_DATA_PREFIX "${prefixes.app}"
 #endif
 #ifndef ME_STATE_PREFIX
-    #define ME_STATE_PREFIX "C:/Program Files/Embedthis Pak"
+    #define ME_STATE_PREFIX "${prefixes.app}"
 #endif
 #ifndef ME_BIN_PREFIX
-    #define ME_BIN_PREFIX "C:/Program Files/Embedthis Pak/bin"
+    #define ME_BIN_PREFIX "${prefixes.app}/bin"
 #endif
 #ifndef ME_INC_PREFIX
-    #define ME_INC_PREFIX "C:/Program Files/Embedthis Pak/inc"
+    #define ME_INC_PREFIX "${prefixes.app}/inc"
 #endif
 #ifndef ME_LIB_PREFIX
-    #define ME_LIB_PREFIX "C:/Program Files/Embedthis Pak/lib"
+    #define ME_LIB_PREFIX "${prefixes.app}/lib"
 #endif
 #ifndef ME_MAN_PREFIX
-    #define ME_MAN_PREFIX "C:/Program Files/Embedthis Pak/man"
+    #define ME_MAN_PREFIX "${prefixes.app}/man"
 #endif
 #ifndef ME_ETC_PREFIX
-    #define ME_ETC_PREFIX "C:/Program Files/Embedthis Pak"
+    #define ME_ETC_PREFIX "${prefixes.app}"
 #endif
 #ifndef ME_WEB_PREFIX
-    #define ME_WEB_PREFIX "C:/Program Files/Embedthis Pak/web"
+    #define ME_WEB_PREFIX "${prefixes.data}/web"
 #endif
 #ifndef ME_LOG_PREFIX
-    #define ME_LOG_PREFIX "C:/Program Files/Embedthis Pak/log"
+    #define ME_LOG_PREFIX "${prefixes.state}/log"
 #endif
 #ifndef ME_SPOOL_PREFIX
-    #define ME_SPOOL_PREFIX "C:/Program Files/Embedthis Pak/tmp"
+    #define ME_SPOOL_PREFIX "${prefixes.state}/tmp"
 #endif
 #ifndef ME_CACHE_PREFIX
-    #define ME_CACHE_PREFIX "C:/Program Files/Embedthis Pak/cache"
+    #define ME_CACHE_PREFIX "${prefixes.state}/cache"
 #endif
 #ifndef ME_SRC_PREFIX
-    #define ME_SRC_PREFIX "C:/Program Files/Embedthis Pak/src"
+    #define ME_SRC_PREFIX "${prefixes.data}/src"
 #endif
 
 /* Suffixes */
@@ -237,10 +237,10 @@
     #define ME_MINOR_VERSION 9
 #endif
 #ifndef ME_PATCH_VERSION
-    #define ME_PATCH_VERSION 6
+    #define ME_PATCH_VERSION 7
 #endif
 #ifndef ME_VNUM
-    #define ME_VNUM 06
+    #define ME_VNUM 07
 #endif
 
 /* Components */

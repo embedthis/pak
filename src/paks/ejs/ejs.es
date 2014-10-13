@@ -3,11 +3,6 @@
  */
 
 
-
-
-/********* Start of file src/core/App.es ************/
-
-
 /*
     App.es -- Application configuration and control.
 
@@ -494,11 +489,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Args.es ************/
-
-
 /*
     Args.es - Command line argument parsing
     Copyright (c) All Rights Reserved. See details at the end of the file.
@@ -753,11 +743,6 @@ for each (file in args.rest) {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Array.es ************/
-
 
 /**
     Array.es - Array class
@@ -1303,11 +1288,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/BinaryStream.es ************/
-
-
 /*
     BinaryStream.es -- BinaryStream class. This class is a filter or endpoint stream to encode and decode binary types.
     Copyright (c) All Rights Reserved. See details at the end of the file.
@@ -1630,11 +1610,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Block.es ************/
-
-
 /*
     Block.es -- Block scope class used internally by the VM.
 
@@ -1673,11 +1648,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Boolean.es ************/
-
 
 /*
     Boolean.es -- Boolean class
@@ -1722,11 +1692,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/ByteArray.es ************/
-
 
 /*
     ByteArray.es - ByteArray class
@@ -2180,11 +2145,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Cache.es ************/
-
-
 /*
     Cache.es -- Cache class providing key/value storage.
 
@@ -2404,11 +2364,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Cmd.es ************/
-
 
 /*
     Cmd.es - Cmd class
@@ -2879,11 +2834,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Compat.es ************/
-
-
 /*
     Compat.es -- Compatibility with other JS engines
 
@@ -2987,11 +2937,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Config.es ************/
-
-
 /*
     Config.es - Configuration settings from ./configure
  
@@ -3093,11 +3038,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Date.es ************/
-
 
 /*
     Date.es -- Date class
@@ -3763,11 +3703,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Debug.es ************/
-
-
 /*
     Debug.es -- Debug class
 
@@ -3831,11 +3766,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Emitter.es ************/
-
 
 /*
     Emitter.es -- Event emitter.
@@ -4056,11 +3986,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Error.es ************/
-
 
 /*
     Error.es -- Error exception classes
@@ -4387,11 +4312,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/File.es ************/
-
-
 /*
     File.es -- File I/O class. Do file I/O and manage files.
 
@@ -4639,11 +4559,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/FileSystem.es ************/
-
-
 /*
     FileSystem.es -- FileSystem class
 
@@ -4759,11 +4674,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Frame.es ************/
-
-
 /*
     Frame.es -- Frame class
  *
@@ -4800,11 +4710,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Function.es ************/
-
 
 /*
     Function.es -- Function class
@@ -4910,11 +4815,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/GC.es ************/
-
-
 /*
     GC.es -- Garbage collector class
  *
@@ -4984,11 +4884,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Global.es ************/
-
 
 /*
     Global.es -- Global variables, namespaces and functions.
@@ -5179,9 +5074,14 @@ module ejs {
 
     /** 
         Blend the contents of one object into another. This routine copies the properites of one object into another.
-        If a property is an object reference and the "deep" option is set, the object is cloned using a deep clone. 
-        Otherwise the object reference is copied.
-        If the overwrite option is false, the property will only be copied if it does not already exist in the destination.
+
+        If the "deep" option is set, object properties have their contents are cloned. Otherwise, the object reference 
+        is copied. Arrays are never deep copied.
+
+        If the "combine" property is set, then property prefixes: +, =, - and ? are used as modifiers describing
+        how to combine source and destination property values.
+
+        If the "overwrite" option is false, properties will only be copied if they do not already exist in the destination.
         @param dest Destination object
         @param src Source object
         @param options Control options
@@ -5196,7 +5096,7 @@ module ejs {
         @option public Boolean. If true, then permit blending into public instance properties.
         @option subclasses Boolean. If true, then copy subclass properties. Defaults to true.
         @option trace Boolean. If true, then trace to the App.log the copied property names.
-        @returns An the destination object
+        @returns The destination object
         @spec ejs
         @example blend(dest, src, { overwrite: true, deep: true, functions: false, subclasses: true })
      */
@@ -5331,11 +5231,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Http.es ************/
-
 
 /**
     Http.es -- HTTP client side communications
@@ -6264,11 +6159,6 @@ FUTURE & KEEP
     @end
  */
 
-
-
-/********* Start of file src/core/Inflector.es ************/
-
-
 /**
     Inflector.es -- Mangage word transformations
  */
@@ -6503,11 +6393,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Iterator.es ************/
-
-
 /**
     Iterator.es -- Iteration support via the Iterable interface and Iterator class. 
 
@@ -6582,11 +6467,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/JSON.es ************/
-
 
 /*
     JSON.es -- JSON class
@@ -6704,11 +6584,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Loader.es ************/
-
 
 /**
     Loader.es - CommonJS module loader with require() support.
@@ -6927,11 +6802,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/LocalCache.es ************/
-
-
 /*
     LocalCache.es -- Local in-memory key/value cache class 
  */
@@ -7070,11 +6940,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Locale.es ************/
-
-
 /*
     Locale.es - Locale specific defaults and control
 
@@ -7137,11 +7002,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Logger.es ************/
-
 
 /*
     Logger.es - Log file control class
@@ -7488,11 +7348,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Math.es ************/
-
-
 /*
     Math.es -- Math class 
 
@@ -7710,11 +7565,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Memory.es ************/
-
-
 /*
     Memory.es -- Memory statistics
  *
@@ -7822,11 +7672,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/MprLog.es ************/
-
 
 /*
     MprLog.es - Application Log File class
@@ -7950,11 +7795,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Name.es ************/
-
-
 /*
     Name.es -- Name class
 
@@ -7998,11 +7838,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Namespace.es ************/
-
-
 /*
     Namespace.es -- Namespace class
 
@@ -8040,11 +7875,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Null.es ************/
-
 
 /*
     Null.es -- Null class used for the null value.
@@ -8096,11 +7926,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Number.es ************/
-
 
 /*
     Number.es - Number class
@@ -8344,11 +8169,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Object.es ************/
-
 
 /*
     Object.es -- Object class. Base class for all types.
@@ -8664,11 +8484,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Path.es ************/
-
-
 /*
     Path.es --  Path class. Path's represent files in a file system. The file may or may not exist.  
 
@@ -8889,8 +8704,7 @@ module ejs {
 
             @option include String | RegExp | Function Whitelist of files to include in the results.
                 Matches the full source path including the Path value. Only for the purpose of this match, 
-                directories will have '/' appended. May be set to the string 'directories' to include only directories 
-                in the results.
+                directories will have '/' appended.
 
                 If 'include' is a function, the file is processed if the function returns true. The function callback
                 has the form:
@@ -8900,14 +8714,11 @@ module ejs {
                 The file argument is the filename being considered, it include the Path value.
                 The value of "this" is set to the Path value.
 
-            @option include Regular expression pattern of files to include in the results. Matches the entire returned path.
-                Only for the purpose of this match, directories will have '/' appended. To include only directories in the
-                results, use {include: 'directories'}
-
             @option missing String Determine what happens if patterns do not match any files.
                 Set to undefined to report patterns that don't resolve by throwing an exception. 
                 Set to any non-null value to be used in the results when there are no matching files or directories. 
                 Set to the empty string to use the patterns in the results and set to null to do nothing.
+                Default is null.
 
             @option noneg Boolean Do not process negated file patterns.
 
@@ -9413,8 +9224,7 @@ module ejs {
         native override function toString(): String
 
         /**
-            Operate on a path. This performs operations on matching patterns for the path.
-            This may be used to copy, move or process entire directory trees.
+            Operate on files.  This may be used to copy, move or process files.
 
             This method supports several invocation forms:
             <ul>
@@ -9458,29 +9268,28 @@ module ejs {
             @param options Additional processing instructions. All the options provided by #Path.files are 
                 also supported.
 
-
             @option active Boolean If destination is an active executable or library, rename the active file using a '.old' 
                 extension and retry.
 
             @option compress Boolean Compress destination file using Zlib. Results in a '.gz' extension.
 
-            @option dir Assume the destination is a directory. Create if it does not exist. Same as appending a trailing '/'
-                to the 'to' argument.
-
-            @option dot String Specifies where the filename extension begins for filenames with multiple dots. Set to 
-                'first' or 'last'.
-
             @option extension String | Path Extension to use for the destination filenames.
+
+            @option extensionDot String Specifies where the filename extension begins for filenames with multiple dots. 
+                Set to 'first' or 'last'.
 
             @option filter RegExp Pattern of lines to filter out from appended files.
 
-            @option flatten Boolean Flatten the input source tree to a single level. Defaults to false.
+            @option flatten Boolean Flatten the input source tree to a single level. Defaults to true.
 
             @option footer String Footer to append when appending files.
 
+            @option group String | Number System group name or number to use for the destination files.
+
             @option header String Header prepend when appending files.
 
-            @option group String | Number System group name or number to use for the destination files.
+            @option isDir Assume the destination is a directory. Create if it does not exist. Same as appending a 
+                trailing '/' to the 'to' argument.
 
             @option keep Boolean Keep uncompressed file after compressing.
 
@@ -9499,15 +9308,15 @@ module ejs {
 
             @option permissions Number Posix style permissions mask. E.g. 0644.
 
-            @option post Function. Callback function to invoke after performing the operation.
+            @option postPerform Function. Callback function to invoke after performing the operation.
                 Function(from, to, options): Path
 
-            @option pre Function. Callback function to invoke before performing the operation.
+            @option prePerform Function. Callback function to invoke before performing the operation.
                 Function(from, to, options): Path
 
             @option relative Boolean | String | Path Create destination filenames relative to the path provided by the 
                 'relative' option, otherwise destination filenames include the Path value. If set to true, the destination
-                 will be relative to the current directory. Defaults to false. 
+                 will be relative to the current directory. If set, implies flatten == false. Defaults to false. 
 
             @option rename Function Callback function to provide a new destination filename. 
                 Function(from, to, options): Path
@@ -9519,32 +9328,32 @@ module ejs {
             @option symlink String | Path Create a symbolic link to the destination. If symlink has a trailing '/'
                 a link is created in the directory specified by 'symlink' using the source file basename as the link name.
 
-            @option trim Number of path components to trim from the start of the source filename. Does not apply when using
-                    'flatten'
+            @option trim Number of path components to trim from the start of the source filename. 
+                If set, implies flatten == false.
 
             @option user String | Number System user account name or number to use for destination files.
 
             @option verbose true | function. If true, then trace to stdout. Otherwise call function for each item.
         */
-        function operate(from, to, options) {
+        function operate(from, to, control) {
             let instructions
-            options ||= {}
+            control ||= {}
             if (to == undefined) {
                 instructions = from
             } else {
-                instructions = [ blend({ from: from, to: to }, options, {functions: true}) ]
+                instructions = [ blend({ from: from, to: to }, control, {functions: true, overwrite: false}) ]
             }
             if (!(instructions is Array)) {
                 instructions = [instructions]
             }
-            let trace = options.verbose
+            let trace = control.verbose
             if (trace && !(trace is Function)) {
                 trace = function(...args) {
                     let msg = '%12s %s' % (['[' + args[0] + ']'] + [args.slice(1).join(' ')]) + '\n'
                     stdout.write(msg)
                 }
             }
-            let expand = options.expand
+            let expand = control.expand
             if (expand) {
                 if (!(expand is Function)) {
                     let obj = expand
@@ -9563,6 +9372,9 @@ module ejs {
                 if (options.move) {
                     options.operation = 'move'
                 }
+                if (options.flatten == undefined) {
+                    options.flatten = true
+                }
                 //  LEGACY 
                 if (options.cat) {
                     print('Warn: using legacy "cat" property for Path.operate, use "append" instead.')
@@ -9571,6 +9383,10 @@ module ejs {
                 if (options.remove) {
                     print('Warn: using legacy "remove" property for Path.operate, use "filter" instead.')
                     options.filter = options.remove
+                }
+                if (options.separator) {
+                    print('Warn: using legacy "separator" property for Path.operate, use "divider" instead.')
+                    options.divider = options.separator
                 }
                 //  LEGACY
                 if (options.title) {
@@ -9583,12 +9399,13 @@ module ejs {
 
                 /*
                     Do not sort this list as we want to preserve user supplied order in their files list
+                    The list files are relative to 'this'
                  */
-                let files = this.files(from, blend({contents: true, relative: true}, options, {overwrite: false}))
+                let files = this.files(from, blend({contents: true, relative: this}, options, {overwrite: false}))
 
                 let to = Path(expand(options.to, options))
                 let sep = to.separator
-                let toDir = to.isDir || to.name.endsWith(sep) || options.dir
+                let toDir = to.isDir || to.name.endsWith(sep) || options.isDir
                 if (operation != 'append') {
                     toDir ||= from.length > 1 || files.length > 1
                 }
@@ -9618,7 +9435,7 @@ module ejs {
                         if (options.relative) {
                             let trimmed = file
                             if (options.trim) {
-                                trimmed = file.components.slice(options.trim).join(to.separator)
+                                trimmed = trimmed.components.slice(options.trim).join(to.separator)
                             }
                             if (options.relative == true) {
                                 dest = to.join(this.join(trimmed).relative)
@@ -9627,7 +9444,7 @@ module ejs {
                             }
 
                         } else if (options.trim) {
-                            dest = to.join(src.components.slice(options.trim).join(to.separator))
+                            dest = to.join(file.components.slice(options.trim).join(to.separator))
 
                         } else if (options.flatten) {
                             dest = to.join(file.basename)
@@ -9643,7 +9460,7 @@ module ejs {
                         dest = to
                     }
                     if (options.extension) {
-                        if (options.dot == 'first') {
+                        if (options.extensionDot == 'first') {
                             dest = dest.split('.')[0].joinExt(options.extension)
                         } else {
                             dest = dest.replaceExt(options.extension)
@@ -9689,8 +9506,8 @@ module ejs {
                     let dest = item.to
                     trace && trace(operation.toPascal(), src + ' => ' + dest)
 
-                    if (options.pre) {
-                        options.pre.call(this, src, dest, options)
+                    if (options.prePerform) {
+                        options.prePerform.call(this, src, dest, options)
                     }
                     if (options.dry) {
                         print('Dry Run', '\n    From:    ' + src + '\n    To:      ' + dest + '\n    Options: ' + 
@@ -9699,7 +9516,7 @@ module ejs {
                     } else if (options.perform && options.perform.call(this, src, dest, options)) {
                         /* Done if 'action' returns true */
 
-                    //  LEGACY
+                    //  UNUSED LEGACY
                     } else if (options.action && options.action.call(this, src, dest, options)) {
                         /* Done if 'action' returns true */
 
@@ -9707,11 +9524,11 @@ module ejs {
                         src.rename(dest)
 
                     } else if (operation == 'append') {
-                        if (options.separator) {
-                            if (options.separator == true) {
+                        if (options.divider) {
+                            if (options.divider == true) {
                                 contents.push('\n\n/********* Start of file ' + src + ' ************/\n\n')
                             } else {
-                                contents.push(expand(options.separator, item))
+                                contents.push(expand(options.divider, item))
                             }
                         }
                         let data = src.readString()
@@ -9743,48 +9560,49 @@ module ejs {
                         }
                     }
                 }
-                if (operation == 'append') {
-                    /* Loop just once over the post processing */
-                    commands = commands.slice(0, 1)
-                    if (options.footer) {
-                        contents.push(expand(options.footer, options))
-                    }
-                    to.write(contents.join('\n'))
-                    to.setAttributes(options)
-                }
-                /*
-                    Post processing: patch, strip, compress, symlink
-                 */
-                for each (item in commands) {
-                    let src = this.join(item.from)
-                    let dest = item.to
-                    if (options.patch) {
-                        dest.write(expand(dest.readString(), item))
-                        dest.setAttributes(attributes)
-                    }
-                    if (options.strip) {
-                        Cmd.run('strip', dest)
-                    }
-                    if (options.compress) {
-                        let zname = Path(dest.name + '.gz')
-                        zname.remove()
-                        Zlib.compress(dest.name, zname)
-                        if (!options.keep) {
-                            dest.remove()
-                            item.dest = zname
+                if (!options.perform) {
+                    if (operation == 'append') {
+                        /* Loop just once over the post processing */
+                        commands = commands.slice(0, 1)
+                        if (options.footer) {
+                            contents.push(expand(options.footer, options))
                         }
+                        to.write(contents.join('\n'))
+                        to.setAttributes(options)
                     }
-                    if (options.symlink) {
-                        let symlink = Path(options.symlink)
-                        if (symlink.name.endsWith(sep)) {
-                            symlink.makeDir(options)
-                            symlink.join(dest.basename)
+                    /*
+                        Post processing: patch, strip, compress, symlink
+                     */
+                    for each (item in commands) {
+                        let src = this.join(item.from)
+                        let dest = item.to
+                        if (options.patch) {
+                            dest.write(expand(dest.readString(), item))
                         }
-                        linkFile(dest.relativeTo(symlink.dirname), symlink, options)
-                        item.to = symlink
-                    }
-                    if (options.post) {
-                        options.post.call(this, src, dest, options)
+                        if (options.strip) {
+                            Cmd.run('strip', dest)
+                        }
+                        if (options.compress) {
+                            let zname = Path(dest.name + '.gz')
+                            zname.remove()
+                            Zlib.compress(dest.name, zname)
+                            if (!options.keep) {
+                                dest.remove()
+                                item.dest = zname
+                            }
+                        }
+                        if (options.symlink && Config.OS != 'windows') {
+                            let symlink = Path(options.symlink)
+                            if (symlink.name.endsWith(sep) || symlink.isDir) {
+                                symlink.makeDir(options)
+                                symlink = symlink.join(dest.basename)
+                            }
+                            dest.relativeTo(symlink.dirname).link(symlink)
+                            item.to = symlink
+                        }
+                        if (options.postPerform) {
+                            options.postPerform.call(this, src, dest, options)
+                        }
                     }
                 }
             }
@@ -9919,11 +9737,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Promise.es ************/
-
 
 /*
     Promise.es -- Promise keeper for deferred execution of async APIs.
@@ -10171,11 +9984,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/RegExp.es ************/
-
-
 /*
     Regex.es -- Regular expression class.
 
@@ -10365,11 +10173,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Socket.es ************/
-
-
 /*
     Socket.es -- Socket I/O class
     Copyright (c) All Rights Reserved. See details at the end of the file.
@@ -10508,11 +10311,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Stream.es ************/
-
 
 /*
     Stream.es -- Stream interface.
@@ -10659,11 +10457,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/String.es ************/
-
-
 /*
     String.es -- String class
  *
@@ -10751,9 +10544,9 @@ module ejs {
             To preserve an ${token} unmodified, preceed the token with an extra '$'. For example: $${token}.
             @param obj containing tokens to expand
             @param options Options hash
-            @option fill Set to a string to use for missing properties. Set to undefined or omit options to 
+            @option fill Set to a string to use for missing properties. Set to undefined or omit the fill option to 
                 throw an exception for missing properties. Set fill to '${}' to preserve undefined tokens as-is. 
-                This permits multi-pass expansions.
+                This permits multi-pass expansions. Default is to throw an exception (undefined).
             @option join Character to use to join array elements. Defaults to space.
             @return Expanded string
          */ 
@@ -11225,11 +11018,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/System.es ************/
-
-
 /*
     System.es - System class
 
@@ -11292,11 +11080,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/TextStream.es ************/
-
 
 /*
     TextStream.es -- TextStream class
@@ -11598,11 +11381,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Timer.es ************/
-
-
 /*
     Timer.es -- Timer Services
 
@@ -11760,11 +11538,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Type.es ************/
-
-
 /*
     Type.es -- Type class. Base class for all type objects.
 
@@ -11807,11 +11580,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Uri.es ************/
-
 
 /*
     Uri.es -- Uri parsing and management class
@@ -12302,11 +12070,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/Void.es ************/
-
-
 /*
     Void.es -- Void class used for undefined value.
 
@@ -12359,11 +12122,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/WebSocket.es ************/
-
 
 /**
     WebSocket.es -- WebSockets class
@@ -12595,11 +12353,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/Worker.es ************/
-
 
 /*
     Worker -- Worker classes
@@ -12841,11 +12594,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/XML.es ************/
-
 
 /*
     XML.es - XML class
@@ -13261,11 +13009,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/core/XMLHttp.es ************/
-
-
 /**
     XMLHttp.es -- XMLHttp class
 
@@ -13484,11 +13227,6 @@ module ejs {
 
     @end
  */
-
-
-
-/********* Start of file src/core/XMLList.es ************/
-
 
 /*
     XMLList.es - XMLList class
@@ -13887,11 +13625,6 @@ module ejs {
     @end
  */
 
-
-
-/********* Start of file src/ejs.db/Database.es ************/
-
-
 /**
     Database.es -- Database class
 
@@ -14260,11 +13993,6 @@ module ejs.db {
     @end
  */
 
-
-
-/********* Start of file src/ejs.db/DatabaseConnector.es ************/
-
-
 /*
     DatabaseConnector.es -- Database Connector interface
 
@@ -14380,11 +14108,6 @@ module ejs.db {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.db.mapper/Record.es ************/
-
 
 /**
     Record.es -- Record class
@@ -15676,11 +15399,6 @@ module ejs.db.mapper {
     @end
  */
 
-
-
-/********* Start of file src/ejs.db.sqlite/Sqlite.es ************/
-
-
 /**
     Sqlite.es -- SQLite Database class
 
@@ -16011,11 +15729,6 @@ module ejs.db.sqlite {
     @end
  */
 
-
-
-/********* Start of file src/ejs.mail/Mail.es ************/
-
-
 /*
    Mail.es -- Simple mail using sendmail
  */
@@ -16106,11 +15819,6 @@ module ejs.mail {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.tar/Tar.es ************/
-
 
 /**
     Tar.es -- Tar archive management
@@ -16538,11 +16246,6 @@ module ejs.tar {
     @end
  */
 
-
-
-/********* Start of file src/ejs.template/TemplateParser.es ************/
-
-
 /*
     TemplateParser.es -- Ejscript web templating parser. 
  */
@@ -16882,11 +16585,6 @@ module ejs.template  {
     @end
  */
 
-
-
-/********* Start of file src/ejs.unix/Unix.es ************/
-
-
 /*
     Unix.es -- Unix compatibility functions
 
@@ -16923,14 +16621,17 @@ module ejs.unix {
 
     /**
         Copy files
-        The src argument can be a Path or String or an array of Strings/Paths representing files/directories to copy and
-        may include wildcards. If a src element is a directory, then it all files and subdirectories underneath will be copied. 
-        By default, this method operates in "flatten" mode where the source directory structure is not copied. To
-        copy an entire directory tree, set "flatten" to false in the options. In this case, the entire source path is 
-        created under the destination. If the "relative" or "trim" options are defined, it is assumed that flatten mode is
-        disabled.
+        Copy files from source patterns to a destination. This is a wrapper over Path.operate() and it supports all
+        of its options.
 
-        This routine is implemented using the Path.operate method. All the options supported by Path.operate are supported.
+        The 'src' argument can be a Path or String or an array of Strings/Paths representing files/directories to copy and
+        may include wildcards. If a src element is a directory, then it all files and subdirectories underneath will be copied. 
+
+        By default, this method operates in 'flatten' mode where the source directory structure is not copied. To
+        copy an entire directory tree, set 'flatten' to false in the options. In this case, the entire source path is 
+        created under the destination.
+        
+        If the 'relative' or 'trim' options are defined, it is assumed that flatten mode is disabled.
 
         @param src Path | String | Array This may be a String or Path containing the source paths to 
         copy. It may also be an array of Paths or Strings. The 'src' patterns may contain:
@@ -16940,77 +16641,19 @@ module ejs.unix {
             {}  Comma separated patterns
             !   Negates pattern. This removes matching patterns from the set. These are applied after all source
                 patterns have been processed. Use !! to escape.
-        If item is a directory, then "**" is automatically appended.
+        If item is a directory, then '**' is automatically appended.
 
 
         @param dest Destination file or directory. If multiple files are copied, dest is assumed to be a directory and 
-            will be created if required.  If dest has a trailing "/", it is assumed to be a directory.
+            will be created if required.  If dest has a trailing '/', it is assumed to be a directory.
 
         @param options Additional processing instructions. All the options provided by #Path.operate are 
             supported.
 
         @return Number of files copied
     */
-    function cp(src, dest: Path, options = {}): Number {
-        //  DEPRECATED tree option
-        if (options.flatten == undefined) {
-            if (options.tree) {
-                print('WARN: cp "tree" option is not supported')
-                /* Default for tree() */
-            } else {
-                options = options.clone()
-                options.flatten = true
-            }
-        }
-        return Path().operate(src, dest, options)
-    }
-
-/* UNUSED
-    function cp(src, dest: Path, options = {}): Number {
-        if (!(src is Array)) src = [src]
-        let count = 0
-        for each (let pattern: Path in src) {
-            let base: Path = Path('.')
-            if (pattern.isDir) {
-                base = pattern
-                pattern = Path('**')
-                options = blend({tree: true, relative: true}, options)
-
-            } else if (options.tree) {
-                base = pattern.dirname
-                pattern = pattern.basename
-                options.relative = true
-            }
-            list = base.files(pattern, options)
-
-            if (!list || list.length == 0) {
-                if (options.exceptions !== false) {
-                    throw 'cp: Cannot find files to copy "' + pattern + '" to ' + dest
-                }
-            }
-            destIsDir = (dest.isDir || list.length > 1 || dest.name.endsWith('/'))
-
-            for each (let file: Path in list) {
-                let to, from = base.join(file)
-                if (options.tree) {
-                    to = dest.join(file).normalize
-                } else if (destIsDir) {
-                    to = dest.join(file.basename)
-                } else {
-                    to = dest
-                }
-                to.dirname.makeDir()
-                if (from.isDir) {
-                    to.makeDir()
-                } else {
-                    from.copy(to, options)
-                }
-                count++
-            }
-        }
-        return count
-    }
-*/
+    function cp(src, dest: Path, options = {}): Number
+        Path().operate(src, dest, options)
 
     /**
         Get the directory name portion of a file. The dirname name portion is the leading portion including all 
@@ -17304,11 +16947,6 @@ module ejs.unix {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Cascade.es ************/
-
-
 /*
     Cascade slices and return the response from the first non-404 slice
     Usage:
@@ -17359,11 +16997,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/CommonLog.es ************/
-
 
 /*
     CommonLog.es -- Common Log Format logger.
@@ -17444,11 +17077,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/ContentType.es ************/
-
-
 /*
     ContentType.es -- Define Content-Type headers
  */
@@ -17507,11 +17135,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/Controller.es ************/
-
 
 /*
     Controller.es -- MVC Controller class.
@@ -18465,11 +18088,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Dir.es ************/
-
-
 /*
     Dir.es - Directory redirection handler
  */
@@ -18545,11 +18163,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/Google.es ************/
-
 
 /**
    GoogleConnector.es -- View connector for the Google Visualization library
@@ -18759,11 +18372,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Head.es ************/
-
-
 /**
     Head.es - Respond to HEAD requesets and Return just the headers and omit the body.
     NOTE: This is typically done by good web servers anyway.
@@ -18818,11 +18426,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/Html.es ************/
-
 
 /**
    Html.es -- HtmlViewConnector. This provides HTML view support.
@@ -19553,11 +19156,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/HttpServer.es ************/
-
-
 /*
     HttpServer.es -- Http Server class.
   
@@ -20266,11 +19864,6 @@ server.listen("127.0.0.1:7777")
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/MethodOverride.es ************/
-
-
 /*
     MethodOverride.es - Override the method type based on the Method-Override header
  */
@@ -20320,11 +19913,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Middleware.es ************/
-
-
 /*
     Middleware.es - Wrap a web app with defined middleware
  */
@@ -20368,11 +19956,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/Mvc.es ************/
-
 
 /**
     Mvc.es -- Model View Controller (MVC) web app management
@@ -20644,11 +20227,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/Request.es ************/
-
 
 /**
     Request.es -- Ejscript web request object. The Request object respresents a single HTTP request and provides
@@ -21858,11 +21436,6 @@ TODO - DEBUG
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Router.es ************/
-
-
 /**
     Router.es - Web Request router. Route incoming client HTTP requests.
  */
@@ -22934,11 +22507,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Script.es ************/
-
-
 /*
     Script.es -- Ejscript templated web content handler
  */
@@ -23003,11 +22571,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Session.es ************/
-
-
 /**
     Session.es -- Session state management
  */
@@ -23070,11 +22633,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/ShowExceptions.es ************/
-
-
 /*
     Show exceptions to the client 
  */
@@ -23120,11 +22678,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/Static.es ************/
-
 
 /*
     Static.es - Static content handler
@@ -23343,11 +22896,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/Template.es ************/
-
-
 /*
     Template.es -- Ejscript templated web content handler
  */
@@ -23442,11 +22990,6 @@ module ejs.web {
     @end
  */
 
-
-
-/********* Start of file src/ejs.web/UploadFile.es ************/
-
-
 /**
     uploadedFile.es - Description of an uploaded file. Instances are created and stored in Request.files.
  */
@@ -23511,11 +23054,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/UrlMap.es ************/
-
 
 /*
     UrlMap.es - Simple Url Router
@@ -23602,11 +23140,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/Utils.es ************/
-
 
 /**
     Utils.es -- Utility routines for the web framework.
@@ -23742,11 +23275,6 @@ module ejs.web {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.web/View.es ************/
-
 
 /**
     View.es -- View class 
@@ -24763,11 +24291,6 @@ TODO -- much more doc here
     @end
  */
 
-
-
-/********* Start of file src/ejs.zip/Zip.es ************/
-
-
 /**
     Zip.es -- Zip class
     @hide
@@ -24833,11 +24356,6 @@ module ejs.tar {
 
     @end
  */
-
-
-
-/********* Start of file src/ejs.zlib/Zlib.es ************/
-
 
 /**
     Zlib.es -- Zlib compression class
