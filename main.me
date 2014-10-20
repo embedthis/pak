@@ -3,9 +3,11 @@
  */
 
 Me.load({
+    plugins: [ 'configuration' ],
+
     blend: [
-        "src/paks/*/*.me",
-        "doc/doc.me",
+        'ejs',
+        'doc/doc.me',
     ],
 
     configure: {
@@ -107,9 +109,9 @@ Me.load({
         },
 
         projects: {
-            action: "
+            action: `
                 genProjects('--with est', 'default', ['freebsd-x86', 'linux-x86', 'macosx-x64', 'windows-x86'])
-            ",
+            `,
         },
     },
 })

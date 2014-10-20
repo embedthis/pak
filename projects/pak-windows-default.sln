@@ -162,6 +162,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pak.mod", "pak-windows-defa
 		{D768049A-0B3F-4D6C-BB87-D2099C833DA4} = {D768049A-0B3F-4D6C-BB87-D2099C833DA4}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
+		{5460A9D7-52CA-499B-A416-4A80F1D5DA79} = {5460A9D7-52CA-499B-A416-4A80F1D5DA79}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
 		{863459B7-A581-406C-B6BB-1FFFF0EF5CC4} = {863459B7-A581-406C-B6BB-1FFFF0EF5CC4}
 	EndProjectSection
 EndProject
@@ -186,6 +189,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pak", "pak-windows-default\
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{D768049A-0B3F-4D6C-BB87-D2099C833DA4} = {D768049A-0B3F-4D6C-BB87-D2099C833DA4}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{5460A9D7-52CA-499B-A416-4A80F1D5DA79} = {5460A9D7-52CA-499B-A416-4A80F1D5DA79}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{863459B7-A581-406C-B6BB-1FFFF0EF5CC4} = {863459B7-A581-406C-B6BB-1FFFF0EF5CC4}

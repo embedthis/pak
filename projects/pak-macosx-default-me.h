@@ -132,6 +132,9 @@
 #ifndef ME_MANIFEST
     #define ME_MANIFEST "package/manifest.me"
 #endif
+#ifndef ME_ME
+    #define ME_ME "=0.8.4"
+#endif
 #ifndef ME_MPR_LOGGING
     #define ME_MPR_LOGGING 1
 #endif
@@ -195,7 +198,7 @@
     #define ME_ETC_PREFIX "${prefixes.data}/etc/pak"
 #endif
 #ifndef ME_WEB_PREFIX
-    #define ME_WEB_PREFIX "${prefixes.state}/www/pak-default"
+    #define ME_WEB_PREFIX "${prefixes.state}/www/pak"
 #endif
 #ifndef ME_LOG_PREFIX
     #define ME_LOG_PREFIX "${prefixes.state}/log/pak"

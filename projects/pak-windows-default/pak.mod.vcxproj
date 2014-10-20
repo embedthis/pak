@@ -102,13 +102,6 @@ cd projects\pak-windows-default</Command>
       </CustomBuildStep>
   </ItemDefinitionGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="ejsc.vcxproj">
-      <Project>d768049a-0b3f-4d6c-bb87-d2099c833da4</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      </ProjectReference>
-    </ItemGroup>
-
   <Import Project="$(VCTargetsPath)Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

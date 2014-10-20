@@ -248,11 +248,10 @@ class Pak
         if (options.dir) {
             App.chdir(options.dir)
         }
-/* UNUSED
+        //  KEEP - WAS COMMENTED OUT
         if (options.all || !options.quiet) {
             options.versions = true
         }
-*/
     }
 
     function setup() {

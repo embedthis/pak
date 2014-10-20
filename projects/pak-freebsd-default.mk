@@ -66,7 +66,7 @@ ME_LIB_PREFIX         ?= $(ME_ROOT_PREFIX)/usr/local/lib
 ME_MAN_PREFIX         ?= $(ME_ROOT_PREFIX)/usr/local/share/man
 ME_SBIN_PREFIX        ?= $(ME_ROOT_PREFIX)/usr/local/sbin
 ME_ETC_PREFIX         ?= $(ME_ROOT_PREFIX)/etc/$(NAME)
-ME_WEB_PREFIX         ?= $(ME_ROOT_PREFIX)/var/www/$(NAME)-default
+ME_WEB_PREFIX         ?= $(ME_ROOT_PREFIX)/var/www/$(NAME)
 ME_LOG_PREFIX         ?= $(ME_ROOT_PREFIX)/var/log/$(NAME)
 ME_SPOOL_PREFIX       ?= $(ME_ROOT_PREFIX)/var/spool/$(NAME)
 ME_CACHE_PREFIX       ?= $(ME_ROOT_PREFIX)/var/spool/$(NAME)/cache
@@ -135,10 +135,10 @@ clean:
 clobber: clean
 	rm -fr ./$(BUILD)
 
-
 #
 #   me.h
 #
+
 $(BUILD)/inc/me.h: $(DEPS_1)
 
 #
@@ -178,6 +178,7 @@ $(BUILD)/inc/http.h: $(DEPS_4)
 #
 #   ejs.slots.h
 #
+
 src/paks/ejs/ejs.slots.h: $(DEPS_5)
 
 #
@@ -251,6 +252,7 @@ $(BUILD)/inc/est.h: $(DEPS_11)
 #
 #   ejs.h
 #
+
 src/paks/ejs/ejs.h: $(DEPS_12)
 
 #
@@ -279,6 +281,7 @@ $(BUILD)/obj/ejsc.o: \
 #
 #   est.h
 #
+
 src/paks/est/est.h: $(DEPS_15)
 
 #
@@ -294,6 +297,7 @@ $(BUILD)/obj/estLib.o: \
 #
 #   http.h
 #
+
 src/paks/http/http.h: $(DEPS_17)
 
 #
@@ -309,6 +313,7 @@ $(BUILD)/obj/httpLib.o: \
 #
 #   mpr.h
 #
+
 src/paks/mpr/mpr.h: $(DEPS_19)
 
 #
@@ -345,6 +350,7 @@ $(BUILD)/obj/pak.o: \
 #
 #   pcre.h
 #
+
 src/paks/pcre/pcre.h: $(DEPS_23)
 
 #
@@ -361,6 +367,7 @@ $(BUILD)/obj/pcre.o: \
 #
 #   zlib.h
 #
+
 src/paks/zlib/zlib.h: $(DEPS_25)
 
 #
@@ -499,10 +506,9 @@ $(BUILD)/bin/ejs.mod: $(DEPS_33)
 	( \
 	cd src/paks/ejs; \
 	echo '   [Compile] ejs.mod' ; \
-	null/ejsc --out ../../../$(BUILD)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
+	../../../$(BUILD)/bin/ejsc --out ../../../$(BUILD)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
 	)
 endif
-
 
 #
 #   http-ca-crt
@@ -530,6 +536,9 @@ endif
 #   libmprssl
 #
 DEPS_36 += $(BUILD)/bin/libmpr.so
+ifeq ($(ME_COM_EST),1)
+    DEPS_36 += $(BUILD)/bin/libest.so
+endif
 DEPS_36 += $(BUILD)/obj/mprSsl.o
 
 LIBS_36 += -lmpr
@@ -556,14 +565,11 @@ DEPS_37 += src/Package.es
 DEPS_37 += src/pak.es
 DEPS_37 += src/paks/ejs-version/Version.es
 ifeq ($(ME_COM_EJS),1)
-    DEPS_37 += $(BUILD)/bin/ejsc
+    DEPS_37 += $(BUILD)/bin/ejs.mod
 endif
 
 $(BUILD)/bin/pak.mod: $(DEPS_37)
-	( \
-	cd .; \
-	./$(BUILD)/bin/ejsc  --out ./$(BUILD)/bin/pak.mod --optimize 9 src/Package.es src/pak.es src/paks/ejs-version/Version.es ; \
-	)
+	./$(BUILD)/bin/ejsc  --out ./$(BUILD)/bin/pak.mod --optimize 9 src/Package.es src/pak.es src/paks/ejs-version/Version.es
 
 #
 #   pak
@@ -596,9 +602,10 @@ $(BUILD)/bin/pak: $(DEPS_38)
 #
 #   installBinary
 #
+
 installBinary: $(DEPS_39)
 	( \
-	cd .; \
+	cd ../../.paks/me-package/0.8.3; \
 	mkdir -p "$(ME_APP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	ln -s "0.9.7" "$(ME_APP_PREFIX)/latest" ; \
@@ -607,27 +614,31 @@ installBinary: $(DEPS_39)
 	mkdir -p "$(ME_BIN_PREFIX)" ; \
 	rm -f "$(ME_BIN_PREFIX)/pak" ; \
 	ln -s "$(ME_VAPP_PREFIX)/bin/pak" "$(ME_BIN_PREFIX)/pak" ; \
+	if [ "$(ME_COM_OPENSSL)" = 1 ]; then true ; \
+	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
+	cp $(BUILD)/bin/libssl*.so* $(ME_VAPP_PREFIX)/bin/libssl*.so* ; \
+	cp $(BUILD)/bin/libcrypto*.so* $(ME_VAPP_PREFIX)/bin/libcrypto*.so* ; \
+	fi ; \
+	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
+	cp $(BUILD)/bin/ca.crt $(ME_VAPP_PREFIX)/bin/ca.crt ; \
+	cp $(BUILD)/bin/ejs.mod $(ME_VAPP_PREFIX)/bin/ejs.mod ; \
+	cp $(BUILD)/bin/pak.mod $(ME_VAPP_PREFIX)/bin/pak.mod ; \
+	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
 	cp $(BUILD)/bin/libejs.so $(ME_VAPP_PREFIX)/bin/libejs.so ; \
 	cp $(BUILD)/bin/libhttp.so $(ME_VAPP_PREFIX)/bin/libhttp.so ; \
 	cp $(BUILD)/bin/libmpr.so $(ME_VAPP_PREFIX)/bin/libmpr.so ; \
 	cp $(BUILD)/bin/libmprssl.so $(ME_VAPP_PREFIX)/bin/libmprssl.so ; \
 	cp $(BUILD)/bin/libpcre.so $(ME_VAPP_PREFIX)/bin/libpcre.so ; \
 	cp $(BUILD)/bin/libzlib.so $(ME_VAPP_PREFIX)/bin/libzlib.so ; \
-	if [ "$(ME_COM_OPENSSL)" = 1 ]; then true ; \
-	cp $(BUILD)/bin/libssl*.so* $(ME_VAPP_PREFIX)/bin/libssl*.so* ; \
-	cp $(BUILD)/bin/libcrypto*.so* $(ME_VAPP_PREFIX)/bin/libcrypto*.so* ; \
-	fi ; \
 	if [ "$(ME_COM_EST)" = 1 ]; then true ; \
+	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
 	cp $(BUILD)/bin/libest.so $(ME_VAPP_PREFIX)/bin/libest.so ; \
 	fi ; \
-	cp $(BUILD)/bin/ca.crt $(ME_VAPP_PREFIX)/bin/ca.crt ; \
-	cp $(BUILD)/bin/ejs.mod $(ME_VAPP_PREFIX)/bin/ejs.mod ; \
-	cp $(BUILD)/bin/pak.mod $(ME_VAPP_PREFIX)/bin/pak.mod ; \
-	mkdir -p "$(ME_VAPP_PREFIX)/doc/man/man1/doc/public/man" ; \
-	cp doc/public/man/pak.1 $(ME_VAPP_PREFIX)/doc/man/man1/doc/public/man/pak.1 ; \
+	mkdir -p "$(ME_VAPP_PREFIX)/doc/man/man1" ; \
+	cp doc/public/man/pak.1 $(ME_VAPP_PREFIX)/doc/man/man1/pak.1 ; \
 	mkdir -p "$(ME_MAN_PREFIX)/man1" ; \
 	rm -f "$(ME_MAN_PREFIX)/man1/pak.1" ; \
-	ln -s "$(ME_VAPP_PREFIX)/doc/man/man1/doc/public/man/pak.1" "$(ME_MAN_PREFIX)/man1/pak.1" ; \
+	ln -s "$(ME_VAPP_PREFIX)/doc/man/man1/pak.1" "$(ME_MAN_PREFIX)/man1/pak.1" ; \
 	)
 
 
@@ -647,7 +658,7 @@ DEPS_41 += stop
 
 uninstall: $(DEPS_41)
 	( \
-	cd .; \
+	cd ../../.paks/me-package/0.8.3; \
 	rm -fr "$(ME_VAPP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	rmdir -p "$(ME_APP_PREFIX)" 2>/dev/null ; true ; \
@@ -656,6 +667,7 @@ uninstall: $(DEPS_41)
 #
 #   version
 #
+
 version: $(DEPS_42)
 	echo 0.9.7
 
