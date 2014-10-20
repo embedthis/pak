@@ -1134,6 +1134,7 @@ class Pak
             }
         }
         fromDir.operate(files, toDir, {
+            flatten: false,
             pre: function(from, to, options) {
                 if (!to.exists || options.force) {
                     vtrace('Copy', to)
