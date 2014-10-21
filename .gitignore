@@ -37,3 +37,4 @@ windows*.bit
 *.guid
 .gitattributes
 /build
+.DS_Store
