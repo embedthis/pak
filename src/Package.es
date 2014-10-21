@@ -185,9 +185,9 @@ class Package {
         sourcePath = path
         sourced = sourcePath.exists
         loadSpec()
-        if (spec) {
-            spec.version ||= '0.0.0'
-            cacheVersion = Version(spec.version)
+        if (source) {
+            source.version ||= '0.0.0'
+            cacheVersion = Version(source.version)
         }
     }
 
@@ -197,7 +197,7 @@ class Package {
 
     private function loadSpec(path: Path? = null) {
         if (path) {
-            spec = Package.readSpec(path)
+            let spec = Package.readSpec(path)
             throw "BOOM - unsupported"
         } else {
             if (sourcePath && sourcePath.exists) {
@@ -220,7 +220,6 @@ class Package {
             }
         }
     }
-
 
     static function readSpec(path: Path?, options = {}): Object {
         if (!path) {
