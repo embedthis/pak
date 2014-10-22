@@ -384,6 +384,7 @@ $(BUILD)/obj/zlib.o: \
 #
 #   libmpr
 #
+DEPS_27 += $(BUILD)/inc/osdep.h
 DEPS_27 += $(BUILD)/inc/mpr.h
 DEPS_27 += $(BUILD)/obj/mprLib.o
 
@@ -524,6 +525,7 @@ ifeq ($(ME_COM_EST),1)
 #
 #   libest
 #
+DEPS_35 += $(BUILD)/inc/osdep.h
 DEPS_35 += $(BUILD)/inc/est.h
 DEPS_35 += $(BUILD)/obj/estLib.o
 
@@ -605,7 +607,7 @@ $(BUILD)/bin/pak: $(DEPS_38)
 
 installBinary: $(DEPS_39)
 	( \
-	cd ../../.paks/me-package/0.8.3; \
+	cd ../../.paks/me-package/0.8.4; \
 	mkdir -p "$(ME_APP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	ln -s "0.9.7" "$(ME_APP_PREFIX)/latest" ; \
@@ -658,7 +660,7 @@ DEPS_41 += stop
 
 uninstall: $(DEPS_41)
 	( \
-	cd ../../.paks/me-package/0.8.3; \
+	cd ../../.paks/me-package/0.8.4; \
 	rm -fr "$(ME_VAPP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	rmdir -p "$(ME_APP_PREFIX)" 2>/dev/null ; true ; \

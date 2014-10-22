@@ -1247,8 +1247,6 @@ class Pak
 
     private function copyPak(pak: Package) {
         vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
-pak.dump()
-print("SP", pak.source)
         copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
     }
 
