@@ -1037,8 +1037,8 @@ class Pak
         pak.resolve(pak.searchCriteria || '*')
         trace('Search', 'Latest version of ' + pak)
         let later = searchPak(pak)
-        if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion)) {
-            vtrace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
+        if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion) && !options.force) {
+            trace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
             return pak
         }
         trace('Update', pak + ' to ' + later.cacheVersion)
