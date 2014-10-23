@@ -942,15 +942,16 @@ class Pak
         for each (pak in sets) {
             spec.optionalDependencies ||= {}
             let optional = spec.optionalDependencies[pak.name] ? ' optional' : ''
+            let frozen = (pak.install && pak.install.frozen) ? ' frozen' : ''
             out.write(pak.name)
             if (!spec.dependencies[pak.name] && !spec.optionalDependencies[pak.name]) {
                 out.write(': ')
-                print(pak.installVersion + ' foreign ' + optional)
+                print(pak.installVersion + ' foreign ' + optional + frozen)
             } else if (options.details && pak.install) {
                 out.write(': ')
                 print(serialize(pak.install, {pretty: true, indent: 4}))
             } else if (options.versions) {
-                print(' ' + pak.installVersion + optional)
+                print(' ' + pak.installVersion + optional + frozen)
             } else {
                 print()
             }
@@ -1066,6 +1067,10 @@ class Pak
         }
         if (options.force && pak.installVersion && pak.installVersion.same(pak.cacheVersion)) {
             state.reinstall = true
+        }
+        if (pak.install && pak.install.frozen) {
+            trace('Info', 'Installed ' + pak + ' ' + pak.installVersion + ' is frozen')
+            return
         }
         later.resolve(later.cacheVersion)
         runScripts(pak, 'preupgrade')
@@ -1222,13 +1227,13 @@ class Pak
                         load(path)
                     } else if (path.extension == 'me') {
                         trace('Run', 'MakeMe', script)
-                        Cmd.run('me -q --file ' + path, {noio: true})
+                        Cmd.run('me -q --file ' + path, {stream: true})
                     } else if (path.extension == 'bit') {
                         trace('Run', 'Bit', script)
-                        Cmd.run('bit -q --file ' + path, {noio: true})
+                        Cmd.run('bit -q --file ' + path, {stream: true})
                     } else {
                         trace('Run', 'Shell', script)
-                        Cmd.run('bash ' + path, {noio: true})
+                        Cmd.run('bash ' + path, {stream: true})
                     }
                 } catch (e) {
                     throw 'Cannot run installion script "' + script + '" for ' + pak + '\n' + e
@@ -1240,7 +1245,7 @@ class Pak
             path = pak.cachePath.join('start.me')
             if (path.exists) {
                 vtrace('Run', 'me -q --file ' + path + ' ' + event)
-                Cmd.run('me -q --file ' + path + ' ' + event, {noio: true})
+                Cmd.run('me -q --file ' + path + ' ' + event, {stream: true})
             }
         }
     }
