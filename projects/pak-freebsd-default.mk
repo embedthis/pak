@@ -606,8 +606,6 @@ $(BUILD)/bin/pak: $(DEPS_38)
 #
 
 installBinary: $(DEPS_39)
-	( \
-	cd ../../.paks/me-package/0.8.4; \
 	mkdir -p "$(ME_APP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	ln -s "0.9.6" "$(ME_APP_PREFIX)/latest" ; \
@@ -640,8 +638,7 @@ installBinary: $(DEPS_39)
 	cp doc/public/man/pak.1 $(ME_VAPP_PREFIX)/doc/man/man1/pak.1 ; \
 	mkdir -p "$(ME_MAN_PREFIX)/man1" ; \
 	rm -f "$(ME_MAN_PREFIX)/man1/pak.1" ; \
-	ln -s "$(ME_VAPP_PREFIX)/doc/man/man1/pak.1" "$(ME_MAN_PREFIX)/man1/pak.1" ; \
-	)
+	ln -s "$(ME_VAPP_PREFIX)/doc/man/man1/pak.1" "$(ME_MAN_PREFIX)/man1/pak.1"
 
 
 #
@@ -659,12 +656,9 @@ install: $(DEPS_40)
 DEPS_41 += stop
 
 uninstall: $(DEPS_41)
-	( \
-	cd ../../.paks/me-package/0.8.4; \
 	rm -fr "$(ME_VAPP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
-	rmdir -p "$(ME_APP_PREFIX)" 2>/dev/null ; true ; \
-	)
+	rmdir -p "$(ME_APP_PREFIX)" 2>/dev/null ; true
 
 #
 #   version
