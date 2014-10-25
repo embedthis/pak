@@ -1116,8 +1116,11 @@ class Pak
     }
 
     function copyTree(pak, fromDir: Path, toDir: Path, ignore: Array?, files: Array?, exportList: Array?) {
-        files ||= ['**']
-        files += ['package.json', 'README.md', 'LICENSE.md']
+        if (!files || files.length == 0) {
+            files = ['**']
+        } else {
+            files += ['package.json', 'README.md', 'LICENSE.md']
+        }
         for each (item in ignore) {
             files.push('!' + item)
         }
@@ -1140,14 +1143,14 @@ class Pak
         }
         fromDir.operate(files, toDir, {
             flatten: false,
-            pre: function(from, to, options) {
+            prePerform: function(from, to, options) {
                 if (!to.exists || options.force) {
                     vtrace('Copy', to)
                 } else {
                     vtrace('Exists', to)
                 }
             },
-            post: function(from, to, options) {
+            postPerform: function(from, to, options) {
                 if (export[from]) {
                     let base: Path = export[from].to
                     let to = base.join(from.relativeTo(fromDir))
