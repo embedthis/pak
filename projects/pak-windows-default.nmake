@@ -111,7 +111,6 @@ TARGETS               = $(TARGETS) build\$(CONFIG)\bin\libest.dll
 !ENDIF
 TARGETS               = $(TARGETS) build\$(CONFIG)\bin\libmprssl.dll
 TARGETS               = $(TARGETS) build\$(CONFIG)\bin\pak.exe
-TARGETS               = $(TARGETS) build\$(CONFIG)\bin\removeFiles.exe
 
 !IFNDEF SHOW
 .SILENT:
@@ -190,10 +189,6 @@ clean:
 	if exist "build\$(CONFIG)\bin\pak.lib" del /Q "build\$(CONFIG)\bin\pak.lib"
 	if exist "build\$(CONFIG)\bin\pak.pdb" del /Q "build\$(CONFIG)\bin\pak.pdb"
 	if exist "build\$(CONFIG)\bin\pak.exp" del /Q "build\$(CONFIG)\bin\pak.exp"
-	if exist "build\$(CONFIG)\bin\removeFiles.exe" del /Q "build\$(CONFIG)\bin\removeFiles.exe"
-	if exist "build\$(CONFIG)\bin\removeFiles.lib" del /Q "build\$(CONFIG)\bin\removeFiles.lib"
-	if exist "build\$(CONFIG)\bin\removeFiles.pdb" del /Q "build\$(CONFIG)\bin\removeFiles.pdb"
-	if exist "build\$(CONFIG)\bin\removeFiles.exp" del /Q "build\$(CONFIG)\bin\removeFiles.exp"
 
 #
 #   me.h
@@ -668,13 +663,4 @@ build\$(CONFIG)\obj\removeFiles.obj: \
     package\windows\removeFiles.c $(DEPS_39)
 	@echo .. [Compile] build\$(CONFIG)\obj\removeFiles.obj
 	"$(CC)" -c -Fo$(BUILD)\obj\removeFiles.obj -Fd$(BUILD)\obj\removeFiles.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) package\windows\removeFiles.c $(LOG)
-
-#
-#   removeFiles
-#
-DEPS_40 = $(DEPS_40) build\$(CONFIG)\obj\removeFiles.obj
-
-build\$(CONFIG)\bin\removeFiles.exe: $(DEPS_40)
-	@echo ..... [Link] build\$(CONFIG)\bin\removeFiles.exe
-	"$(LD)" -nologo -out:$(BUILD)\bin\removeFiles.exe -entry:WinMainCRTStartup -subsystem:windows "$(BUILD)\obj\removeFiles.obj"   $(LOG)
 
