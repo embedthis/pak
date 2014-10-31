@@ -54,6 +54,7 @@ all compile:
 clean clobber install installBinary uninstall run:
 	@echo '       [Run] $(MAKE) -f projects/$(NAME)-$(OS)-$(PROFILE).$(EXT) $@'
 	@$(MAKE) -f projects/$(NAME)-$(OS)-$(PROFILE).$(EXT) $@
+	@echo '      [Info] $@ complete'
 
 deploy:
 	@echo '       [Deploy] $(MAKE) ME_ROOT_PREFIX=$(OS)-$(ARCH)-$(PROFILE)/deploy -f projects/$(NAME)-$(OS)-$(PROFILE).  $(EXT) installBinary'
