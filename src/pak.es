@@ -15,7 +15,7 @@ require ejs.version
 
 const MAX_VER: Number = 1000000000
 const VER_FACTOR: Number = 1000
-const HOME = Path(App.getenv('HOME') || '.')
+const HOME = App.home
 const BOWER: Path = Path('bower.json')
 
 var PACKAGE: Path = Path('package.json')
