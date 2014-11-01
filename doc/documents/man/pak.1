@@ -38,22 +38,17 @@ pak \- Embedthis Pak -- Package Manager
     upgrade paks...
 .RE
 .SH DESCRIPTION
-\fBPak\fR is a simple package manager of components for embedded applications. 
-It makes it easy to retrieve, integrate and manage components for applications. Pak focusses on embedded applications using Appweb, ESP and EJS. It provides tested, integrated componens that work together. It is not intended as a generic package manager to install complete applications.
-.PP
+\fBPak\fR is a generic package manager for applications. 
 Pak calls packages "paks". This is not a misspelling. 
 
 .PP
 .SH WHY PAK?
-Existing package managers like Bower are excellent, but the published components are typically tuned for enterprise
-environments and not for embedded use. There are many files not necessary on smaller embedded systems and they are not
-integrated together. Pak focusses on the embedded ESP web framework and offers components specificially tailored and
-integrated for this environment.
+Existing package managers like NPM are excellent, but they are heavily focussed the needs of NodeJS and not 
+for non-Node applications. Pak is agnostic to its environment and can be used to install components for any application.
 .PP 
 
 .SH FEATURES
-Pak is implemented primarily as a single script of some 2K lines and is very hackable. 
-It has the following major features:
+Pak has the following major features:
 
     . Install, list and uninstall packages into a local application
     . Manages a local cache of retrieved packages
