@@ -1471,7 +1471,7 @@ class Pak
             if (spec.app && spec.app.client && spec.app.client.scripts) {
                 let lib = directories.lib ? 
                     { LIB: directories.lib.trimStart(directories.client + '/') } : {LIB: 'lib'}
-                let app = blend({}, pak.install.app.client, {combine: true})
+                let app = blend({}, spec.app.client, {combine: true})
                 for each (script in app.scripts) {
                     script = script.expand(lib).expand(spec)
                     for (let [key,value] in spec.app.client.scripts) {
