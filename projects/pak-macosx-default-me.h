@@ -133,7 +133,7 @@
     #define ME_MANIFEST "package/manifest.me"
 #endif
 #ifndef ME_ME
-    #define ME_ME "=0.8.4"
+    #define ME_ME "=>0.8.4"
 #endif
 #ifndef ME_MPR_LOGGING
     #define ME_MPR_LOGGING 1
