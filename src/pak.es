@@ -48,10 +48,10 @@ class Pak
     /* This layers over App.config */
     private var defaultConfig = {
         catalogs: [ 
+            'http://embedthis.com/catalog/do/pak',
             'https://embedthis.com/catalog/do/pak',
             'https://bower.herokuapp.com/packages',
         ],
-        publish: 'https://embedthis.com/pak/do/catalog/publish',
         directories: {
             paks: Path('paks'),
             pakcache: Path('~/.paks'),
@@ -63,6 +63,8 @@ class Pak
             pak: 'pak',
             mod: 'mod',
         },
+        requirePrimaryCatalog: true,
+        publish: 'https://embedthis.com/pak/do/catalog/publish',
     }
 
     private var requiredKeywords = [ 'description', 'license', 'name', 'repository', 'version' ]
