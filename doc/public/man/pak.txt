@@ -162,7 +162,8 @@ CONFIGURATION
        defines the operational configuration for Pak. For example:
         {
            "catalogs": [
-               "http://localhost:5000/do/pak",
+               "http://embedthis.com/catalog/do/pak",
+               "https://embedthis.com/catalog/do/pak",
                "https://bower.herokuapp.com/packages",
            ],
            "dirs": {
