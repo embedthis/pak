@@ -950,7 +950,7 @@ class Pak
             out.write(pak.name)
             if (!spec.dependencies[pak.name] && !spec.optionalDependencies[pak.name]) {
                 out.write(': ')
-                print(pak.installVersion + ' foreign ' + optional + frozen)
+                print(pak.installVersion + optional + frozen)
             } else if (options.details && pak.install) {
                 out.write(': ')
                 print(serialize(pak.install, {pretty: true, indent: 4}))
