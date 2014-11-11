@@ -39,7 +39,7 @@ class Pak
 
     private var appName: String = 'pak'
     private var args: Args
-    private var git: Path
+    private var git: Path?
     private var searchPath: String
     private var tempFile: Path?
     private var installed: Object = {}
@@ -275,7 +275,9 @@ class Pak
             makeDir(directories.pakcache)
         }
         git = Cmd.locate('git')
-
+        if (!git) {
+            throw 'Cannot find "git" utility. Please install git first.'
+        }
         let path = Package.getSpecFile('.') || Path(PACKAGE)
         spec = path.exists ? path.readJSON() : PakTemplate.clone()
         if (spec.pak && !Version(Config.Version).acceptable(spec.pak)) {
