@@ -1676,10 +1676,12 @@ fi";
 					"$(inherited)"
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ME_COM_OPENSSL_PATH=/usr",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
 				LIBRARY_SEARCH_PATHS = (
+					"../$(ME_COM_OPENSSL_PATH)/lib",
 					"../$(ME_COM_OPENSSL_PATH)",
 					"$(inherited)"
 				);
@@ -1701,8 +1703,12 @@ fi";
 					"../$(ME_COM_OPENSSL_PATH)/include",
 					"$(inherited)"
 				);
-
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ME_COM_OPENSSL_PATH=/usr",
+					"$(inherited)"
+				);
 				LIBRARY_SEARCH_PATHS = (
+					"../$(ME_COM_OPENSSL_PATH)/lib",
 					"../$(ME_COM_OPENSSL_PATH)",
 					"$(inherited)"
 				);

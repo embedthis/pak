@@ -14,9 +14,13 @@ BUILD                 ?= build/$(CONFIG)
 LBIN                  ?= $(BUILD)/bin
 PATH                  := $(LBIN):$(PATH)
 
+ME_COM_COMPILER       ?= 1
 ME_COM_EJS            ?= 1
 ME_COM_EST            ?= 0
 ME_COM_HTTP           ?= 1
+ME_COM_LIB            ?= 1
+ME_COM_MPR            ?= 1
+ME_COM_OPENSSL        ?= 1
 ME_COM_OSDEP          ?= 1
 ME_COM_PCRE           ?= 1
 ME_COM_SQLITE         ?= 0
@@ -25,7 +29,15 @@ ME_COM_VXWORKS        ?= 0
 ME_COM_WINSDK         ?= 1
 ME_COM_ZLIB           ?= 1
 
+ME_COM_OPENSSL_PATH   ?= "/usr"
+
 ifeq ($(ME_COM_EST),1)
+    ME_COM_SSL := 1
+endif
+ifeq ($(ME_COM_LIB),1)
+    ME_COM_COMPILER := 1
+endif
+ifeq ($(ME_COM_OPENSSL),1)
     ME_COM_SSL := 1
 endif
 ifeq ($(ME_COM_EJS),1)
@@ -33,7 +45,7 @@ ifeq ($(ME_COM_EJS),1)
 endif
 
 CFLAGS                += -g -w
-DFLAGS                +=  $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_COM_EJS=$(ME_COM_EJS) -DME_COM_EST=$(ME_COM_EST) -DME_COM_HTTP=$(ME_COM_HTTP) -DME_COM_OSDEP=$(ME_COM_OSDEP) -DME_COM_PCRE=$(ME_COM_PCRE) -DME_COM_SQLITE=$(ME_COM_SQLITE) -DME_COM_SSL=$(ME_COM_SSL) -DME_COM_VXWORKS=$(ME_COM_VXWORKS) -DME_COM_WINSDK=$(ME_COM_WINSDK) -DME_COM_ZLIB=$(ME_COM_ZLIB) 
+DFLAGS                +=  $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_COM_COMPILER=$(ME_COM_COMPILER) -DME_COM_EJS=$(ME_COM_EJS) -DME_COM_EST=$(ME_COM_EST) -DME_COM_HTTP=$(ME_COM_HTTP) -DME_COM_LIB=$(ME_COM_LIB) -DME_COM_MPR=$(ME_COM_MPR) -DME_COM_OPENSSL=$(ME_COM_OPENSSL) -DME_COM_OSDEP=$(ME_COM_OSDEP) -DME_COM_PCRE=$(ME_COM_PCRE) -DME_COM_SQLITE=$(ME_COM_SQLITE) -DME_COM_SSL=$(ME_COM_SSL) -DME_COM_VXWORKS=$(ME_COM_VXWORKS) -DME_COM_WINSDK=$(ME_COM_WINSDK) -DME_COM_ZLIB=$(ME_COM_ZLIB) 
 IFLAGS                += "-I$(BUILD)/inc"
 LDFLAGS               += '-Wl,-rpath,@executable_path/' '-Wl,-rpath,@loader_path/'
 LIBPATHS              += -L$(BUILD)/bin
@@ -299,7 +311,7 @@ DEPS_18 += src/paks/mpr/mpr.h
 $(BUILD)/obj/mprSsl.o: \
     src/paks/mpr/mprSsl.c $(DEPS_18)
 	@echo '   [Compile] $(BUILD)/obj/mprSsl.o'
-	$(CC) -c $(DFLAGS) -o $(BUILD)/obj/mprSsl.o -arch $(CC_ARCH) $(CFLAGS) $(IFLAGS) "-I$(ME_COM_OPENSSL_PATH)/include" src/paks/mpr/mprSsl.c
+	$(CC) -c $(DFLAGS) -o $(BUILD)/obj/mprSsl.o -arch $(CC_ARCH) $(CFLAGS) -DME_COM_OPENSSL_PATH="$(ME_COM_OPENSSL_PATH)" $(IFLAGS) "-I$(ME_COM_OPENSSL_PATH)/include" src/paks/mpr/mprSsl.c
 
 #
 #   pak.o
@@ -494,11 +506,13 @@ DEPS_32 += $(BUILD)/obj/mprSsl.o
 LIBS_32 += -lmpr
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_32 += -lssl
-    LIBPATHS_32 += -L$(ME_COM_OPENSSL_PATH)
+    LIBPATHS_32 += -L"$(ME_COM_OPENSSL_PATH)/lib"
+    LIBPATHS_32 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_32 += -lcrypto
-    LIBPATHS_32 += -L$(ME_COM_OPENSSL_PATH)
+    LIBPATHS_32 += -L"$(ME_COM_OPENSSL_PATH)/lib"
+    LIBPATHS_32 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 ifeq ($(ME_COM_EST),1)
     LIBS_32 += -lest
@@ -506,7 +520,7 @@ endif
 
 $(BUILD)/bin/libmprssl.dylib: $(DEPS_32)
 	@echo '      [Link] $(BUILD)/bin/libmprssl.dylib'
-	$(CC) -dynamiclib -o $(BUILD)/bin/libmprssl.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  -install_name @rpath/libmprssl.dylib -compatibility_version 0.9 -current_version 0.9 "$(BUILD)/obj/mprSsl.o" $(LIBPATHS_32) $(LIBS_32) $(LIBS_32) $(LIBS) 
+	$(CC) -dynamiclib -o $(BUILD)/bin/libmprssl.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)   -install_name @rpath/libmprssl.dylib -compatibility_version 0.9 -current_version 0.9 "$(BUILD)/obj/mprSsl.o" $(LIBPATHS_32) $(LIBS_32) $(LIBS_32) $(LIBS) 
 
 #
 #   pak.mod
@@ -549,16 +563,29 @@ $(BUILD)/bin/pak: $(DEPS_34)
 	$(CC) -o $(BUILD)/bin/pak -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/pak.o" $(LIBPATHS_34) $(LIBS_34) $(LIBS_34) $(LIBS) 
 
 #
+#   installPrep
+#
+
+installPrep: $(DEPS_35)
+	( \
+	cd ../../.paks/me-package/0.8.5; \
+	if [ "`id -u`" != 0 ] ; \
+	then echo "Must run as root. Rerun with "sudo"" ; \
+	exit 255 ; \
+	fi ; \
+	)
+
+#
 #   stop
 #
 
-stop: $(DEPS_35)
+stop: $(DEPS_36)
 
 #
 #   installBinary
 #
 
-installBinary: $(DEPS_36)
+installBinary: $(DEPS_37)
 	mkdir -p "$(ME_APP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	ln -s "0.9.7" "$(ME_APP_PREFIX)/latest" ; \
@@ -597,23 +624,24 @@ installBinary: $(DEPS_36)
 #   start
 #
 
-start: $(DEPS_37)
+start: $(DEPS_38)
 
 #
 #   install
 #
-DEPS_38 += stop
-DEPS_38 += installBinary
-DEPS_38 += start
+DEPS_39 += installPrep
+DEPS_39 += stop
+DEPS_39 += installBinary
+DEPS_39 += start
 
-install: $(DEPS_38)
+install: $(DEPS_39)
 
 #
 #   uninstall
 #
-DEPS_39 += stop
+DEPS_40 += stop
 
-uninstall: $(DEPS_39)
+uninstall: $(DEPS_40)
 	rm -fr "$(ME_VAPP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	rmdir -p "$(ME_APP_PREFIX)" 2>/dev/null ; true
@@ -622,6 +650,6 @@ uninstall: $(DEPS_39)
 #   version
 #
 
-version: $(DEPS_40)
+version: $(DEPS_41)
 	echo 0.9.7
 
