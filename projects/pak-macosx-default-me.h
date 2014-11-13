@@ -235,7 +235,7 @@
 
 /* Profile */
 #ifndef ME_CONFIG_CMD
-    #define ME_CONFIG_CMD "me -d -q -platform macosx-x64-default -configure . --with openssl -gen xcode"
+    #define ME_CONFIG_CMD "me -q -d -platform macosx-x64-default -configure . --with openssl -gen make"
 #endif
 #ifndef ME_PAK_PRODUCT
     #define ME_PAK_PRODUCT 1
