@@ -4,7 +4,7 @@ Welcome to Pak -- the package manager for embedded.
 
 This document contains details regarding the installation procedure for the binary Embedthis Pak package.  This package contains Pak utility. You can read the documentation for the latest release online at:
 
-http://embedthis.com/products/pak/doc/index.html
+http://embedthis.com/pak/doc/index.html
 
 This software is copyrighted and distributed under license. Please read the LICENSE.TXT for details.
 
