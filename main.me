@@ -92,6 +92,17 @@ Me.load({
     },
 
     targets: {
+        init: {
+            first: true,
+            path: 'init',
+            'generate-make': `
+                if [ ! -d /usr/include/openssl ] ; then echo
+                    echo Install libssl-dev to get /usr/include/openssl
+                    exit 255
+                fi
+            `,
+            action: ' ',
+        },
         'pak.mod': {
             path: '${BIN}/pak.mod',
             files: [ 'src/*.es', 'src/paks/ejs-version/Version.es' ],
@@ -106,7 +117,7 @@ Me.load({
             type: 'exe',
             path: '${BIN}/pak${EXE}',
             sources: [ 'src/pak.c' ],
-            depends: [ 'libejs', 'pak.mod' ],
+            depends: [ 'init', 'libejs', 'pak.mod' ],
         },
 
         projects: {
