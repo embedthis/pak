@@ -731,8 +731,8 @@ class Pak
                     qtrace('Info', pak + ' is already installed')
                 } else if (Version(pak.cache.version).acceptable(pak.searchCriteria) && !state.upgrade) {
                     qtrace('Info', pak + ' is already installed')
-                    return
                 }
+                return
             }
         } else {
             pak = searchPak(pak)
@@ -768,8 +768,7 @@ class Pak
         blending[pak.name] = true
         vtrace('Blend', pak + ' configuration')
         let paks = spec.paks
-        //  MOB - must blend spec to update dependencies
-        if (true || spec.import === true) {
+        if (spec.import !== false) {
             if (!(paks && (paks.noblend || (paks[pak.name] && paks[pak.name].noblend)))) {
                 blendSpec(pak)
             }
@@ -863,13 +862,15 @@ class Pak
         let ignore = pak.cache.ignore || []
         let export = pak.cache.export
         if (export && PACKAGE.exists) {
-            if (!spec.import) {
+            if (spec.import === false) {
                 export = null
             } else if (spec.paks) {
+                //  DEPRECATE noimport
                 if (spec.paks.noexport || spec.paks.noimport) {
                     export = null
                 } else if (spec.paks[pak.name]) {
                     let pspec = spec.paks[pak.name]
+                    //  DEPRECATE noimport
                     if (pspec.noexport || pspec.noimport) {
                         export = null
                     } else if (pspec.ignore) {
