@@ -32,7 +32,7 @@ FITNESS FOR ANY PARTICULAR PURPOSE.
 
 The optional EST SSL stack includes code from TropicSSL.
 
-TropicSSL - [BSD License](http://opensource.org/licenses/BSD-2-Clause
+TropicSSL - [BSD License](http://opensource.org/licenses/BSD-2-Clause)
 
 ### Perl Regular Expressions License
 

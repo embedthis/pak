@@ -2,7 +2,7 @@
     "name": "pak",
     "description": "Embedthis Pak Package Manager",
     "title": "Embedthis Pak",
-    "version": "0.9.7",
+    "version": "0.10.0",
     "keywords": [
         "pak",
         "package"
@@ -25,7 +25,6 @@
         "ejs-version": "~0.8",
         "est": "~0.6",
         "http": "~6.0",
-        "me-docstyle": "~0.8",
         "mpr": "~6.0",
         "osdep": "~0.8",
         "pcre": "~1.0",
@@ -52,8 +51,7 @@
             "url": "http://embedthis.com/licensing/"
         }
     ],
-    "import": true,
-    "paks": {
+    "app": {
         "*": {
             "ignore": [
                 "doc/**"
