@@ -29,6 +29,7 @@ pak \- Embedthis Pak -- Package Manager
     install paks...
     list paks...
     lockdown    
+    mode [debug|release|...]
     prune paks...
     publish [name uri pass]
     retract name [password]
@@ -199,6 +200,9 @@ Lockdown the version criteria for all dependencies. This rewrites the
 package.json to define a compatible version expression for all installed
 dependencies.
 .TP
+mode
+Index in the modes property. The selected property collection is copied up to the top level. This may be used to select
+a "debug" or "release" configuration.
 .TP
 prune [paks...]          
 Prune named paks

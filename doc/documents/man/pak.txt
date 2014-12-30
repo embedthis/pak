@@ -34,6 +34,7 @@ SYNOPSIS
            install paks...
            list paks...
            lockdown
+           mode [debug|release|...]
            prune paks...
            publish [name uri pass]
            retract name [password]
@@ -219,6 +220,9 @@ COMMANDS
               rewrites the package.json to define a compatible version expres-
               sion for all installed dependencies.
 
+       mode   Index in the modes property. The selected property collection is
+              copied up to the top level. This may be used to select a "debug"
+              or "release" configuration.
 
        prune [paks...]
               Prune named paks
@@ -248,14 +252,13 @@ OPTIONS
 
 
        --cache directory
-              Specify the directory to use for  the  paks  cache.  This
-              overrides  the  values  specified in the various pakrc or
-              package.json files.
+              Specify the directory to use for the paks cache. This  overrides
+              the values specified in the various pakrc or package.json files.
 
 
        --catalog URI
-              Set the catalog URI to use for  install,  cache,  publish
-              and retract commands.
+              Set the catalog URI to  use  for  install,  cache,  publish  and
+              retract commands.
 
 
        --details URI
@@ -267,39 +270,36 @@ OPTIONS
 
 
        --force
-              Force  the command to continue. This is useful to install
-              or cache a pak when dependencies cannot be satisfied.  It
-              is   also   useful   to   cache  or  install  an  already
-              cached/installed pack. Aliased as -f.
+              Force  the  command  to  continue.  This is useful to install or
+              cache a pak when dependencies cannot be satisfied.  It  is  also
+              useful  to  cache  or  install an already cached/installed pack.
+              Aliased as -f.
 
 
        --log logName[:logLevel]
-              Specify a file to log internal  execution  messages.  Bit
-              will log execution related trace to the log file. The log
-              level specifies the desired verbosity of output. Level  0
-              is  the  least  verbose and level 9 is the most. The '-v'
-              switch is an alias for '--log stderr:2'.
+              Specify a file to log internal execution messages. Bit will  log
+              execution related trace to the log file. The log level specifies
+              the desired verbosity of output. Level 0 is  the  least  verbose
+              and  level 9 is the most. The '-v' switch is an alias for '--log
+              stderr:2'.
 
 
        --nodeps
-              Used to suppress installing or upgrading dependent  pack-
-              ages.
+              Used to suppress installing or upgrading dependent packages.
 
 
        --paks directory
-              Specify the directory to use for the paks. This overrides
-              the values specified in the various pakrc or package.json
-              files.
+              Specify the directory to use for the paks.  This  overrides  the
+              values specified in the various pakrc or package.json files.
 
 
        --quiet
-              Run  in  quiet  mode with less verbose otuput. Aliased as
-              -q.
+              Run in quiet mode with less verbose otuput. Aliased as -q.
 
 
        --silent
-              Run in silent  mode  suppressing  all  but  hard  errors.
-              Aliased as -s.
+              Run  in  silent mode suppressing all but hard errors. Aliased as
+              -s.
 
 
        --versions URI
@@ -311,8 +311,8 @@ REPORTING BUGS
        Report bugs to dev@embedthis.com.
 
 COPYRIGHT
-       Copyright (C) 2004-2014 Embedthis Software. Bit and Ejscript are
-       a trademarks of Embedthis Software.
+       Copyright (C) 2004-2014 Embedthis Software.  Bit  and  Ejscript  are  a
+       trademarks of Embedthis Software.
 
 SEE ALSO
        http://embedthis.com/pak/

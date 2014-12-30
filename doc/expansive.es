@@ -3,13 +3,12 @@ Expansive.load({
         title:       'Embedthis Pak Documentation',
         url:         'https://embedthis.com/pak/doc/',
         description: 'Package manager for Embedded Applications',
-        keywords:    'package, package manager, embedded, npm',
     },
 
     expansive: {
         copy:    [ 'images' ],
-        dependencies: { 'css/all.css.less': 'css/*.inc.less' },
-        documents: [ '**', '!css/*.inc.less' ],
+        dependencies: { 'css/all.css.less': '**.less' },
+        documents: [ '**', '!**.less', '**.css.less' ],
         plugins: [ 'less' ],
     }
 })

@@ -3,7 +3,7 @@
 #
 
 NAME                  := pak
-VERSION               := 0.9.7
+VERSION               := 0.10.0
 PROFILE               ?= default
 ARCH                  ?= $(shell uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/')
 CC_ARCH               ?= $(shell echo $(ARCH) | sed 's/x86/i686/;s/x64/x86_64/')
@@ -585,7 +585,7 @@ stop: $(DEPS_36)
 installBinary: $(DEPS_37)
 	mkdir -p "$(ME_APP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
-	ln -s "0.9.7" "$(ME_APP_PREFIX)/latest" ; \
+	ln -s "0.10.0" "$(ME_APP_PREFIX)/latest" ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
 	cp $(BUILD)/bin/pak $(ME_VAPP_PREFIX)/bin/pak ; \
 	mkdir -p "$(ME_BIN_PREFIX)" ; \
@@ -643,5 +643,5 @@ uninstall: $(DEPS_40)
 #
 
 version: $(DEPS_41)
-	echo 0.9.7
+	echo 0.10.0
 
