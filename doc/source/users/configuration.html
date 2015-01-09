@@ -1,0 +1,37 @@
+{
+    title: "Configuring Pak",
+    crumbs: [
+        { "User's Guide": 'index.html' },
+    ],
+}
+            <h1>Configuring Pak</h1>
+
+            <h4>To show the Pak configuration</h4>
+            On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak. To
+            show the pak configuration:
+            <pre class="ui code segment">pak config</pre>
+            <p>This displays something like:</p>
+<pre class="ui code segment">{
+    catalogs: [
+        "https://embedthis.com/catalog/do/pak",
+        "https://bower.herokuapp.com/packages",
+    ],
+    directories: {
+        paks: "src/paks",
+        pakcache: "/Users/name/.paks",
+    },
+}
+</pre>
+            <p>The "catalogs" property specifies the web sites that host Pak or Bower catalogs. The "paks" directory is the name of the local
+            application sub-directory in which to store paks. The "pakcache" directory defines where to cache paks on the local system.</p>
+            <p>Pak locates a valid pakrc file by searching in order until it finds a suitable configuration file. This is the
+            search order:</p>
+            <ol>
+                <li>pakrc</li>
+                <li>.pakrc</li>
+                <li>../pakrc and ../.pakrc 
+                <li>.. repeat up the parent directory chain</li>
+                <li>/etc/pakrc</li>
+                <li>package.json</li>
+            </ol>
+            <p>The package.json is always loaded if present after any pakrc file.</p>
