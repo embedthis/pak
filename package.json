@@ -31,9 +31,6 @@
         "ssl": "~0.8",
         "zlib": "~1.0"
     },
-    "optionalDependencies": {
-        "sqlite": "~1.0"
-    },
     "devDependencies": {
         "makeme": ">0.8.0"
     },
@@ -54,8 +51,9 @@
     "app": {
         "*": {
             "ignore": [
-                "doc/**"
-            ]
+                "doc**"
+            ],
+            "noblend": true
         }
     }
 }
