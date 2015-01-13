@@ -52,13 +52,13 @@ class Pak
             'https://bower.herokuapp.com/packages',
         ],
         directories: {
-            documents: Path('documents'),
             /* exports */
             files: Path('files'),
             lib: Path('lib'),
             paks: Path('paks'),
             pakcache: Path('~/.paks'),
             public: Path('public'),
+            source: Path('source'),
             top: Path('.'),
         },
         requirePrimaryCatalog: true,
@@ -132,6 +132,7 @@ class Pak
             dir: { range: String },
             force: { alias: 'f' },
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
+            name: { range: String },
             nodeps: { alias: 'n' },
             paks: { alias: 'p', range: String },
             quiet: { alias: 'q' },
@@ -173,6 +174,7 @@ class Pak
             '    --dir dir                # Change to directory before running\n' +
             '    --force                  # Force requested action\n' +
             '    --log file:level         # Send output to a file at a given level\n' + 
+            '    --name name              # Set an application name\n' +
             '    --nodeps                 # Do not install or upgrade dependencies\n' +
             '    --paks dir               # Use given directory for paks cache\n' +
             '    --quiet, -q              # Run in quiet mode\n' +
@@ -243,6 +245,12 @@ class Pak
         if (options.all || !options.quiet) {
             options.versions = true
         }
+        if (options.name) {
+            aname = options.name
+            PakTemplate.name = aname
+            PakTemplate.title = aname.toPascal() + ' Application'
+            PakTemplate.description = aname.toPascal() + ' Application'
+        }
     }
 
     function setup() {
@@ -275,6 +283,7 @@ class Pak
             blend(spec, { app: spec.paks })
         }
         spec.dependencies ||= {}
+        state.force = options.force
     }
 
     function process() {
@@ -480,7 +489,6 @@ class Pak
                 error('Cannot read package.json')
                 break
             }
-            spec.optionalDependencies ||= {}
             if (rest.length == 0) {
                 let deps = blend({}, spec.dependencies)
                 blend(deps, spec.optionalDependencies)
@@ -488,7 +496,7 @@ class Pak
                 for (let [name,criteria] in deps) {
                     let pak = Package(name)
                     pak.resolve(criteria)
-                    if (pak.installed || !spec.optionalDependencies[pak.name]) {
+                    if (pak.installed || !optional(pak.name)) {
                         upgrade(pak)
                     }
                 }
@@ -498,7 +506,7 @@ class Pak
                     topDeps[name] = true
                 }
                 for each (name in rest) {
-                    let criteria = spec.dependencies[name] || spec.optionalDependencies[name]
+                    let criteria = spec.dependencies[name] || optional(name)
                     let pak = Package(name)
                     pak.resolve(criteria)
                     upgrade(pak)
@@ -583,7 +591,7 @@ class Pak
             return
         }
         if (pak.cached) {
-            if (!options.force) {
+            if (!state.force) {
                 qtrace('Info', pak + ' ' + pak.cacheVersion + ' is already cached')
                 return
             }
@@ -680,9 +688,11 @@ class Pak
         if (args.length > 0) {
             let [name, version] = args
             pspec.name = name
+            pspec.title = name.toPascal()
+            pspec.description = pspec.title + ' Application'
             pspec.version = version
         } else {
-            pspec.name = App.dir.basename.toLowerCase()
+            pspec.name = options.name || App.dir.basename.toLowerCase()
         }
         Path(PACKAGE).write(serialize(pspec, {pretty: true, indent: 4}))
     }
@@ -690,7 +700,7 @@ class Pak
     function install(pak: Package) {
         pak.resolve(pak.searchCriteria || '*')
         if (pak.cached) {
-            if (pak.installed && !options.force) {
+            if (pak.installed && !state.force) {
                 if (pak.installVersion.same(pak.cacheVersion)) {
                     qtrace('Info', pak + ' is already installed')
                 } else if (Version(pak.cache.version).acceptable(pak.searchCriteria) && !state.upgrade) {
@@ -786,12 +796,9 @@ class Pak
             let obj = dest.exists ? dest.readJSON() : {}
             blend(obj, src.readJSON(), {combine: true})
             dest.write(serialize(obj, {pretty: true, indent: 4}) + '\n')
-            /* UNUSED
-            spec.blend = ((spec.blend || []) + [name]).unique()
-             */
         }
         if (topDeps[pak.name]) {
-            if (spec.optionalDependencies && spec.optionalDependencies[pak.name]) {
+            if (optional(pak.name)) {
                 spec.optionalDependencies ||= {}
                 spec.optionalDependencies[pak.name] ||= '~' + pak.cachelVersion.compatible
                 Object.sortProperties(spec.optionalDependencies)
@@ -818,7 +825,7 @@ class Pak
         /* Get updated dependency information in spec */
         pak.resolve()
 
-        let installDeps = true
+        let installDeps = !options.nodeps
         if (PACKAGE.exists) {
             if (getAppSetting(pak, 'nodeps')) {
                 installDeps = false
@@ -827,20 +834,25 @@ class Pak
                 installDeps = false
             }
         }
-        if (installDeps) {
-            installDependencies(pak)
-        }
-        qtrace(state.reinstall ? 'Reinstall': 'Install', pak.name, pak.cacheVersion)
         if (!pak.cached) {
             cachePak(pak)
             pak.resolve()
         }
+        if (installDeps) {
+            installDependencies(pak)
+        }
         blendPak(pak)
 
-        if (pak.cache.install === false && !options.force) {
-            qtrace('Info', pak + ' cached and will run from cache. Use -f to force install locally.')
+        if (pak.cache.install === false) {
+            /*
+                Pak prefers to execute from cache. Don't install locally unless "force" and not "upgrade"
+             */
+            if (!state.force || state.upgrade) {
+                trace('Cached', pak + ' ' + pak.cacheVersion)
+            }
             return
         }
+        qtrace(state.reinstall ? 'Reinstall': 'Install', pak.name, pak.cacheVersion)
         let dest = pak.installPath
         vtrace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
         if (dest.exists) {
@@ -912,13 +924,13 @@ class Pak
         let dep = Package(name)
         dep.selectCacheVersion(criteria)
         dep.resolve()
-        if (install && ((!dep.installed && dep.cache.install !== false) || options.force)) {
+        if (install && ((!dep.installed && dep.cache && dep.cache.install !== false) || state.force)) {
             vtrace('Info', 'Install required dependency ' + dep.name)
             try {
                 installPak(dep)
             } catch (e) {
                 print(e)
-                if (options.force) {
+                if (state.force) {
                     qtrace('WARN', 'Cannot install required dependency "' + dep.name + '"' )
                 } else {
                     throw 'Cannot install ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
@@ -955,21 +967,21 @@ class Pak
         let sets = getPaks({}, patterns, spec)
         for each (pak in sets) {
             spec.optionalDependencies ||= {}
-            let optional = spec.optionalDependencies[pak.name] ? ' optional' : ''
+            let opt = optional(pak.name) ? ' optional' : ''
             let cached = !pak.installVersion && pak.cacheVersion ? ' cached' : ''
             let installed = pak.installVersion ? ' installed' : ''
             let uninstalled = pak.installVersion || pak.cache.install === false ? '' : ' uninstalled'
             let frozen = (pak.install && pak.install.frozen) ? ' frozen' : ''
             out.write(pak.name)
             let version = pak.installVersion || pak.cacheVersion
-            if (!spec.dependencies[pak.name] && !spec.optionalDependencies[pak.name]) {
+            if (!spec.dependencies[pak.name] && !optional(pak.name)) {
                 out.write(' ')
-                print(version + cached + uninstalled + installed + optional + frozen)
+                print(version + cached + uninstalled + installed + opt + frozen)
             } else if (options.details && pak.install) {
                 out.write(' ')
                 print(serialize(pak.install, {pretty: true, indent: 4}))
             } else if (options.versions) {
-                print(' ' + version + cached + uninstalled + installed + optional + frozen)
+                print(' ' + version + cached + uninstalled + installed + opt + frozen)
             } else {
                 print()
             }
@@ -1019,7 +1031,7 @@ class Pak
         if (!latest) {
             throw 'Nothing to prune for "' + pak + '"'
         }
-        if (pak.cache && pak.cache.precious && !options.force) {
+        if (pak.cache && pak.cache.precious && !state.force) {
             qtrace('Warn', 'Cannot prune "' + pak + '" designated as precious. Use --force to force pruning.')
             return
         }
@@ -1029,7 +1041,7 @@ class Pak
             return
         }
         if ((users = requiredCachedPak(pak)) != null) {
-            if (!options.force) {
+            if (!state.force) {
                 throw 'Cannot prune "' + pak + '". It is required by: ' + users.join(', ') + '.'
             }
         }
@@ -1059,7 +1071,7 @@ class Pak
         pak.resolve(pak.searchCriteria || '*')
         trace('Search', 'Latest version of ' + pak)
         let later = searchPak(pak)
-        if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion) && !options.force) {
+        if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion) && !state.force) {
             trace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
             return pak
         }
@@ -1079,15 +1091,17 @@ class Pak
             later = update(pak)
         } 
         if (pak.installed && pak.installVersion && pak.installVersion.same(later.cacheVersion)) {
-            if (!options.force) {
+            if (!state.force) {
                 vtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
                     ' for version requirement ' + pak.searchCriteria)
                 return
             }
         } else {
-            qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
+            if (pak.cache.install !== false) {
+                qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
+            }
         }
-        if (options.force && pak.installVersion && pak.installVersion.same(pak.cacheVersion)) {
+        if (state.force && pak.installVersion && pak.installVersion.same(pak.cacheVersion)) {
             state.reinstall = true
         }
         if (pak.install && pak.install.frozen) {
@@ -1097,7 +1111,7 @@ class Pak
         later.resolve(later.cacheVersion)
         runScripts(pak, 'preupgrade')
         state.upgrade = true
-        install(later, true)
+        install(later)
         delete state.upgrade
     }
 
@@ -1123,7 +1137,7 @@ class Pak
                         cachePak(dep)
                     } catch (e) {
                         print(e)
-                        if (options.force) {
+                        if (state.force) {
                             qtrace('WARN', 'Cannot cache required dependency "' + dep.name + '"' )
                         } else {
                             throw 'Cannot cache ' + pak.name + ' because of missing required dependency "' + dep.name + '"' 
@@ -1164,7 +1178,7 @@ class Pak
                     pat.overwrite = true
                 }
             }
-            let dir = Path(directories.exports || directories.documents.join(directories.lib))
+            let dir = Path(directories.exports || directories.source.join(directories.lib))
             let to = dir.join(pat.to.expand(dirTokens, {fill: '.'}))
             if (!to.childOf('.')) {
                 throw 'Copy destination "' + to + '" for pak "' + pak.name + '" is outside current directory'
@@ -1176,7 +1190,7 @@ class Pak
         fromDir.operate(files, toDir, {
             flatten: false,
             prePerform: function(from, to, options) {
-                if (!to.exists || options.force) {
+                if (!to.exists || state.force) {
                     vtrace('Copy', to)
                 } else {
                     vtrace('Exists', to)
@@ -1185,14 +1199,18 @@ class Pak
             postPerform: function(from, to, options) {
                 if (export[from]) {
                     let base: Path = export[from].to
-                    let to = base.join(from.relativeTo(fromDir))
+                    let to = base.join(from.relativeTo(fromDir)).relative
                     if (from.isDir) {
                         global.pak.makeDir(to)
                     } else {
                         if (!to.exists || export[from].overwrite) {
                             global.pak.makeDir(to.dirname)
+                            if (to.exists) {
+                                vtrace('Overwrite', to)
+                            } else {
+                                vtrace('Export', to)
+                            }
                             from.copy(to)
-                            vtrace('Export', to)
                         } else {
                             vtrace('Exists', to)
                         }
@@ -1494,7 +1512,7 @@ class Pak
     }
 
     function uninstallPak(pak: Package): Void {
-        if (!options.force) {
+        if (!state.force) {
             if (users = requiredInstalledPak(pak)) {
                 throw 'Cannot remove "' + pak + '". It is required by: ' + users.join(', ') + '.'
             }
@@ -1544,7 +1562,7 @@ class Pak
                 let pspec = Package.readSpec(path, {quiet: true})
                 if (pspec && pspec.dependencies) {
                     for (let [other, criteria] in pspec.dependencies) {
-                        if (other == pak.name && pak.installVersion.acceptable(criteria)) {
+                        if (other == pak.name && pak.installVersion && pak.installVersion.acceptable(criteria)) {
                             users.append(name)
                         }
                     }
@@ -1583,7 +1601,7 @@ class Pak
             }
         }
         if (!found) {
-            if (options.force) {
+            if (state.force) {
                 trace('Warn', 'Suitable release version not found for ' + pak.name + ' ' + criteria)
                 pak.setRemoteVersion(versions[versions.length - 1])
                 pak.setCachePath()
@@ -1623,7 +1641,7 @@ class Pak
                 http.get(catalog)
             } catch (e) {
                 qtrace('Warn', 'Cannot access catalog at: ' + catalog)
-                if (App.config.requirePrimaryCatalog && !options.force) {
+                if (App.config.requirePrimaryCatalog && !state.force) {
                     throw 'Cannot continue with offline primary catalog ' + catalog + '\n' + 'Wait or retry with --force'
                 }
             }
@@ -1774,7 +1792,7 @@ class Pak
             pak.setInstallPath()
             if (matchPakName(pak.name, patterns)) {
                 list.push(pak)
-                if (!pak.installed && !pak.cached && !options.force) {
+                if (!pak.installed && !pak.cached && !state.force) {
                     throw 'Pak "' + pak + '" is not installed'
                 }
             }
@@ -1878,10 +1896,12 @@ class Pak
 
     function error(msg) App.log.error(msg)
 
+    let aname = App.dir.basename.toString()
+
     private var PakTemplate = {
-        name: App.dir.basename.toLowerCase()
-        title: 'Display Package Title - several words. E.g. Company Product',
-        description: 'Full Package Description - one line',
+        name: aname.toLowerCase()
+        title: aname.toPascal() + ' Application',
+        description: aname.toPascal() + ' Application',
         version: '1.0.0',
         keywords: [
             'Put search keywords here',
@@ -1910,6 +1930,8 @@ class Pak
         return result
     }
 
+    private function optional(obj, name)
+        spec.optionalDependencies ? spec.optionalDependencies[name] : null
 }
 
 /*
