@@ -949,10 +949,10 @@ class Pak
                 if (matchPakName(name, patterns)) {
                     result[name] = dep
                 }
-                if (!dep.cache) {
+                if (!dep.install && !dep.cache) {
                     throw 'Cannot find pak "' + dep.name + '" referenced by "' + pak.name + '"'
                 }
-                getPaks(result, patterns, dep.cache)
+                getPaks(result, patterns, dep.install || dep.cache)
             }
         }
         return result
