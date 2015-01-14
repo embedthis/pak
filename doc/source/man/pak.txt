@@ -14,6 +14,7 @@ SYNOPSIS
            --dir dir
            --force
            --log file:level
+           --name name
            --nodeps
            --paks dir
            --quiet
