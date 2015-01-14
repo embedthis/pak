@@ -1851,7 +1851,7 @@ class Pak
         }
         let base: Path = '.'
         let d: Path = base
-        for ( ; d.parent != d; d = d.parent) {
+        //  UNUSED for ( ; d.parent != d; d = d.parent) {
             let f = Package.getSpecFile(d)
             if (f) {
                 let pspec = f.readJSON()
@@ -1862,9 +1862,9 @@ class Pak
                 if (pspec.catalogs) {
                     catalogs = pspec.catalogs
                 }
-                break
+                // UNUSED break
             }
-        }
+        // UNUSED }
         if (options.paks) {
             directories.paks = Path(options.paks)
         }
