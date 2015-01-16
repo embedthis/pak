@@ -2,7 +2,7 @@
 #
 #	uninstall: Pak uninstall script
 #
-#	Copyright (c) Embedthis Software LLC, 2003-2014. All Rights Reserved.
+#	Copyright (c) Embedthis Software. All Rights Reserved.
 #
 #	Usage: uninstall [configFile]
 #
