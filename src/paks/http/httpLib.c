@@ -3635,7 +3635,7 @@ PUBLIC HttpParseCallback httpAddConfig(cchar *key, HttpParseCallback callback)
 }
 
 
-static void httpParseError(HttpRoute *route, cchar *fmt, ...)
+PUBLIC void httpParseError(HttpRoute *route, cchar *fmt, ...)
 {
     HttpRoute   *rp;
     va_list     args;
