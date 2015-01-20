@@ -8861,31 +8861,35 @@ PUBLIC HttpRoute *httpGetHostDefaultRoute(HttpHost *host)
 }
 
 
-static void printRoute(HttpRoute *route, int next, bool full)
+static void printRouteHeader(HttpHost *host, int *methodsLen, int *patternLen, int *targetLen)
 {
-    HttpRoute   *rp;
+    HttpRoute   *route;
+    int         next;
+
+    *methodsLen = (int) slen("Methods");
+    *patternLen = (int) slen("Route");
+    *targetLen = (int) slen("$&");
+
+    for (next = 0; (route = mprGetNextItem(host->routes, &next)) != 0; ) {
+        *targetLen = (int) max(*targetLen, slen(route->target));
+        *patternLen = (int) max(*patternLen, slen(route->pattern));
+        *methodsLen = (int) max(*methodsLen, slen(httpGetRouteMethods(route)));
+    }
+    printf("\n%-*s %-*s %-*s\n", *patternLen, "Route", *methodsLen, "Methods", *targetLen, "Target");
+}
+
+
+static void printRoute(HttpRoute *route, int idx, bool full, int methodsLen, int patternLen, int targetLen)
+{
     HttpRouteOp *condition;
     HttpStage   *handler;
     HttpAuth    *auth;
     MprKey      *kp;
     cchar       *methods, *pattern, *target, *index;
-    int         methodsLen, patternLen, targetLen, nextIndex;
+    int         nextIndex;
 
     if (route->flags & HTTP_ROUTE_HIDDEN) {
         return;
-    }
-    if (!full) {
-        if (next == 0) {
-            methodsLen = (int) slen("Methods");
-            patternLen = (int) slen("Route");
-            targetLen = (int) slen("$&");
-            for (next = 0; (rp = mprGetNextItem(route->host->routes, &next)) != 0; ) {
-                targetLen = (int) max(targetLen, slen(rp->target));
-                patternLen = (int) max(patternLen, slen(rp->pattern));
-                methodsLen = (int) max(methodsLen, slen(httpGetRouteMethods(rp)));
-            }
-            printf("%-*s %-*s %-*s\n", patternLen, "Route", methodsLen, "Methods", targetLen, "Target");
-        }
     }
     auth = route->auth;
     methods = httpGetRouteMethods(route);
@@ -8894,7 +8898,7 @@ static void printRoute(HttpRoute *route, int next, bool full)
     target = (route->target && *route->target) ? route->target : "$&";
 
     if (full) {
-        printf("\n Route [%d]. %s\n", next, route->pattern);
+        printf("\n Route [%d]. %s\n", idx, route->pattern);
         printf("    Pattern:      %s\n", pattern);
         if (route->prefix && *route->prefix) {
             printf("    RegExp:       %s\n", route->optimizedPattern);
@@ -8917,7 +8921,7 @@ static void printRoute(HttpRoute *route, int next, bool full)
             }
         }
         if (route->conditions) {
-            for (next = 0; (condition = mprGetNextItem(route->conditions, &next)) != 0; ) {
+            for (nextIndex = 0; (condition = mprGetNextItem(route->conditions, &nextIndex)) != 0; ) {
                 printf("    Condition:    %s %s\n", condition->name, condition->details ? condition->details : "");
             }
         }
@@ -8944,23 +8948,16 @@ static void printRoute(HttpRoute *route, int next, bool full)
 PUBLIC void httpLogRoutes(HttpHost *host, bool full)
 {
     HttpRoute   *route;
-    int         next, foundDefault;
+    int         index, methodsLen, patternLen, targetLen;
 
     if (!host) {
         host = httpGetDefaultHost();
     }
-    printf("\n");
-    for (foundDefault = next = 0; (route = mprGetNextItem(host->routes, &next)) != 0; ) {
-        printRoute(route, next - 1, full);
-        if (route == host->defaultRoute) {
-            foundDefault++;
-        }
+    if (!full) {
+        printRouteHeader(host, &methodsLen, &patternLen, &targetLen);
     }
-    /*
-        Add the default so LogRoutes can print the default route which has yet been added to host->routes
-     */
-    if (!foundDefault && host->defaultRoute) {
-        printRoute(host->defaultRoute, next - 1, full);
+    for (index = 0; (route = mprGetNextItem(host->routes, &index)) != 0; ) {
+        printRoute(route, index - 1, full, methodsLen, patternLen, targetLen);
     }
     printf("\n");
 }
