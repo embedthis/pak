@@ -125,6 +125,7 @@ PUBLIC Http *httpCreate(int flags)
     http->startLevel = 2;
     http->localPlatform = slower(sfmt("%s-%s-%s", ME_OS, ME_CPU, ME_PROFILE));
     httpSetPlatform(http->localPlatform);
+    httpSetPlatformDir(0);
 
     updateCurrentDate();
     http->statusCodes = mprCreateHash(41, MPR_HASH_STATIC_VALUES | MPR_HASH_STATIC_KEYS | MPR_HASH_STABLE);
@@ -1805,9 +1806,11 @@ static HttpRoute *createLoginRoute(HttpRoute *route, cchar *pattern, HttpAction 
     if (sstarts(pattern, "https:///")) {
         pattern = &pattern[8];
         secure = 1;
+    } else if (sstarts(pattern, "http:///")) {
+        pattern = &pattern[7];
     }
     if ((route = httpCreateInheritedRoute(route)) != 0) {
-        httpSetRoutePattern(route, sjoin(pattern, "$", NULL), 0);
+        httpSetRoutePattern(route, sjoin("^", pattern, "$", NULL), 0);
         if (secure) {
             httpAddRouteCondition(route, "secure", "https://", HTTP_ROUTE_REDIRECT);
         }
@@ -1835,7 +1838,9 @@ PUBLIC void httpSetAuthFormDetails(HttpRoute *route, cchar *loginPage, cchar *lo
 
     if (loggedInPage) {
         auth->loggedInPage = sclone(loggedInPage);
+#if UNUSED
         createLoginRoute(route, auth->loggedInPage, 0);
+#endif
     }
     if (loginPage) {
         auth->loginPage = sclone(loginPage);
@@ -3615,7 +3620,6 @@ PUBLIC int httpWait(HttpConn *conn, int state, MprTicks timeout)
 
 /************************************ Forwards ********************************/
 
-static void copyMappings(HttpRoute *route, MprJson *dest, MprJson *obj);
 static void parseAuthRoles(HttpRoute *route, cchar *key, MprJson *prop);
 static void parseAuthStore(HttpRoute *route, cchar *key, MprJson *prop);
 static void parseRoutes(HttpRoute *route, cchar *key, MprJson *prop);
@@ -3752,11 +3756,24 @@ PUBLIC int parseInclude(HttpRoute *route, MprJson *config, MprJson *inc)
 }
 
 
-PUBLIC int parseFile(HttpRoute *route, cchar *path)
+PUBLIC void httpInitConfig(HttpRoute *route)
+{
+    route->error = 0;
+    route->config = 0;
+    route->clientConfig = 0;
+}
+
+
+PUBLIC int httpLoadConfig(HttpRoute *route, cchar *path)
 {
     MprJson     *config, *obj;
     cchar       *data, *errorMsg;
 
+    /*
+        Order of processing matters. First load the file and then blend included files into the same json obj.
+        Then blend the mode directives and then assign/blend into the route config.
+        Lastly, parse the json config dom.
+     */
     if ((data = mprReadPathContents(path, NULL)) == 0) {
         mprLog("error http config", 0, "Cannot read configuration from \"%s\"", path);
         return MPR_ERR_CANT_READ;
@@ -3787,24 +3804,9 @@ PUBLIC int parseFile(HttpRoute *route, cchar *path)
     } else {
         route->config = config;
     }
+    route->error = 0;
+
     httpParseAll(route, 0, config);
-    return 0;
-}
-
-
-PUBLIC void httpInitConfig(HttpRoute *route)
-{
-    route->error = 0;
-    route->config = 0;
-}
-
-
-PUBLIC int httpLoadConfig(HttpRoute *route, cchar *path)
-{
-    route->error = 0;
-    if (parseFile(route, path) < 0) {
-        return MPR_ERR_CANT_READ;
-    }
     if (route->error) {
         route->config = 0;
         return MPR_ERR_BAD_STATE;
@@ -3813,11 +3815,12 @@ PUBLIC int httpLoadConfig(HttpRoute *route, cchar *path)
 }
 
 
+#if UNUSED
 PUBLIC int httpFinalizeConfig(HttpRoute *route)
 {
     HttpHost    *host;
     HttpRoute   *rp;
-    MprJson     *apps, *obj, *mappings, *routes;
+    MprJson     *routes;
     cchar       *home;
     int         nextHost, nextRoute;
 
@@ -3830,33 +3833,9 @@ PUBLIC int httpFinalizeConfig(HttpRoute *route)
     if ((routes = mprGetJsonObj(route->config, "http.routes")) != 0) {
         parseRoutes(route, "http.routes", routes);
     }
-
-    if ((apps = mprGetJsonObj(route->config, "http.apps")) != 0) {
-        parseRoutes(route, "http.apps", apps);
-    }
-
-    /*
-        Create a subset, optimized configuration to send to the client
-     */
-    if ((obj = mprGetJsonObj(route->config, "http.client.mappings")) == 0) {
-#if DEPRECATED || 1
-        if ((obj = mprGetJsonObj(route->config, "http.mappings")) != 0) {
-            mprLog("warn http", 0, "Using deprecated http.mappings. use http.client.mappings instead.");
-        }
-#endif
-    }
-    if (obj) {
-        mappings = mprCreateJson(MPR_JSON_OBJ);
-        copyMappings(route, mappings, obj);
-        mprWriteJson(mappings, "prefix", route->prefix, 0);
-        route->clientConfig = mprJsonToString(mappings, MPR_JSON_QUOTES);
-    }
     httpAddHostToEndpoints(route->host);
 
-    /*
-        Ensure the host home directory is set and the file handler is defined
-        Propagate the HttpRoute.client to all child routes.
-     */
+#if UNUSED
     for (nextHost = 0; (host = mprGetNextItem(route->http->hosts, &nextHost)) != 0; ) {
         for (nextRoute = 0; (rp = mprGetNextItem(host->routes, &nextRoute)) != 0; ) {
             if (!mprLookupKey(rp->extensions, "")) {
@@ -3870,6 +3849,7 @@ PUBLIC int httpFinalizeConfig(HttpRoute *route)
             }
         }
     }
+#endif
 #if ME_UNIX_LIKE
     if ((home = mprGetJson(route->config, "http.server.chroot")) != 0) {
         home = httpMakePath(route, 0, home);
@@ -3899,8 +3879,10 @@ PUBLIC int httpFinalizeConfig(HttpRoute *route)
     }
     return 0;
 }
+#endif
 
 
+#if UNUSED
 static void copyMappings(HttpRoute *route, MprJson *dest, MprJson *obj)
 {
     MprJson     *child, *job, *jvalue;
@@ -3927,6 +3909,7 @@ static void copyMappings(HttpRoute *route, MprJson *dest, MprJson *obj)
         }
     }
 }
+#endif
 
 
 /**************************************** Parser Callbacks ****************************************/
@@ -4221,7 +4204,7 @@ static void parseCache(HttpRoute *route, cchar *key, MprJson *prop)
 
 static void parseCgiEscape(HttpRoute *route, cchar *key, MprJson *prop)
 {
-    httpSetRouteEnvEscape(route, prop->type & MPR_JSON_TRUE);
+    httpSetRouteEnvEscape(route, (prop->type & MPR_JSON_TRUE) ? 1 : 0);
 }
 
 
@@ -4780,9 +4763,6 @@ static void parseHttp(HttpRoute *route, cchar *key, MprJson *prop)
 }
 
 
-/*
-    Must only be called directly via parseHttp as all other http.* keys must have already been processed.
- */
 static void parseRoutes(HttpRoute *route, cchar *key, MprJson *prop)
 {
     MprJson     *child;
@@ -5411,6 +5391,7 @@ PUBLIC int httpInitParser()
     httpAddConfig("http.pipeline.handlers", parsePipelineHandlers);
     httpAddConfig("http.prefix", parsePrefix);
     httpAddConfig("http.redirect", parseRedirect);
+    httpAddConfig("http.routes", parseRoutes);
     httpAddConfig("http.resources", parseResources);
     httpAddConfig("http.scheme", parseScheme);
 
@@ -14812,9 +14793,8 @@ PUBLIC HttpRoute *httpDefineRoute(HttpRoute *parent, cchar *methods, cchar *patt
 
 PUBLIC HttpRoute *httpAddRestfulRoute(HttpRoute *parent, cchar *methods, cchar *pattern, cchar *target, cchar *resource)
 {
-    cchar   *nameResource, *source;
+    cchar   *source;
 
-    nameResource = smatch(resource, "{controller}") ? "*" : resource;
 #if DEPRECATE || 1
     if (*resource == '{') {
         pattern = sfmt("^%s%s/%s%s", parent->prefix, parent->serverPrefix, resource, pattern);
