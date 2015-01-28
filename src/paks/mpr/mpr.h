@@ -8867,9 +8867,9 @@ typedef struct MprCmd {
 #if ME_WIN_LIKE
     HANDLE          thread;             /**< Handle of the primary thread for the created process */
     HANDLE          process;            /**< Process handle for the created process */
-    char            *command;           /**< Windows command line */
-    char            *arg0;              /**< Windows sanitized argv[0] */
 #endif
+//  MOB - move back
+    char            *command;           /**< Windows command line */
 
 #if VXWORKS
     /*
