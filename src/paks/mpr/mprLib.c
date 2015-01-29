@@ -6606,7 +6606,6 @@ static void prepWinProgram(MprCmd *cmd)
 {
 #if ME_WIN_LIKE
     MprFile     *file;
-    MprBuf      *buf;
     cchar       *bat, *ext, *shell, *cp, *start;
     char        bang[ME_MAX_FNAME + 1], *path, *pp;
     int         i;
@@ -6642,21 +6641,14 @@ static void prepWinProgram(MprCmd *cmd)
             if ((shell = getenv("COMSPEC")) == 0) {
                 shell = "cmd.exe";
             }
-            buf = mprCreateBuf(0, 0);
-            for (i = 1; i < cmd->argc; ) {
-                mprPutStringToBuf(buf, cmd->argv[i]);
-                if (++i < cmd->argc) {
-                    mprPutCharToBuf(buf, ' ');
-                }
-            }
-            cmd->argv = mprAlloc(6 * sizeof(char*));
+            cmd->argv = mprRealloc((void*) cmd->argv, (cmd->argc + 4) * sizeof(char*));
+            memmove((void*) &cmd->argv[3], (void*) cmd->argv, sizeof(char*) * (cmd->argc + 1));
             cmd->argv[0] = sclone(shell);
             cmd->argv[1] = sclone("/Q");
             cmd->argv[2] = sclone("/C");
             cmd->argv[3] = bat;
-            cmd->argv[4] = mprBufToString(buf);
-            cmd->argv[5] = 0;
-            cmd->argc = 4;
+            cmd->argc += 3;
+            cmd->argv[cmd->argc] = 0;
             return;
         }
     }
