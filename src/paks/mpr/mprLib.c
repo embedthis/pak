@@ -6635,12 +6635,8 @@ static void prepWinProgram(MprCmd *cmd)
         Support ".cmd" and ".bat" files that take precedence
      */
     if ((ext = mprGetPathExt(path)) == 0) {
-        bat = mprJoinPathExt(path, ".cmd");
-        if (!mprPathExists(bat, X_OK)) {
-            bat = mprJoinPathExt(path, ".bat");
-            if (!mprPathExists(bat, X_OK)) {
-                bat = 0;
-            }
+        if ((bat = mprSearchPath(mprJoinPathExt(path, ".cmd"), MPR_SEARCH_EXE, cmd->searchPath, NULL)) == 0) {
+            bat = mprSearchPath(mprJoinPathExt(path, ".bat"), MPR_SEARCH_EXE, cmd->searchPath, NULL);
         }
         if (bat) {
             if ((shell = getenv("COMSPEC")) == 0) {
