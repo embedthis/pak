@@ -1334,22 +1334,28 @@ class Pak
             trace('Mkdir', dest)
             mkdir(dest)
         }
-        if (!pak.sourcePath) {
-            fetchPak(pak)
-        } else if (pak.sourcePath.isDir) {
-            copyPak(pak)
-        } else {
-            throw 'Cannot find pak ' + pak.name + ' to install'
+        try {
+            if (!pak.sourcePath) {
+                fetchPak(pak)
+            } else if (pak.sourcePath.isDir) {
+                copyPak(pak)
+            } else {
+                throw 'Cannot find pak ' + pak.name + ' to install'
+            }
+            if (!Package.getSpecFile(pak.cachePath)) {
+                throw 'Cannot find package description for ' + pak + ' from ' + pak.cachePath
+            }
+            pak.resolve()
+            if (!pak.sourcePath || options.all) {
+                cacheDependencies(pak)
+            }
+            runScripts(pak, 'postcache')
+            qtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
         }
-        if (!Package.getSpecFile(pak.cachePath)) {
-            throw 'Cannot find package description for ' + pak + ' from ' + pak.cachePath
+        catch (e) {
+            dest.removeAll()
+            throw e
         }
-        pak.resolve()
-        if (!pak.sourcePath || options.all) {
-            cacheDependencies(pak)
-        }
-        runScripts(pak, 'postcache')
-        qtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
     }
 
     private function pakFileExists(path: Path): Boolean {
