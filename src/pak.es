@@ -1289,24 +1289,24 @@ class Pak
                             throw 'Cannot find ' + path
                         }
                         if (path.extension == 'es') {
-                            trace('Run', 'ejs', path)
+                            vtrace('Run', 'ejs', path)
                             load(path)
                         } else if (path.extension == 'me') {
-                            trace('Run', 'me -q --file', path)
+                            vtrace('Run', 'me -q --file', path)
                             results = Cmd.run('me -q --file ' + path)
                         } else {
-                            trace('Run', 'bash', path)
+                            vtrace('Run', 'bash', path)
                             results = Cmd.run('bash ' + path)
                         }
                     } else if (script is String) {
-                        trace('Run', script)
+                        vtrace('Run', script)
                         results = Cmd.run(script)
                     }
                 }
             } else if (pak.cachePath) {
                 path = pak.cachePath.join('start.me')
                 if (path.exists) {
-                    trace('Run', 'me -q --file ' + path + ' ' + event)
+                    vtrace('Run', 'me -q --file ' + path + ' ' + event)
                     results = Cmd.run('me -q --file ' + path + ' ' + event)
                 }
             }
