@@ -383,7 +383,7 @@ class Pak
                 topDeps = {}
                 for each (vname in rest) {
                     let [name,version] = vname.split('#')
-                    topDeps[name] = true
+                    topDeps[Path(name).basename] = true
                 }
                 for each (vname in rest) {
                     let [name,version] = vname.split('#')
@@ -503,7 +503,7 @@ class Pak
             } else {
                 topDeps = {}
                 for each (name in rest) {
-                    topDeps[name] = true
+                    topDeps[Path(name).basename] = true
                 }
                 for each (name in rest) {
                     let criteria = spec.dependencies[name] || optional(name)
