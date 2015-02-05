@@ -1,7 +1,15 @@
 {
     "jquery": {
-        ">1.11.1": {
+        ">=1.11.1": {
             "export": "*.js",
+            "render": {
+                "js": "*.js"
+            }
+        }
+    },
+    "npm:jquery": {
+        ">=1.11.1": {
+            "export": "*.mob",
             "render": {
                 "js": "*.js"
             }
