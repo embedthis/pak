@@ -1,7 +1,7 @@
 #!/usr/bin/env ejs
 
 /*
-    pak.es -- Embedthis Pak Package Manager
+    pak.es -- Embedthis Pak Manager
 
     Copyright (c) All Rights Reserved. See details at the end of the file.
  */
@@ -20,9 +20,11 @@ const PACKAGE: Path = Path('package.json')
 const BOWER: Path = Path('bower.json')
 
 var PakFiles = [ PACKAGE, BOWER ]
+
+//  MOB - rename package
 var spec: Object
 
-var catalogs: Array
+var catalogs: Object?
 var directories: Object
 var dirTokens: Object
 var files: Object
@@ -46,11 +48,23 @@ class Pak
 
     /* This layers over App.config */
     private var defaultConfig = {
-        catalogs: [ 
-            'http://embedthis.com/catalog/do/pak',
-            //KEEP 'https://embedthis.com/catalog/do/pak',
-            'https://bower.herokuapp.com/packages',
-        ],
+        catalogs: { 
+            pak: {
+                list: 'http://embedthis.com/catalog/do/pak/search',
+                query: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
+                download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
+            },
+            bower: {
+                list: 'http://bower.herokuapp.com/packages',
+                query: 'http://bower.herokuapp.com/packages/${NAME}',
+                download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
+            },
+            npm: {
+                __list: 'http://registry.npmjs.org/-/all?stale=update_after&startkey=1386393773409',
+                query: 'http://registry.npmjs.org/${NAME}',
+                download: 'http://registry.npmjs.org/${NAME}/-/${NAME}-${TAG}.tgz',
+            }
+        },
         directories: {
             /* exports */
             files: Path('files'),
@@ -58,7 +72,6 @@ class Pak
             paks: Path('paks'),
             pakcache: Path('~/.paks'),
             public: Path('public'),
-            source: Path('source'),
             top: Path('.'),
         },
         requirePrimaryCatalog: true,
@@ -125,6 +138,7 @@ class Pak
         options: {
             all: { alias: 'a'},
             cache: { alias: 'c', range: String },
+//  MOB - remove
             catalog: { range: String },
             code: { range: String },
             debug: { alias: 'd' },
@@ -154,7 +168,7 @@ class Pak
             '    depend [paks...]         # Display installed pak dependencies\n' +
             '    edit key[=value]...      # Edit a pak description file \n' +
             '    help                     # Display this usage help\n' +
-            '    info paks...             # Display README for paks\n' +
+            '    info paks...             # Display README for cached paks\n' +
             '    init [name [version]]    # Create a new package.json\n' +
             '    install paks...          # Install a pak on the local system\n' +
             '    license paks...          # Display LICENSE for paks\n' +
@@ -165,10 +179,11 @@ class Pak
             '    publish [name uri pass]  # publish a pak in a catalog\n' +
             '    retract name [pass]      # Unpublish a pak\n' +
             '    search paks...           # Search for paks in the catalog\n' +
-            '    uninstall                # Uninstall a pak on the local system\n' +
+            '    uninstall paks...        # Uninstall a pak on the local system\n' +
             '    update [paks...]         # Update the cache with latest version\n' +
             '    upgrade [paks...]        # Upgrade installed paks\n\n' +
             '  General options:\n' + 
+//  MOB - remove
             '    --catalog catalog        # Catalog to use instead of defaults\n' +
             '    --cache dir              # Director to use for the Pak cache\n' +
             '    --dir dir                # Change to directory before running\n' +
@@ -232,7 +247,7 @@ class Pak
             directories.pakcache = Path(options.cache)
         }
         if (options.search) {
-            //  TODO - no search switch defined
+            //  MOB TODO - no search switch defined
             searchPath = App.searchPath = options.search.split(Path.SearchSeparator)
         }
         if (options.log) {
@@ -255,6 +270,7 @@ class Pak
 
     function setup() {
         setDefaults()
+/* UNUSED MOB
         if (options.catalog) {
             catalogs = [Uri(options.catalog)]
         } else {
@@ -262,6 +278,7 @@ class Pak
                 catalogs[c] = Uri(catalogs[c])
             }
         }
+*/
         for (let [d,value] in directories) {
             directories[d] = Path(value.toString().replace('~', HOME))
         }
@@ -272,6 +289,7 @@ class Pak
         if (!git) {
             throw 'Cannot find "git" utility. Please install git first.'
         }
+        //  MOB - is || ... needed
         let path = Package.getSpecFile('.') || Path(PACKAGE)
         spec = path.exists ? path.readJSON() : PakTemplate.clone()
         if (spec.pak && !Version(Config.Version).acceptable(spec.pak)) {
@@ -293,29 +311,7 @@ class Pak
 
         switch (task) {
         case 'cache':
-            if (rest.length == 0) {
-                if (!PACKAGE.exists) {
-                    error('Nothing to install')
-                } else {
-                    pak = Package(spec.name)
-                    pak.setSource(Path('.').absolute)
-                    cache(pak)
-                }
-            } else {
-                for each (name in rest) {
-                    let pak = Package(name)
-                    if (Path(name).exists) {
-                        pak.setSource(name)
-                        /* Use name from package.json so directory can be any name */
-                        let pspec = Package.readSpec(name)
-                        if (pspec) {
-                            pak.name = pspec.name
-                            pak.resolve()
-                        }
-                    }
-                    cache(pak)
-                }
-            }
+            cache(rest)
             break
 
         case 'cached':
@@ -343,25 +339,11 @@ class Pak
             break
 
         case 'info':
-            for each (name in rest) {
-                let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
-                let pak = Package(name)
-                pak.resolve(criteria)
-                if (!pak.cached) {
-                    pak = searchPak(pak)
-                }
-                if (pak && pak.cachePath.join('README.md')) {
-                    let readme = pak.cachePath.join('README.md')
-                    if (!readme.exists) {
-                        throw 'Pak is missing a README.md file'
-                    } else {
-                        print(readme.readString())
-                    }
-                }
-            }
+            info(rest)
             break
 
         case 'install':
+            //  MOB Functionalize
             if (rest.length == 0) {
                 if (!PACKAGE.exists) {
                     error('Nothing to install')
@@ -373,9 +355,7 @@ class Pak
                         }
                         topDeps = deps
                         for (let [name,version] in deps) {
-                            let pak = Package(name)
-                            pak.setSearchCriteria(version)
-                            install(pak)
+                            install(Package(name, version))
                         }
                     }
                 }
@@ -383,27 +363,28 @@ class Pak
                 topDeps = {}
                 for each (vname in rest) {
                     let [name,version] = vname.split('#')
+                    name = Path(name).basename.name
+                    if (RegExp('^(npm:)|(pak:)|(bower:)').exec(name)) {
+                        [, name] = name.split(':')
+                    }
                     topDeps[Path(name).basename] = true
                 }
                 for each (vname in rest) {
                     let [name,version] = vname.split('#')
                     if (!version && spec.dependencies && spec.dependencies[name]) {
-                        vname += '#' + spec.dependencies[name]
+                        version = spec.dependencies[name]
                     }
-                    let pak = Package(vname)
-                    pak.resolve()
-                    install(pak)
+                    install(Package(name, version))
                 }
             }
             break
 
        case 'license':
+            //  MOB Functionalize
             for each (name in rest) {
-                let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
-                let pak = Package(name)
-                pak.resolve(criteria)
+                let pak = Package(name, spec.dependencies[name])
                 if (!pak.cached) {
-                    pak = searchPak(pak)
+                    locatePak(pak)
                 }
                 if (pak && pak.cachePath.join('LICENSE.md')) {
                     let license = pak.cachePath.join('LICENSE.md')
@@ -430,20 +411,20 @@ class Pak
             break
 
         case 'prune':
+            //  MOB Functionalize
             if (rest.length == 0) {
                 let pak
-                for each (path in directories.pakcache.files('*/*')) {
-                    pak = Package(path.dirname.basename)
-                    pak.setVersion(path.basename)
-                    prune(pak)
+                /* name/version */
+                for each (path in directories.pakcache.files('*/*/*')) {
+                    //  MOB - not right
+                    prune(Package(path.dirname, path.basename))
                 }
             } else {
                 let pak
                 for each (name in rest) {
-                    for each (path in directories.pakcache.join(name).files('*')) {
-                        pak = Package(name)
-                        pak.setSearchCriteria(path.basename)
-                        prune(pak)
+                    for each (path in directories.pakcache.join(name).files('*/*')) {
+                        //MOB not right
+                        prune(Package(name, path.basename))
                     }
                 }
                 if (!pak) {
@@ -461,9 +442,7 @@ class Pak
             break
 
         case 'search':
-            for each (name in rest) {
-                search(Package(name))
-            }
+            search(rest)
             break
 
         case 'uninstall':
@@ -471,6 +450,7 @@ class Pak
             break
 
         case 'update':
+            //  MOB Functionalize
             if (rest.length == 0) {
                 for each (path in ls(directories.pakcache, true)) {
                     update(Package(path))
@@ -481,6 +461,7 @@ class Pak
             break
 
         case 'upgrade':
+            //  MOB Functionalize
             if (!PACKAGE.exists) {
                 error('Nothing to upgrade')
                 break
@@ -494,8 +475,8 @@ class Pak
                 blend(deps, spec.optionalDependencies)
                 topDeps = deps
                 for (let [name,criteria] in deps) {
-                    let pak = Package(name)
-                    pak.resolve(criteria)
+//  MOB REFACTOR
+                    let pak = Package(name, criteria)
                     if (pak.installed || !optional(pak.name)) {
                         upgrade(pak)
                     }
@@ -507,9 +488,8 @@ class Pak
                 }
                 for each (name in rest) {
                     let criteria = spec.dependencies[name] || optional(name)
-                    let pak = Package(name)
-                    pak.resolve(criteria)
-                    upgrade(pak)
+//  MOB REFACTOR
+                    upgrade(Package(name, criteria))
                 }
             }
             break
@@ -537,14 +517,14 @@ class Pak
         Returned in dependency first order.
      */
     function depend(patterns): Void {
-        let sets = getPaks({}, patterns, spec)
+        let sets = getInstalledPaks({}, patterns, spec)
         for each (pak in sets) {
             printDeps(pak)
         }
     }
 
     function getValue(key): Void {
-        let obj = Package.readSpec('.')
+        let obj = Package.loadPackage('.')
         for each (thisKey in key.split('.')) {
             obj = obj[thisKey]
         }
@@ -580,32 +560,41 @@ class Pak
         }
     }
 
-    /*
-        Cache a pak
-        @param pak Name of the pak. can be a bare pak name, versioned pak-name or a path to a physical pak file
-     */
-    function cache(pak: Package) {
-        pak.resolve(pak.searchCriteria || '*')
-        if (pak.publish === false) {
-            qtrace('Skip', pak + ' has publish: false')
-            return
-        }
-        if (pak.cached) {
-            if (!state.force) {
-                qtrace('Info', pak + ' ' + pak.cacheVersion + ' is already cached')
-                return
+    function cache(names: Array): Void {
+        if (names.length == 0) {
+            if (!PACKAGE.exists) {
+                error('Nothing to install')
+            } else {
+                let pak = Package(spec.name)
+                pak.setSource('.')
+                cachePak(pak)
             }
         } else {
-            vtrace('Info', pak + ' is not yet cached')
-        }
-        if (pak.sourcePath) {
-            if (!pak.source) {
-                qtrace('Skip', pak + ' does not have a valid package.json')
-                return
+            for each (name in names) {
+                if (Path(name).exists && Package.getSpecFile(name)) {
+                    let pspec = Package.loadPackage(name)
+                    if (!pspec.repository || !pspec.repository.url) {
+                        throw "Package.json is missing repository.url"
+                    }
+                    let pak = Package(pspec.repository.url)
+                    pak.setSource(name)
+                    cachePak(pak)
+                } else {
+                    let pak = Package(name)
+                    locatePak(pak)
+                    cachePak(pak)
+                }
             }
+        }
+    }
+
+    function cacheName(name: String, dir: Path? = null) {
+        let pak = Package(name)
+        if (dir) {
+            pak.setSource(dir)
             pak.setCacheVersion(pak.source.version)
         } else {
-            pak = searchPak(pak)
+            locatePak(pak)
         }
         cachePak(pak)
     }
@@ -616,34 +605,36 @@ class Pak
             --versions     # Show versions appended to each pak
             --details      # List pak details
      */
-    function cached(patterns: Array): Void {
+    function cached(names: Array): Void {
         let sets = {}
-        for each (path in directories.pakcache.files('*/*').sort()) {
-            let pak = Package(path.dirname.basename)
-            pak.setCacheVersion(path.basename)
-            if (matchPakName(pak.name, patterns)) {
-                /* Aggregate the set of installed versions of each pak */
-                let pakset = sets[pak.name]
-                pakset ||= []
+        if (names.length == 0) {
+            names = directories.pakcache.files('*', {relative:true}).sort()
+        }
+        for each (name in names) {
+            /*
+                Build list of qualifying paks from cached versions
+             */
+            for each (path in directories.pakcache.files(name + '/*/*').sort()) {
+                let pak = Package(path)
+                let pakset = sets[pak.owner + '/' + pak.name] || {}
                 sets[pak.name] = pakset
-                pakset.append(pak)
+                pakset[pak.cacheVersion] = pak
             }
         }
         for each (pakset in sets) {
-            let pak = pakset[0]
+            versions = []
+            for each (pak in pakset) {
+                versions.append(pak.cacheVersion)
+            }
+            Version.sort(versions)
+            let latest = versions[versions.length - 1]
+
+            let pak = pakset[latest]
             if (options.all) {
-                versions = []
-                for each (pak in pakset) {
-                    versions.append(pak.cacheVersion)
-                }
-                pak = pakset[0]
-                out.write(pak.name + ' ' + Version.sort(versions).join(', '))
+                out.write(pak.name + ' ' + versions.join(', '))
             } else {
-                /* Pick last pak (highest version) */
-                pak = pakset[pakset.length - 1]
                 out.write(pak.name + ' ' + pak.cacheVersion)
             }
-            pak.resolve()
             if (options.details && pak.cache) {
                 out.write(': ')
                 print(serialize(pak.cache, {pretty: true, indent: 4}))
@@ -652,25 +643,40 @@ class Pak
         }
     }
 
-    /*
-        Search for a pak
-        @param pak Name of the pak. can be a bare-pak name, versioned pak-name or a path to a physical pak file
-     */
-    function search(pak: Package) {
-        let indent = ''
-        if (options.verbose || options.versions) {
-            indent += '    '
-        }
-        for each (match in searchPaks(pak, false)) {
-            let cached = match.cached ? 'cached' : ''
-            if (options.versions) {
-                print(indent + match.name + ' ' + match.cacheVersion + ' ' + match.remoteUri + ' ' + cached)
-                print(indent + '  versions:')
-                for each (v in match.versions) {
-                    print(indent + indent + v)
+    function search(args: Array) {
+        for each (ref in args) {
+            let indent = ''
+            if (options.verbose || options.versions) {
+                indent += '    '
+            }
+            for each (match in searchCatalogs(ref)) {
+                let cached = match.cached ? 'cached' : ''
+                if (options.versions) {
+                    print(indent + match.name + ' ' + match.cacheVersion + ' ' + match.location + ' ' + cached)
+                    print(indent + '  versions:')
+                    for each (v in match.versions) {
+                        print(indent + indent + v)
+                    }
+                } else {
+                    print(indent + match.name + ' ' + match.cacheVersion + ' ' + match.location + ' ' + cached)
                 }
+            }
+        }
+    }
+
+    function info(names: Array) {
+        for each (name in names) {
+            let criteria = (spec.dependencies && spec.dependencies[name]) || '*'
+            let pak = Package(name, criteria)
+            let path = (pak.installed) ? pak.installPath : pak.cachePath
+            if (!path) {
+                throw 'Pak "' + name + '" is not yet cached'
+            }
+            let readme = path.join('README.md')
+            if (!readme.exists) {
+                throw 'Pak is missing a README.md file'
             } else {
-                print(indent + match.name + ' ' + match.cacheVersion + ' ' + match.remoteUri + ' ' + cached)
+                print(readme.readString())
             }
         }
     }
@@ -698,18 +704,17 @@ class Pak
     }
 
     function install(pak: Package) {
-        pak.resolve(pak.searchCriteria || '*')
         if (pak.cached) {
             if (pak.installed && !state.force) {
                 if (pak.installVersion.same(pak.cacheVersion)) {
                     qtrace('Info', pak + ' is already installed')
-                } else if (Version(pak.cache.version).acceptable(pak.searchCriteria) && !state.upgrade) {
+                } else if (Version(pak.cache.version).acceptable(pak.versionCriteria) && !state.upgrade) {
                     qtrace('Info', pak + ' is already installed')
                 }
                 return
             }
         } else {
-            pak = searchPak(pak)
+            locatePak(pak)
             cachePak(pak)
         }
         runScripts(pak, 'preinstall')
@@ -734,7 +739,7 @@ class Pak
     var blending = {}
 
     /* 
-        Blend dependencies bottom up so that lower paks can define directories
+        Blend dependencies bottom up so that lower paks can define directories and upper paks can override.
      */
     private function blendPak(pak: Package) {
         if (!pak.cache) {
@@ -754,28 +759,17 @@ class Pak
             pak.cache.app['*'].noblend = pak.cache.import
         }
         if (!getAppSetting(pak, 'noblend')) {
+            // MOB - move blendSpec in here?
             blendSpec(pak)
         }
         delete blending[pak.name]
     }
 
     private function blendSpec(pak: Package) {
-        /*  KEEP
-            Expand tokens in scripts before blending
-        try {
-            let scripts = pak.cache.app.client['+scripts']
-            if (scripts) {
-                for (let [key,value] in scripts) {
-                    scripts[key] = value.expand(dirTokens)
-                }
-            }
-        } catch {}
-        */
-
         /*
             Combine directories, app and mode
          */
-        let combine = blend({directories:'directories', app:'app',}, pak.cache.combine)
+        let combine = blend({directories:'directories', app:'app'}, pak.cache.combine)
         for (let [key,value] in combine) {
             if (pak.cache[value]) {
                 spec[key] ||= {}
@@ -810,6 +804,10 @@ class Pak
                 }
             }
         }
+        if (spec.override && spec.override[pak.name]) {
+            vtrace('Apply', 'Local overrides for ' + pak.name)
+            blend(pak.cache, spec.override[pak.name], {combine: true})
+        }
     }
 
     /*
@@ -821,10 +819,6 @@ class Pak
             return
         }
         installed[pak.name] = true
-
-        /* Get updated dependency information in spec */
-        pak.resolve()
-
         let installDeps = !options.nodeps
         if (PACKAGE.exists) {
             if (getAppSetting(pak, 'nodeps')) {
@@ -836,7 +830,6 @@ class Pak
         }
         if (!pak.cached) {
             cachePak(pak)
-            pak.resolve()
         }
         if (installDeps) {
             installDependencies(pak)
@@ -901,7 +894,24 @@ class Pak
                 }
             }
         }
-        copyTree(pak, pak.cachePath, dest, ignore, pak.cache.files, export)
+        let from = pak.cachePath
+        let files = pak.cache.files
+//  MOB - need some way to control from package.json
+        if (!files) {
+            for each (dir in ['dist', 'lib']) {
+                let path = pak.cachePath.join(dir)
+                if (path.exists) {
+                    // from = path
+                    if (!export) {
+                        export = [ dir + '/**' ]
+//  MOB - how to trim 'dist'
+print("SET EXPORT", export)
+                    }
+                    break
+                }
+            }
+        }
+        copyTree(pak, from, dest, ignore, files, export)
         vtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
         vtrace('Info', 'Use "pak info ' + pak.name + '" to view the README')
     }
@@ -921,9 +931,7 @@ class Pak
         if (installed[name]) {
             return
         }
-        let dep = Package(name)
-        dep.selectCacheVersion(criteria)
-        dep.resolve()
+        let dep = Package(name, criteria)
         if (install && ((!dep.installed && dep.cache && dep.cache.install !== false) || state.force)) {
             vtrace('Info', 'Install required dependency ' + dep.name)
             try {
@@ -941,18 +949,17 @@ class Pak
         }
     }
 
-    function getPaks(result, patterns, pak) {
+    function getInstalledPaks(result, patterns, pak) {
         for (let [name, requiredVersion] in pak.dependencies) {
             if (!result[name]) {
-                let dep = Package(directories.paks.join(name))
-                dep.resolve(requiredVersion)
+                let dep = Package(name, requiredVersion)
                 if (matchPakName(name, patterns)) {
                     result[name] = dep
                 }
                 if (!dep.install && !dep.cache) {
                     throw 'Cannot find pak "' + dep.name + '" referenced by "' + pak.name + '"'
                 }
-                getPaks(result, patterns, dep.install || dep.cache)
+                getInstalledPaks(result, patterns, dep.install || dep.cache)
             }
         }
         return result
@@ -964,7 +971,7 @@ class Pak
             --details      # List pak details
      */
     function list(patterns: Array): Void {
-        let sets = getPaks({}, patterns, spec)
+        let sets = getInstalledPaks({}, patterns, spec)
         for each (pak in sets) {
             spec.optionalDependencies ||= {}
             let opt = optional(pak.name) ? ' optional' : ''
@@ -996,12 +1003,11 @@ class Pak
         let deps = blend({}, spec.dependencies)
         blend(deps, spec.optionalDependencies)
         for (let [name,criteria] in deps) {
-            let pak = Package(name)
-            pak.resolve(criteria)
+            let pak = Package(name, criteria)
             if (pak.installed) {
-                trace('Lockdown', pak.name + ' to ' + pak.installVersion.compatible + 
-                    ' (was ' + spec.dependencies[pak.name] + ')')
-                spec.dependencies[pak.name] = '~' + pak.installVersion.compatible
+                trace('Lockdown', pak.name + ' to ^' + pak.installVersion.compatible + 
+                    ' (was ' + deps[pak.name] + ')')
+                spec.dependencies[pak.name] = '^' + pak.installVersion.compatible
                 delete spec.optionalDependencies[pak.name]
             } else {
                 trace('Info', pak.name + ' is not installed')
@@ -1026,7 +1032,6 @@ class Pak
         --force Prune regardless of whether other dependencies require the pak.
      */
     function prune(pak: Package) {
-        pak.resolve()
         var latest = Version.sort(directories.pakcache.join(pak.name).files('*'), -1)[0]
         if (!latest) {
             throw 'Nothing to prune for "' + pak + '"'
@@ -1067,38 +1072,38 @@ class Pak
     /*
         Update cached packs
      */
-    function update(pak: Package? = null): Package {
-        pak.resolve(pak.searchCriteria || '*')
+    function update(pak: Package) {
+//  MOB - where is this doing a search to get the latest version?
         trace('Search', 'Latest version of ' + pak)
-        let later = searchPak(pak)
-        if (pak.cacheVersion && pak.cacheVersion.same(later.cacheVersion) && !state.force) {
+        let current = pak.cacheVersion
+        if (current && current.same(pak.cacheVersion) && !state.force) {
             trace('Info', pak + ' is current with ' + pak.cacheVersion + ' for requirement ')
             return pak
         }
-        trace('Update', pak + ' to ' + later.cacheVersion)
+        trace('Update', pak + ' to ' + pak.cacheVersion)
         runScripts(pak, 'preupdate')
-        cachePak(later)
-        return later
+        cachePak(pak)
+        return pak
     }
 
     /*
         Upgrade installed packs
      */
     function upgrade(pak: Package? = null) {
-        pak.resolve(pak.searchCriteria || '*')
-        let later = pak
+//  MOB - where is this doing a search to get the latest version?
+        let current = pak.installVersion
         if (!pak.cached) {
-            later = update(pak)
+            update(pak)
         } 
-        if (pak.installed && pak.installVersion && pak.installVersion.same(later.cacheVersion)) {
+        if (current && current.same(pak.cacheVersion)) {
             if (!state.force) {
                 vtrace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion + 
-                    ' for version requirement ' + pak.searchCriteria)
+                    ' for version requirement ' + pak.versionCriteria)
                 return
             }
         } else {
             if (pak.cache.install !== false) {
-                qtrace('Upgrade', pak + ' to ' + later.cacheVersion)
+                qtrace('Upgrade', pak + ' to ' + pak.cacheVersion)
             }
         }
         if (state.force && pak.installVersion && pak.installVersion.same(pak.cacheVersion)) {
@@ -1108,10 +1113,9 @@ class Pak
             trace('Info', 'Installed ' + pak + ' ' + pak.installVersion + ' is frozen')
             return
         }
-        later.resolve(later.cacheVersion)
         runScripts(pak, 'preupgrade')
         state.upgrade = true
-        install(later)
+        install(pak)
         delete state.upgrade
     }
 
@@ -1121,19 +1125,17 @@ class Pak
             return false
         }
         for (let [other, criteria] in pspec.dependencies) {
-            let dep = Package(other)
-            dep.selectCacheVersion(criteria)
+            let dep = Package(other, criteria)
             if (Path(dep.name).isDir) {
                 dep.setSource(dep.name)
             }
-            dep.resolve()
             if (!dep.cached) {
                 if (dep.sourcePath) {
                     trace('Info', 'Caching required dependency from source at: ' + dep.sourcePath)
                     cachePak(dep)
                 } else {
                     try {
-                        dep = searchPak(dep)
+                        locatePak(dep)
                         cachePak(dep)
                     } catch (e) {
                         print(e)
@@ -1158,7 +1160,7 @@ class Pak
         if (!files || files.length == 0) {
             files = ['**']
         } else {
-            files += ['package.json', 'README.md', 'LICENSE.md']
+            files = (files + ['package.json', 'README.md', 'LICENSE.md']).unique()
         }
         if (ignore && !(ignore is Array)) {
             ignore = [ignore]
@@ -1172,21 +1174,24 @@ class Pak
                 pat = { from: [pat], to: Path(pak.name), overwrite: true}
             } else {
                 if (!(pat.from is Array)) {
-                    pat.from = [pat.from]
+                    pat.from = [pat.from || '**']
                 }
+                pat.to ||= Path(pak.name)
                 if (pat.overwrite == undefined) {
                     pat.overwrite = true
                 }
             }
-            let dir = Path(directories.exports || directories.source.join(directories.lib))
-            let to = dir.join(pat.to.expand(dirTokens, {fill: '.'}))
+            let dir = Path(directories.export || directories.lib)
+            let to = dir.join(pat.to.toString().expand(dirTokens, {fill: '.'}))
             if (!to.childOf('.')) {
                 throw 'Copy destination "' + to + '" for pak "' + pak.name + '" is outside current directory'
             }
             for each (f in fromDir.files(pat.from)) {
-                export[f] = { overwrite: pat.overwrite, to: to }
+                export[f] = { overwrite: pat.overwrite, to: to, trim: pat.trim }
             }
         }
+        print("FROM", fromDir)
+        dump(files)
         fromDir.operate(files, toDir, {
             flatten: false,
             prePerform: function(from, to, options) {
@@ -1199,7 +1204,11 @@ class Pak
             postPerform: function(from, to, options) {
                 if (export[from]) {
                     let base: Path = export[from].to
-                    let to = base.join(from.relativeTo(fromDir)).relative
+                    let path = from.relativeTo(fromDir)
+                    if (export[from].trim) {
+                        path = path.components.slice(export[from].trim).join(path.separator)
+                    }
+                    let to = base.join(path).relative
                     if (from.isDir) {
                         global.pak.makeDir(to)
                     } else {
@@ -1229,16 +1238,19 @@ class Pak
         let dest = pak.cachePath
         try {
             http.followRedirects = true
-            trace('Get', pak.downloadUri)
-            http.get(pak.downloadUri)
+            trace('Get', pak.download)
+            http.get(pak.download)
             let file = File(tgzName, 'w')
             let buf = new ByteArray
             while (http.read(buf) > 0) {
                 let wrote = file.write(buf)
             }
             file.close()
+            if (http.status != 200) {
+                throw 'Cannot download ' + pak.download + ' status ' + http.status
+            }
             http.close()
-            trace('Save', 'Response to ' + tgzName.absolute)
+            vtrace('Save', 'Response to ' + tgzName.absolute)
             Zlib.uncompress(tgzName, tarName)
             let tar = new Tar(tarName.absolute)
             chdir(dest.parent)
@@ -1247,7 +1259,13 @@ class Pak
             //  Tar options strip: 1
             tar.extract()
             removeDir(dest, true)
-            dest.parent.join(pak.repName + '-' + pak.cacheVersion).rename(dest)
+            let from
+            if (pak.catalog == 'npm') {
+                from = dest.parent.join('package')
+            } else {
+                from = dest.parent.join(pak.name + '-' + pak.cacheVersion)
+            }
+            from.rename(dest)
 
         } finally {
             chdir(current)
@@ -1318,13 +1336,16 @@ class Pak
         }
     }
 
-    private function copyPak(pak: Package) {
-        vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + pak.cachePath + '"')
-        copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
-    }
-
     private function cachePak(pak: Package) {
-        trace('Cache', pak)
+        if (pak.publish === false) {
+            throw pak + ' cannot be published, has publish: false'
+            return
+        }
+        if (pak.cached && !state.force) {
+            vtrace('Info', pak + ' ' + pak.cacheVersion + ' is already cached')
+            return
+        }
+        trace('Cache', pak, pak.cacheVersion)
         let dest = pak.cachePath
         if (dest.exists) {
             vtrace('Rmdir', dest)
@@ -1338,7 +1359,9 @@ class Pak
             if (!pak.sourcePath) {
                 fetchPak(pak)
             } else if (pak.sourcePath.isDir) {
-                copyPak(pak)
+                vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' + 
+                    pak.cachePath + '"')
+                copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
             } else {
                 throw 'Cannot find pak ' + pak.name + ' to install'
             }
@@ -1346,6 +1369,28 @@ class Pak
                 throw 'Cannot find package description for ' + pak + ' from ' + pak.cachePath
             }
             pak.resolve()
+
+            print("--------")
+
+            if (pak.override) {
+                /* Apply Pak overrides */
+print("KEY", pak.key)
+                if (pak.key) {
+                    let override = pak.override[pak.key]
+if (override) dump("OVERRIDE", override)
+                    for (let [criteria, properties] in override) {
+                        print("VERSION", pak.cacheVersion, criteria)
+                        if (Version(pak.cacheVersion).acceptable(criteria)) {
+dump("ACCEPTABLE OVERRIDES", properties)
+                            vtrace('Apply', 'Pak overrides for ' + pak.name)
+                            blend(pak.cache, properties, {combine: true})
+                            let path = pak.cachePath.join(PACKAGE)
+                            path.write(serialize(pak.cache, {pretty: true, indent: 4}) + '\n')
+                            break
+                        }
+                    }
+                }
+            }
             if (!pak.sourcePath || options.all) {
                 cacheDependencies(pak)
             }
@@ -1376,7 +1421,7 @@ class Pak
             return true
         }
         for each (pat in patterns) {
-            //  Ignore version copmonent
+            //  Ignore version component
             pat = pat.split('#')[0]
             if (!(pat is RegExp)) pat = RegExp(pat)
             if (name.match(pat)) {
@@ -1387,13 +1432,9 @@ class Pak
     }
 
     private function getDeps(pak: Package, deps = {}, level: Number = 0) {
-        let version = pak.installVersion || pak.cacheVersion
-        pak.setCacheVersion(version)
-        pak.resolve()
         if (options.all || level == 0) {
-            for (let [name,criteria] in pak.cache.dependencies) {
-                let dep = Package(name)
-                dep.selectCacheVersion(criteria)
+            for (let [name,criteria] in pak.install.dependencies) {
+                let dep = Package(name, criteria)
                 getDeps(dep, deps, level + 1)
             }
         }
@@ -1404,17 +1445,14 @@ class Pak
     }
 
     private function printDeps(pak: Package, prefix: String = '') {
-        let version = pak.installVersion || pak.cacheVersion
-        pak.setCacheVersion(version)
-        print('\n' + pak.name + ' ' + version + ' dependencies:')
+        print('\n' + pak.name + ' ' + pak.installVersion + ' dependencies:')
         let deps = getDeps(pak)
         if (Object.getOwnPropertyCount(deps) == 0) {
             print('    none')
         }
         for (let [name, dep] in deps) {
             out.write(prefix)
-            let dver = dep.installVersion || dep.cacheVersion
-            out.write('    ' + dep.name + ' ' + dver + '\n')
+            out.write('    ' + dep.name + ' ' + dep.installVersion + '\n')
         }
     }
 
@@ -1423,6 +1461,7 @@ class Pak
         pak publish name URI [password]
      */
     function publish(args): Void {
+//  MOB - remove options.catalog
         let uri = options.catalog || catalogs[0]
         let name, endpoint, password
         if (!PACKAGE.exists) {
@@ -1487,6 +1526,7 @@ class Pak
         pak retract name [password]
      */
     function retract(args): Void {
+//  MOB - remove options.catalog
         let uri = options.catalog || catalogs[0]
         let name, endpoint, password
         let pak = new Package(spec.name)
@@ -1523,7 +1563,6 @@ class Pak
                 throw 'Cannot remove "' + pak + '". It is required by: ' + users.join(', ') + '.'
             }
         }
-        pak.resolve(pak.installVersion)
         runScripts(pak, 'uninstall')
 
         delete spec.dependencies[pak.name]
@@ -1531,6 +1570,9 @@ class Pak
 
         if (spec.app) {
             delete spec.app[pak.name]
+        }
+        if (spec.override) {
+            delete spec.override[pak.name]
         }
         let path = Package.getSpecFile('.')
         path.write(serialize(spec, {pretty: true, indent: 4}) + '\n')
@@ -1543,7 +1585,7 @@ class Pak
         for each (path in directories.pakcache.files('*/*')) {
             let name = path.dirname.basename.toString()
             if (name != pak.name) {
-                let pspec = Package.readSpec(path, {quiet: true})
+                let pspec = Package.loadPackage(path, {quiet: true})
                 if (pspec && pspec.dependencies) {
                     for (let [dname, criteria] in pspec.dependencies) {
                         if (dname == pak.name && pak.cacheVersion.acceptable(criteria)) {
@@ -1561,11 +1603,10 @@ class Pak
         /*
             See if any installed paks has a dependency on pak
          */
-        pak.resolve()
         for each (path in ls(directories.paks, true)) {
             let name = path.basename.toString()
             if (name != pak.name) {
-                let pspec = Package.readSpec(path, {quiet: true})
+                let pspec = Package.loadPackage(path, {quiet: true})
                 if (pspec && pspec.dependencies) {
                     for (let [other, criteria] in pspec.dependencies) {
                         if (other == pak.name && pak.installVersion && pak.installVersion.acceptable(criteria)) {
@@ -1578,29 +1619,24 @@ class Pak
         return users.length ? users : null
     }
 
-    private function selectRemoteVersion(pak: Package, criteria: String, remote) {
-        if (!pak.setRemoteEndpoint(remote)) {
-            if (remote.match(/^[\w\-]$/)) {
-                qtrace('Warn', pak + ' is part of ' + remote + ' and not available separately')
-            } else {
-                throw 'Remote endpoint is not in the correct format: ' + remote
-            }
-        }
-        trace('Run', [git, 'ls-remote', '--tags', pak.remoteUri].join(' '))
-        let data = Cmd.run([git, 'ls-remote', '--tags', pak.remoteUri])
-        let versions = data.trim().
-            replace(/[ \t]+/g, ' ').
-            replace(/^.+refs\/tags\//mg, '').
-            split(/[\r\n]+/).
-            filter(function(e) !e.match(/\{/))
-        let found 
+    private function selectVersion(pak: Package, criteria: String): Boolean {
+        let versions = pak.versions
         pak.versions = []
+        if (pak.catalog != 'npm') {
+            trace('Run', [git, 'ls-remote', '--tags', pak.endpoint].join(' '))
+            let data = Cmd.run([git, 'ls-remote', '--tags', pak.endpoint])
+            versions = data.trim().
+                replace(/[ \t]+/g, ' ').
+                replace(/^.+refs\/tags\//mg, '').
+                split(/[\r\n]+/).
+                filter(function(e) !e.match(/\{/))
+        }
+        let found 
         for each (v in Version.sort(versions, -1)) {
             if (v && Version(v).acceptable(criteria)) {
                 pak.versions.push(v)
                 if (!found) {
                     found = true
-                    pak.setRepTag(v)
                     pak.setRemoteVersion(v)
                     pak.setCacheVersion(v)
                 }
@@ -1612,88 +1648,171 @@ class Pak
                 pak.setRemoteVersion(versions[versions.length - 1])
                 pak.setCachePath()
             } else {
-                throw 'Desired version not found in catalog. ' + criteria
+                vtrace('Info', 'Desired version not found in catalog. ' + criteria)
+                return false
             }
         }
-        trace('Info', 'Matched ' + pak + ' ' + pak.remoteVersion + ' from ' + pak.remoteUri)
-        if (pak.host != 'github.com') {
-            throw 'Repository host "' + pak.host + '" is not support. Only github supported'
-        }
-        pak.setDownload('https://github.com/' + pak.owner + '/' + pak.repName + '/archive/' + pak.repTag + '.tar.gz')
+        trace('Info', 'Selected ' + pak + ' ' + pak.remoteVersion)
+        let download = catalogs[pak.catalog || 'pak'].download.expand({OWNER: pak.owner, NAME: pak.name, TAG: pak.remoteTag})
+        pak.setDownload(download)
+        pak.resolve()
+        return true
     }
 
     /*
-        Search for matching paks in a remote catalog
-        Pak specifies a name and optional version 
+        Locate a pak by name in the catalogs
      */
-    private function searchPaks(pak: Package, exactName: Boolean = false): Array {
-        /* Test if pak path is a github endpoint */
-        if (pak.setRemoteEndpoint(pak.path)) {
-            let criteria = pak.searchCriteria || (options.all ? '*' : '^*')
-            try {
-                selectRemoteVersion(pak, criteria, pak.path)
-                return [pak]
-            } catch {}
+    private function locatePak(pak: Package, exceptions = true): Boolean {
+        let location
+        if (pak.endpoint) {
+            selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+            location = pak.endpoint
+        } else {
+            for (let [cname, catalog] in catalogs) {
+                if (pak.catalog && pak.catalog != cname) {
+                    continue
+                }
+                trace('Info', 'Search catalog: "' + cname + '" for ' + pak.name)
+                let cmd = catalog.query
+                let http = new Http
+                try {
+                    cmd = cmd.expand({NAME: pak.name})
+                    vtrace('Retrieve', cmd)
+                    http.get(cmd)
+                    if (http.status != 200) {
+                        vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + '" catalog. Status ' + http.status)
+                        continue
+                    }
+                } catch (e) {
+                    qtrace('Warn', 'Cannot access catalog at: ' + cmd)
+                    if (App.config.requirePrimaryCatalog && !state.force) {
+                        throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
+                    }
+                }
+                try {
+                    let response
+                    try {
+                        response = deserialize(http.response)
+                    } catch {
+                        trace('Skip', 'Bad response from catalog: ' + catalog + '\n' + http.response)
+                    }
+                    if (!response) {
+                        trace('Skip', 'Missing catalog data')
+                        continue
+                    }
+                    if (cname == 'pak') {
+                        //  TEMP till exact search
+                        for each (item in response.data) {
+                            if (item.name == pak.name) {
+                                location = item.endpoint
+                                pak.setEndpoint(location)
+                                selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                                break
+                            }
+                        }
+                    } else if (cname == 'bower') {
+                        location = response.url
+                        pak.setEndpoint(location)
+                        selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+
+                    } else if (cname == 'npm') {
+                        location = response.repository.url
+                        pak.versions = Object.getOwnPropertyNames(response.versions).map(function(e) e.trimStart('v'))
+                        selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                    }
+                    if (location) {
+                        trace('Found', pak.name + ' in catalog "' + cname + '" at ' + location)
+                        break
+                    }
+                } catch (e) {
+    print("CATCH", e)
+                    vtrace('Warn', e)
+                }
+            }
         }
+        if (!location && exceptions) {
+            throw 'Cannot locate pak "' + pak.args + '"'
+        }
+        let override
+        try {
+            let http = new Http
+            let cmd = 'https://raw.githubusercontent.com/embedthis/pak/dev/override/' + pak.name + '.json'
+            http.verify = false
+            http.get(cmd)
+            pak.override = deserialize(http.response)
+pak.override = Path('/Users/mob/dev/pak/override/' + pak.name + '.json').readJSON()
+dump("PO", pak.override)
+            http.close()
+        } catch (e) {
+print("CATCH", e)
+        }
+        return false
+    }
+
+    private function searchCatalogs(ref: String): Array {
+        let pak = Package(ref)
+        /*
+            Search for exact match (quicker)
+         */           
+        if (locatePak(pak, false)) {
+            return [pak]
+        }
+
         let http = new Http
         let matches = []
-        for (let [index, catalog] in catalogs) {
-            trace('Info', 'Searching catalog: ' + catalog + ' for ' + pak + ' ' + (pak.searchCriteria || ''))
+        for (let [cname, catalog] in catalogs) {
+            if (pak.catalog && pak.catalog != cname) {
+                continue
+            }
+            trace('Info', 'Search catalog: ' + cname + ' for partial "' + pak.name + '" ' + (pak.versionCriteria || ''))
+            let cmd = catalog.list || catalog.query.expand({NAME: pak.name})
             try {
-                if (!catalog.toString().contains('bower')) {
-                    catalog = catalog.toString() + '/search'
-                }
-                vtrace('Retrieve', catalog)
-                http.get(catalog)
+                vtrace('Retrieve', cmd)
+                http.get(cmd)
             } catch (e) {
-                qtrace('Warn', 'Cannot access catalog at: ' + catalog)
+                qtrace('Warn', 'Cannot access catalog at: ' + cmd)
                 if (App.config.requirePrimaryCatalog && !state.force) {
-                    throw 'Cannot continue with offline primary catalog ' + catalog + '\n' + 'Wait or retry with --force'
+                    throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
                 }
             }
             try {
                 let index = {}
-                let data
+                let response
                 try {
-                    data = deserialize(http.response)
+                    response = deserialize(http.response)
                 } catch {
                     trace('Skip', 'Bad response from catalog: ' + catalog + '\n' + http.response)
                 }
-                if (!data) {
+                if (!response) {
                     trace('Skip', 'Missing catalog data')
                     continue
                 }
-                if (!(data is Array)) {
-                    data = data.data
+                let index = {}
+                if (cname == 'npm') {
+                    if (response.name == pak.name) {
+                        pak.versions = Object.getOwnPropertyNames(response.versions).map(function(e) e.trimStart('v'))
+                        index[pak.name] = response.repository.url
+                    }
+                } else {
+                    if (response.data is Array) {
+                        response = response.data
+                    }
+                    for each (item in response) {
+                        index[item.name] = item.endpoint || item.url
+                    }
                 }
-                for each (item in data) {
-                    index[item.name] = item.endpoint || item.url
-                }
-                let remote = index[pak.name]
-                if (remote) {
-                    /* Exact match */
-                    trace('Query', pak.name + ' versions at ' + remote)
-                    let mpak = Package(pak.name)
-                    let criteria = pak.searchCriteria || (options.all ? '*' : '^*')
-                    selectRemoteVersion(mpak, criteria, remote)
-                    matches.push(mpak)
-                    return matches
-                }
-                if (!exactName) {
-                    for (let [pname, remote] in index) {
-                        /* Partial name match */
-                        if (pname.contains(pak.name)) {
-                            trace('Query', pak.name + ' versions at ' + remote)
-                            let mpak = Package(pname)
-                            let criteria = pak.searchCriteria || (options.all ? '*' : '^*')
-                            selectRemoteVersion(mpak, criteria, remote)
-                            matches.push(mpak)
-                        }
+                for (let [pname, location] in index) {
+                    if (pname.contains(pak.name)) {
+                        trace('Query', pak.name + ' at ' + location)
+                        let criteria = pak.versionCriteria || (options.all ? '*' : '^*')
+                        let mpak = Package(location, criteria)
+                        selectVersion(mpak, criteria)
+                        matches.push(mpak)
                     }
                 }
             } catch (e) {
                 vtrace('Warn', e)
-                qtrace('Info', 'Cannot find suitable ' + pak.name + ' in catalog: ' + catalog)
+                qtrace('Info', 'Cannot find suitable ' + pak.name + ' in catalog: ' + cname)
             }
         }
         if (matches.length == 0) {
@@ -1701,9 +1820,6 @@ class Pak
         }
         return matches
     }
-
-    private function searchPak(pak: Package, exact: Boolean = true): Package
-        searchPaks(pak, exact)[0]
 
     /*
         Set package dependencies based on module files. Uses exact versioning.
@@ -1736,7 +1852,6 @@ class Pak
                 throw 'Pak is missing required file "' + file + '"'
             }
         }
-        pak.resolve()
         let pspec = pak.source
         let name = pspec.name
         if (!name || !name.match(/^[\w_-]+$/)) {
@@ -1761,14 +1876,14 @@ class Pak
     /*
         Validate a package.json object
      */
-    function validateJson(package: Object): Boolean {
-        if (!package) {
+    function validateJson(pak: Object): Boolean {
+        if (!pak) {
             throw 'Invalid package description file'
         }
         for each (field in requiredKeywords) {
-            if (package[field] == undefined) {
-                if (package.name) {
-                    throw 'Package ' + package.name + ' does not validate. Missing or empty required field "' + field + '"'
+            if (pak[field] == undefined) {
+                if (pak.name) {
+                    throw 'Package ' + pak.name + ' does not validate. Missing or empty required field "' + field + '"'
                 }
                 throw 'Package does not validate. Missing or empty required field "' + field + '"'
             }
@@ -1793,9 +1908,8 @@ class Pak
 
     function uninstall(patterns): Void {
         let list = []
-        let sets = getPaks({}, patterns, spec)
+        let sets = getInstalledPaks({}, patterns, spec)
         for each (pak in sets) {
-            pak.setInstallPath()
             if (matchPakName(pak.name, patterns)) {
                 list.push(pak)
                 if (!pak.installed && !pak.cached && !state.force) {
@@ -1816,6 +1930,7 @@ class Pak
         vtrace('Read', 'Pak configuration from ' + path)
         let obj = path.readJSON()
         blend(App.config, obj)
+//  MOB - review
         if (obj.catalogs) {
             catalogs = obj.catalogs
         }
@@ -1857,20 +1972,18 @@ class Pak
         }
         let base: Path = '.'
         let d: Path = base
-        //  UNUSED for ( ; d.parent != d; d = d.parent) {
-            let f = Package.getSpecFile(d)
-            if (f) {
-                let pspec = f.readJSON()
-                vtrace('Read', 'Configuration from: ' + f)
-                for (let [field, value] in pspec.directories) {
-                    directories[field] = f.dirname.join(value)
-                }
-                if (pspec.catalogs) {
-                    catalogs = pspec.catalogs
-                }
-                // UNUSED break
+        let f = Package.getSpecFile(d)
+        if (f) {
+            let pspec = f.readJSON()
+            vtrace('Read', 'Configuration from: ' + f)
+            for (let [field, value] in pspec.directories) {
+                directories[field] = f.dirname.join(value)
             }
-        // UNUSED }
+//  MOB - review
+            if (pspec.catalogs) {
+                catalogs = pspec.catalogs
+            }
+        }
         if (options.paks) {
             directories.paks = Path(options.paks)
         }

@@ -42226,10 +42226,18 @@ static EjsArray *getFilesWithInstructions(Ejs *ejs, EjsPath *fp, EjsObj *instruc
         }
         if (pat[0] == '!' && !(flags & FILES_NONEG)) {
             negate = ejsCreateArray(ejs, 0);
-            if (!getFiles(ejs, negate, fp, &pat[1], 0, relative, exclude, include, options, flags & ~FILES_NOMATCH_EXC)) {
+            pat = &pat[1];
+            if (!getFiles(ejs, negate, fp, pat, 0, relative, exclude, include, options, flags & ~FILES_NOMATCH_EXC)) {
                 return 0;
             }
             ejsRemoveItems(ejs, results, negate);
+            if (flags & FILES_CONTENTS && mprIsPathDir(mprJoinPath(fp->value, pat))) {
+                pat = mprJoinPath(pat, "**");
+                if (!getFiles(ejs, negate, fp, pat, 0, relative, exclude, include, options, flags & ~FILES_NOMATCH_EXC)) {
+                    return 0;
+                }
+                ejsRemoveItems(ejs, results, negate);
+            }
         } else {
             if (!getFiles(ejs, results, fp, pat, missing, relative, exclude, include, options, flags)) {
                 return 0;

@@ -7,45 +7,148 @@ module ejs.pak {
 require ejs.unix
 require ejs.version
 
-class Package {
+/*
+    MOB
+    bootstrap
+    twbs/bootstrap
+    ~/.paks/github.com/twbs/bootstrap
+    paks/github.com/twbs/bootstrap
+
+    name
+    cachePath
+    installPath
+    endpoint
+    owner paks/semantic.git
+ */
+enumerable class Package {
     use default namespace public
+    var args: String            //  Original full args provided to specify the pak
     var name: String            //  Bare name without version information
+    var base: Object            //  Base filename
     var cache: Object           //  Package description from cache
     var cachePath: Path?        //  Path to pak in paks cache (includes version)
     var cached: Boolean         //  True if present in the cache
+    var catalog: String?        //  Catalog to search for the pak
     var installPath: Path?      //  Path to installed copy of the pak
     var installed: Boolean      //  True if installed locally
     var install: Object         //  Package description from installed paks
+    var endpoint: String        //  Remote package endpoint
     var source: Object          //  Package description from source
     var sourcePath: Path        //  Source for the package
     var sourced: Boolean        //  True if source present
-    var remoteUri: String       //  Remote repository location
-    var downloadUri: String     //  URI to download a version
-    var protocol: String
-    var host: String
-    var owner: String
-    var path: String            //  Original full path provided to specify the pak
-    var repName: String
-    var repTag: String          //  Repository tag for this version
-    var resolved: Boolean
+    var download: String        //  URI to download a version
+    var protocol: String?       //  Protocol to use to access repository. Null if local.
+    var host: String?           //  Host storing the repository
+    var owner: String?          //  Repository owner account "owner/name"
+    var key: String?            //  
+
+//  MOB - needs to be versioned?
+    var override: Object?       //  Override configuration
 
     var versions: Array?        //  List of available versions
     var installVersion: Version?
     var sourceVersion: Version?
     var cacheVersion: Version?
     var remoteVersion: Version?
-    var searchCriteria: String?
+    var remoteTag: String?
+    var versionCriteria: String?
 
     /*
         Create a pak description object. Pathname may be a filename, URI, pak name or a versioned pak name
+        Formats:
+            http://host/..../name
+            http://host/..../name.git
+            git@github.com:embedthis/name
+            git@github.com:embedthis/name.git
+            github-account/name
+            name
+            name#1.2.3
+            ./path/to/directory
+            /path/to/directory
      */
-    function Package(path: String) {
-        if (path.contains('#')) {
-            [path, ver] = path.toString().split('#')
-            searchCriteria = ver
+    function Package(ref: String, criteria = null) {
+        this.args = ref
+        if (criteria) {
+            versionCriteria = criteria
+        } else if (ref.contains('#')) {
+            [ref, versionCriteria] = ref.split('#')
         }
-        this.name = Path(path).basename.trimExt()
-        this.path = path
+        versionCriteria ||= '*'
+        setEndpoint(ref)
+    }
+
+    /*
+        Parse the endpoint reference. Supported formats:  
+            name
+            name#1.2.3
+            http://host/..../name
+            http://host/..../name.git
+            git@github.com:embedthis/name
+            git@github.com:embedthis/name.git
+            github-account/name
+            /.../paks/NAME/ACCOUNT/VERSION
+            ./src/paks/NAME
+            ./path/to/directory
+            /path/to/directory
+     */
+    function setEndpoint(ref: String) {
+        if (ref.contains('#')) {
+            [ref, this.versionCriteria] = ref.split('#')
+        }
+        ref = ref.trimEnd('.git')
+        let matches = RegExp('^(npm:)|(pak:)|(bower:)').exec(ref)
+        if (matches) {
+            [this.catalog, ref] = ref.split(':')
+        }
+        if (ref.contains('://')) {
+            /* http:// */
+            matches = RegExp('([^:]+):\/\/([^\/]+)\/([^\/]+)\/([^\/]+)').exec(ref)
+
+        } else if (ref.contains('@')) {
+            /* git@host */
+            matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+)').exec(ref)
+
+        } else if (Path(ref).isAbsolute || ref[0] == '.') {
+            /* ~/.paks/NAME/OWNER/VERSIONS */
+            let package = Package.getSpecFile(ref)
+            if (package) {
+                if (package.repository) {
+                    setEndpoint(package.repository.url)
+                }
+                if (package.version) {
+                    setCacheVersion(package.version)
+                }
+            }
+
+        } else if (ref.match(/\//)) {
+            /* github-account */
+            matches = RegExp('([^\/]+)\/([^\/]+)').exec(ref)
+            if (matches) {
+                ref = Path('https://github.com/' + ref)
+                matches = [null, 'https', 'github.com' ] + matches.slice(1)
+            }
+
+        } else {
+            /* Simple name */
+            name = ref
+            if (catalog == 'npm') {
+                owner = '@npm'
+                key = 'npm:' + name
+            }
+            matches = []
+        }
+        if (!matches) {
+            throw 'Bad pak address "' + ref + '"'
+        }
+        if (matches.length >= 5) {
+            endpoint = ref
+            [,protocol,host,owner,name] = matches
+            key = owner + '/' + name
+        }
+        if (!owner && !catalog) {
+            owner ||= 'embedthis'
+        }
+        resolve()
     }
 
     /*
@@ -53,17 +156,45 @@ class Package {
      */
     function resolve(criteria = null) {
         setInstallPath()
-        if (criteria) {
-            searchCriteria = criteria
+        if (installPath && installPath.exists) {
+            install = Package.loadPackage(installPath)
+            if (install) {
+                installVersion = Version(install.version || '0.0.1')
+            }
         }
-        if (searchCriteria) {
-            selectCacheVersion(searchCriteria)
-        } 
-        if (cacheVersion) {
+        if (criteria) {
+            versionCriteria = criteria
+        }
+        if (versionCriteria) {
+            selectCacheVersion(versionCriteria)
+        } else if (cacheVersion) {
             setCachePath()
         }
-        loadSpec()
-        resolved = true
+        if (sourcePath && sourcePath.exists) {
+            source = Package.loadPackage(sourcePath)
+            if (source) {
+                sourceVersion = Version(source.version || '0.0.1')
+            }
+        }
+        if (cachePath && cachePath.exists) {
+            cache = Package.loadPackage(cachePath, {quiet: true})
+            if (cache && cache.version) {
+                cacheVersion = Version(cache.version)
+/* UNUSED
+                if (override) {
+                    // Apply Pak overrides
+                    for (let [criteria, properties] in override[name]) {
+                        print("VERSION", criteria, properties.export)
+                        if (Version(cacheVersion).acceptable(criteria)) {
+                            vtrace('Apply', 'Pak overrides for ' + name)
+                            blend(cache, properties)
+                            break
+                        }
+                    }
+                }
+*/
+            }
+        } 
     }
 
     function selectCacheVersion(criteria: String) {
@@ -71,8 +202,8 @@ class Package {
             /*
                 Pick most recent qualifying version
              */
-            for each (path in Version.sort(find(directories.pakcache, name + '/*'), -1)) {
-                let candidate = Version(path.basename)
+            for each (filename in Version.sort(find(App.config.directories.pakcache, name + '/*/*'), -1)) {
+                let candidate = Version(filename.basename)
                 if (candidate.acceptable(criteria)) {
                     cacheVersion = candidate
                     break
@@ -82,26 +213,19 @@ class Package {
         setCachePath()
     }
 
-    function setCachePath(path: Path? = null) {
-        if (path) {
-            cachePath = path
-        } else if (cacheVersion && cacheVersion.valid) {
-            cachePath = directories.pakcache.join(name, cacheVersion.toString())
-        } else {
-            cachePath = null
-        }
-        if (cachePath && cachePath.exists) {
-            if (Package.readSpec(cachePath, {quiet: true})) {
+    function setCachePath() {
+        cachePath = null
+        cached = false
+        if (cacheVersion && cacheVersion.valid) {
+            cachePath = App.config.directories.pakcache.join(name, owner, cacheVersion.toString())
+            if (cachePath && cachePath.exists && Package.loadPackage(cachePath, {quiet: true})) {
                 cached = true
             }
-        } else {
-            cached = false
         }
     }
 
     function setDownload(uri: String) {
-        downloadUri = uri
-        vtrace('Set', 'Download uri: ' + downloadUri)
+        download = uri
     }
 
     function setCacheVersion(ver: String?) {
@@ -114,7 +238,7 @@ class Package {
     } 
 
     public function setInstallPath() {
-        installPath = directories.paks.join(name)
+        installPath = App.config.directories.paks.join(name)
         installed = (installPath.exists && installPath.join('package.json').exists)
     }
 
@@ -127,6 +251,7 @@ class Package {
     } 
 
     function setRemoteVersion(ver: String?) {
+        remoteTag = ver
         if (ver) {
             remoteVersion = Version(ver)
         } else {
@@ -134,109 +259,48 @@ class Package {
         }
     } 
 
-    /*
-        Set a remote endpoint to download the package. Remote formats examples:  
-        https://github.com/embedthis/pak-bit.git
-        git@github.com:embedthis/pak-esp-gui.git
-     */
-    function setRemoteEndpoint(remote: String) {
-        let matches
-        if (!remote.endsWith('.git')) {
-            remote += '.git'
-        }
-        if (remote.contains('://')) {
-            matches = RegExp('([^:]+):\/\/([^\/]+)\/([^\/]+)\/([^\/]+).git').exec(remote)
-        } else if (remote.contains('@')) {
-            matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+).git').exec(remote)
-        } else {
-            let rest = RegExp('([^\/]+)\/([^\/]+).git').exec(remote)
-            if (!rest) {
-                return false
-            }
-            remote = 'https://github.com/' + remote
-            matches = [remote, 'https', 'github.com' ] + rest.slice(1)
-        }
-        if (!matches) {
-            return false
-        }
-        try {
-            let [,protocol,host,owner,repName] = matches
-            this.remoteUri = remote
-            this.protocol = protocol
-            this.host = host
-            this.owner = owner
-            this.repName = repName
-        } catch {
-            return false
-        }
-        return true
+    function setCatalog(catalog: String) {
+        this.catalog = catalog
     }
 
-    function setSearchCriteria(criteria: String) {
-        searchCriteria = criteria
-        selectCacheVersion(searchCriteria)
+/* UNUSED
+    function setVersionCriteria(criteria: String) {
+        versionCriteria = criteria
+        selectCacheVersion(versionCriteria)
     }
+*/
 
-    function setSource(path: Path) {
-        if (!path.exists && Package.getSpecFile(path)) {
-            throw 'Pak source at ' + path + ' is missing package.json'
+    function setSource(sourcePath: Path) {
+        if (!sourcePath.exists && Package.getSpecFile(sourcePath)) {
+            throw 'Pak source at ' + sourcePath + ' is missing package.json'
             return
         }
-        sourcePath = path
+        this.sourcePath = sourcePath
         sourced = sourcePath.exists
-        loadSpec()
+        source = Package.loadPackage(sourcePath)
         if (source) {
-            source.version ||= '0.0.0'
-            cacheVersion = Version(source.version)
+            sourceVersion = Version(source.version || '0.0.1')
+            setCacheVersion(source.version)
         }
     }
 
-    function setRepTag(tag: String) {
-        repTag = tag
-    }
-
-    private function loadSpec(path: Path? = null) {
-        if (path) {
-            let spec = Package.readSpec(path)
-            throw "BOOM - unsupported"
-        } else {
-            if (sourcePath && sourcePath.exists) {
-                source = Package.readSpec(sourcePath)
-                if (source && source.version) {
-                    sourceVersion = Version(source.version)
-                }
-            }
-            if (cachePath && cachePath.exists) {
-                cache = Package.readSpec(cachePath, {quiet: true})
-                if (cache && cache.version) {
-                    cacheVersion = Version(cache.version)
-                }
-            } 
-            if (installPath && installPath.exists) {
-                install = Package.readSpec(installPath)
-                if (install && install.version) {
-                    installVersion = Version(install.version)
-                }
-            }
-        }
-    }
-
-    static function readSpec(path: Path?, options = {}): Object {
+    static function loadPackage(path: Path?, options = {}): Object {
         if (!path) {
             return null
         }
         for each (name in PakFiles) {
             let f = path.join(name)
             if (f.exists) {
-                let spec = deserialize(f.readString())
-                spec.dependencies ||= {}
-                spec.optionalDependencies ||= {}
-                return spec
+                let obj = deserialize(f.readString())
+                obj.dependencies ||= {}
+                obj.optionalDependencies ||= {}
+                return obj
             }
         }
         return null
     }
 
+//  MOB - rename getPackageFilename
     public static function getSpecFile(path: Path): Path? {
         for each (pname in PakFiles) {
             let f = path.join(pname)
@@ -249,7 +313,7 @@ class Package {
 
     public function toString() name
 
-    public function dump(msg: String = '') {
+    public function show(msg: String = '') {
         print(msg + serialize(this, {hidden: true, pretty: true}))
     }
 
