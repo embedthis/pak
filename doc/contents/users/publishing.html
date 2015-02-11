@@ -9,12 +9,16 @@
             <p>To publish a new pak, create your package.json and then run pak in your application directory.
             <pre class="ui code segment">pak publish NAME ENDPOINT PASSWORD</pre>
             <p>The NAME is the globally unique name for your pak. It may contain "-", "_" or "." characters.
-            Pak names that start with "appweb", "esp", "ejs", "embedthis", "exp", "me" and "pak" are reserved.
             Check the <a href="http://embedthis.com/catalog">Pak Catalog</a> for currently published Pak
             names.</p>
-            <p>The ENDPOINT is a valid GitHub endpoint that hosts your pak contents. The PASSWORD is the 
+
+            <p>The ENDPOINT is a valid GitHub endpoint that hosts your pak contents. The PASSWORD is the
             password to use to manage this pak in the catalog. Choose and protect this password carefully and
             then use it to modify or retract your pak in the catalog.</p>
+
+            <h3>Reserved Pak Prefixes</h3>
+            Pak names that start with "appweb", "esp", "ejs", "embedthis", "exp", "expansive", "go", "goahead", "makeme",
+            "me" and "pak" are reserved.</p>
 
             <h2>Package.json</h2>
             <p>The package.json file defines a pak. It defines the package name, version, authoring details
@@ -41,32 +45,87 @@
     "dependencies": {
         "jquery": "1.9.x",
         "angular": "~1.2",
+    },
+    "pak": {
+        "import": true,
+        "mode": "debug"
     }
 }</pre>
             <p>At a minimum, a package.json must have a "name", "description" and "version". Other fields
             are optional. Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
                 major.minor.patch[-pre-release].</p>
-            <h2>Custom Fields</h2>
-            <p>Pak supports several custom fields in the package.json file.</p>
+            <h2>Standard Fields</h2>
             <ul>
-            <li>client-scripts &mdash; this is the list of Javascripts that a web application would like
-                served. The ESP web framework automatically includes these when rendering a scripts() call.</li>
-            <li>files &mdash; list of files to include when caching and installing the pak</li>
-            <li>ignore &mdash; list of files to exclude when caching and installing the pak</li>
-            <li>esp &mdash; properties made available to ESP applications</li>
-            <li>dependencies &mdash; List of paks and the acceptable versions. Version fields may include expressions that
-            describe a range of acceptable versions. For example: 
+                <li><p>dependencies &mdash; List of paks and the acceptable versions. Version fields may include
+                        expressions that describe a range of acceptable versions. For example:</p>
+                    <p>
+                    <table title="versions" class="ui celled table segment">
+                        <thead>
+                            <tr>
+                                <th class="nowrap">Topic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>version</td><td>(allows prereleases)</td></tr>
+                            <tr><td>^version</td><td>(same as &gt;=1.2.3 &lt;2.0.0, does not allow prereleases)</td></tr>
+                            <tr><td>~version</td><td>(same as &gt;=1.2.3 &lt;2.0.0, allows prereleases)</td></tr>
+                            <tr><td>1.2.X </td><td> (any version starting with 1.2 (allows prereleases)</td></tr>
+                            <tr><td>&gt;, &gt;=, &lt;, &lt;=, ==, != version</td><td>Version expression</td></tr>
+                            <tr><td>expression || expression </td><td>either expression qualifies</td></tr>
+                            <tr><td>expression &amp;&amp; expression </td><td>both expressions must qualify</td></tr>
+                            <tr><td>expression expression </td><td>same as &amp;&amp;</td></tr>
+                        </tbody>
+                    </table>
+                    </p>
+                </li>
+                <li>files &mdash; list of files to include when caching and installing the pak</li>
+                <li>ignore &mdash; list of files to exclude when caching and installing the pak</li>
+            </ul>
+            <h2>Custom Fields</h2>
+                <p>Pak defines some custom properties that are declared under the "pak" property.</p>
                 <ul>
-        <li>version &mdash; (allows prereleases)</li>
-        <li>^ version &mdash; (same as &gt;=1.2.3 &lt;2.0.0, does not allow prereleases)</li>
-        <li>~ version &mdash; (same as &gt;=1.2.3 &lt;2.0.0, allows prereleases)</li>
-        <li>1.2.X &mdash; (any version starting with 1.2 (allows prereleases)</li>
-        <li>[&gt;, &gt;=, &lt;, &lt;=, ==, !=] version</li>
-        <li>expression || expression ... (either expression qualifies)</li>
-        <li>expression &amp;&amp; expression ... (both expressions must qualify)</li>
-        <li>expression expression ... (same as &amp;&amp;) </li>
+                <li>blend &mdash; properties to blend from a pak into the application package.json.</li>
+                <li>export &mdash; export files from the paks directory into the application.</li>
+                <li>frozen &mdash; define the pak as frozen and impervious to upgrades.</li>
+                <li>import &mdash; import any files exported by installed paks. Defaults to false.</li>
+                <li>install &mdash; permit the pak to be locally installed. Defaults to true.</li>
+                <li>mode &mdash; application render mode. Selects a property set from the 'modes' collection.</li>
+                <li>modes &mdash; properties to be blended into the top-level application package.json.</li>
+                <li>origin &mdash; location of the pak in the Pak cache.</li>
+                <li>render &mdash; files to render by extension type.</li>
+                <li>version &mdash; Pak program version required by this pak.</li>
                 </ul>
             </li>
+
+            <!--
+            pak: {
+                blend
+                combine
+                export: []
+                frozen
+                import: true
+                install: true
+                mode
+                modes: {}
+                origin:                 # internal use only
+                override: {
+                    "name": {
+                    }
+                }
+                paks: {
+                    "name": {}
+                    "*": {
+                        noexport            (default is to export)
+                        noblend
+                        nodeps
+                    }
+                }
+                precious
+                render: {}
+                version:                # was pak
+
+            -->
             </ul>
             <h2>Want More?</h2>
             <p>For more details, see:</p>

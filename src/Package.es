@@ -151,6 +151,8 @@ enumerable class Package {
             origin = owner + '/' + name
         }
         if (!owner && !catalog) {
+            //  MOB - review
+            /* Assume downloaded from pak */
             owner ||= 'embedthis'
         }
         resolve()
@@ -286,6 +288,9 @@ enumerable class Package {
         if (source) {
             sourceVersion = Version(source.version || '0.0.1')
             setCacheVersion(source.version)
+            if (source.repository) {
+                setEndpoint(source.repository.url)
+            }
         }
     }
 

@@ -1053,7 +1053,12 @@ class Pak
             let cached = !pak.installVersion && pak.cacheVersion ? ' cached' : ''
             let installed = pak.installVersion ? ' installed' : ''
             let uninstalled = pak.installVersion || pak.cache.pak.install === false ? '' : ' uninstalled'
-            let from = (pak.install && pak.install.pak.origin) ? (' from ' + pak.install.pak.origin) : ''
+            let from = ''
+            if (pak.install && pak.install.pak.origin) {
+                from = ' from ' + pak.install.pak.origin
+            } else if (pak.cache && pak.cache.pak.origin) {
+                from = ' from ' + pak.cache.pak.origin
+            }
             let frozen = (pak.install && pak.install.pak.frozen) ? ' frozen' : ''
             out.write(pak.name)
             let version = pak.installVersion || pak.cacheVersion
@@ -1462,7 +1467,6 @@ print("CURRENT", current)
                     }
                 }
             }
-            print("PO", pak.origin)
             if (pak.origin) {
                 let path = pak.cachePath.join(PACKAGE)
                 pak.cache.pak ||= {}
