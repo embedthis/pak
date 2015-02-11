@@ -1,0 +1,28 @@
+#!/bin/sh
+# 	prerm -- Pre removal script for Pak
+#
+#	Copyright (c) Embedthis Software. All Rights Reserved.
+#
+
+ME_PRODUCT=${settings.name}
+ME_NAME="${settings.title}"
+
+###############################################################################
+#
+#	Main
+#
+cd /
+action=$1
+case $action in
+	remove)					# when new
+		;;
+	upgrade)				# when old
+		;;
+	failed-upgrade)			# when new
+		oldVersion=$2
+		;;
+	deconfigure)			# when old
+		# 	deconfigure in-favor package-being-installed version removing 
+		#	conflicting-package version
+esac
+exit 0

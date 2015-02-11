@@ -3,7 +3,7 @@
  */
 
 Me.load({
-    plugins: [ 'configuration', 'package' ],
+    plugins: [ 'configuration', 'installs' ],
 
     blend: [
         'ejs',
@@ -31,8 +31,8 @@ Me.load({
         /*
             Installation prefix set
          */
-        prefixes: 'package-prefixes',
-        manifest: 'package/manifest.me',
+        prefixes: 'install-prefixes',
+        manifest: 'installs/manifest.me',
 
         platforms: [ 'local' ],
         static: false,
@@ -106,7 +106,7 @@ Me.load({
         },
         'pak.mod': {
             path: '${BIN}/pak.mod',
-            files: [ 'src/*.es', 'src/paks/ejs-version/Version.es' ],
+            files: [ 'src/*.es', 'paks/ejs-version/Version.es' ],
             build: `
                 trace('Compile', 'src/*.es')
                 run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 ${FILES}')

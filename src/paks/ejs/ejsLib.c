@@ -35331,7 +35331,11 @@ PUBLIC int ejsBlendObject(Ejs *ejs, EjsObj *dest, EjsObj *src, int flags)
                 }
             } else {
                 /* Assign */
-                if (!(cflags & EJS_BLEND_SUB)) {
+                if (cflags & EJS_BLEND_COND_ASSIGN) {
+                    if (ejsLookupProperty(ejs, dest, trimmedName) < 0) {
+                        setBlendProperty(ejs, dest, trimmedName, ejsClone(ejs, vp, deep));
+                    }
+                } else if (!(cflags & EJS_BLEND_SUB)) {
                     setBlendProperty(ejs, dest, trimmedName, vp);
                 }
             }

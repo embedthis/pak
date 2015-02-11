@@ -25,14 +25,16 @@ enumerable class Package {
     var args: String            //  Original full args provided to specify the pak
     var name: String            //  Bare name without version information
     var base: Object            //  Base filename
+    var dirty: Boolean          //  Cache dom is dirty and must be saved
     var cache: Object           //  Package description from cache
-    var cachePath: Path?        //  Path to pak in paks cache (includes version)
+    var cachePath: Path?        //  Path to pak in cache (includes version)
     var cached: Boolean         //  True if present in the cache
     var catalog: String?        //  Catalog to search for the pak
+    var endpoint: String        //  Remote package endpoint
     var installPath: Path?      //  Path to installed copy of the pak
     var installed: Boolean      //  True if installed locally
     var install: Object         //  Package description from installed paks
-    var endpoint: String        //  Remote package endpoint
+    var origin: String?         //  Directory in the cache for versions from this endpoint
     var source: Object          //  Package description from source
     var sourcePath: Path        //  Source for the package
     var sourced: Boolean        //  True if source present
@@ -40,11 +42,7 @@ enumerable class Package {
     var protocol: String?       //  Protocol to use to access repository. Null if local.
     var host: String?           //  Host storing the repository
     var owner: String?          //  Repository owner account "owner/name"
-    var key: String?            //  
-
-//  MOB - needs to be versioned?
     var override: Object?       //  Override configuration
-
     var versions: Array?        //  List of available versions
     var installVersion: Version?
     var sourceVersion: Version?
@@ -78,7 +76,7 @@ enumerable class Package {
     }
 
     /*
-        Parse the endpoint reference. Supported formats:  
+        Parse the endpoint reference. Supported formats:
             name
             name#1.2.3
             http://host/..../name
@@ -112,6 +110,10 @@ enumerable class Package {
             /* ~/.paks/NAME/OWNER/VERSIONS */
             let package = Package.getSpecFile(ref)
             if (package) {
+                if (package.pak && package.origin) {
+                    cacheDir = package.pak.origin
+                    [owner,name] = package.pak.origin.split('/')
+                }
                 if (package.repository) {
                     setEndpoint(package.repository.url)
                 }
@@ -133,7 +135,7 @@ enumerable class Package {
             name = ref
             if (catalog == 'npm') {
                 owner = '@npm'
-                key = 'npm:' + name
+                cacheDir = 'npm:' + name
             }
             matches = []
         }
@@ -143,7 +145,7 @@ enumerable class Package {
         if (matches.length >= 5) {
             endpoint = ref
             [,protocol,host,owner,name] = matches
-            key = owner + '/' + name
+            cacheDir = owner + '/' + name
         }
         if (!owner && !catalog) {
             owner ||= 'embedthis'
@@ -178,23 +180,23 @@ enumerable class Package {
         }
         if (cachePath && cachePath.exists) {
             cache = Package.loadPackage(cachePath, {quiet: true})
-            if (cache && cache.version) {
-                cacheVersion = Version(cache.version)
-/* UNUSED
-                if (override) {
-                    // Apply Pak overrides
-                    for (let [criteria, properties] in override[name]) {
-                        print("VERSION", criteria, properties.export)
-                        if (Version(cacheVersion).acceptable(criteria)) {
-                            vtrace('Apply', 'Pak overrides for ' + name)
-                            blend(cache, properties)
-                            break
-                        }
+            if (cache) {
+                if (cache.version) {
+                    cacheVersion = Version(cache.version)
+                }
+                if (cache.pak is String) {
+                    trace('Warn', 'Using deprecated "pak" version property. Use "pak.version" instead in ' +
+                        cachePath)
+                }
+                for each (name in ['app', 'blend', 'combine', 'export', 'frozen', 'import', 'install', 'mode', 'modes',
+                    'origin', 'paks', 'precious', 'render']) {
+                    if (cache[name]) {
+                        trace('Warn', 'Using deprecated "' + name + '" property. Use "pak.' + name + '" instead in ' +
+                            cachePath)
                     }
                 }
-*/
             }
-        } 
+        }
     }
 
     function selectCacheVersion(criteria: String) {
@@ -202,7 +204,7 @@ enumerable class Package {
             /*
                 Pick most recent qualifying version
              */
-            for each (filename in Version.sort(find(App.config.directories.pakcache, name + '/*/*'), -1)) {
+            for each (filename in Version.sort(find(App.config.directories.pakcache, name + '/' + owner + '/*'), -1)) {
                 let candidate = Version(filename.basename)
                 if (candidate.acceptable(criteria)) {
                     cacheVersion = candidate
@@ -235,7 +237,7 @@ enumerable class Package {
         } else {
             cacheVersion = null
         }
-    } 
+    }
 
     public function setInstallPath() {
         installPath = App.config.directories.paks.join(name)
@@ -248,7 +250,7 @@ enumerable class Package {
         } else {
             installVersion = null
         }
-    } 
+    }
 
     function setRemoteVersion(ver: String?) {
         remoteTag = ver
@@ -257,13 +259,13 @@ enumerable class Package {
         } else {
             remoteVersion = null
         }
-    } 
+    }
 
     function setCatalog(catalog: String) {
         this.catalog = catalog
     }
 
-/* UNUSED
+/* KEEP
     function setVersionCriteria(criteria: String) {
         versionCriteria = criteria
         selectCacheVersion(versionCriteria)
@@ -294,6 +296,10 @@ enumerable class Package {
                 let obj = deserialize(f.readString())
                 obj.dependencies ||= {}
                 obj.optionalDependencies ||= {}
+                obj.pak ||= {}
+                if (name == 'bower.json') {
+                    print('WARNING: using bower.json for ' + path)
+                }
                 return obj
             }
         }
@@ -319,4 +325,3 @@ enumerable class Package {
 
 } /* class Package */
 } /* ejs.pak */
-

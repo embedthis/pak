@@ -1,0 +1,16 @@
+Package: ${settings.name}
+Version: ${settings.version}
+Section: devel
+Priority: optional
+Architecture: ${platform.mappedCpu}
+Depends: libc6
+Provides: pak
+Replaces: pak
+Conflicts: pak
+Installed-Size: 10
+Maintainer: Embedthis Development <dev@embedthis.com>
+Description: Embedthis Bit
+ Pak is a simple package manager for ESP/EJS.
+ .
+ more information about Embedthis Pak can be found at:
+ <URL:http://embedthis.com>

@@ -1,0 +1,50 @@
+{
+    "npm:jquery": {
+        ">=2.1.0": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                },
+                "render": {
+                    "js": [ "*.js", "!*.min.js" ]
+                }
+            }
+        },
+        ">=1.11.1": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                },
+                "render": {
+                    "js": [ "*.js", "!*.min.js" ]
+                }
+            }
+        }
+    },
+    "jquery/jquery": {
+        ">=2.1.0": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                },
+                "render": {
+                    "js": [ "*.js", "!*.min.js" ]
+                }
+            }
+        },
+        ">=1.11.0": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                },
+                "render": {
+                    "js": [ "*.js", "!*.min.js" ]
+                }
+            }
+        }
+    }
+}
