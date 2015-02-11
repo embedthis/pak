@@ -665,8 +665,8 @@ class Pak
              */
             for each (path in directories.pakcache.files(name + '/*/*').sort()) {
                 let pak = Package(path)
-                let pakset = sets[pak.owner + '/' + pak.name] || {}
-                sets[pak.name] = pakset
+                let pakset = sets[pak.origin] || {}
+                sets[pak.origin] = pakset
                 pakset[pak.cacheVersion] = pak
             }
         }
@@ -679,10 +679,11 @@ class Pak
             let latest = versions[versions.length - 1]
 
             let pak = pakset[latest]
+            let origin = pak.origin ? (' from ' + pak.origin) : ''
             if (options.all) {
-                out.write(pak.name + ' ' + versions.join(', '))
+                out.write(pak.name + ' ' + versions.join(', ') + origin)
             } else {
-                out.write(pak.name + ' ' + pak.cacheVersion)
+                out.write(pak.name + ' ' + pak.cacheVersion + origin)
             }
             if (options.details && pak.cache) {
                 out.write(': ')
@@ -1460,7 +1461,11 @@ print("CURRENT", current)
                         break
                     }
                 }
+            }
+            print("PO", pak.origin)
+            if (pak.origin) {
                 let path = pak.cachePath.join(PACKAGE)
+                pak.cache.pak ||= {}
                 pak.cache.pak.origin = pak.origin
                 path.write(serialize(cleanSpec(pak.cache), {pretty: true, indent: 4}) + '\n')
             }

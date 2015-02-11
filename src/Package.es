@@ -34,7 +34,7 @@ enumerable class Package {
     var installPath: Path?      //  Path to installed copy of the pak
     var installed: Boolean      //  True if installed locally
     var install: Object         //  Package description from installed paks
-    var origin: String?         //  Directory in the cache for versions from this endpoint
+    var origin: String?         //  Relative cache directory for versions from this endpoint
     var source: Object          //  Package description from source
     var sourcePath: Path        //  Source for the package
     var sourced: Boolean        //  True if source present
@@ -102,25 +102,28 @@ enumerable class Package {
             /* http:// */
             matches = RegExp('([^:]+):\/\/([^\/]+)\/([^\/]+)\/([^\/]+)').exec(ref)
 
-        } else if (ref.contains('@')) {
+        } else if (ref.contains('git@')) {
             /* git@host */
             matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+)').exec(ref)
 
         } else if (Path(ref).isAbsolute || ref[0] == '.') {
             /* ~/.paks/NAME/OWNER/VERSIONS */
-            let package = Package.getSpecFile(ref)
+            let package = Package.loadPackage(ref)
             if (package) {
-                if (package.pak && package.origin) {
-                    cacheDir = package.pak.origin
+                if (package.pak && package.pak.origin) {
+                    origin = package.pak.origin
                     [owner,name] = package.pak.origin.split('/')
-                }
-                if (package.repository) {
+                } else if (package.repository) {
                     setEndpoint(package.repository.url)
+                } else {
+                    [name,owner,] = Path(ref).components.slice(-3)
+                    origin = owner + '/' + name
                 }
                 if (package.version) {
                     setCacheVersion(package.version)
                 }
             }
+            matches = []
 
         } else if (ref.match(/\//)) {
             /* github-account */
@@ -135,7 +138,7 @@ enumerable class Package {
             name = ref
             if (catalog == 'npm') {
                 owner = '@npm'
-                cacheDir = 'npm:' + name
+                origin = '@npm/' + name
             }
             matches = []
         }
@@ -145,7 +148,7 @@ enumerable class Package {
         if (matches.length >= 5) {
             endpoint = ref
             [,protocol,host,owner,name] = matches
-            cacheDir = owner + '/' + name
+            origin = owner + '/' + name
         }
         if (!owner && !catalog) {
             owner ||= 'embedthis'

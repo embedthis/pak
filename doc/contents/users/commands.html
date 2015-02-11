@@ -8,14 +8,21 @@
 
             <h2>Installing Paks</h2>
             <p>To install named paks:</p>
-            <pre class="ui code segment">pak install PAK...</pre>
-            <p>A PAK can be the name of a package published in the Pak catalog a GitHub repository endpoint or 
-            a path to a local pak directory. 
-            <pre class="ui code segment">pak install jquery
+            <pre class="ui code segment">pak install NAME...</pre>
+            <p>Where NAME can be the name of a package published in the Pak catalog, NPM or bower catalog, 
+            a GitHub repository endpoint, a GitHub account/repository or a path to a local pak directory. </p>
+<pre class="ui code segment">pak install jquery
+pak install jquery
+pak install npm:jquery
+pak install bower:jquery
 pak install https://github.com/embedthis/jquery.git
+pak install git@github.com:embedthis/jquery
 pak install embedthis/jquery</pre>
-            <p>A PAK name may have a "#version" suffix that nominates a 
-            specific version to install. All required dependent paks will be automatically installed.</p>
+
+            <p>When a pak is installed, all required dependent paks will be automatically installed.</p>
+            <p>A PAK name may have a "#version" suffix that nominates a specific version to install. 
+<pre class="ui code segment">pak install 'jquery#2.1.3'</pre>
+
             <p>To install all the paks required by an application as specified in package.json:</p>
             <pre class="ui code segment">pak install</pre>
 

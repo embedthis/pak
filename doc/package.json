@@ -8,5 +8,9 @@
         "exp-less": "~0.2",
         "jquery": "~1.11",
         "semantic": "~0.50"
+    },
+    "pak": {
+        "mode": "debug",
+        "import": true
     }
 }
