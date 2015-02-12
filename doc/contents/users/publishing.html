@@ -90,42 +90,16 @@
                 <li>frozen &mdash; define the pak as frozen and impervious to upgrades.</li>
                 <li>import &mdash; import any files exported by installed paks. Defaults to false.</li>
                 <li>install &mdash; permit the pak to be locally installed. Defaults to true.</li>
+                <li>manage &mdash; array of external json files to manage by blending.</li>
                 <li>mode &mdash; application render mode. Selects a property set from the 'modes' collection.</li>
                 <li>modes &mdash; properties to be blended into the top-level application package.json.</li>
                 <li>origin &mdash; location of the pak in the Pak cache.</li>
+                <li>override &mdash; local overrides for pak properties.</li>
+                <li>precious &mdash; protect a pak in the cache from pruning unless forced.</li>
                 <li>render &mdash; files to render by extension type.</li>
                 <li>version &mdash; Pak program version required by this pak.</li>
                 </ul>
             </li>
-
-            <!--
-            pak: {
-                blend
-                combine
-                export: []
-                frozen
-                import: true
-                install: true
-                mode
-                modes: {}
-                origin:                 # internal use only
-                override: {
-                    "name": {
-                    }
-                }
-                paks: {
-                    "name": {}
-                    "*": {
-                        noexport            (default is to export)
-                        noblend
-                        nodeps
-                    }
-                }
-                precious
-                render: {}
-                version:                # was pak
-
-            -->
             </ul>
             <h2>Want More?</h2>
             <p>For more details, see:</p>
