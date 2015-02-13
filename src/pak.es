@@ -148,7 +148,10 @@ class Pak
         license: 'GPL',
         dependencies: {},
         optionalDependencies: {},
-        pak: {},
+        pak: {
+            import: true,
+            mode: 'debug',
+        },
     }
 
     function Pak() {
@@ -595,7 +598,7 @@ class Pak
         }
         obj[key] = value
         path = Package.getSpecFile('.')
-        path.write(serialize(spec, {pretty: true}) + '\n')
+        path.write(serialize(cleanSpec(spec), {pretty: true}) + '\n')
     }
 
     function edit(args): Void {
@@ -1102,7 +1105,7 @@ class Pak
         if (newMode.length == 0) {
             print(spec.pak.mode)
         } else {
-            setValue('mode', newMode[0])
+            setValue('pak.mode', newMode[0])
             trace('Set', 'Mode to "' + spec.pak.mode + '"')
         }
     }
@@ -1244,7 +1247,6 @@ print("CURRENT", current)
             files = ['**']
         } else {
             files = (files + ['package.json', 'README.md', 'LICENSE.md']).unique()
-            files = (files + ['package.json']).unique()
         }
         if (ignore && !(ignore is Array)) {
             ignore = [ignore]
@@ -1258,7 +1260,7 @@ print("CURRENT", current)
                 pat = { from: [pat], to: Path(pak.name), overwrite: true}
             } else {
                 if (!(pat.from is Array)) {
-                    pat.from = [pat.from || '**']
+                    pat.from = [pat.from || '**'] + [ '!package.json', '!*.md']
                 }
                 pat.to ||= Path(pak.name)
                 if (pat.overwrite == undefined) {
@@ -1826,7 +1828,10 @@ print("CURRENT", current)
             if (http.status == 200) {
                 pak.override = deserialize(http.response)
 //  MOB
-                pak.override = Path('/Users/mob/dev/pak/override/' + pak.name + '.json').readJSON()
+                let path = App.home.join('/dev/pak/override/' + pak.name + '.json')
+                if (path.exists) {
+                    pak.override = path.readJSON()
+                }
             }
             http.close()
         } catch (e) {
