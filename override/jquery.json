@@ -7,7 +7,7 @@
                     "trim": 1
                 },
                 "render": {
-                    "js": [ "*.js", "!*.min.js" ]
+                    "js": [ "*.js" ]
                 }
             }
         },
@@ -18,7 +18,7 @@
                     "trim": 1
                 },
                 "render": {
-                    "js": [ "*.js", "!*.min.js" ]
+                    "js": [ "*.js" ]
                 }
             }
         }
@@ -31,7 +31,7 @@
                     "trim": 1
                 },
                 "render": {
-                    "js": [ "*.js", "!*.min.js" ]
+                    "js": [ "*.js" ]
                 }
             }
         },
@@ -42,7 +42,27 @@
                     "trim": 1
                 },
                 "render": {
-                    "js": [ "*.js", "!*.min.js" ]
+                    "js": [ "*.js" ]
+                }
+            }
+        }
+    },
+    "components/jquery": {
+        ">=2.1.0": {
+            "files":  "jquery.*",
+            "pak": {
+                "export": "jquery.*",
+                "render": {
+                    "js": [ "*.js" ]
+                }
+            }
+        },
+        ">=1.11.0": {
+            "files":  "jquery.*",
+            "pak": {
+                "export": "jquery.*",
+                "render": {
+                    "js": [ "*.js" ]
                 }
             }
         }
