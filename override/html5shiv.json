@@ -1,0 +1,12 @@
+{
+    "@npm/html5shiv": {
+        "*": {
+            "pak": {
+                "export": 'dist/html5shiv.*',
+                "render": {
+                    "js": [ "*.js" ]
+                }
+            }
+        }
+    }
+}

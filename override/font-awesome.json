@@ -1,0 +1,15 @@
+{
+    "@npm/font-awesome": {
+        "*": {
+            "pak": {
+                "export": [ 
+                    'css/**', 
+                    'fonts/**' 
+                ],
+                "render": {
+                    "css": [ "css/*.css" ],
+                }
+            }
+        }
+    }
+}

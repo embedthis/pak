@@ -1,0 +1,17 @@
+{
+    "@npm/angular": {
+        "*": {
+            "files":  [
+                "angular.*",
+                "angular-csp.css",
+                "!**.gzip"
+            ],
+            "pak": {
+                "export": 'angular*',
+                "render": {
+                    "js": [ "*.js" ]
+                }
+            }
+        }
+    }
+}

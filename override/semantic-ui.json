@@ -1,0 +1,20 @@
+{
+    "@npm/semantic-ui": {
+        "*": {
+            "files":  [ "dist/semantic.*", "dist/themes/**" ],
+            "pak": {
+                "export": [{
+                    from: "dist/themes/default/**",
+                    "trim": 3
+                }, {
+                    from: "dist/semantic.*",
+                    "trim": 1
+                }],
+                "render": {
+                    "js": [ "*.js" ],
+                    "css": [ "*.css" ],
+                }
+            }
+        }
+    }
+}
