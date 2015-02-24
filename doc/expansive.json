@@ -1,8 +1,13 @@
 {
     meta: {
-        url:         'https://embedthis.com/pak/doc/',
+        url: 'https://embedthis.com/pak/doc/',
     },
     control: {
-        copy:    [ 'images' ],
+        copy: [ 'images' ],
+        collections: {
+            styles: [
+                'css/all.css',
+            ]
+        }
     }
 }
