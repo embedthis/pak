@@ -1769,6 +1769,9 @@ class Pak
                                 if (item.name == 'semantic-ui') {
                                     item.endpoint = 'Semantic-Org/Semantic-UI-CSS'
                                     vtrace('Info', 'Redirect to ' + item.endpoint)
+                                } else if (item.name == 'respond') {
+                                    item.endpoint = 'scottjehl/Respond'
+                                    vtrace('Info', 'Redirect to ' + item.endpoint)
                                 } else if (item.name == 'angular' ||
                                     item.name == 'animate.css' ||
                                     item.name == 'bootstrap' ||
