@@ -24,7 +24,6 @@ enumerable class Package {
     use default namespace public
     var args: String            //  Original full args provided to specify the pak
     var name: String            //  Bare name without version information
-    var base: Object            //  Base filename
     var dirty: Boolean          //  Cache dom is dirty and must be saved
     var cache: Object           //  Package description from cache
     var cachePath: Path?        //  Path to pak in cache (includes version)
@@ -43,6 +42,7 @@ enumerable class Package {
     var host: String?           //  Host storing the repository
     var owner: String?          //  Repository owner account "owner/name"
     var override: Object?       //  Override configuration
+    var repository: Object?     //  Repository name
     var versions: Array?        //  List of available versions
     var installVersion: Version?
     var sourceVersion: Version?
@@ -52,7 +52,8 @@ enumerable class Package {
     var versionCriteria: String?
 
     /*
-        Create a pak description object. Pathname may be a filename, URI, pak name or a versioned pak name
+        Create a pak description object and resolve as fully as possible.
+        Pathname may be a filename, URI, pak name or a versioned pak name
         Formats:
             http://host/..../name
             http://host/..../name.git
@@ -71,8 +72,8 @@ enumerable class Package {
         } else if (ref.contains('#')) {
             [ref, versionCriteria] = ref.split('#')
         }
-        versionCriteria ||= '*'
-        setEndpoint(ref)
+        versionCriteria ||= '^*'
+        parseEndpoint(ref)
     }
 
     /*
@@ -89,7 +90,7 @@ enumerable class Package {
             ./path/to/directory
             /path/to/directory
      */
-    function setEndpoint(ref: String) {
+    function parseEndpoint(ref: String) {
         if (ref.contains('#')) {
             [ref, this.versionCriteria] = ref.split('#')
         }
@@ -112,12 +113,12 @@ enumerable class Package {
             if (package) {
                 if (package.pak && package.pak.origin) {
                     origin = package.pak.origin
-                    [owner,name] = package.pak.origin.split('/')
+                    [owner,repository] = package.pak.origin.split('/')
                 } else if (package.repository) {
-                    setEndpoint(package.repository.url)
+                    parseEndpoint(package.repository.url)
                 } else {
-                    [name,owner,] = Path(ref).components.slice(-3)
-                    origin = owner + '/' + name
+                    [repository,owner,] = Path(ref).components.slice(-3)
+                    origin = owner + '/' + repository
                 }
                 if (package.version) {
                     setCacheVersion(package.version)
@@ -135,10 +136,11 @@ enumerable class Package {
 
         } else {
             /* Simple name */
-            name = ref
+            name ||= ref
+            repository = ref
             if (catalog == 'npm') {
                 owner = '@npm'
-                origin = '@npm/' + name
+                origin = '@npm/' + ref
             }
             matches = []
         }
@@ -147,52 +149,56 @@ enumerable class Package {
         }
         if (matches.length >= 5) {
             endpoint = ref
-            [,protocol,host,owner,name] = matches
-            origin = owner + '/' + name
-        }
-        if (!owner && !catalog) {
-            //  MOB - review
-            /* Assume downloaded from pak */
-            owner ||= 'embedthis'
+            [,protocol,host,owner,repository] = matches
+            origin = owner + '/' + repository
         }
         resolve()
     }
 
     /*
-        Resolve as much as we can about a package
+        Resolve as much as we can about a package. A package may be cached and/or installed locally.
      */
     function resolve(criteria = null) {
-        setInstallPath()
-        if (installPath && installPath.exists) {
-            install = Package.loadPackage(installPath)
-            if (install) {
-                installVersion = Version(install.version || '0.0.1')
-            }
-        }
         if (criteria) {
             versionCriteria = criteria
+        }
+        if (name) {
+            /*
+                Already have a name, so check if installed locally and extract the origin in the cache
+             */
+            setInstallPath()
+            if (installPath && installPath.exists) {
+                install = Package.loadPackage(installPath)
+                if (install) {
+                    installVersion = Version(install.version || '0.0.1')
+                    origin = install.pak.origin
+                }
+            }
         }
         if (versionCriteria) {
             selectCacheVersion(versionCriteria)
         } else if (cacheVersion) {
             setCachePath()
         }
-        if (sourcePath && sourcePath.exists) {
-            source = Package.loadPackage(sourcePath)
-            if (source) {
-                sourceVersion = Version(source.version || '0.0.1')
-            }
-        }
         if (cachePath && cachePath.exists) {
             cache = Package.loadPackage(cachePath, {quiet: true})
             if (cache) {
+                name ||= cache.name
                 if (cache.version) {
                     cacheVersion = Version(cache.version)
+                }
+                setInstallPath()
+                if (installPath && installPath.exists) {
+                    install = Package.loadPackage(installPath)
+                    if (install) {
+                        installVersion = Version(install.version || '0.0.1')
+                    }
                 }
                 if (cache.pak is String) {
                     trace('Warn', 'Using deprecated "pak" version property. Use "pak.version" instead in ' +
                         cachePath)
                 }
+                //  DEPRECATE
                 for each (name in ['app', 'blend', 'combine', 'export', 'frozen', 'import', 'install', 'mode', 'modes',
                     'origin', 'paks', 'precious', 'render']) {
                     if (cache[name]) {
@@ -202,6 +208,12 @@ enumerable class Package {
                 }
             }
         }
+        if (sourcePath && sourcePath.exists) {
+            source = Package.loadPackage(sourcePath)
+            if (source) {
+                sourceVersion = Version(source.version || '0.0.1')
+            }
+        }
     }
 
     function selectCacheVersion(criteria: String) {
@@ -209,10 +221,13 @@ enumerable class Package {
             /*
                 Pick most recent qualifying version
              */
-            for each (filename in Version.sort(find(App.config.directories.pakcache, name + '/' + owner + '/*'), -1)) {
+            let base = repository + '/' + (owner || '*')
+            for each (filename in Version.sort(find(App.config.directories.pakcache, base + '/*'), -1)) {
                 let candidate = Version(filename.basename)
                 if (candidate.acceptable(criteria)) {
                     cacheVersion = candidate
+                    owner = filename.dirname.basename
+                    origin = owner + '/' + repository
                     break
                 }
             }
@@ -224,7 +239,7 @@ enumerable class Package {
         cachePath = null
         cached = false
         if (cacheVersion && cacheVersion.valid) {
-            cachePath = App.config.directories.pakcache.join(name, owner, cacheVersion.toString())
+            cachePath = App.config.directories.pakcache.join(repository, owner, cacheVersion.toString())
             if (cachePath && cachePath.exists && Package.loadPackage(cachePath, {quiet: true})) {
                 cached = true
             }
@@ -270,12 +285,10 @@ enumerable class Package {
         this.catalog = catalog
     }
 
-/* KEEP
     function setVersionCriteria(criteria: String) {
         versionCriteria = criteria
         selectCacheVersion(versionCriteria)
     }
-*/
 
     function setSource(sourcePath: Path) {
         if (!sourcePath.exists && Package.getSpecFile(sourcePath)) {
@@ -289,7 +302,7 @@ enumerable class Package {
             sourceVersion = Version(source.version || '0.0.1')
             setCacheVersion(source.version)
             if (source.repository) {
-                setEndpoint(source.repository.url)
+                parseEndpoint(source.repository.url)
             }
         }
     }
@@ -325,7 +338,7 @@ enumerable class Package {
         return null
     }
 
-    public function toString() name
+    public function toString() name || ''
 
     public function show(msg: String = '') {
         print(msg + serialize(this, {hidden: true, pretty: true}))

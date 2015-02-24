@@ -13,28 +13,29 @@
                 }, {
                     from: "dist/semantic.*",
                     "trim": 1
-                }],
-                "render": {
-                    "js": [ "*.js" ],
-                    "css": [ "*.css" ],
-                }
+                }]
             }
         }
     },
     "Semantic-Org/Semantic-UI-CSS": {
         "*": {
             "name": "semantic-ui",
+            "mob": 42,
             "files":  [ "semantic.*", "themes/**" ],
             "pak": {
                 "export": [{
-                    from: "themes/default/assets/**"
+                    from: "themes/default/assets/images/**"
+                }, {
+                    from: [
+                        "themes/default/assets/fonts/icons.eot",
+                        "themes/default/assets/fonts/icons.otf",
+                        "themes/default/assets/fonts/icons.ttf",
+                        "themes/default/assets/fonts/icons.woff",
+                        "themes/default/assets/fonts/icons.eot"
+                    ]
                 }, {
                     from: "semantic.*"
-                }],
-                "render": {
-                    "js": [ "*.js" ],
-                    "css": [ "*.css" ],
-                }
+                }]
             }
         }
     }

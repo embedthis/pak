@@ -9,7 +9,11 @@
             "pak": {
                 "export": 'angular*',
                 "render": {
-                    "js": [ "*.js" ]
+                    "js": [
+                        "angular.js",
+                        "angular-animate.js",
+                        "angular-route.js"
+                    ]
                 }
             }
         }
