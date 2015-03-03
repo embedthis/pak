@@ -9,34 +9,34 @@ require ejs.version
 
 enumerable class Package {
     use default namespace public
-    var args: String            //  Original full args provided to specify the pak when constructed
-    var name: String            //  Bare name without version information
-    var dirty: Boolean          //  Cache dom is dirty and must be saved
-    var cache: Object           //  Package description from cache
-    var cachePath: Path?        //  Path to pak in cache (includes version)
-    var cached: Boolean         //  True if present in the cache
-    var catalog: String?        //  Catalog to search for the pak
-    var endpoint: String?       //  Package endpoint. Typically a github "owner/repo" or "@npm/name"
-    var installPath: Path?      //  Path to installed copy of the pak
-    var installed: Boolean      //  True if installed locally
-    var install: Object         //  Package description from installed paks
-    var origin: String?         //  Package endpoint origin (owner/repository)
-    var source: Object          //  Package description from source
-    var sourcePath: Path        //  Source for the package
-    var sourced: Boolean        //  True if source present
-    var download: String        //  URI to download a version
-    var protocol: String?       //  Protocol to use to access repository. Null if local.
-    var host: String?           //  Host storing the repository
-    var owner: String?          //  Repository owner account "owner/name"
-    var override: Object?       //  Override configuration
-    var repository: Path?       //  Repository name
-    var versions: Array?        //  List of available versions
-    var installVersion: Version?
-    var sourceVersion: Version?
-    var cacheVersion: Version?
-    var remoteVersion: Version?
-    var remoteTag: String?
-    var versionCriteria: String?
+    var args: String                //  Original full args provided to specify the pak when constructed
+    var name: String                //  Bare name without version information
+    var dirty: Boolean              //  Cache dom is dirty and must be saved
+    var cache: Object               //  Package description from cache
+    var cachePath: Path?            //  Path to pak in cache (includes version)
+    var cached: Boolean             //  True if present in the cache
+    var catalog: String?            //  Catalog to search for the pak
+    var endpoint: String?           //  Package endpoint. Typically a github "owner/repo" or "@npm/name"
+    var installPath: Path?          //  Path to installed copy of the pak
+    var installed: Boolean          //  True if installed locally
+    var install: Object             //  Package description from installed paks
+    var origin: String?             //  Package endpoint origin (owner/repository)
+    var source: Object              //  Package description from source
+    var sourcePath: Path            //  Source for the package
+    var sourced: Boolean            //  True if source present
+    var download: String            //  URI to download a version
+    var protocol: String?           //  Protocol to use to access repository. Null if local.
+    var host: String?               //  Host storing the repository
+    var owner: String?              //  Repository owner account "owner/name"
+    var override: Object?           //  Override configuration
+    var repository: Path?           //  Repository name
+    var versions: Array?            //  List of available versions
+    var installVersion: Version?    //  Installed pak version
+    var sourceVersion: Version?     //  Source pak version
+    var cacheVersion: Version?      //  Cached pak version
+    var remoteVersion: Version?     //  Remote (github) version
+    var remoteTag: String?          //  Repository version tag
+    var versionCriteria: String?    //  Version matching criteria
 
     /*
         Create a pak description object and resolve as fully as possible.
@@ -101,15 +101,15 @@ enumerable class Package {
             let package = Package.loadPackage(ref)
             if (package) {
                 if (package.pak && package.pak.origin) {
-print("SOURCE ORIGIN")
                     parseEndpoint(package.pak.origin)
                 } else if (package.repository) {
                     parseEndpoint(package.repository.url)
+                /* UNUSED
                 } else {
-                    /* MOB - Unreliable? - who is using */
                     print("WARNING UNRELIABLE", ref)
                     [repository,owner,] = Path(ref).components.slice(-3)
                     origin = owner + '/' + repository
+                    */
                 }
                 if (package.version) {
                     setCacheVersion(package.version)
@@ -196,8 +196,7 @@ print("SOURCE ORIGIN")
                     }
                 }
                 if (cache.pak is String) {
-                    trace('Warn', 'Using deprecated "pak" version property. Use "pak.version" instead in ' +
-                        cachePath)
+                    trace('Warn', 'Using deprecated "pak" version property. Use "pak.version" instead in ' + cachePath)
                 }
             }
         }
@@ -322,7 +321,6 @@ print("SOURCE ORIGIN")
         return null
     }
 
-//  MOB - rename getPackageFilename
     public static function getSpecFile(path: Path): Path? {
         for each (pname in PakFiles) {
             let f = path.join(pname)

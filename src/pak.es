@@ -579,11 +579,12 @@ class Pak
                     if (http.status == 200) {
                         pak.override = deserialize(http.response)
                     }
-                    //  MOB - temp
+                    /* KEEP
                     let path = App.home.join('dev/pak/override/' + pak.name + '.json')
                     if (path.exists) {
                         pak.override = path.readJSON()
                     }
+                    */
                     http.close()
                 } catch (e) {
                      print("CATCH", e)
@@ -1758,7 +1759,7 @@ class Pak
                         trace('Skip', 'Missing catalog data')
                         continue
                     }
-                    //  MOB TEMP
+                    //  TODO - remove
                     if (cname == 'pak') {
                         let item = { name: pak.name, endpoint: '' }
                         if (pak.name == 'semantic-ui') {
@@ -1784,7 +1785,7 @@ class Pak
                         response.data = [item]
                     }
                     if (cname == 'pak') {
-                        //  MOB untill pak catalog exact search
+                        //  TODO untill pak catalog exact search
                         for each (item in response.data) {
                             if (item.name == pak.name) {
                                 if (item.endpoint.startsWith('@')) {
