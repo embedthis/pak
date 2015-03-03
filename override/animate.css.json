@@ -2,10 +2,7 @@
     "@npm/animate.css": {
         "*": {
             "pak": {
-                "export": 'animate.*',
-                "render": {
-                    "css": [ "*.css" ]
-                }
+                "export": "animate.*"
             }
         }
     }

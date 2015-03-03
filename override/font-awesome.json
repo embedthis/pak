@@ -5,10 +5,7 @@
                 "export": [ 
                     'css/**', 
                     'fonts/**' 
-                ],
-                "render": {
-                    "css": [ "css/*.css" ],
-                }
+                ]
             }
         }
     }

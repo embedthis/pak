@@ -7,14 +7,7 @@
                 "!**.gzip"
             ],
             "pak": {
-                "export": 'angular*',
-                "render": {
-                    "js": [
-                        "angular.js",
-                        "angular-animate.js",
-                        "angular-route.js"
-                    ]
-                }
+                "export": 'angular*'
             }
         }
     }

@@ -20,7 +20,6 @@
     "Semantic-Org/Semantic-UI-CSS": {
         "*": {
             "name": "semantic-ui",
-            "mob": 42,
             "files":  [ "semantic.*", "themes/**" ],
             "pak": {
                 "export": [{

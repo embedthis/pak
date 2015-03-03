@@ -7,33 +7,20 @@ module ejs.pak {
 require ejs.unix
 require ejs.version
 
-/*
-    MOB
-    bootstrap
-    twbs/bootstrap
-    ~/.paks/github.com/twbs/bootstrap
-    paks/github.com/twbs/bootstrap
-
-    name
-    cachePath
-    installPath
-    endpoint
-    owner paks/semantic.git
- */
 enumerable class Package {
     use default namespace public
-    var args: String            //  Original full args provided to specify the pak
+    var args: String            //  Original full args provided to specify the pak when constructed
     var name: String            //  Bare name without version information
     var dirty: Boolean          //  Cache dom is dirty and must be saved
     var cache: Object           //  Package description from cache
     var cachePath: Path?        //  Path to pak in cache (includes version)
     var cached: Boolean         //  True if present in the cache
     var catalog: String?        //  Catalog to search for the pak
-    var endpoint: String        //  Remote package endpoint
+    var endpoint: String?       //  Package endpoint. Typically a github "owner/repo" or "@npm/name"
     var installPath: Path?      //  Path to installed copy of the pak
     var installed: Boolean      //  True if installed locally
     var install: Object         //  Package description from installed paks
-    var origin: String?         //  Relative cache directory for versions from this endpoint
+    var origin: String?         //  Package endpoint origin (owner/repository)
     var source: Object          //  Package description from source
     var sourcePath: Path        //  Source for the package
     var sourced: Boolean        //  True if source present
@@ -42,7 +29,7 @@ enumerable class Package {
     var host: String?           //  Host storing the repository
     var owner: String?          //  Repository owner account "owner/name"
     var override: Object?       //  Override configuration
-    var repository: Object?     //  Repository name
+    var repository: Path?       //  Repository name
     var versions: Array?        //  List of available versions
     var installVersion: Version?
     var sourceVersion: Version?
@@ -74,6 +61,7 @@ enumerable class Package {
         }
         versionCriteria ||= '^*'
         parseEndpoint(ref)
+        resolve()
     }
 
     /*
@@ -85,6 +73,7 @@ enumerable class Package {
             git@github.com:embedthis/name
             git@github.com:embedthis/name.git
             github-account/name
+            @npm/name
             /.../paks/NAME/ACCOUNT/VERSION
             ./src/paks/NAME
             ./path/to/directory
@@ -108,15 +97,17 @@ enumerable class Package {
             matches = RegExp('([^@]+)@([^\/]+):([^\/]+)\/([^\/]+)').exec(ref)
 
         } else if (Path(ref).isAbsolute || ref[0] == '.') {
-            /* ~/.paks/NAME/OWNER/VERSIONS */
+            /* Source package */
             let package = Package.loadPackage(ref)
             if (package) {
                 if (package.pak && package.pak.origin) {
-                    origin = package.pak.origin
-                    [owner,repository] = package.pak.origin.split('/')
+print("SOURCE ORIGIN")
+                    parseEndpoint(package.pak.origin)
                 } else if (package.repository) {
                     parseEndpoint(package.repository.url)
                 } else {
+                    /* MOB - Unreliable? - who is using */
+                    print("WARNING UNRELIABLE", ref)
                     [repository,owner,] = Path(ref).components.slice(-3)
                     origin = owner + '/' + repository
                 }
@@ -124,6 +115,15 @@ enumerable class Package {
                     setCacheVersion(package.version)
                 }
             }
+            matches = []
+
+        } else if (ref.startsWith('@')) {
+            origin = ref
+            [owner, repository] = origin.split('/')
+            if (owner == '@npm') {
+                catalog = 'npm'
+            }
+            name = repository
             matches = []
 
         } else if (ref.match(/\//)) {
@@ -152,7 +152,6 @@ enumerable class Package {
             [,protocol,host,owner,repository] = matches
             origin = owner + '/' + repository
         }
-        resolve()
     }
 
     /*
@@ -171,7 +170,9 @@ enumerable class Package {
                 install = Package.loadPackage(installPath)
                 if (install) {
                     installVersion = Version(install.version || '0.0.1')
-                    origin = install.pak.origin
+                    if (install.pak && install.pak.origin) {
+                        parseEndpoint(install.pak.origin)
+                    }
                 }
             }
         }
@@ -197,14 +198,6 @@ enumerable class Package {
                 if (cache.pak is String) {
                     trace('Warn', 'Using deprecated "pak" version property. Use "pak.version" instead in ' +
                         cachePath)
-                }
-                //  DEPRECATE
-                for each (name in ['app', 'blend', 'combine', 'export', 'frozen', 'import', 'install', 'mode', 'modes',
-                    'origin', 'paks', 'precious', 'render']) {
-                    if (cache[name]) {
-                        trace('Warn', 'Using deprecated "' + name + '" property. Use "pak.' + name + '" instead in ' +
-                            cachePath)
-                    }
                 }
             }
         }
@@ -239,8 +232,9 @@ enumerable class Package {
         cachePath = null
         cached = false
         if (cacheVersion && cacheVersion.valid) {
-            cachePath = App.config.directories.pakcache.join(repository, owner, cacheVersion.toString())
-            if (cachePath && cachePath.exists && Package.loadPackage(cachePath, {quiet: true})) {
+            let cacheBase = repository.join(owner, cacheVersion.toString())
+            cachePath = App.config.directories.pakcache.join(cacheBase)
+            if (cachePath.exists && Package.loadPackage(cachePath, {quiet: true})) {
                 cached = true
             }
         }
@@ -303,6 +297,7 @@ enumerable class Package {
             setCacheVersion(source.version)
             if (source.repository) {
                 parseEndpoint(source.repository.url)
+                resolve()
             }
         }
     }
