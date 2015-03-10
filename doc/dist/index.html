@@ -50,10 +50,23 @@
             <div class="item">
                 <a href="users/index.html"><b>User's Guide</b></a>
                 <div class="menu">
-                    <a class="item" href="users/commands.html">Pak Commands</a>
-                    <a class="item" href="users/configuration.html">Pak Configuration</a>
-                    <a class="item" href="users/catalog.html">Pak Catalog</a>
+<!-- MOB - rename commands to tour -->
+                    <a class="item" href="users/commands.html">Quick Tour</a>
+                    <a class="item" href="users/installing.html">Installing Paks</a>
+                    <a class="item" href="users/search.html">Searching for Paks</a>
+<a class="item" href="users/catalog.html">Pak Catalog</a>
+                    <a class="item" href="users/modes.html">Pak Modes</a>
+                </div>
+            </div>
+
+            <div class="item">
+                <a href="developers/index.html"><b>Developer's Guide</b></a>
+                <div class="menu">
                     <a class="item" href="users/publishing.html">Publishing Paks</a>
+                    <a class="item" href="users/configuration.html">Pak Configuration</a>
+                    <a class="item" href="users/exporting.html">Exporting Pak Contents</a>
+                    <a class="item" href="users/overrides.html">Overriding Other Paks</a>
+                    <a class="item" href="users/directories.html">Pak Directories</a>
                 </div>
             </div>
             <div class="item">
@@ -80,9 +93,6 @@
         </div>
     </div>
 
-    <div class="ui sidebar-launch button">
-        <i class="icon list layout"></i>
-    </div>
 
 
 
@@ -96,10 +106,12 @@
                   
                     <a class="item" href="https://embedthis.com/">Embedthis</a>
                     <a class="item" href="https://embedthis.com/pak/">Pak Site</a>
-                    <a class="item" href="http://goo.gl/Fg0Kf7">Pak News</a>
-                    <a class="item" href="https://github.com/embedthis/pak">Repository</a>
-                    <a class="item" href="https://embedthis.com/blog/">Blog</a>
-                    <a class="item" href="https://twitter.com/mobstream">Twitter</a>
+                    <span class="desktop-only">
+                        <a class="item" href="http://goo.gl/Fg0Kf7">Pak News</a>
+                        <a class="item" href="https://github.com/embedthis/pak">Repository</a>
+                        <a class="item" href="https://embedthis.com/blog/">Blog</a>
+                        <a class="item" href="https://twitter.com/mobstream">Twitter</a>
+                    </span>
 
             </div>
         </div>
@@ -119,22 +131,24 @@
 
             <h1>Embedthis Pak&trade;</h1>
 
-            <img height="256" src="images/pak.png" class="ui left floated image">
-            <p>Embedthis Pak is a genric package manager for application components. It makes it easy to retrieve,
-            integrate and manage components for applications. Pak manages dependencies for you and automatically
-            retrieves dependant packs if required.</p>
+            <img src="images/pak-icon-128.png" class="ui left floated image">
+            <p>Embedthis Pak is a package manager for application components. Pak makes it easy to retrieve,
+            integrate and manage components for applications. Unlike other package managers, Pak will 
+            automatically install and configure downloaded packages &mdash; no more manual file installation 
+            each time you upgrade a library.</p>
 
             <p>The <a href="https://embedthis.com/catalog/">Online Pak Catalog</a> provides tested, integrated
             componens that are designed work together. Pak makes it easy to publish packs into the catalog and
-            uses GitHub as the back-end storage for packages.</p>
-
-            <p>Pak implements the CommonJS Package specification and uses Git as back-end storage for packages. 
-            Pak calls packages "paks" &mdash; this is not a misspelling.</p>
+            uses <a href="http://github.org">GitHub</a> or <a href="http://npmjs.org">NPM</a>
+            as the back-end storage for packages. Pak also supports overriding and wrapping existing third party
+            packages to customize which files are installed to where.
 
             <h2>Why Pak?</h2>
-            <p>Existing package managers like Bower are excellent, but the published components are typically 
-            tuned for enterprise environments and not for embedded use. The Pak catalog publishes components 
-            specificially tailored for embedded use.</p>
+            <p>Existing package managers like <a href="http://npmjs.org">NPM</a> are excellent, but the 
+            published components are typically tuned for <a href="http://nodejs.org">Node</a> and 
+            not for general application or web components.</p>
+
+            <P>Pak calls packages "paks" &mdash; this is not a misspelling.</p>
            
             <a class="ui primary right labeled icon button"
                 href="https://embedthis.com/pak/download.html">

@@ -4,29 +4,36 @@
 }
             <h1>Embedthis Pak&trade; Features</h1>
 
-            <p>Pak is implemented primarily as a single script of some 2K lines and is very hackable. 
-             It has the following major features:</p>
+            <p>Pak has the following major features:</p>
             <ul>
                 <li>Install, list and uninstall packages into a local application</li>
+                <li>Automatically retrieves and installs dependant paks</li>
+                <li>Update and upgrade paks and their dependencies</li>
+                <li>Manage pak versions and dependencies</li>
+                <li>Support complex version expressions using <a href="http://semver.org">Semantic Versioning 2.0</a></li>
                 <li>Manages a local cache of retrieved packages</li>
                 <li>Provides a global catalog to search for public paks</li>
-                <li>Easy upgrading paks when new versions become available</li>
-                <li>Automatically retrieves and installs dependant paks</li>
-                <li>Supports the CommonJS package standard</li>
-                <li>Supports the SemVer package versioning standard</li>
-                <li>Supports GitHub as the primary pak storage repository</li>
+                <li>Integrated with the <a href="http://bower.io/search">Bower</a> and 
+                    <a href="http://npmjs.org">NPM</a> catalogs</a> for thousands of
+                    of extra paks</li>
+                <li>Supports <a href="http://github.org">GitHub</a> and <a href="npmjs.org">NPM</a> as the primary 
+                    pak storage repositories</li>
+                <li>Online <a href="https://embedthis.com/catalog/">Pak Catalog</a> to locate installable paks</li>
+                <li>Publish and retract paks in the <a href="https://embedthis.com/catalog/">Pak Catalog</a></li>
+                <li>Post install configuration of paks by selectively exporting pak contents into local "lib" directory</li>
+                <li>Customization by package.json overrides for customize installation of third party packages</li>
                 <li>Open Source</li>
             </ul>
 
             <h2>Nice Parts</h2>
             <p>While Pak has a strong feature set, there are some characteristics that make Pak particularly sweet.</p>
             <ul>
-                <li>Local cache of paks supports fast offline use</li>
-                <li>Can publish, modify and retract paks in the global catalog</li>
+                <li>Local cache of paks supports fast offline use and local component sharing between apps</li>
+                <li>Can publish, modify and retract paks in the Pak catalog</li>
                 <li>Web portal to manage your published paks</li>
-                <li>Integrates with the Bower repository to seamlessly download Bower components</li>
-                <li>Packages are described via a Package.json file that is compatible with nodejs</li>
-                <li>Fast, fast, fast. Did I say fast?</li>
+                <li>Packages are described via a Package.json file that is compatible with 
+                    <a href="http://nodejs.org">Node</a></li>
+                <li>Fast operation</li>
             </ul>
 
             <h2>Commands</h2>
@@ -34,7 +41,7 @@
             <table class="ui table segment">
                 <thead><tr><th>Command</th><th>Description</th></tr></thead>
                 <tbody>
-                <tr><td>cache</td><td>Populate the cache with paks</td></tr>
+                <tr><td>cache</td><td>Download and save paks to the the local pak cache</td></tr>
                 <tr><td>cached</td><td>List paks in the cache</td></tr>
                 <tr><td>config</td><td>Show the Pak configuration</td></tr>
                 <tr><td>depend</td><td>Display installed pak dependencies</td></tr>

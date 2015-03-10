@@ -4,22 +4,24 @@
 }
             <h1>Embedthis Pak&trade;</h1>
 
-            <img height="256" src="images/pak.png" class="ui left floated image">
-            <p>Embedthis Pak is a genric package manager for application components. It makes it easy to retrieve,
-            integrate and manage components for applications. Pak manages dependencies for you and automatically
-            retrieves dependant packs if required.</p>
+            <img src="images/pak-icon-128.png" class="ui left floated image">
+            <p>Embedthis Pak is a package manager for application components. Pak makes it easy to retrieve,
+            integrate and manage components for applications. Unlike other package managers, Pak will 
+            automatically install and configure downloaded packages &mdash; no more manual file installation 
+            each time you upgrade a library.</p>
 
             <p>The <a href="https://embedthis.com/catalog/">Online Pak Catalog</a> provides tested, integrated
             componens that are designed work together. Pak makes it easy to publish packs into the catalog and
-            uses GitHub as the back-end storage for packages.</p>
-
-            <p>Pak implements the CommonJS Package specification and uses Git as back-end storage for packages. 
-            Pak calls packages "paks" &mdash; this is not a misspelling.</p>
+            uses <a href="http://github.org">GitHub</a> or <a href="http://npmjs.org">NPM</a>
+            as the back-end storage for packages. Pak also supports overriding and wrapping existing third party
+            packages to customize which files are installed to where.
 
             <h2>Why Pak?</h2>
-            <p>Existing package managers like Bower are excellent, but the published components are typically 
-            tuned for enterprise environments and not for embedded use. The Pak catalog publishes components 
-            specificially tailored for embedded use.</p>
+            <p>Existing package managers like <a href="http://npmjs.org">NPM</a> are excellent, but the 
+            published components are typically tuned for <a href="http://nodejs.org">Node</a> and 
+            not for general application or web components.</p>
+
+            <P>Pak calls packages "paks" &mdash; this is not a misspelling.</p>
            
             <a class="ui primary right labeled icon button"
                 href="https://embedthis.com/pak/download.html">

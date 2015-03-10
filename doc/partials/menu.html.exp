@@ -1,7 +1,9 @@
   
                     <a class="item" href="https://embedthis.com/">Embedthis</a>
                     <a class="item" href="https://embedthis.com/pak/">Pak Site</a>
-                    <a class="item" href="http://goo.gl/Fg0Kf7">Pak News</a>
-                    <a class="item" href="https://github.com/embedthis/pak">Repository</a>
-                    <a class="item" href="https://embedthis.com/blog/">Blog</a>
-                    <a class="item" href="https://twitter.com/mobstream">Twitter</a>
+                    <span class="desktop-only">
+                        <a class="item" href="http://goo.gl/Fg0Kf7">Pak News</a>
+                        <a class="item" href="https://github.com/embedthis/pak">Repository</a>
+                        <a class="item" href="https://embedthis.com/blog/">Blog</a>
+                        <a class="item" href="https://twitter.com/mobstream">Twitter</a>
+                    </span>
