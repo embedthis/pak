@@ -158,171 +158,171 @@ $(BUILD)/inc/me.h: $(DEPS_2)
 #
 #   osdep.h
 #
-DEPS_3 += paks/osdep/dist/osdep.h
+DEPS_3 += src/osdep/osdep.h
 DEPS_3 += $(BUILD)/inc/me.h
 
 $(BUILD)/inc/osdep.h: $(DEPS_3)
 	@echo '      [Copy] $(BUILD)/inc/osdep.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/osdep/dist/osdep.h $(BUILD)/inc/osdep.h
+	cp src/osdep/osdep.h $(BUILD)/inc/osdep.h
 
 #
 #   mpr.h
 #
-DEPS_4 += paks/mpr/dist/mpr.h
+DEPS_4 += src/mpr/mpr.h
 DEPS_4 += $(BUILD)/inc/me.h
 DEPS_4 += $(BUILD)/inc/osdep.h
 
 $(BUILD)/inc/mpr.h: $(DEPS_4)
 	@echo '      [Copy] $(BUILD)/inc/mpr.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/mpr/dist/mpr.h $(BUILD)/inc/mpr.h
+	cp src/mpr/mpr.h $(BUILD)/inc/mpr.h
 
 #
 #   http.h
 #
-DEPS_5 += paks/http/dist/http.h
+DEPS_5 += src/http/http.h
 DEPS_5 += $(BUILD)/inc/mpr.h
 
 $(BUILD)/inc/http.h: $(DEPS_5)
 	@echo '      [Copy] $(BUILD)/inc/http.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/http/dist/http.h $(BUILD)/inc/http.h
+	cp src/http/http.h $(BUILD)/inc/http.h
 
 #
 #   ejs.slots.h
 #
 
-paks/ejs/dist/ejs.slots.h: $(DEPS_6)
+src/ejs/ejs.slots.h: $(DEPS_6)
 
 #
 #   pcre.h
 #
-DEPS_7 += paks/pcre/dist/pcre.h
+DEPS_7 += src/pcre/pcre.h
 
 $(BUILD)/inc/pcre.h: $(DEPS_7)
 	@echo '      [Copy] $(BUILD)/inc/pcre.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/pcre/dist/pcre.h $(BUILD)/inc/pcre.h
+	cp src/pcre/pcre.h $(BUILD)/inc/pcre.h
 
 #
 #   zlib.h
 #
-DEPS_8 += paks/zlib/dist/zlib.h
+DEPS_8 += src/zlib/zlib.h
 DEPS_8 += $(BUILD)/inc/me.h
 
 $(BUILD)/inc/zlib.h: $(DEPS_8)
 	@echo '      [Copy] $(BUILD)/inc/zlib.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/zlib/dist/zlib.h $(BUILD)/inc/zlib.h
+	cp src/zlib/zlib.h $(BUILD)/inc/zlib.h
 
 #
 #   ejs.h
 #
-DEPS_9 += paks/ejs/dist/ejs.h
+DEPS_9 += src/ejs/ejs.h
 DEPS_9 += $(BUILD)/inc/me.h
 DEPS_9 += $(BUILD)/inc/osdep.h
 DEPS_9 += $(BUILD)/inc/mpr.h
 DEPS_9 += $(BUILD)/inc/http.h
-DEPS_9 += paks/ejs/dist/ejs.slots.h
+DEPS_9 += src/ejs/ejs.slots.h
 DEPS_9 += $(BUILD)/inc/pcre.h
 DEPS_9 += $(BUILD)/inc/zlib.h
 
 $(BUILD)/inc/ejs.h: $(DEPS_9)
 	@echo '      [Copy] $(BUILD)/inc/ejs.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/ejs/dist/ejs.h $(BUILD)/inc/ejs.h
+	cp src/ejs/ejs.h $(BUILD)/inc/ejs.h
 
 #
 #   ejs.slots.h
 #
-DEPS_10 += paks/ejs/dist/ejs.slots.h
+DEPS_10 += src/ejs/ejs.slots.h
 
 $(BUILD)/inc/ejs.slots.h: $(DEPS_10)
 	@echo '      [Copy] $(BUILD)/inc/ejs.slots.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/ejs/dist/ejs.slots.h $(BUILD)/inc/ejs.slots.h
+	cp src/ejs/ejs.slots.h $(BUILD)/inc/ejs.slots.h
 
 #
 #   ejsByteGoto.h
 #
-DEPS_11 += paks/ejs/dist/ejsByteGoto.h
+DEPS_11 += src/ejs/ejsByteGoto.h
 
 $(BUILD)/inc/ejsByteGoto.h: $(DEPS_11)
 	@echo '      [Copy] $(BUILD)/inc/ejsByteGoto.h'
 	mkdir -p "$(BUILD)/inc"
-	cp paks/ejs/dist/ejsByteGoto.h $(BUILD)/inc/ejsByteGoto.h
+	cp src/ejs/ejsByteGoto.h $(BUILD)/inc/ejsByteGoto.h
 
 #
 #   ejs.h
 #
 
-paks/ejs/dist/ejs.h: $(DEPS_12)
+src/ejs/ejs.h: $(DEPS_12)
 
 #
 #   ejsLib.o
 #
-DEPS_13 += paks/ejs/dist/ejs.h
+DEPS_13 += src/ejs/ejs.h
 DEPS_13 += $(BUILD)/inc/mpr.h
 DEPS_13 += $(BUILD)/inc/pcre.h
 DEPS_13 += $(BUILD)/inc/me.h
 
 $(BUILD)/obj/ejsLib.o: \
-    paks/ejs/dist/ejsLib.c $(DEPS_13)
+    src/ejs/ejsLib.c $(DEPS_13)
 	@echo '   [Compile] $(BUILD)/obj/ejsLib.o'
-	$(CC) -c -o $(BUILD)/obj/ejsLib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) paks/ejs/dist/ejsLib.c
+	$(CC) -c -o $(BUILD)/obj/ejsLib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/ejs/ejsLib.c
 
 #
 #   ejsc.o
 #
-DEPS_14 += paks/ejs/dist/ejs.h
+DEPS_14 += src/ejs/ejs.h
 
 $(BUILD)/obj/ejsc.o: \
-    paks/ejs/dist/ejsc.c $(DEPS_14)
+    src/ejs/ejsc.c $(DEPS_14)
 	@echo '   [Compile] $(BUILD)/obj/ejsc.o'
-	$(CC) -c -o $(BUILD)/obj/ejsc.o $(CFLAGS) $(DFLAGS) $(IFLAGS) paks/ejs/dist/ejsc.c
+	$(CC) -c -o $(BUILD)/obj/ejsc.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/ejs/ejsc.c
 
 #
 #   http.h
 #
 
-paks/http/dist/http.h: $(DEPS_15)
+src/http/http.h: $(DEPS_15)
 
 #
 #   httpLib.o
 #
-DEPS_16 += paks/http/dist/http.h
+DEPS_16 += src/http/http.h
 
 $(BUILD)/obj/httpLib.o: \
-    paks/http/dist/httpLib.c $(DEPS_16)
+    src/http/httpLib.c $(DEPS_16)
 	@echo '   [Compile] $(BUILD)/obj/httpLib.o'
-	$(CC) -c -o $(BUILD)/obj/httpLib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) paks/http/dist/httpLib.c
+	$(CC) -c -o $(BUILD)/obj/httpLib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/http/httpLib.c
 
 #
 #   mpr.h
 #
 
-paks/mpr/dist/mpr.h: $(DEPS_17)
+src/mpr/mpr.h: $(DEPS_17)
 
 #
 #   mprLib.o
 #
-DEPS_18 += paks/mpr/dist/mpr.h
+DEPS_18 += src/mpr/mpr.h
 
 $(BUILD)/obj/mprLib.o: \
-    paks/mpr/dist/mprLib.c $(DEPS_18)
+    src/mpr/mprLib.c $(DEPS_18)
 	@echo '   [Compile] $(BUILD)/obj/mprLib.o'
-	$(CC) -c -o $(BUILD)/obj/mprLib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) paks/mpr/dist/mprLib.c
+	$(CC) -c -o $(BUILD)/obj/mprLib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/mpr/mprLib.c
 
 #
 #   mprSsl.o
 #
-DEPS_19 += paks/mpr/dist/mpr.h
+DEPS_19 += src/mpr/mpr.h
 
 $(BUILD)/obj/mprSsl.o: \
-    paks/mpr/dist/mprSsl.c $(DEPS_19)
+    src/mpr/mprSsl.c $(DEPS_19)
 	@echo '   [Compile] $(BUILD)/obj/mprSsl.o'
-	$(CC) -c -o $(BUILD)/obj/mprSsl.o $(CFLAGS) $(DFLAGS) -DME_COM_OPENSSL_PATH="$(ME_COM_OPENSSL_PATH)" $(IFLAGS) "-I$(ME_COM_OPENSSL_PATH)/include" paks/mpr/dist/mprSsl.c
+	$(CC) -c -o $(BUILD)/obj/mprSsl.o $(CFLAGS) $(DFLAGS) -DME_COM_OPENSSL_PATH="$(ME_COM_OPENSSL_PATH)" $(IFLAGS) "-I$(ME_COM_OPENSSL_PATH)/include" src/mpr/mprSsl.c
 
 #
 #   pak.o
@@ -338,35 +338,35 @@ $(BUILD)/obj/pak.o: \
 #   pcre.h
 #
 
-paks/pcre/dist/pcre.h: $(DEPS_21)
+src/pcre/pcre.h: $(DEPS_21)
 
 #
 #   pcre.o
 #
 DEPS_22 += $(BUILD)/inc/me.h
-DEPS_22 += paks/pcre/dist/pcre.h
+DEPS_22 += src/pcre/pcre.h
 
 $(BUILD)/obj/pcre.o: \
-    paks/pcre/dist/pcre.c $(DEPS_22)
+    src/pcre/pcre.c $(DEPS_22)
 	@echo '   [Compile] $(BUILD)/obj/pcre.o'
-	$(CC) -c -o $(BUILD)/obj/pcre.o $(CFLAGS) $(DFLAGS) $(IFLAGS) paks/pcre/dist/pcre.c
+	$(CC) -c -o $(BUILD)/obj/pcre.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/pcre/pcre.c
 
 #
 #   zlib.h
 #
 
-paks/zlib/dist/zlib.h: $(DEPS_23)
+src/zlib/zlib.h: $(DEPS_23)
 
 #
 #   zlib.o
 #
 DEPS_24 += $(BUILD)/inc/me.h
-DEPS_24 += paks/zlib/dist/zlib.h
+DEPS_24 += src/zlib/zlib.h
 
 $(BUILD)/obj/zlib.o: \
-    paks/zlib/dist/zlib.c $(DEPS_24)
+    src/zlib/zlib.c $(DEPS_24)
 	@echo '   [Compile] $(BUILD)/obj/zlib.o'
-	$(CC) -c -o $(BUILD)/obj/zlib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) paks/zlib/dist/zlib.c
+	$(CC) -c -o $(BUILD)/obj/zlib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/zlib/zlib.c
 
 #
 #   libmpr
@@ -487,26 +487,26 @@ ifeq ($(ME_COM_EJS),1)
 #
 #   ejs.mod
 #
-DEPS_31 += paks/ejs/dist/ejs.es
+DEPS_31 += src/ejs/ejs.es
 DEPS_31 += $(BUILD)/bin/ejsc
 
 $(BUILD)/bin/ejs.mod: $(DEPS_31)
 	( \
-	cd paks/ejs/dist; \
+	cd src/ejs; \
 	echo '   [Compile] ejs.mod' ; \
-	../../../$(BUILD)/bin/ejsc --out ../../../$(BUILD)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
+	../../$(BUILD)/bin/ejsc --out ../../$(BUILD)/bin/ejs.mod --optimize 9 --bind --require null ejs.es ; \
 	)
 endif
 
 #
 #   http-ca-crt
 #
-DEPS_32 += paks/http/dist/ca.crt
+DEPS_32 += src/http/ca.crt
 
 $(BUILD)/bin/ca.crt: $(DEPS_32)
 	@echo '      [Copy] $(BUILD)/bin/ca.crt'
 	mkdir -p "$(BUILD)/bin"
-	cp paks/http/dist/ca.crt $(BUILD)/bin/ca.crt
+	cp src/http/ca.crt $(BUILD)/bin/ca.crt
 
 #
 #   libmprssl
