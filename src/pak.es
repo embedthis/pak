@@ -65,7 +65,6 @@ class Pak
         },
         directories: {
             /* exports */
-            files: 'files',
             lib: (!Path('lib').exists && Path('src').exists) ? 'src' : 'lib'
             paks: 'paks',
             pakcache: '~/.paks',
@@ -318,6 +317,7 @@ class Pak
             let version = spec.pak
             spec.pak = { version: version }
         }
+        //  DEPRECATE
         for each (name in ['app', 'blend', 'combine', 'export', 'frozen', 'import', 'install', 'mode', 'modes',
                 'origin', 'paks', 'precious', 'render']) {
             if (spec[name] != null) {
@@ -579,12 +579,10 @@ class Pak
                     if (http.status == 200) {
                         pak.override = deserialize(http.response)
                     }
-                    /* KEEP
-                    let path = App.home.join('dev/pak/override/' + pak.name + '.json')
+                    let path = App.home.join('.pak/override', pak.name + '.json')
                     if (path.exists) {
                         pak.override = path.readJSON()
                     }
-                    */
                     http.close()
                 } catch (e) {
                      print("CATCH", e)
@@ -920,7 +918,7 @@ class Pak
             mkdir(dest)
         }
         /*
-            Override pak based on local overrides
+            Override pak based on local overrides from the application's package.json in 'spec'
          */
         let override = spec.pak.override
         if (spec.pak.override) {
@@ -950,19 +948,21 @@ class Pak
         if (!(files is Array)) {
             files = [files]
         }
-        if (spec.pak.import && getPakSetting(pak, 'noimport') !== true) {
-            let needExports = (export.length == 0)
-            let needFiles = (files.length == 0)
-            for each (dir in ['dist', 'lib']) {
-                let path = pak.cachePath.join(dir)
-                if (path.exists) {
-                    if (needFiles) {
-                        files.push('dist/**')
+        if (spec.pak.import) {
+            if (getPakSetting(pak, 'import') !== false) {
+                let needExports = (export.length == 0)
+                let needFiles = (files.length == 0)
+                for each (dir in ['dist', 'lib']) {
+                    let path = pak.cachePath.join(dir)
+                    if (path.exists) {
+                        if (needFiles) {
+                            files.push('dist/**')
+                        }
+                        if (needExports) {
+                            export.push({ from: 'dist/', trim: 1 })
+                        }
+                        break
                     }
-                    if (needExports) {
-                        export.push({ from: 'dist/', trim: 1 })
-                    }
-                    break
                 }
             }
         } else {
@@ -1183,7 +1183,6 @@ class Pak
                 delete obj[key]
             }
         }
-        delete obj.directories.cache
         print('Pak configuration: ' + serialize(obj, {pretty: true, quotes: false}))
     }
 
@@ -1418,26 +1417,28 @@ class Pak
             files.push('!' + item)
         }
         var export = {}
-        exportList = exportList.clone(true)
         for each (pat in exportList) {
-            if (pat is String) {
-                pat = { from: [pat], to: Path(pak.name), overwrite: true}
-            } else {
-                if (!(pat.from is Array)) {
-                    pat.from = [pat.from || '**'] + [ '!package.json', '!*.md']
+            if (!pat.script) {
+                if (pat is String) {
+                    pat = { from: [pat], to: Path(pak.name), overwrite: true}
+                } else {
+                    pat = pat.clone(true)
+                    if (!(pat.from is Array)) {
+                        pat.from = [pat.from || '**'] + [ '!package.json', '!*.md']
+                    }
+                    pat.to ||= Path(pak.name)
+                    if (pat.overwrite == undefined) {
+                        pat.overwrite = true
+                    }
                 }
-                pat.to ||= Path(pak.name)
-                if (pat.overwrite == undefined) {
-                    pat.overwrite = true
+                let dir = Path(directories.export || directories.lib)
+                let to = dir.join(pat.to.toString().expand(dirTokens, {fill: '.'}))
+                if (!to.childOf('.')) {
+                    throw 'Copy destination "' + to + '" for pak "' + pak.name + '" is outside current directory'
                 }
-            }
-            let dir = Path(directories.export || directories.lib)
-            let to = dir.join(pat.to.toString().expand(dirTokens, {fill: '.'}))
-            if (!to.childOf('.')) {
-                throw 'Copy destination "' + to + '" for pak "' + pak.name + '" is outside current directory'
-            }
-            for each (f in fromDir.files(pat.from)) {
-                export[f] = { overwrite: pat.overwrite, to: to, trim: pat.trim }
+                for each (f in fromDir.files(pat.from)) {
+                    export[f] = { overwrite: pat.overwrite, to: to, trim: pat.trim }
+                }
             }
         }
 
@@ -1476,6 +1477,12 @@ class Pak
                 }
             }
         })
+        for each (pat in exportList) {
+            if (pat.script) {
+                trace('Run', 'Custom export script')
+                eval(pat.script)
+            }
+        }
     }
 
     private function fetchPak(pak: Package) {
@@ -1711,7 +1718,7 @@ class Pak
                 return false
             }
         }
-        trace('Select', pak + ' ' + pak.remoteVersion)
+        vtrace('Select', pak + ' ' + pak.remoteVersion)
         let download = catalogs[pak.catalog || 'pak'].download
         let download = download.expand({OWNER: pak.owner, NAME: pak.repository, TAG: pak.remoteTag})
         pak.setDownload(download)
@@ -1739,7 +1746,8 @@ class Pak
                     vtrace('Retrieve', cmd)
                     http.get(cmd)
                     if (http.status != 200) {
-                        vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + '" catalog. Status ' + http.status)
+                        vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + 
+                               '" catalog. Status ' + http.status)
                         continue
                     }
                 } catch (e) {
@@ -1825,10 +1833,13 @@ class Pak
                 }
             }
         }
-        if (!location && exceptions) {
-            throw 'Cannot locate pak "' + pak.args + '" ' + pak.versionCriteria
+        if (!location) {
+            if (exceptions) {
+                throw 'Cannot locate pak "' + pak.args + '" ' + pak.versionCriteria
+            }
+            return false
         }
-        return false
+        return true
     }
 
     private function searchCatalogs(ref: String): Array {
