@@ -1,0 +1,137 @@
+{
+    title: "Publishing Paks",
+    crumbs: [
+        { "User's Guide": "index.html" },
+    ],
+}
+            <h1>Publishing Paks</h1>
+
+            <p>You can publish a package for use by Pak in one of three package catalogs:</p>
+            <ul>
+                <li><a href="http://bower.io/search/">Bower Catalog</a></li>
+                <li><a href="http://npmjs.org/">NPM Catalog</a></li>
+                <li><a href="http://embedthis.com/catalog/">Pak Catalog</a></li>
+            </ul>
+            <p>This document describes the process for creating a package in the Pak catalog. Consult the relevant
+                NPM or Bower documentation for creating packages in those catalogs.</p>
+                
+            <h2>Publishing to the Pak Catalog</h2>
+            <p>To publish a new package, create your package.json and then run <em>pak</em> in your application directory.
+            <code>pak publish NAME ENDPOINT PASSWORD</code>
+            <p>The NAME is the globally unique name for your package. It may contain <em>-</em>, <em>_</em> or <em>.</em>
+            characters. Check the <a href="http://embedthis.com/catalog">Pak Catalog</a> for currently published Pak
+            names in the Pak catalog.</p>
+
+            <p>The ENDPOINT is a valid GitHub endpoint that hosts your package contents. The PASSWORD is the
+            password to use to manage this package in the catalog. Choose and protect this password carefully and
+            then use it to modify or retract your package in the catalog.</p>
+
+            <h3>Reserved Pak Prefixes</h3>
+            Pak names that start with <em>appweb</em>, <em>esp</em>, <em>ejs</em>, <em>embedthis</em>, <em>exp</em>, 
+            <em>expansive</em>, <em>go</em>, <em>goahead</em>, <em>makeme</em>,
+            <em>me</em> and <em>pak</em> are reserved.</p>
+
+            <h2>Package.json</h2>
+            <p>The package.json file defines a pakcage. It defines the package name, version, authoring details
+            and dependencies. The format is specified by
+                <a href="http://wiki.commonjs.org/wiki/Packages/1.1">
+                http://wiki.commonjs.org/wiki/Packages/1.1</a> and also used by
+                the <a href="http://npmjs.org">NPM</a> and <a href="http://bower.io">Bower</a> catalog packages. 
+                For example:</p>
+<code>{
+    "name": "Package name - one word"
+    "description": "Package description - one line"
+    "version": "1.2.3",
+    "keywords": [
+        "comms", "websockets", "sockets", "ssl",
+    ],
+    "author": {
+        "name": "Your name",
+        "email": "Your email",
+        "url": "Your web site"
+    },
+    "bugs": {
+        "email": "name@example.com",
+        "url": "http://example.com/bugs"
+    },
+    "license": "GPL",
+    "dependencies": {
+        "jquery": "1.9.x",
+        "angular": "~1.2",
+    },
+    "pak": {
+        "import": true,
+        "mode": "debug"
+    }
+}</code>
+            <p>At a minimum, a package.json must have a <em>name</em>, <em>description</em> and <em>version</em>. 
+            Other fields are optional. Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
+                major.minor.patch[-pre-release]. See <a href="versions.html">Package Versions</a> for more details.</p>
+            <h2>Standard Fields</h2>
+            <ul>
+                <li><p>dependencies &mdash; List of packages and the acceptable versions. Version fields may include
+                        expressions that describe a range of acceptable versions. For example:</p>
+                    <p>
+                    <table title="versions" class="ui celled table segment">
+                        <thead>
+                            <tr>
+                                <th class="nowrap">Topic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>version</td><td>(allows prereleases)</td></tr>
+                            <tr><td>^version</td><td>(same as &gt;=1.2.3 &lt;2.0.0, does not allow prereleases)</td></tr>
+                            <tr><td>~version</td><td>(same as &gt;=1.2.3 &lt;2.0.0, allows prereleases)</td></tr>
+                            <tr><td>1.2.X </td><td> (any version starting with 1.2 (allows prereleases)</td></tr>
+                            <tr><td>&gt;, &gt;=, &lt;, &lt;=, ==, != version</td><td>Version expression</td></tr>
+                            <tr><td>expression || expression </td><td>either expression qualifies</td></tr>
+                            <tr><td>expression &amp;&amp; expression </td><td>both expressions must qualify</td></tr>
+                            <tr><td>expression expression </td><td>same as &amp;&amp;</td></tr>
+                        </tbody>
+                    </table>
+                    </p>
+                </li>
+                <li>files &mdash; list of files to include when caching and installing the package. These are 
+                    applied before considering export definitions.</li>
+                <li>ignore &mdash; list of files to exclude when caching and installing the package. These are 
+                    applied before considering export definitions.</li>
+            </ul>
+
+            <h2>Pak Configuration Properties</h2>
+            <p>Pak defines some properties in the <em>package.json</em> file under the <em>pak</em> property.
+            All other property names under the <em>pak</em> property are reserved. If you need custom configuration
+            settings for your application, you should create your own top-level package.json property set.</p>
+            <table class="ui celled table">
+                <thead>
+                    <tr><th>Name</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>blend</td><td>Properties to blend from a package into the application package.json when
+                        installing the package.</td></tr>
+                    <tr><td>export</td><td>Export instructions to export package files from the <em>paks</em> directory 
+                        into the application's <em>lib</em> directory.</td></tr>
+                    <tr><td>frozen</td><td>Define the package as frozen and impervious to upgrades.</td></tr>
+                    <tr><td>import</td><td>Enable exporting of package conents when installing packages. 
+                        Defaults to false.</td></tr>
+                    <tr><td>install</td><td>Permit the package to be locally installed. If false, the package
+                        will be cached, but not installed in the <em>paks</em> directory. Defaults to true.</td></tr>
+                    <tr><td>manage</td><td>Array of external json files to manage by blending their properties when
+                        installing the package.</td></tr>
+                    <tr><td>mode</td><td>Application execution mode. Selects a property set from the 
+                        <em>pak.modes</em> collection and copy to the top level.</td></tr>
+                    <tr><td>modes</td><td>Properties to be blended into the top-level application package.json.</td></tr>
+                    <tr><td>origin</td><td>Location of the package in the Pak cache.</td></tr>
+                    <tr><td>override</td><td>Local overrides for package package.json properties.</td></tr>
+                    <tr><td>precious</td><td>Protect a package in the cache from pruning unless forced.</td></tr>
+                    <tr><td>version</td><td>Pak program version (expression) required by this package.</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Want More?</h2>
+            <p>For more details, see:</p>
+            <ul>
+                <li><a href=" http://package.json.nodejitsu.com">http://package.json.nodejitsu.com</a></li>
+                <li><a href="http://wiki.commonjs.org/wiki/Packages/1.1">http://wiki.commonjs.org/wiki/Packages/1.1</a></li>
+                <li><a href="https://npmjs.org/doc/json.html">https://npmjs.org/doc/json.html</a></li>
+            </ul>

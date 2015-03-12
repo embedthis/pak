@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Configuring Pak</title>
+    <title>Pak Modes</title>
     <!-- Copyright Embedthis Software. All Rights Reserved. -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8" />
@@ -42,7 +42,7 @@
                 </a>
                 <div class="menu">
                     <a class="item" href="../start/quick.html">Quick Start</a>
-                    <a class="item" href="../start/installing.html">Installing Pak</a>
+                    <a class="item" href="../start/installing.html">Installing</a>
                     <a class="item" href="../start/releaseNotes.html">Release Notes</a>
                     <a class="item" href="../start/source.html">Building from Source</a>
                 </div>
@@ -50,11 +50,11 @@
             <div class="item">
                 <a href="../users/index.html"><b>User's Guide</b></a>
                 <div class="menu">
-<!-- MOB - rename commands to tour -->
-                    <a class="item" href="../users/commands.html">Quick Tour</a>
-                    <a class="item" href="../users/installing.html">Installing Paks</a>
-                    <a class="item" href="../users/search.html">Searching for Paks</a>
-<a class="item" href="../users/catalog.html">Pak Catalog</a>
+                    <a class="item" href="../users/tour.html">Quick Tour</a>
+                    <a class="item" href="../users/searching.html">Searching for Packages</a>
+                    <a class="item" href="../users/installing.html">Installing Packages</a>
+                    <a class="item" href="../users/customizing.html">Customizing Packages</a>
+                    <a class="item" href="../users/versions.html">Package Versions</a>
                     <a class="item" href="../users/modes.html">Pak Modes</a>
                 </div>
             </div>
@@ -62,11 +62,8 @@
             <div class="item">
                 <a href="../developers/index.html"><b>Developer's Guide</b></a>
                 <div class="menu">
-                    <a class="item" href="../users/publishing.html">Publishing Paks</a>
-                    <a class="item" href="../users/configuration.html">Pak Configuration</a>
-                    <a class="item" href="../users/exporting.html">Exporting Pak Contents</a>
-                    <a class="item" href="../users/overrides.html">Overriding Other Paks</a>
-                    <a class="item" href="../users/directories.html">Pak Directories</a>
+                    <a class="item" href="../developers/publishing.html">Publishing Packages</a>
+                    <a class="item" href="../developers/configuration.html">Pak Configuration</a>
                 </div>
             </div>
             <div class="item">
@@ -74,7 +71,7 @@
                 <div class="menu">
                     <a class="item" href="http://goo.gl/t5tTNO">Official Pak News</a>
                     <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
-                    <a class="item" href="https://embedthis.com/catalog/#/">Online Pak Catalog</a>
+                    <a class="item" href="https://embedthis.com/catalog/#/">Pak Catalog</a>
                     <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
                     <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
                     <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
@@ -126,49 +123,54 @@
             
             
             <div class="divider">/</div>
-            <a class="active section" href="configuration.html">Configuring Pak</a>
+            <a class="active section" href="modes.html">Pak Modes</a>
             
         </div>
         
-        <div class="ui right floated basic segment version">
+        <div class="version desktop-only">
             v0.10.0
         </div>
 
     </div>
     <div class="content">
 
-            <h1>Configuring Pak</h1>
 
-            <h4>To show the Pak configuration</h4>
-            On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak. To
-            show the pak configuration:
-            <pre class="ui code segment">pak config</pre>
-            <p>This displays something like:</p>
-<pre class="ui code segment">{
-    catalogs: [
-        "https://embedthis.com/catalog/do/pak",
-        "https://bower.herokuapp.com/packages",
-    ],
-    directories: {
-        paks: "my-paks",
-        pakcache: "/Users/name/.paks",
-    },
+            <h1>Pak Modes</h1>
+            <p>Pak supports the definition of execution modes / profiles. For example: <em>debug</em>, <em>test</em>
+                or <em>release</em> mode. By defining an execution mode, a specific Pak configuration may be easily
+                defined and enabled.</p>
+
+            <p>The Pak mode is defined via the <em>pak.mode</em> property. This then selects collections of properties
+            under the <em>pak.modes</em> property. For example:
+            <code>{
+    "pak": {
+        <b>"mode": "debug"</b>,
+        "modes": {
+            "debug": {
+                "import": true,
+            },
+            "release": {
+                "pak": {
+                    "import": false,
+                }
+            }
+        }
+    }
 }
-</pre>
-            <p>The "catalogs" property specifies the web sites that host Pak or Bower catalogs. The "paks" directory is the name of the local
-            application sub-directory in which to store paks. The "pakcache" directory defines where to cache paks on the local system.</p>
-            <p>Pak locates a valid pakrc file by searching in order until it finds a suitable configuration file. This is the
-            search order:</p>
-            <ol>
-                <li>pakrc</li>
-                <li>.pakrc</li>
-                <li>../pakrc and ../.pakrc 
-                <li>.. repeat up the parent directory chain</li>
-                <li>/etc/pakrc</li>
-                <li>package.json</li>
-            </ol>
-            <p>The package.json is always loaded if present after any pakrc file.</p>
+</code>
+            <p>When the mode is set to <em>debug</em>, the properties under <em>pak.modes.debug</em> are 
+            logically copied to the top level of the package.json properties. i.e. <em>pak.import</em> is set to true.
 
+            <h2>Changing Mode</h2>
+            <p>Use the <em>pak mode MODE</em> command to change the execution mode. For example:</p>
+            <code>pak mode debug</code>
+            <p>To display the current mode, run: <code>pak mode</code></p>
+
+            <h2>Other Applications</h2>
+            <p>Other applications such as <a href="http://embedthis.com/expansive/">Expansive</a> utilize the 
+            package.json <em>pak.mode</em> setting and modify their execution mode similarly. The 
+            <a href="http://embedthis.com/esp/">ESP Web Framework</a> also uses the <em>pak.mode</em> setting.</p>
+                
     </div>
     <div class="terms ui basic center aligned segment">
         <p>&copy; Embedthis Software, 2003-2014. All rights reserved.</p>
@@ -193,7 +195,7 @@
             sessionStorage.setItem('scroll-top', $('.sidebar').scrollTop());
         });
         $(function() {
-            var url = '../users/configuration.html';
+            var url = '../users/modes.html';
             var active = $('.sidebar a[href="' + url +'"]');
             active.addClass('active');
             $('.sidebar').scrollTop(sessionStorage.getItem('scroll-top'));

@@ -27,32 +27,31 @@ PAK(1)                           User Commands                          PAK(1)
            <B>commands ...</B>
 
        <B>Commands:</B>
-           cache paks...
-           cached paks...
+           cache packages...
+           cached packages...
            config
-           depend paks...
+           depend packages...
            edit key[=value]
            help
            init [name [version]]
-           install paks...
-           list paks...
+           install packages...
+           list packages...
            lockdown
            mode [debug|release|...]
-           prune paks...
+           prune packages...
            publish [name uri pass]
            retract name [password]
-           search paks...
-           uninstall paks...
-           update paks...
-           upgrade paks...
+           search packages...
+           uninstall packages...
+           update packages...
+           upgrade packages...
 
 <B>DESCRIPTION</B>
-       <B>Pak  </B>is  a package manager for application components.  Pak calls pack-
-       ages "paks". This is not a misspelling.
+       <B>Pak </B>is a package manager for application components.
 
 <B>WHY PAK?</B>
-       Existing package managers like NPM are excellent, but they are  heavily
-       focussed  the needs of NodeJS and not for non-Node applications or gen-
+       Existing  package managers like NPM are excellent, but they are heavily
+       focussed the needs of NodeJS and not for non-Node applications or  gen-
        eral application components. Pak is agnostic to its environment and can
        be used to install components for any application.
 
@@ -61,9 +60,9 @@ PAK(1)                           User Commands                          PAK(1)
 
            . Install, list and uninstall packages into a local application
            . Manages a local cache of retrieved packages
-           . Provides a global catalog to search for public paks
-           . Easy upgrading paks when new versions become available
-           . Automatically retrieves and installs dependant paks
+           . Provides a global catalog to search for public packages
+           . Easy upgrading packages when new versions become available
+           . Automatically retrieves and installs dependant packages
            . Supports the CommonJS package standard
            . Supports the SemVer package versioning standard
            . Supports using GitHub and NPM as the primary package repository
@@ -74,40 +73,41 @@ PAK(1)                           User Commands                          PAK(1)
        make Pak particularly sweet.
 
            . Fast, fast, fast.
-           . Local cache of paks supports fast offline use.
-           . Share paks by publishing to a common public catalog.
-           . Catalog web portal to search published paks.
-           . Pak integrates with the Bower repository to  seamlessly  download
+           . Local cache of packages supports fast offline use.
+           . Share packages by publishing to a common public catalog.
+           . Catalog web portal to search published packages.
+           .  Pak  integrates with the Bower repository to seamlessly download
        Bower components.
            . Package.json is compatible with nodejs.
            . Retrieve packs from NPM and bower.
            . Easy overriding to tailor packages from NPM and bower.
 
 <B>BASIC USAGE</B>
-       To install paks:
+       To install packages:
            pak install Names...
 
        To uninstall
            pak uninstall Names...
 
-       To list installed paks
+       To list installed packages
            pak list
 
-       To display pak dependencies
+       To display package dependencies
            pak depend
 
-       To show what paks are present in the cache and where they originated
+       To show what packages are present in the cache and  where  they  origi-
+       nated
            pak cached
 
-       To download and cache a pak but not install in the local directory
+       To download and cache a package but not install in the local directory
            pak cache Name
 
        To prune old versions from the cache
            pak prune
 
 <B>OVERVIEW</B>
-       A  pak is described by a CommonJS package.json file. This provides at a
-       minimum the following properties.
+       A  package  is described by a CommonJS package.json file. This provides
+       at a minimum the following properties.
 
             {
                 "name": "Package name - one word"
@@ -141,15 +141,15 @@ PAK(1)                           User Commands                          PAK(1)
        completely silently except for hard-errors, use --silent.
 
 <B>PUBLISHING</B>
-       To publish a new pak, create a package.json and then run pak inside the
-       directory of the pak to be published:
+       To publish a new package, create a package.json and then run pak inside
+       the directory of the package to be published:
 
            pak publish NAME REPOSITORY PASSWORD
 
-       Where NAME is the name of pak, REPOSITORY is the GitHub endpoint of the
-       package and PASSWORD is the password to associate  with  the  pak.  You
-       will  need  this  password  to modify or retract the pak in the future.
-       Safeguard it well.
+       Where NAME is the name of package, REPOSITORY is the GitHub endpoint of
+       the package and PASSWORD is the password to associate with the package.
+       You  will  need  this  password to modify or retract the package in the
+       future. Safeguard it well.
 
 <B>CONFIGURATION</B>
        On startup, Pak reads  configuration  from  a  pakrc  file.  This  file
@@ -183,46 +183,46 @@ PAK(1)                           User Commands                          PAK(1)
 
        The "catalogs" property defines sites that index and catalog packs. The
        "paks" directory is the name of the local directory in which  to  store
-       paks. The "pakcache" directory defines where to cache paks on the local
-       system.
+       packages.  The  "pakcache" directory defines where to cache packages on
+       the local system.
 
        Pak locates a valid pakrc file by searching in order:
 
            pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, package.json
 
 <B>COMMANDS</B>
-       cache [paks...]
-              Download and populate the cache with paks.
+       cache [packages...]
+              Download and populate the cache with packages.
 
-       cached [paks...]
-              List paks in the cache.
+       cached [packages...]
+              List packages in the cache.
 
        config Show the Pak configuration.
 
-       depend [paks...]
-              Display installed pak dependencies.
+       depend [packages...]
+              Display installed package dependencies.
 
        edit key[=value]...
-              Edit a pak description file.
+              Edit a package description file.
 
        help ...
               Display this Pak usage help.
 
-       info paks...
-              Display the README for a cached pak.
+       info packages...
+              Display the README for a cached package.
 
        init [name [version]]
               Create a new package.json.
 
-       install paks...
-              Install a pak on the local system. The pak name can be a name in
-              an  online  catalog or it can be a GitHub endpoint URL or of the
-              form 'account/repositiory'. The pak name may have a catalog pre-
-              fix  "pak", "npm" or "bower" to select a specific catalog to use
-              when locating the pak repository endpoint.
+       install packages...
+              Install a package on the local system. The package name can be a
+              name  in an online catalog or it can be a GitHub endpoint URL or
+              of the form 'account/repositiory'. The package name may  have  a
+              catalog prefix "pak", "npm" or "bower" to select a specific cat-
+              alog to use when locating the package repository endpoint.
 
-       list [paks...]
-              list installed paks
+       list [packages...]
+              List the installed packages.
 
        lockdown
               Lockdown  the  version  criteria  for  all  dependencies.   This
@@ -233,46 +233,46 @@ PAK(1)                           User Commands                          PAK(1)
               copied up to the top level. This may be used to select a "debug"
               or "release" configuration.
 
-       prune [paks...]
-              Prune named paks.
+       prune [packages...]
+              Prune named packages.
 
        publish name endpoint password
-              publish a pak in the Pak catalog.
+              Publish a package in the Pak catalog.
 
        retract name [pass]
-              Unpublish a pak.
+              Unpublish a package.
 
-       search paks...
-              Search for paks in the catalogs.
+       search packages...
+              Search for packages in the catalogs.
 
        uninstall
-              Uninstall an installed pak.
+              Uninstall an installed package.
 
-       update [paks...]
+       update [packages...]
               Update the pak cache with latest version.
 
-       upgrade [paks...]
-              Upgrade installed paks.
+       upgrade [packages...]
+              Upgrade installed packages.
 
 <B>OPTIONS</B>
        <B>--all URI</B>
-              Show all versions of a pak.
+              Show all versions of a package.
 
        <B>--cache directory</B>
               Specify the directory to use for the paks cache. This  overrides
               the values specified in the various pakrc or package.json files.
 
        <B>--details URI</B>
-              Show more pak details. Useful with pak list.
+              Show more package details. Useful with "pak list".
 
        <B>--dir directory</B>
               Change to the given directory before running.
 
        <B>--force</B>
               Force the command to continue. This  is  useful  to  install  or
-              cache  a  pak when dependencies cannot be satisfied.  It is also
-              useful to cache or install  an  already  cached/installed  pack.
-              Aliased as -f.
+              cache  a  package  when dependencies cannot be satisfied.  It is
+              also useful to cache  or  install  an  already  cached/installed
+              pack. Aliased as -f.
 
        <B>--log logName[:logLevel]</B>
               Specify  a file to log internal execution messages. Bit will log
@@ -285,24 +285,25 @@ PAK(1)                           User Commands                          PAK(1)
               Used to suppress installing or upgrading dependent packages.
 
        <B>--paks directory</B>
-              Specify  the  directory  to use for the paks. This overrides the
-              values specified in the various pakrc or package.json files.
+              Specify the local "paks" directory in which to install packages.
+              This overrides the values specified  in  the  various  pakrc  or
+              package.json files.
 
        <B>--quiet</B>
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
        <B>--silent</B>
-              Run in silent mode suppressing all but hard errors.  Aliased  as
+              Run  in  silent mode suppressing all but hard errors. Aliased as
               -s.
 
        <B>--versions URI</B>
-              Show pak version information.
+              Show package version information.
 
 <B>REPORTING BUGS</B>
        Report bugs to dev@embedthis.com.
 
 <B>COPYRIGHT</B>
-       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
+       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
        Embedthis Software.
 
 <B>SEE ALSO</B>

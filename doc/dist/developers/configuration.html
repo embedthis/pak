@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Pak commands</title>
+    <title>Pak Configuration</title>
     <!-- Copyright Embedthis Software. All Rights Reserved. -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8" />
@@ -42,7 +42,7 @@
                 </a>
                 <div class="menu">
                     <a class="item" href="../start/quick.html">Quick Start</a>
-                    <a class="item" href="../start/installing.html">Installing Pak</a>
+                    <a class="item" href="../start/installing.html">Installing</a>
                     <a class="item" href="../start/releaseNotes.html">Release Notes</a>
                     <a class="item" href="../start/source.html">Building from Source</a>
                 </div>
@@ -50,11 +50,11 @@
             <div class="item">
                 <a href="../users/index.html"><b>User's Guide</b></a>
                 <div class="menu">
-<!-- MOB - rename commands to tour -->
-                    <a class="item" href="../users/commands.html">Quick Tour</a>
-                    <a class="item" href="../users/installing.html">Installing Paks</a>
-                    <a class="item" href="../users/search.html">Searching for Paks</a>
-<a class="item" href="../users/catalog.html">Pak Catalog</a>
+                    <a class="item" href="../users/tour.html">Quick Tour</a>
+                    <a class="item" href="../users/searching.html">Searching for Packages</a>
+                    <a class="item" href="../users/installing.html">Installing Packages</a>
+                    <a class="item" href="../users/customizing.html">Customizing Packages</a>
+                    <a class="item" href="../users/versions.html">Package Versions</a>
                     <a class="item" href="../users/modes.html">Pak Modes</a>
                 </div>
             </div>
@@ -62,11 +62,8 @@
             <div class="item">
                 <a href="../developers/index.html"><b>Developer's Guide</b></a>
                 <div class="menu">
-                    <a class="item" href="../users/publishing.html">Publishing Paks</a>
-                    <a class="item" href="../users/configuration.html">Pak Configuration</a>
-                    <a class="item" href="../users/exporting.html">Exporting Pak Contents</a>
-                    <a class="item" href="../users/overrides.html">Overriding Other Paks</a>
-                    <a class="item" href="../users/directories.html">Pak Directories</a>
+                    <a class="item" href="../developers/publishing.html">Publishing Packages</a>
+                    <a class="item" href="../developers/configuration.html">Pak Configuration</a>
                 </div>
             </div>
             <div class="item">
@@ -74,7 +71,7 @@
                 <div class="menu">
                     <a class="item" href="http://goo.gl/t5tTNO">Official Pak News</a>
                     <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
-                    <a class="item" href="https://embedthis.com/catalog/#/">Online Pak Catalog</a>
+                    <a class="item" href="https://embedthis.com/catalog/#/">Pak Catalog</a>
                     <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
                     <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
                     <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
@@ -126,67 +123,69 @@
             
             
             <div class="divider">/</div>
-            <a class="active section" href="commands.html">Pak commands</a>
+            <a class="active section" href="configuration.html">Pak Configuration</a>
             
         </div>
         
-        <div class="ui right floated basic segment version">
+        <div class="version desktop-only">
             v0.10.0
         </div>
 
     </div>
     <div class="content">
 
-            <h1>Pak Commands</h1>
+            <h1>Configuring Pak</h1>
 
-            <h2>Installing Paks</h2>
-            <p>To install named paks:</p>
-            <pre class="ui code segment">pak install NAME...</pre>
-            <p>Where NAME can be the name of a package published in the Pak catalog, NPM or bower catalog, 
-            a GitHub repository endpoint, a GitHub account/repository or a path to a local pak directory. </p>
-<pre class="ui code segment">pak install jquery
-pak install jquery
-pak install npm:jquery
-pak install bower:jquery
-pak install https://github.com/embedthis/jquery.git
-pak install git@github.com:embedthis/jquery
-pak install embedthis/jquery</pre>
+            <p>On startup, Pak reads configuration from a pakrc file. This file defines the default configuration for Pak. 
+            To show the pak configuration, type:<code>pak config</code></p>
+            <p>This displays something like xx:</p>
+<code>{
+  catalogs: {
+    pak: {
+      list: "http://embedthis.com/catalog/do/pak/search",
+      query: "http://embedthis.com/catalog/do/pak/search?keywords=${NAME}",
+      download: "https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz"
+    },
+    bower: {
+      list: "http://bower.herokuapp.com/packages",
+      query: "http://bower.herokuapp.com/packages/${NAME}",
+      download: "https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz"
+    },
+    npm: {
+      query: "http://registry.npmjs.org/${NAME}",
+      download: "http://registry.npmjs.org/${NAME}/-/${NAME}-${TAG}.tgz"
+    }
+  },
+  directories: {
+    files: "files",
+    lib: "lib",
+    paks: "paks",
+    pakcache: "/Users/guest/.paks",
+    top: "."
+  }
+}</code>
+            <p>The <em>catalogs</em> property specifies the web sites that host Pak or Bower catalogs. </p>
 
-            <p>When a pak is installed, all required dependent paks will be automatically installed.</p>
-            <p>A PAK name may have a "#version" suffix that nominates a specific version to install. 
-<pre class="ui code segment">pak install 'jquery#2.1.3'</pre>
+            <h2>Directories</h2>
+            <p>The <em>paks</em> directory is the name of the local application sub-directory in which to 
+            store paks. The <em>pakcache</em> directory defines where to cache paks on the local system.
+            The <em>lib</em> directory is to where Pak will export installed pacakge contents. The 
+            <em>top</em> directory refers to the current directory.</p>
 
-            <p>To install all the paks required by an application as specified in package.json:</p>
-            <pre class="ui code segment">pak install</pre>
-
-            <h2>Removing Paks</h2>
-            <p>To uninstall a pak from your local directory. The pak will remain in the local Pak cache.</p>
-            <pre class="ui code segment">pak uninstall PAK...</pre>
-
-            <h2>List Paks</h2>
-            <p>To list installed paks in your local directory:</p>
-            <pre class="ui code segment">pak list</pre>
-            <p>The list will display the pak name and installed version. Paks may designated as optional
-            if the package.json describes them in the 'optionalDependencies' list. Paks may be shown as 
-            'foreign' if they are installed but not present in the package.json.</p>
-
-            <h2>Pak Dependencies</h2>
-            <p>To display dependencies for installed paks in your local directory</p>
-            <pre class="ui code segment">pak depend</pre>
-            <p>This will display the installed paks and their dependencies with versions.</p>
-    
-            <h2>Cached Paks</h2>
-            <p>When pak installs a package, it keeps a copy of the pak in the Pak cache which is typically at "~/.paks".
-            The cache stores all versions downloaded of a Pak.</p>
-            <pre class="ui code segment">pak cached</pre>
-
-            <h2>Pre-Caching</h2>
-            <p>To download and cache a pak but not install in the local directory</p>
-            <pre class="ui code segment">pak cache Name</pre>
-
-            <h2>Pruning Paks</h2>
-            <p>To prune old versions from the cache</p>
-            <pre class="ui code segment">pak prune</pre>
+            <h2>Pakrc</h2>
+            <p>The Pak configuration may be modified by defining properties in a <em>pakrc</em> file or in the
+            application's <em>package.json</em> file. Pak locates a <em>pakrc</em> file by searching in order 
+            until it finds a suitable configuration file. This is the search order:</p>
+            <ol>
+                <li>pakrc</li>
+                <li>.pakrc</li>
+                <li>../pakrc and ../.pakrc 
+                <li>.. repeat up the parent directory chain</li>
+                <li>/etc/pakrc</li>
+                <li>package.json</li>
+            </ol>
+            <p>The package.json is always loaded after any pakrc file. In this manner, the package.json may 
+            override default configuration.</p>
 
     </div>
     <div class="terms ui basic center aligned segment">
@@ -212,7 +211,7 @@ pak install embedthis/jquery</pre>
             sessionStorage.setItem('scroll-top', $('.sidebar').scrollTop());
         });
         $(function() {
-            var url = '../users/commands.html';
+            var url = '../developers/configuration.html';
             var active = $('.sidebar a[href="' + url +'"]');
             active.addClass('active');
             $('.sidebar').scrollTop(sessionStorage.getItem('scroll-top'));

@@ -19,28 +19,27 @@ pak \- Embedthis Pak -- Package Manager
     \fBcommands ...\fB
 .SH ""
 .B Commands:
-    cache paks...
-    cached paks...
+    cache packages...
+    cached packages...
     config
-    depend paks...
+    depend packages...
     edit key[=value]
     help
     init [name [version]]
-    install paks...
-    list paks...
+    install packages...
+    list packages...
     lockdown    
     mode [debug|release|...]
-    prune paks...
+    prune packages...
     publish [name uri pass]
     retract name [password]
-    search paks...
-    uninstall paks...
-    update paks...
-    upgrade paks...
+    search packages...
+    uninstall packages...
+    update packages...
+    upgrade packages...
 .RE
 .SH DESCRIPTION
 \fBPak\fR is a package manager for application components. 
-Pak calls packages "paks". This is not a misspelling. 
 
 .PP
 .SH WHY PAK?
@@ -54,9 +53,9 @@ Pak has the following major features:
 
     . Install, list and uninstall packages into a local application
     . Manages a local cache of retrieved packages
-    . Provides a global catalog to search for public paks
-    . Easy upgrading paks when new versions become available
-    . Automatically retrieves and installs dependant paks
+    . Provides a global catalog to search for public packages
+    . Easy upgrading packages when new versions become available
+    . Automatically retrieves and installs dependant packages
     . Supports the CommonJS package standard
     . Supports the SemVer package versioning standard
     . Supports using GitHub and NPM as the primary package repository
@@ -66,9 +65,9 @@ Pak has the following major features:
 While Pak has a strong feature set, there are some characteristics that make Pak particularly sweet.
 
     . Fast, fast, fast.
-    . Local cache of paks supports fast offline use.
-    . Share paks by publishing to a common public catalog.
-    . Catalog web portal to search published paks.
+    . Local cache of packages supports fast offline use.
+    . Share packages by publishing to a common public catalog.
+    . Catalog web portal to search published packages.
     . Pak integrates with the Bower repository to seamlessly download Bower components.
     . Package.json is compatible with nodejs.
     . Retrieve packs from NPM and bower.
@@ -77,22 +76,22 @@ While Pak has a strong feature set, there are some characteristics that make Pak
 .PP
 .SH BASIC USAGE
 .PP
-To install paks:
+To install packages:
     pak install Names...
 
 To uninstall 
     pak uninstall Names...
 
-To list installed paks
+To list installed packages
     pak list
 
-To display pak dependencies
+To display package dependencies
     pak depend
     
-To show what paks are present in the cache and where they originated
+To show what packages are present in the cache and where they originated
     pak cached
 
-To download and cache a pak but not install in the local directory
+To download and cache a package but not install in the local directory
     pak cache Name
 
 To prune old versions from the cache
@@ -100,7 +99,7 @@ To prune old versions from the cache
 
 .PP
 .SH OVERVIEW
-A pak is described by a CommonJS package.json file. This provides at a minimum the following properties.
+A package is described by a CommonJS package.json file. This provides at a minimum the following properties.
 .PP
 .RS 5
 {
@@ -137,12 +136,12 @@ To run Pak with more verbose trace output, use the [-v] --verbose switch. To run
 [-q] --quiet switch.  To run completely silently except for hard-errors, use --silent.
 
 .SH PUBLISHING
-To publish a new pak, create a package.json and then run pak inside the directory of the pak to be published:
+To publish a new package, create a package.json and then run pak inside the directory of the package to be published:
 
     pak publish NAME REPOSITORY PASSWORD
 
-Where NAME is the name of pak, REPOSITORY is the GitHub endpoint of the package and PASSWORD is the password to associate
-with the pak. You will need this password to modify or retract the pak in the future. Safeguard it well.
+Where NAME is the name of package, REPOSITORY is the GitHub endpoint of the package and PASSWORD is the password to associate
+with the package. You will need this password to modify or retract the package in the future. Safeguard it well.
 
 .SH CONFIGURATION
 On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak. For example:
@@ -170,7 +169,7 @@ On startup, Pak reads configuration from a pakrc file. This file defines the ope
  }
 
 The "catalogs" property defines sites that index and catalog packs. The "paks" directory is the name of the local
-directory in which to store paks. The "pakcache" directory defines where to cache paks on the local system.
+directory in which to store packages. The "pakcache" directory defines where to cache packages on the local system.
 .PP
 Pak locates a valid pakrc file by searching in order:
 
@@ -179,37 +178,37 @@ Pak locates a valid pakrc file by searching in order:
 .SH COMMANDS
 
 .TP 
-cache [paks...]
-Download and populate the cache with paks.
+cache [packages...]
+Download and populate the cache with packages.
 .TP
-cached [paks...]         
-List paks in the cache.
+cached [packages...]         
+List packages in the cache.
 .TP
 config                   
 Show the Pak configuration.
 .TP
-depend [paks...]         
-Display installed pak dependencies.
+depend [packages...]         
+Display installed package dependencies.
 .TP
 edit key[=value]...      
-Edit a pak description file.
+Edit a package description file.
 .TP
 help ...
 Display this Pak usage help.
 .TP
-info paks...             
-Display the README for a cached pak.
+info packages...             
+Display the README for a cached package.
 .TP
 init [name [version]]    
 Create a new package.json.
 .TP
-install paks...          
-Install a pak on the local system. The pak name can be a name in an online catalog or it can be a GitHub endpoint
-URL or of the form 'account/repositiory'. The pak name may have a catalog prefix "pak", "npm" or "bower" to select
-a specific catalog to use when locating the pak repository endpoint. 
+install packages...          
+Install a package on the local system. The package name can be a name in an online catalog or it can be a GitHub endpoint
+URL or of the form 'account/repositiory'. The package name may have a catalog prefix "pak", "npm" or "bower" to select
+a specific catalog to use when locating the package repository endpoint. 
 .TP
-list [paks...]           
-list installed paks
+list [packages...]           
+List the installed packages.
 .TP
 lockdown
 Lockdown the version criteria for all dependencies. This rewrites the
@@ -220,31 +219,31 @@ mode
 Index in the modes property. The selected property collection is copied up to the top level. This may be used to select
 a "debug" or "release" configuration.
 .TP
-prune [paks...]          
-Prune named paks.
+prune [packages...]          
+Prune named packages.
 .TP
 publish name endpoint password
-publish a pak in the Pak catalog.
+Publish a package in the Pak catalog.
 .TP
 retract name [pass]      
-Unpublish a pak.
+Unpublish a package.
 .TP
-search paks...           
-Search for paks in the catalogs.
+search packages...           
+Search for packages in the catalogs.
 .TP
 uninstall                
-Uninstall an installed pak.
+Uninstall an installed package.
 .TP
-update [paks...]         
+update [packages...]         
 Update the pak cache with latest version.
 .TP
-upgrade [paks...]        
-Upgrade installed paks.
+upgrade [packages...]        
+Upgrade installed packages.
 
 .SH OPTIONS
 .TP
 \fB\--all URI\fR
-Show all versions of a pak.
+Show all versions of a package.
 
 .TP
 \fB\--cache directory\fR
@@ -253,7 +252,7 @@ or package.json files.
 
 .TP
 \fB\--details URI\fR
-Show more pak details. Useful with pak list.
+Show more package details. Useful with "pak list".
 
 .TP
 \fB\--dir directory\fR
@@ -261,7 +260,7 @@ Change to the given directory before running.
 
 .TP
 \fB\--force\fR
-Force the command to continue. This is useful to install or cache a pak when dependencies cannot be satisfied.
+Force the command to continue. This is useful to install or cache a package when dependencies cannot be satisfied.
 It is also useful to cache or install an already cached/installed pack. Aliased as -f.
 
 .TP
@@ -276,7 +275,7 @@ Used to suppress installing or upgrading dependent packages.
 
 .TP
 \fB\--paks directory\fR
-Specify the directory to use for the paks. This overrides the values specified in the various pakrc 
+Specify the local "paks" directory in which to install packages. This overrides the values specified in the various pakrc 
 or package.json files.
 
 .TP
@@ -289,7 +288,7 @@ Run in silent mode suppressing all but hard errors. Aliased as -s.
 
 .TP
 \fB\--versions URI\fR
-Show pak version information.
+Show package version information.
 
 .PP
 .SH "REPORTING BUGS"

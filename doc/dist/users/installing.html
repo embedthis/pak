@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Installing Pak</title>
+    <title>Installing Packages</title>
     <!-- Copyright Embedthis Software. All Rights Reserved. -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8" />
@@ -118,12 +118,12 @@
             
             <div class="divider">/</div>
             <a class="section" href="index.html">
-                Getting Started
+                User's Guide
             </a>
             
             
             <div class="divider">/</div>
-            <a class="active section" href="installing.html">Installing Pak</a>
+            <a class="active section" href="installing.html">Installing Packages</a>
             
         </div>
         
@@ -134,19 +134,112 @@
     </div>
     <div class="content">
 
-            <h1>Installing Pak</h1>
-            <p>Please read the overview information below, then refer to the specific instructions for your operating
-            system.  The Pak binary installation is available for:</p>
-            <ul>
-                <li><a href="linux.html">Linux Installation Instructions</a></li>
-                <li><a href="mac.html">Mac OS X Installation Instructions</a></li>
-                <li><a href="windows.html">Windows Installation Instructions</a></li>
-            </ul>
+            <h1>Installing Packages</h1>
 
-            <h2>Source Code</h2>
-            <p>The Pak source code is provided as a separate download distribution. It is also available via the
-            source code <a href="https://github.com/embedthis/pak">repository</a> for developers who wish to participate
-            in the development of Pak.</p>
+            <p>To install named packages, use the <em>pak install PACKAGES ...</em> command and name the packages to 
+            install. Multiple packages can be installed on one command line. For example:</p>
+<code>$ <b>pak install jquery bootstrap</b>
+[Install] jquery 2.1.3
+[Install] bootstrap 3.3.2</code>
+
+            <p>Pak will remember which packages are installed by adding an entry to a package.json file in the
+                current directory. Pak will create the package.json file if it does not already exist. The generated
+                package.json will look like this subset:</p>
+<code>{
+    "name": "my
+    "version": "1.0.0",
+    "dependencies": {
+        "bootstrap": "^3.3",
+        "jquery": "^2.1"
+    },
+    "pak": {
+        "import": true,
+        "mode": "debug"
+    }
+}
+</code>
+            <p>The <em>dependencies</em> property will document the installed packages and their versions. 
+                You can modify the version string for packages to specify what range of versions
+                your application can accept. See <a href="versions.html">Pak Versions</a> for 
+                more details.</p>
+
+            <p>In the previous example, Bootstrap internally specifies jQuery as a dependency, so we could have 
+            installed just Bootstrap and it would have automatically downloaded and installed jquery &mdash; 
+            as it is required by Bootstrap. For example:</p>
+<code>$ <b>pak install bootstrap</b>
+[Install] jquery 2.1.3
+[Install] bootstrap 3.3.2</code>
+            <p>Without requesting jQuery, Pak knew to install it because it was listed in the Bootstrap dependencies.</p>
+
+            <h2>Installation Process</h2>
+            <p>When Pak installs a package, it follows the following process:</p>
+            <ol>
+                <li>Lookup the specified pak name in various catalogs and determine the respository location for the pak.</li>
+                <li>Download the pak from the repository.</li>
+                <li>Save the pak contents in to the Pak global cache. This is typically at ~/.pak/PACKAGE.</li>
+                <li>Install the pak contents locally in the paks/PACKAGE directory.</li>
+                <li>Export selected contents to the lib/PACKAGE directory for use.</li>
+            </ol>
+
+            <h2>Package Endpoints</h2>
+            <p>When installing packages, the package name may be a simple name, or it may be a more complex endpoint that
+                describes where to locate the package. The complete syntax is:</p>
+            <code>pak install ENDPOINTS ...</code>
+            <p>Where an ENDPOINT can be the name of a package published in the Pak catalog, NPM or bower catalog, 
+            a GitHub repository endpoint, a GitHub account/repository or a path to a local package directory. 
+            For example:</p>
+<code>pak install jquery
+pak install jquery
+pak install pak:jquery
+pak install npm:jquery
+pak install bower:jquery
+pak install embedthis/exp-js
+pak install https://github.com/embedthis/exp-js.git
+pak install git@github.com:embedthis/jquery
+pak install ./my-source/graphics</code>
+
+            <h3>Catalog Prefixes</h3>
+            <p>A catalog prefix may be used on an endpoint to specify a catalog to use when searching for a package.
+            The <em>pak</em>, <em>npm</em>, <em>bower</em> prefixes direct Pak to use the corresponding package catalog
+            to search when locating the package. If no prefix is specified and the endpoint is a simple name, the 
+            catalogs will be searched in the order: Pak catalog, NPM catalog, and finally the Bower catalog. For example:</p>
+            <code>pak install jquery
+pak install <b>pak:</b>jquery
+pak install <b>npm:</b>jquery
+pak install <b>bower:</b>jquery
+</code>
+
+            <h3>GitHub Endpoints</h3>
+            <p>A catalog search is not required if the endpoint is a resolved Git repository endpoint. 
+            Three forms are supported:</p>
+            <ul>
+                <li>account/repository</li>
+                <li>https://site/account/repository</li>
+                <li>git@github.com:account/repository</li>
+            </ul>
+            <p>The account/repository form is a short-cut for https://github.com/account/repository.git.</p>
+
+            <p>An endpoint may optionally have a <em>#version</em> suffix that nominates a specific version to install. 
+            Otherwise the most recent, stable version will be selected. For example:</p>
+            <code>pak install jquery#2.1.3</code>
+
+            <h2>Forced Installation</h2>
+            <p>To force a package to be installed regardless of whether it is already installed or not.</p>
+            <code>pak -f install PACKAGE ...</code>
+
+            <h2>Installing and Upgrading Packages</h2>
+            <p>To install all the packages required by an application as specified in package.json:</p>
+            <code>pak install</code>
+
+            <p>To reinstall all the application's packages.</p>
+            <code>pak -f install</code>
+
+
+            <p>To upgrade all the packages required by an application as specified in package.json:</p>
+            <code>pak upgrade</code>
+
+
+
 
     </div>
     <div class="terms ui basic center aligned segment">
@@ -172,7 +265,7 @@
             sessionStorage.setItem('scroll-top', $('.sidebar').scrollTop());
         });
         $(function() {
-            var url = '../start/installing.html';
+            var url = '../users/installing.html';
             var active = $('.sidebar a[href="' + url +'"]');
             active.addClass('active');
             $('.sidebar').scrollTop(sessionStorage.getItem('scroll-top'));

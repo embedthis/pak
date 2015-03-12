@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Installing Pak</title>
+    <title>Developer's Guide</title>
     <!-- Copyright Embedthis Software. All Rights Reserved. -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8" />
@@ -116,14 +116,9 @@
         <div class="ui breadcrumb">
             <a class="section" href="../">Home</a>
             
-            <div class="divider">/</div>
-            <a class="section" href="index.html">
-                Getting Started
-            </a>
-            
             
             <div class="divider">/</div>
-            <a class="active section" href="installing.html">Installing Pak</a>
+            <a class="active section" href="index.html">Developer's Guide</a>
             
         </div>
         
@@ -134,19 +129,27 @@
     </div>
     <div class="content">
 
-            <h1>Installing Pak</h1>
-            <p>Please read the overview information below, then refer to the specific instructions for your operating
-            system.  The Pak binary installation is available for:</p>
-            <ul>
-                <li><a href="linux.html">Linux Installation Instructions</a></li>
-                <li><a href="mac.html">Mac OS X Installation Instructions</a></li>
-                <li><a href="windows.html">Windows Installation Instructions</a></li>
-            </ul>
+            <h1>Developers's Guide</h1>
+            <p>The Pak Developers's Guide explains the following topics:</p>
+            <table title="topics" class="ui celled table segment">
+                <thead>
+                    <tr>
+                        <th class="nowrap">Topic</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="publishing.html">Publishing Paks</a></td>
+                        <td>How to publish paks into the online Pak catalog.</td>
+                    </tr>
+                    <tr>
+                        <td><a href="configuration.html">Configuring Pak</a></td>
+                        <td>Configuring Pak via the pakrc file.</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <h2>Source Code</h2>
-            <p>The Pak source code is provided as a separate download distribution. It is also available via the
-            source code <a href="https://github.com/embedthis/pak">repository</a> for developers who wish to participate
-            in the development of Pak.</p>
 
     </div>
     <div class="terms ui basic center aligned segment">
@@ -172,7 +175,7 @@
             sessionStorage.setItem('scroll-top', $('.sidebar').scrollTop());
         });
         $(function() {
-            var url = '../start/installing.html';
+            var url = '../developers/index.html';
             var active = $('.sidebar a[href="' + url +'"]');
             active.addClass('active');
             $('.sidebar').scrollTop(sessionStorage.getItem('scroll-top'));
