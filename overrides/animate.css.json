@@ -1,0 +1,9 @@
+{
+    "@npm/animate.css": {
+        "*": {
+            "pak": {
+                "export": "animate.*"
+            }
+        }
+    }
+}

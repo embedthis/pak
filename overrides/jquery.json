@@ -1,0 +1,52 @@
+{
+    "@npm/jquery": {
+        ">=2.1.0": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                }
+            }
+        },
+        ">=1.11.1": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                }
+            }
+        }
+    },
+    "jquery/jquery": {
+        ">=2.1.0": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                }
+            }
+        },
+        ">=1.11.0": {
+            "files":  "dist/jquery.*",
+            "pak": {
+                "export": {
+                    "trim": 1
+                }
+            }
+        }
+    },
+    "components/jquery": {
+        ">=2.1.0": {
+            "files":  "jquery.*",
+            "pak": {
+                "export": "jquery.*"
+            }
+        },
+        ">=1.11.0": {
+            "files":  "jquery.*",
+            "pak": {
+                "export": "jquery.*"
+            }
+        }
+    }
+}

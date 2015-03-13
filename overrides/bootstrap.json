@@ -1,0 +1,14 @@
+{
+    "@npm/bootstrap": {
+        "*": {
+            "files":  [ 
+                "dist/**", 
+                "!dist/js/npm.js", 
+                "less/**" 
+            ],
+            "=dependencies": {
+                "jquery": "x.*"
+            }
+        }
+    }
+}
