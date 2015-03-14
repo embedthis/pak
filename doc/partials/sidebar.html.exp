@@ -42,6 +42,7 @@
             <div class="item">
                 <a href="@~developers/index.html"><b>Developer's Guide</b></a>
                 <div class="menu">
+                    <a class="item" href="@~developers/creating.html">Creating Packages</a>
                     <a class="item" href="@~developers/publishing.html">Publishing Packages</a>
                     <a class="item" href="@~developers/configuration.html">Pak Configuration</a>
                 </div>

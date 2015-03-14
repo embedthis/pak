@@ -12,6 +12,7 @@ pak \- Embedthis Pak -- Package Manager
     \fB--name name\fR
     \fB--nodeps\fR
     \fB--paks dir\fR
+    \fB--password file\fR
     \fB--quiet\fR
     \fB--silent\fR
     \fB--verbose\fR
@@ -31,7 +32,7 @@ pak \- Embedthis Pak -- Package Manager
     lockdown    
     mode [debug|release|...]
     prune packages...
-    publish [name uri pass]
+    publish [name endpoint email [override]]
     retract name [password]
     search packages...
     uninstall packages...
@@ -138,10 +139,11 @@ To run Pak with more verbose trace output, use the [-v] --verbose switch. To run
 .SH PUBLISHING
 To publish a new package, create a package.json and then run pak inside the directory of the package to be published:
 
-    pak publish NAME REPOSITORY PASSWORD
+    pak publish
 
-Where NAME is the name of package, REPOSITORY is the GitHub endpoint of the package and PASSWORD is the password to associate
-with the package. You will need this password to modify or retract the package in the future. Safeguard it well.
+Where NAME is the name of package, REPOSITORY is the GitHub endpoint of the package. You will be prompted to enter a 
+password to manage the package. You will need this password to modify or retract the package in the future. 
+Safeguard it well.
 
 .SH CONFIGURATION
 On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak. For example:
@@ -277,6 +279,10 @@ Used to suppress installing or upgrading dependent packages.
 \fB\--paks directory\fR
 Specify the local "paks" directory in which to install packages. This overrides the values specified in the various pakrc 
 or package.json files.
+
+.TP
+\fB\--password file\fR
+Specify the a file containing the password to use when doing "pak publish".
 
 .TP
 \fB\--quiet\fR

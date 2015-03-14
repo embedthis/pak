@@ -16,6 +16,7 @@ SYNOPSIS
            --name name
            --nodeps
            --paks dir
+           --password file
            --quiet
            --silent
            --verbose
@@ -36,7 +37,7 @@ SYNOPSIS
            lockdown
            mode [debug|release|...]
            prune packages...
-           publish [name uri pass]
+           publish [name endpoint email [override]]
            retract name [password]
            search packages...
            uninstall packages...
@@ -153,12 +154,12 @@ PUBLISHING
        To publish a new package, create a package.json and then run pak inside
        the directory of the package to be published:
 
-           pak publish NAME REPOSITORY PASSWORD
+           pak publish
 
        Where NAME is the name of package, REPOSITORY is the GitHub endpoint of
-       the package and PASSWORD is the password to associate with the package.
-       You  will  need  this  password to modify or retract the package in the
-       future. Safeguard it well.
+       the package. You will be prompted to enter a  password  to  manage  the
+       package.  You  will need this password to modify or retract the package
+       in the future.  Safeguard it well.
 
 
 CONFIGURATION
@@ -309,12 +310,17 @@ OPTIONS
               package.json files.
 
 
+       --password file
+              Specify  the  a  file  containing the password to use when doing
+              "pak publish".
+
+
        --quiet
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
 
        --silent
-              Run  in  silent mode suppressing all but hard errors. Aliased as
+              Run in silent mode suppressing all but hard errors.  Aliased  as
               -s.
 
 
@@ -327,7 +333,7 @@ REPORTING BUGS
        Report bugs to dev@embedthis.com.
 
 COPYRIGHT
-       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
+       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 SEE ALSO

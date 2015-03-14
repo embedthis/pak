@@ -48,18 +48,27 @@ class Pak
     private var defaultConfig = {
         catalogs: {
             pak: {
-                list: 'http://embedthis.com/catalog/do/pak/search',
-                query: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
+                //  MOB - add "catalog"
+                lookup:    'http://localhost:4000/search/${NAME}',
+                query:     'http://localhost:4000/search/${NAME}',
+                //  MOB - must be https
+                publish:   'http://localhost:4000/pak/publish',
+                download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
+                overrides: 'https://raw.githubusercontent.com/embedthis/pak/dev/overrides'
+
+                /*
+                lookup: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
+                query: 'http://embedthis.com/catalog/pak/search',
                 download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
+                */
             },
             bower: {
-                list: 'http://bower.herokuapp.com/packages',
-                query: 'http://bower.herokuapp.com/packages/${NAME}',
+                lookup: 'http://bower.herokuapp.com/packages/${NAME}',
+                query: 'http://bower.herokuapp.com/packages',
                 download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
             },
             npm: {
-                __list: 'http://registry.npmjs.org/-/all?stale=update_after&startkey=1386393773409',
-                query: 'http://registry.npmjs.org/${NAME}',
+                lookup: 'http://registry.npmjs.org/${NAME}',
                 download: 'http://registry.npmjs.org/${NAME}/-/${NAME}-${TAG}.tgz',
             }
         },
@@ -71,7 +80,6 @@ class Pak
             top: '.',
         },
         requirePrimaryCatalog: true,
-        publish: 'https://embedthis.com/pak/do/catalog/publish',
     }
 
     private var requiredKeywords = [ 'description', 'license', 'name', 'repository', 'version' ]
@@ -145,6 +153,8 @@ class Pak
         license: 'GPL',
         dependencies: {},
         optionalDependencies: {},
+        files: [ 'dist/**' ],
+        ignore: [ '*.tmp' ],
         pak: {
             import: true,
             mode: 'debug',
@@ -173,7 +183,8 @@ class Pak
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
             name: { range: String },
             nodeps: { alias: 'n' },
-            paks: { alias: 'p', range: String },
+            paks: { range: String },
+            password: { range: String },
             quiet: { alias: 'q' },
             silent: { alias: 's' },
             verbose: { alias: 'v' },
@@ -208,13 +219,14 @@ class Pak
             '    update [paks...]         # Update the cache with latest version\n' +
             '    upgrade [paks...]        # Upgrade installed paks\n\n' +
             '  General options:\n' +
-            '    --cache dir              # Director to use for the Pak cache\n' +
+            '    --cache dir              # Directory to use for the Pak cache\n' +
             '    --dir dir                # Change to directory before running\n' +
             '    --force                  # Force requested action\n' +
             '    --log file:level         # Send output to a file at a given level\n' +
-            '    --name name              # Set an application name\n' +
+            '    --name name              # Set an application name for "pak init"\n' +
             '    --nodeps                 # Do not install or upgrade dependencies\n' +
-            '    --paks dir               # Use given directory for paks cache\n' +
+            '    --paks dir               # Use given directory for "paks" directory\n' +
+            '    --password file          # File containing the package password\n' +
             '    --quiet, -q              # Run in quiet mode\n' +
             '    --silent, -s             # Run in totally silent mode\n' +
             '    --verbose, -v            # Run in verbose mode\n\n' +
@@ -560,7 +572,7 @@ class Pak
                 }
                 copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
             } else {
-                throw 'Cannot find pak ' + pak.name + ' to install'
+                throw 'Cannot find package ' + pak.name + ' to install'
             }
             if (!Package.getSpecFile(pak.cachePath)) {
                 throw 'Cannot find package description for ' + pak + ' from ' + pak.cachePath
@@ -571,27 +583,11 @@ class Pak
                 throw new Error('Missing cache for ', pak.name)
             }
             if (!pak.sourcePath) {
-                try {
-                    let http = new Http
-                    let cmd = 'https://raw.githubusercontent.com/embedthis/pak/dev/override/' + pak.name + '.json'
-                    http.verify = false
-                    http.get(cmd)
-                    if (http.status == 200) {
-                        pak.override = deserialize(http.response)
-                    }
-                    let path = App.home.join('.pak/override', pak.name + '.json')
-                    if (path.exists) {
-                        pak.override = path.readJSON()
-                    }
-                    http.close()
-                } catch (e) {
-                     print("CATCH", e)
-                }
                 if (pak.origin) {
-                    if (pak.override) {
-                        /* Apply global override downloaded from catalog */
-                        let override = pak.override[pak.origin]
-                        for (let [criteria, properties] in override) {
+                    /* Apply global override downloaded from catalog */
+                    for each (over in pak.overrides) {
+                        over = over[pak.origin]
+                        for (let [criteria, properties] in over) {
                             if (Version(pak.cacheVersion).acceptable(criteria)) {
                                 vtrace('Apply', 'Pak overrides for ' + pak.name)
                                 blend(pak.cache, properties, {combine: true})
@@ -725,7 +721,7 @@ class Pak
     private var blending = {}
 
     /*
-        Blend dependencies bottom up so that lower paks can define directories and upper paks can override.
+        Blend dependencies bottom up so that lower paks can define directories and upper paks can take precedence.
      */
     private function blendPak(pak: Package) {
         if (!pak.cache) {
@@ -744,9 +740,6 @@ class Pak
     }
 
     private function blendSpec(pak: Package) {
-        /*
-            Apply pak overrides to the application package.json
-         */
         if (pak.cache.pak.blend) {
             blend(spec, pak.cache.pak.blend, {combine: true})
         }
@@ -891,6 +884,9 @@ class Pak
         if (!pak.cached) {
             locatePak(pak)
             cachePak(pak)
+        } else {
+            pak.name = pak.cache.name
+            pak.resolve()
         }
         if (installDeps) {
             installDependencies(pak)
@@ -918,7 +914,7 @@ class Pak
             mkdir(dest)
         }
         /*
-            Override pak based on local overrides from the application's package.json in 'spec'
+            Override installed pak based on local overrides from the application's package.json in 'spec'
          */
         let override = spec.pak.override
         if (spec.pak.override) {
@@ -932,7 +928,7 @@ class Pak
                 blend(pak.cache, spec.pak.override[pak.name], {combine: true})
                 pak.dirty = true
             }
-            /* Saved below */
+            /* Saved below to paks/name/package.json */
         }
         let ignore = pak.cache.ignore || []
         if (!(ignore is Array)) {
@@ -1187,38 +1183,42 @@ class Pak
     }
 
     /*
-        pak publish <CR>
-        pak publish name URI [password]
+        pak [--password passfile] publish
+        pak [--password passfile] publish name email endpoint [override]
      */
     function publish(args): Void {
-        let uri = catalogs[0]
-        let name, endpoint, password
-        if (!PACKAGE.exists) {
-            throw 'Cannot find package.json in current directory'
-        }
-        let pak = new Package(spec.name)
-        if (pak.publish === false) {
-            qtrace('Skip', pak + ' has publish: false')
-            return
-        }
-        pak.setSource('.')
+        let passfile = options.password
+        let name, endpoint, over
         if (args.length == 0) {
+            if (!PACKAGE.exists) {
+                throw 'Cannot find package.json in current directory'
+            }
+            let pak = new Package(spec.name)
+            if (pak.publish === false) {
+                qtrace('Skip', pak + ' has publish: false')
+                return
+            }
+            pak.setSource('.')
+            if (!validatePak(pak)) {
+                return
+            }
             name = pak.name
             endpoint = (spec.repository && spec.repository.url) || null
+            over = (spec.repository && spec.repository.override) || null
         } else if (args.length == 3) {
-            [name, endpoint, password] = args
+            [name, endpoint, over] = args
         } else if (args.length == 2) {
             [name, endpoint] = args
         } else {
             throw 'Incorrect args for publish'
         }
-        if (!validatePak(pak)) {
-            return
-        }
         if (!endpoint) {
             throw 'Missing repository property in package.json.'
         }
-        if (!password) {
+        let password
+        if (passfile) {
+            password = Path(passfile).readString().trim()
+        } else {
             while (true) {
                 password = App.getpass('Password: ')
                 confirm = App.getpass('Confirm: ')
@@ -1233,20 +1233,21 @@ class Pak
             throw 'Bad password. Must be 8 characters or longer'
         }
         let http = new Http
-        let data = { name: pak.name, endpoint: endpoint, password: password }
+        let data = { name: name, endpoint: endpoint, password: password, override: over }
         http.setHeader('Content-Type', 'application/json')
+        let uri = catalogs.pak.publish
         try {
-            qtrace('Publish', pak.name + ' ' + pak.cacheVersion + ' at ' + uri)
-            // FUTURE http.verifyIssuer = false
-            http.post(uri + '/publish', serialize(data))
+            qtrace('Publish', name + ' at ' + uri)
+            // MOB FUTURE http.verifyIssuer = false
+            http.post(uri, serialize(data))
             let response = deserialize(http.response)
             if (response.error) {
                 qtrace('Error', response.feedback.error)
             } else {
-                qtrace('Info', pak.name + ' successfully published at ' + endpoint)
+                qtrace('Info', name + ' successfully published at ' + endpoint)
             }
         } catch (e) {
-            throw 'Cannot register pak. ' + e
+            throw 'Cannot register package. ' + e
         }
     }
 
@@ -1281,7 +1282,7 @@ class Pak
                 qtrace('Info', pak.name + ' retracted')
             }
         } catch (e) {
-            throw 'Cannot register pak. ' + e
+            throw 'Cannot register package. ' + e
         }
     }
 
@@ -1302,6 +1303,11 @@ class Pak
         let path = Package.getSpecFile('.')
         path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
         removeDir(pak.installPath, true)
+
+        path = directories.lib.join(pak.name)
+        if (path.exists) {
+            removeDir(path, true)
+        }
         qtrace('Uninstall', pak.name)
     }
 
@@ -1531,6 +1537,30 @@ class Pak
         }
     }
 
+    function fetchGlobalOverrides(pak, url = null) {
+        pak.overrides ||= []
+        if (!url && pak.catalog != 'pak') {
+            url = catalogs.pak.overrides + '/' + pak.name + '.json'
+        }
+        if (url) {
+            try {
+                let http = new Http
+                http.verify = false
+                http.get(url)
+                if (http.status == 200) {
+                    pak.overrides.push(deserialize(http.response))
+                }
+                http.close()
+            } catch (e) {
+                 print("CATCH", e)
+            }
+        }
+        let path = App.home.join('.pak/overrides', pak.name + '.json')
+        if (path.exists) {
+            pak.overrides.push(path.readJSON())
+        }
+    }
+
     /*
         Events:
             cache
@@ -1689,7 +1719,13 @@ class Pak
         pak.versions = []
         if (pak.owner != '@npm') {
             vtrace('Run', [git, 'ls-remote', '--tags', pak.endpoint].join(' '))
-            let data = Cmd.run([git, 'ls-remote', '--tags', pak.endpoint])
+            let data
+            try {
+                data = Cmd.run([git, 'ls-remote', '--tags', pak.endpoint])
+            } catch (e) {
+                print("CATCH", e)
+                throw e.message
+            }
             versions = data.trim().
                 replace(/[ \t]+/g, ' ').
                 replace(/^.+refs\/tags\//mg, '').
@@ -1739,11 +1775,11 @@ class Pak
                     continue
                 }
                 trace('Info', 'Search catalog: "' + cname + '" for ' + pak.name)
-                let cmd = catalog.query
+                let cmd = catalog.lookup
                 let http = new Http
                 try {
                     cmd = cmd.expand({NAME: pak.name})
-                    vtrace('Retrieve', cmd)
+                    vtrace('Get', cmd)
                     http.get(cmd)
                     if (http.status != 200) {
                         vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + 
@@ -1767,43 +1803,18 @@ class Pak
                         trace('Skip', 'Missing catalog data')
                         continue
                     }
-                    //  TODO - remove
                     if (cname == 'pak') {
-                        let item = { name: pak.name, endpoint: '' }
-                        if (pak.name == 'semantic-ui') {
-                            item.endpoint = 'Semantic-Org/Semantic-UI-CSS'
-                            vtrace('Info', 'Redirect to ' + item.endpoint)
-                        } else if (pak.name == 'respond') {
-                            item.endpoint = 'scottjehl/Respond'
-                            vtrace('Info', 'Redirect to ' + item.endpoint)
-                        } else if (pak.name == 'angular' ||
-                            pak.name == 'angular-animate' ||
-                            pak.name == 'angular-route' ||
-                            pak.name == 'animate.css' ||
-                            pak.name == 'bootstrap' ||
-                            pak.name == 'font-awesome' ||
-                            pak.name == 'html5shiv' ||
-                            pak.name == 'jquery') {
-
-                            vtrace('Redirect', 'Redirect to npm:' + pak.name)
-                            pak.parseEndpoint('npm:' + pak.name)
-                            pak.resolve()
-                            return locatePak(pak)
-                        }
-                        response.data = [item]
-                    }
-                    if (cname == 'pak') {
-                        //  TODO untill pak catalog exact search
                         for each (item in response.data) {
                             if (item.name == pak.name) {
                                 if (item.endpoint.startsWith('@')) {
                                     vtrace('Redirect', 'Redirect to ' + item.endpoint.slice(1))
-                                    pak.parseEndpoint(item.endpoint)
+                                    pak.parseEndpoint(item.endpoint.slice(1))
                                     pak.resolve()
                                     return locatePak(pak)
                                 }
                                 location = item.endpoint
                                 pak.parseEndpoint(location)
+                                fetchGlobalOverrides(pak, item.override)
                                 pak.resolve()
                                 selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
                                 break
@@ -1812,6 +1823,7 @@ class Pak
                     } else if (cname == 'bower') {
                         location = response.url
                         pak.parseEndpoint(location)
+                        fetchGlobalOverrides(pak)
                         pak.resolve()
                         selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
 
@@ -1821,8 +1833,9 @@ class Pak
                             vtrace('Info', 'Available versions:')
                             dump(pak.versions)
                         }
-                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
                         pak.endpoint = '@npm/' + pak.name
+                        fetchGlobalOverrides(pak)
+                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
                     }
                     if (location) {
                         vtrace('Found', pak.name + ' in catalog "' + cname + '" at ' + pak.endpoint)
@@ -1835,13 +1848,16 @@ class Pak
         }
         if (!location) {
             if (exceptions) {
-                throw 'Cannot locate pak "' + pak.args + '" ' + pak.versionCriteria
+                throw 'Cannot locate package "' + pak.args + '" ' + pak.versionCriteria
             }
             return false
         }
         return true
     }
 
+    /*
+        Only used by search
+     */
     private function searchCatalogs(ref: String): Array {
         let pak = Package(ref)
         /*
@@ -1850,6 +1866,9 @@ class Pak
         if (locatePak(pak, false)) {
             return [pak]
         }
+        /*
+            Now search for partial name match or keyword match
+         */
         let http = new Http
         let matches = []
         for (let [cname, catalog] in catalogs) {
@@ -1857,9 +1876,10 @@ class Pak
                 continue
             }
             trace('Info', 'Search catalog: ' + cname + ' for partial "' + pak.name + '" ' + (pak.versionCriteria || ''))
-            let cmd = catalog.list || catalog.query.expand({NAME: pak.name})
+            let cmd = catalog.query || catalog.lookup
+            cmd = cmd.expand({NAME: pak.name})
             try {
-                vtrace('Retrieve', cmd)
+                vtrace('Get', cmd)
                 http.get(cmd)
             } catch (e) {
                 qtrace('Warn', 'Cannot access catalog at: ' + cmd)
@@ -1909,7 +1929,7 @@ class Pak
             }
         }
         if (matches.length == 0) {
-            throw 'Cannot find pak "' + pak + '" with suitable version'
+            throw 'Cannot find package "' + pak + '" with suitable version'
         }
         return matches
     }
@@ -2029,7 +2049,7 @@ class Pak
                     result[name] = dep
                 }
                 if (!dep.install && !dep.cache) {
-                    throw 'Cannot find pak "' + dep.name + '" referenced by "' + pak.name + '"'
+                    throw 'Cannot find package "' + dep.name + '" referenced by "' + pak.name + '"'
                 }
                 getDepPaks(result, patterns, dep.install || dep.cache)
             }
@@ -2172,6 +2192,7 @@ class Pak
     function error(msg) App.log.error(msg)
 
     private function getPakSetting(pak, property) {
+        //  MOB - review this. Used for noblend, nodeps, import
         let override = spec.pak.override
         return ((override && override[pak.name] && override[pak.name][property] === true) ||
                       (override && override['*'] && override['*'][property] === true))

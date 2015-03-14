@@ -62,6 +62,7 @@
             <div class="item">
                 <a href="../developers/index.html"><b>Developer's Guide</b></a>
                 <div class="menu">
+                    <a class="item" href="../developers/creating.html">Creating Packages</a>
                     <a class="item" href="../developers/publishing.html">Publishing Packages</a>
                     <a class="item" href="../developers/configuration.html">Pak Configuration</a>
                 </div>
@@ -179,21 +180,25 @@
 
             <p>However, if you want to override how a third party package is installed, you 
                 can override the package by adding export instructions for the package in your 
-                application's <em>package.json</em> file. Or you can create a package override file in the 
-                <em>~/.pak/override</em> directory. Lastly, you can submit an override file to the Pak catalog so it
-                can be used by all users.</p>
+                application's <em>package.json</em> file, or you can create a package override file in the 
+                <em>~/.pak/override</em> directory or create an override package. </p>
             <p>If you are a developer of a package, you can add export instructions to your package's 
                 <em>package.json</em> file to export the most common subset of files. </p>
 
             <h3>Export Overrides</h3>
-            <p>When you cannot modify a third-party package, you can create export overrides to provide the instructions.
-                The syntax to achieve this in your application's package.json file is via a
+            <p>When you cannot modify a third-party package, you can create overrides to provide the export instructions.
+            Pak supports overriding exports in your application's <em>package.json</em> file and also via special
+            override packages. For more details please read 
+            <a href="../developers/publishing.html#override">Overide Packages</a> in the 
+            <a href="../developers/">Developers Guide</a>.</p> 
+
+            <p>The syntax to override exports in your application's package.json file is via a
                 <em>pak.override.PACKAGE.pak.export</em> definition, where PACKAGE is the name of the package.
                 For example:</p>
                 <code>
 "pak": {
     "override": {
-        "jquery": {
+        <b>"jquery"</b>: {
             "pak": {
                 "export": "dist/jquery.js"
             }
@@ -202,45 +207,12 @@
 }
 </code>
             <p>This example overrides the default jquery exporting of the <em>dist</em> directory, and exports just the
-            <em>dist/jquery.js</em> file. It does this by overriding the jquery package.json export details with the 
-            local application's definition.</p>
+            <em>dist/jquery.js</em> file. It does this by overriding the jquery package.json export details.</p>
 
             <h3>Override Files</h3>
-            <p>Override files in the <em>~/.pak/override</em> or in the Pak catalog have a slightly different syntax to
-            handle different instructions for various versions of a package. 
-            For example, here is a portion of the jQuery override file in the Pak catalog:</p>
-            <code>
-{
-    "jquery/jquery": {
-        ">=2.1.0": {
-            "pak": {
-                "export": {
-                    "from":  "dist/jquery.*",
-                    "trim": 1
-                }
-            }
-        },
-        ">=1.11.0": {
-            "pak": {
-                "export": {
-                    "from":  "dist/jquery.js",
-                    "trim": 1
-                }
-            }
-        }
-    }
-}
-</code>
-            <p>See <a href="versions.html">Version Expressions</a> for details on the version expression syntax.</p>
-            <p>Here are some example override files from the Pak Catalog:</p>
-            <ul>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/angular.json">Angular</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/angular-route.json">Angular Route</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/bootstrap.json">Bootstrap</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/font-awesome.json">Font Awesome</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/jquery.json">JQuery</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/semantic-ui-css.json">Semantic-UI</a></li>
-            </ul>
+            <p>For details on creating a local override file, please see 
+            <a href="../developers/publishing.html#overrideFiles">Overide Files</a> in the 
+            <a href="../developers/">Developers Guide</a>.</p>
 
             <h3>Export Instructions</h3>
             <p>Export instructions in a <em>package.json</em> file may be specified two ways:</p>
@@ -359,16 +331,6 @@
     "lib": "www/lib"
 }
 </code>
-
-            <p>Lastly, you can submit an override package.json for any package to the 
-                <a href="https://github.com/embedthis/pak/tree/dev/override">Pak repository overrides</a>. 
-                This works regardless of where the package is hosted, be it GitHub, NPM or custom Git repository.
-                To submit an override file to Pak, please create a
-                <a href="https://help.github.com/articles/creating-a-pull-request/">Pull Request</a> 
-                for your override file.</p>
-
-               
-
     </div>
     <div class="terms ui basic center aligned segment">
         <p>&copy; Embedthis Software, 2003-2014. All rights reserved.</p>

@@ -1,10 +1,10 @@
 {
-    title: "Publishing Paks",
+    title: "Publishing Packages",
     crumbs: [
-        { "User's Guide": "index.html" },
+        { "Developer's Guide": "index.html" },
     ],
 }
-            <h1>Publishing Paks</h1>
+            <h1>Publishing Packages</h1>
 
             <p>You can publish a package for use by Pak in one of three package catalogs:</p>
             <ul>
@@ -13,125 +13,116 @@
                 <li><a href="http://embedthis.com/catalog/">Pak Catalog</a></li>
             </ul>
             <p>This document describes the process for creating a package in the Pak catalog. Consult the relevant
-                NPM or Bower documentation for creating packages in those catalogs.</p>
-                
+                <a href="http://npmjs.org/">NPM</a> or <a href="http://bower.io/">Bower</a> documentation for 
+                creating packages in those catalogs.</p>
+
             <h2>Publishing to the Pak Catalog</h2>
-            <p>To publish a new package, create your package.json and then run <em>pak</em> in your application directory.
-            <code>pak publish NAME ENDPOINT PASSWORD</code>
-            <p>The NAME is the globally unique name for your package. It may contain <em>-</em>, <em>_</em> or <em>.</em>
-            characters. Check the <a href="http://embedthis.com/catalog">Pak Catalog</a> for currently published Pak
-            names in the Pak catalog.</p>
+            <p>To publish a new package in the Pak catalog, <a href="creating.html">create your package.json</a> 
+            and then run <em>pak publish</em> in your application directory.</p>
+            <code class="inverted">$ pak publish
 
-            <p>The ENDPOINT is a valid GitHub endpoint that hosts your package contents. The PASSWORD is the
-            password to use to manage this package in the catalog. Choose and protect this password carefully and
-            then use it to modify or retract your package in the catalog.</p>
+$ pak publish NAME ENDPOINT EMAIL [OVERRIDE]</code>
 
-            <h3>Reserved Pak Prefixes</h3>
-            Pak names that start with <em>appweb</em>, <em>esp</em>, <em>ejs</em>, <em>embedthis</em>, <em>exp</em>, 
-            <em>expansive</em>, <em>go</em>, <em>goahead</em>, <em>makeme</em>,
-            <em>me</em> and <em>pak</em> are reserved.</p>
+            <p>In the first example, the package name, repository endpoint and author's email address will be extracted 
+            from the <em>package.json</em>. The third example supplies the name, endpoint and email. You will be prompted
+            to enter a password to secure management of the package. You can supply a file containing the password via
+            the <em>--password password</em> option. Choose and protect your password very carefully. You may 
+            use it to modify or retract your package from the catalog.</p>
 
-            <h2>Package.json</h2>
-            <p>The package.json file defines a pakcage. It defines the package name, version, authoring details
-            and dependencies. The format is specified by
-                <a href="http://wiki.commonjs.org/wiki/Packages/1.1">
-                http://wiki.commonjs.org/wiki/Packages/1.1</a> and also used by
-                the <a href="http://npmjs.org">NPM</a> and <a href="http://bower.io">Bower</a> catalog packages. 
-                For example:</p>
-<code>{
-    "name": "Package name - one word"
-    "description": "Package description - one line"
-    "version": "1.2.3",
-    "keywords": [
-        "comms", "websockets", "sockets", "ssl",
-    ],
-    "author": {
-        "name": "Your name",
-        "email": "Your email",
-        "url": "Your web site"
-    },
-    "bugs": {
-        "email": "name@example.com",
-        "url": "http://example.com/bugs"
-    },
-    "license": "GPL",
-    "dependencies": {
-        "jquery": "1.9.x",
-        "angular": "~1.2",
-    },
-    "pak": {
-        "import": true,
-        "mode": "debug"
-    }
-}</code>
-            <p>At a minimum, a package.json must have a <em>name</em>, <em>description</em> and <em>version</em>. 
-            Other fields are optional. Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
-                major.minor.patch[-pre-release]. See <a href="versions.html">Package Versions</a> for more details.</p>
-            <h2>Standard Fields</h2>
+            <p>The package name should be a globally unique name for your package. It may contain <em>-</em>, 
+            <em>_</em> or <em>.</em> characters. Check the <a href="http://embedthis.com/catalog">Pak Catalog</a> 
+            for currently published Pak names to ensure your chosen name is unique. Note that Pak names that start 
+            with <em>appweb</em>, <em>esp</em>, <em>ejs</em>, <em>embedthis</em>, <em>exp</em>, <em>expansive</em>, 
+            <em>go</em>, <em>goahead</em>, <em>makeme</em>, <em>me</em> and <em>pak</em> are reserved. </p>
+
+            <p>The email address should be that of the person responsible for the catalog entry for the package. 
+                This email address will be used for password reset requests. </p>
+
+            <p>The package endpoint is a valid GitHub account or endpoint that hosts your package contents. For example:</p>
+<code>pak publish jquery/jquery ...
+pak publish https://github.com/jquery/jquery.git ...
+pak publish git@github.com:jquery/jquery ...
+pak publish git@github.com:jquery/jquery ...</code>
+
+            <p>To publish a package that is hosted on <a href="http://npmjs.org">NPM</a>, use an <em>@npm:</em> package
+            alias to query the NPM catalog. For example:</p>
+<code>pak publish @npm:jquery name@example.com</code>
+
+            <h2>Package Aliases</h2>
+            <p>You can publish an alias entry in the catalog that redirects Pak to use another package name. 
+            To create an alias, simply use an <em>@</em> prefix on the endpoint. For example:</p>
+            <code class="inverted">pak publish my-angular @angular ...</code>
+
+            <p>When Pak installs <em>my-angular</em> it will redirect and search for the <em>angular</em> package 
+            and install it instead. You can use a catalog prefix <em>pak:</em>, <em>bower:</em> and <em>npm:</em> to direct 
+            Pak to search in the designated catalog. For example:</p>
+            <code class="inverted">pak publish my-angular @bower:angular ...</code>
+            <p>This will search for <em>angular</em> in the Bower catalog.</p>
+
+            <a name="override"></a>
+            <h2>Override Packages</h2>
+            <p>Sometimes you may need to create a package from third-party source that you cannot modify or control.
+            The package source may not even have its own <em>package.json</em> file. To support wrapping such existing 
+            packages, you can create an entry in the Pak catalog with an override package.json file. 
+            This override file is blended into the package's package.json when it is saved to the Pak cache. 
+            If the package does not have its own package.json, then this file will be used to create a package.json. 
+            For example:</p>
+
+            <code>pak publish my-openssl openssl/openssl me@example.com &rarr;
+    http://example.com/openssl.json</code>
+
+            <p>You can directly access override files in GitHub via the <em>raw.githubusercontent.com</em> site.
+            For example: <em>raw.githubusercontent.com/embedthis/pak/master/overrides/openssl.json</em>.</p>
+
+            <p>Pak considers override instructions from several sources (in order):</p>
             <ul>
-                <li><p>dependencies &mdash; List of packages and the acceptable versions. Version fields may include
-                        expressions that describe a range of acceptable versions. For example:</p>
-                    <p>
-                    <table title="versions" class="ui celled table segment">
-                        <thead>
-                            <tr>
-                                <th class="nowrap">Topic</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>version</td><td>(allows prereleases)</td></tr>
-                            <tr><td>^version</td><td>(same as &gt;=1.2.3 &lt;2.0.0, does not allow prereleases)</td></tr>
-                            <tr><td>~version</td><td>(same as &gt;=1.2.3 &lt;2.0.0, allows prereleases)</td></tr>
-                            <tr><td>1.2.X </td><td> (any version starting with 1.2 (allows prereleases)</td></tr>
-                            <tr><td>&gt;, &gt;=, &lt;, &lt;=, ==, != version</td><td>Version expression</td></tr>
-                            <tr><td>expression || expression </td><td>either expression qualifies</td></tr>
-                            <tr><td>expression &amp;&amp; expression </td><td>both expressions must qualify</td></tr>
-                            <tr><td>expression expression </td><td>same as &amp;&amp;</td></tr>
-                        </tbody>
-                    </table>
-                    </p>
-                </li>
-                <li>files &mdash; list of files to include when caching and installing the package. These are 
-                    applied before considering export definitions.</li>
-                <li>ignore &mdash; list of files to exclude when caching and installing the package. These are 
-                    applied before considering export definitions.</li>
+                <li>Override instructions from the Pak catalog.</li>
+                <li>Over instructions in a local package override file under <em>~/.pak/overrides/NAME.json</em></li>
+                <li>Override instructions in your application's <em>package.json</em> file.</li>
             </ul>
 
-            <h2>Pak Configuration Properties</h2>
-            <p>Pak defines some properties in the <em>package.json</em> file under the <em>pak</em> property.
-            All other property names under the <em>pak</em> property are reserved. If you need custom configuration
-            settings for your application, you should create your own top-level package.json property set.</p>
-            <table class="ui celled table">
-                <thead>
-                    <tr><th>Name</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>blend</td><td>Properties to blend from a package into the application package.json when
-                        installing the package.</td></tr>
-                    <tr><td>export</td><td>Export instructions to export package files from the <em>paks</em> directory 
-                        into the application's <em>lib</em> directory.</td></tr>
-                    <tr><td>frozen</td><td>Define the package as frozen and impervious to upgrades.</td></tr>
-                    <tr><td>import</td><td>Enable exporting of package conents when installing packages. 
-                        Defaults to false.</td></tr>
-                    <tr><td>install</td><td>Permit the package to be locally installed. If false, the package
-                        will be cached, but not installed in the <em>paks</em> directory. Defaults to true.</td></tr>
-                    <tr><td>manage</td><td>Array of external json files to manage by blending their properties when
-                        installing the package.</td></tr>
-                    <tr><td>mode</td><td>Application execution mode. Selects a property set from the 
-                        <em>pak.modes</em> collection and copy to the top level.</td></tr>
-                    <tr><td>modes</td><td>Properties to be blended into the top-level application package.json.</td></tr>
-                    <tr><td>origin</td><td>Location of the package in the Pak cache.</td></tr>
-                    <tr><td>override</td><td>Local overrides for package package.json properties.</td></tr>
-                    <tr><td>precious</td><td>Protect a package in the cache from pruning unless forced.</td></tr>
-                    <tr><td>version</td><td>Pak program version (expression) required by this package.</td></tr>
-                </tbody>
-            </table>
-
-            <h2>Want More?</h2>
-            <p>For more details, see:</p>
+            <h3>Override Files</h3>
+            <p>Override files in the <em>~/.pak/override</em> directory or in the Pak catalog have a slightly 
+            different syntax so they can provide different overrides for various versions of a package. One 
+            override file can provide override configuration for all versions of a package and for various 
+            endpoints hosting the package. </p>
+            <p>For example, here is a portion of the jQuery override file in the 
+            Pak catalog. It has different configuration for version 1.x and 2.x and provides unique configuration
+            when hosted from NPM:</p>
+            <code>{
+    "jquery/jquery": {
+        ">=2.1.0": {
+            "pak": {
+                "export": {
+                    "from":  "dist/jquery.*",
+                    "trim": 1
+                }
+            }
+        },
+        ">=1.11.0": {
+            "pak": {
+                "export": {
+                    "from":  "dist/jquery.js",
+                    "trim": 1
+                }
+            }
+        }
+    },
+    "@npm/jquery": {
+        ...
+    }
+}
+</code>
+            <p>An override file is a hash of endpoints that provide the package. Inside each endpoint property hash is
+            a set of configurations for different version expressions.
+            See <a href="../users/versions.html#expressions">Version Expressions</a> for details on the version 
+            expression syntax.</p>
+            <p>Here are some example override files from the Pak Catalog:</p>
             <ul>
-                <li><a href=" http://package.json.nodejitsu.com">http://package.json.nodejitsu.com</a></li>
-                <li><a href="http://wiki.commonjs.org/wiki/Packages/1.1">http://wiki.commonjs.org/wiki/Packages/1.1</a></li>
-                <li><a href="https://npmjs.org/doc/json.html">https://npmjs.org/doc/json.html</a></li>
+                <li><a href="https://github.com/embedthis/pak/tree/dev/override/angular.json">Angular</a></li>
+                <li><a href="https://github.com/embedthis/pak/tree/dev/override/angular-route.json">Angular Route</a></li>
+                <li><a href="https://github.com/embedthis/pak/tree/dev/override/bootstrap.json">Bootstrap</a></li>
+                <li><a href="https://github.com/embedthis/pak/tree/dev/override/font-awesome.json">Font Awesome</a></li>
+                <li><a href="https://github.com/embedthis/pak/tree/dev/override/jquery.json">JQuery</a></li>
+                <li><a href="https://github.com/embedthis/pak/tree/dev/override/semantic-ui-css.json">Semantic-UI</a></li>
             </ul>

@@ -62,6 +62,7 @@
             <div class="item">
                 <a href="../developers/index.html"><b>Developer's Guide</b></a>
                 <div class="menu">
+                    <a class="item" href="../developers/creating.html">Creating Packages</a>
                     <a class="item" href="../developers/publishing.html">Publishing Packages</a>
                     <a class="item" href="../developers/configuration.html">Pak Configuration</a>
                 </div>
@@ -138,13 +139,15 @@
 
             <p>On startup, Pak reads configuration from a pakrc file. This file defines the default configuration for Pak. 
             To show the pak configuration, type:<code>pak config</code></p>
-            <p>This displays something like xx:</p>
+            <p>This displays something like:</p>
 <code>{
   catalogs: {
     pak: {
-      list: "http://embedthis.com/catalog/do/pak/search",
-      query: "http://embedthis.com/catalog/do/pak/search?keywords=${NAME}",
-      download: "https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz"
+      lookup: "http://localhost:4000/search/${NAME}",
+      query: "http://localhost:4000/search/${NAME}",
+      publish: "http://localhost:4000/pak/publish",
+      download: "https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz",
+      overrides: "https://raw.githubusercontent.com/embedthis/pak/dev/overrides"
     },
     bower: {
       list: "http://bower.herokuapp.com/packages",
@@ -176,16 +179,15 @@
             <p>The Pak configuration may be modified by defining properties in a <em>pakrc</em> file or in the
             application's <em>package.json</em> file. Pak locates a <em>pakrc</em> file by searching in order 
             until it finds a suitable configuration file. This is the search order:</p>
-            <ol>
+            <ul>
                 <li>pakrc</li>
                 <li>.pakrc</li>
-                <li>../pakrc and ../.pakrc 
-                <li>.. repeat up the parent directory chain</li>
+                <li>../pakrc and ../.pakrc and repeat up the parent directory chain</li>
                 <li>/etc/pakrc</li>
                 <li>package.json</li>
-            </ol>
-            <p>The package.json is always loaded after any pakrc file. In this manner, the package.json may 
-            override default configuration.</p>
+            </ul>
+            <p>The <em>package.json</em> is always loaded after any <em>pakrc</em> file. In this manner, the 
+            package.json may override default configuration.</p>
 
     </div>
     <div class="terms ui basic center aligned segment">

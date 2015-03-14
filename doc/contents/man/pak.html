@@ -20,6 +20,7 @@ PAK(1)                           User Commands                          PAK(1)
            <B>--name name</B>
            <B>--nodeps</B>
            <B>--paks dir</B>
+           <B>--password file</B>
            <B>--quiet</B>
            <B>--silent</B>
            <B>--verbose</B>
@@ -39,7 +40,7 @@ PAK(1)                           User Commands                          PAK(1)
            lockdown
            mode [debug|release|...]
            prune packages...
-           publish [name uri pass]
+           publish [name endpoint email [override]]
            retract name [password]
            search packages...
            uninstall packages...
@@ -144,12 +145,12 @@ PAK(1)                           User Commands                          PAK(1)
        To publish a new package, create a package.json and then run pak inside
        the directory of the package to be published:
 
-           pak publish NAME REPOSITORY PASSWORD
+           pak publish
 
        Where NAME is the name of package, REPOSITORY is the GitHub endpoint of
-       the package and PASSWORD is the password to associate with the package.
-       You  will  need  this  password to modify or retract the package in the
-       future. Safeguard it well.
+       the package. You will be prompted to enter a  password  to  manage  the
+       package.  You  will need this password to modify or retract the package
+       in the future.  Safeguard it well.
 
 <B>CONFIGURATION</B>
        On startup, Pak reads  configuration  from  a  pakrc  file.  This  file
@@ -289,11 +290,15 @@ PAK(1)                           User Commands                          PAK(1)
               This overrides the values specified  in  the  various  pakrc  or
               package.json files.
 
+       <B>--password file</B>
+              Specify  the  a  file  containing the password to use when doing
+              "pak publish".
+
        <B>--quiet</B>
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
        <B>--silent</B>
-              Run  in  silent mode suppressing all but hard errors. Aliased as
+              Run in silent mode suppressing all but hard errors.  Aliased  as
               -s.
 
        <B>--versions URI</B>
@@ -303,7 +308,7 @@ PAK(1)                           User Commands                          PAK(1)
        Report bugs to dev@embedthis.com.
 
 <B>COPYRIGHT</B>
-       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
+       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 <B>SEE ALSO</B>

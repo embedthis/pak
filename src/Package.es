@@ -28,7 +28,7 @@ enumerable class Package {
     var protocol: String?           //  Protocol to use to access repository. Null if local.
     var host: String?               //  Host storing the repository
     var owner: String?              //  Repository owner account "owner/name"
-    var override: Object?           //  Override configuration
+    var overrides: Array?           //  Overrides for the configuration
     var repository: Path?           //  Repository name
     var versions: Array?            //  List of available versions
     var installVersion: Version?    //  Installed pak version
@@ -104,12 +104,6 @@ enumerable class Package {
                     parseEndpoint(package.pak.origin)
                 } else if (package.repository) {
                     parseEndpoint(package.repository.url)
-                /* UNUSED
-                } else {
-                    print("WARNING UNRELIABLE", ref)
-                    [repository,owner,] = Path(ref).components.slice(-3)
-                    origin = owner + '/' + repository
-                    */
                 }
                 if (package.version) {
                     setCacheVersion(package.version)
