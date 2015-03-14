@@ -1,0 +1,15 @@
+{
+    "openssl/openssl": {
+        "versions": "^OpenSSL_(\\d+)_(\\d+)_(\\d+)$",
+        "overrides": {
+            ">=1.0.0": {
+                "name": "openssl",
+                "description": "OpenSSL Source Code",
+                "repository": {
+                    "type": "git",
+                    "url": "git://github.com/openssl/openssl.git"
+                }
+            }
+        }
+    }
+}
