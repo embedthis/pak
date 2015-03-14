@@ -1,5 +1,6 @@
 {
     "@npm/angular": {
+        "versions": "^(\\d+)\.(\\d+)\.(\\d+)$",
         "overrides": {
             "*": {
                 "files":  [

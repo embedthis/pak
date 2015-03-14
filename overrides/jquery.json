@@ -1,5 +1,6 @@
 {
     "@npm/jquery": {
+        "versions": "^(\\d+)\.(\\d+)\.(\\d+)$",
         "overrides": {
             ">=2.1.0": {
                 "files":  "dist/jquery.*",
@@ -41,6 +42,7 @@
         }
     },
     "components/jquery": {
+        "versions": "^(\\d+)\.(\\d+)\.(\\d+)$",
         "overrides": {
             ">=2.1.0": {
                 "files":  "jquery.*",

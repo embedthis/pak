@@ -1,5 +1,6 @@
 {
     "@npm/angular-animate": {
+        "versions": "^(\\d+)\.(\\d+)\.(\\d+)$",
         "overrides": {
             "^1.3": {
                 "files":  [
