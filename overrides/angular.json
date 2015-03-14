@@ -1,13 +1,15 @@
 {
     "@npm/angular": {
-        "*": {
-            "files":  [
-                "angular.*",
-                "angular-csp.css",
-                "!**.gzip"
-            ],
-            "pak": {
-                "export": 'angular*'
+        "overrides": {
+            "*": {
+                "files":  [
+                    "angular.*",
+                    "angular-csp.css",
+                    "!**.gzip"
+                ],
+                "pak": {
+                    "export": 'angular*'
+                }
             }
         }
     }
