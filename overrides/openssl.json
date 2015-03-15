@@ -9,6 +9,9 @@
                     "type": "git",
                     "url": "git://github.com/openssl/openssl.git",
                     "patch": "https://github.com/embedthis/test/archive/1.0.0.tar.gz"
+                },
+                "pak": {
+                    "install": false
                 }
             }
         }
