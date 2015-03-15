@@ -37,6 +37,7 @@ enumerable class Package {
     var remoteVersion: Version?     //  Remote (github) version
     var remoteTag: String?          //  Repository version tag
     var versionCriteria: String?    //  Version matching criteria
+    var versionFormat: String?      //  RegExp for matching git versions
 
     /*
         Create a pak description object and resolve as fully as possible.
@@ -145,6 +146,7 @@ enumerable class Package {
             endpoint = ref
             [,protocol,host,owner,repository] = matches
             origin = owner + '/' + repository
+            name ||= repository
         }
     }
 

@@ -54,7 +54,7 @@ class Pak
                 //  MOB - must be https
                 publish:   'http://localhost:4000/pak/publish',
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
-                overrides: 'https://raw.githubusercontent.com/embedthis/pak/dev/overrides'
+                overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
 
                 /*
                 lookup: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
@@ -575,7 +575,10 @@ class Pak
                 throw 'Cannot find package ' + pak.name + ' to install'
             }
             if (!Package.getSpecFile(pak.cachePath)) {
-                throw 'Cannot find package description for ' + pak + ' from ' + pak.cachePath
+                trace('Create', 'package.json for', pak.name)
+                pak.cache = { name: pak.name, version: pak.cacheVersion.toString(), dependencies: {} }
+                let path = pak.cachePath.join(PACKAGE)
+                path.write(serialize(cleanSpec(pak.cache), {pretty: true, indent: 4}) + '\n')
             }
             pak.resolve()
 
@@ -586,7 +589,7 @@ class Pak
                 if (pak.origin) {
                     /* Apply global override downloaded from catalog */
                     for each (over in pak.overrides) {
-                        over = over[pak.origin]
+                        over = over[pak.origin].overrides
                         for (let [criteria, properties] in over) {
                             if (Version(pak.cacheVersion).acceptable(criteria)) {
                                 vtrace('Apply', 'Pak overrides for ' + pak.name)
@@ -604,6 +607,9 @@ class Pak
                         Resolve after updating the package.json as it will be re-read
                      */
                     pak.resolve()
+                }
+                if (pak.cache.repository && pak.cache.repository.patch) {
+                    applyPatch(pak)
                 }
             }
             if (!pak.sourcePath || options.all) {
@@ -916,16 +922,16 @@ class Pak
         /*
             Override installed pak based on local overrides from the application's package.json in 'spec'
          */
-        let override = spec.pak.override
-        if (spec.pak.override) {
-            if (spec.pak.override['*']) {
+        let overrides = spec.pak.overrides
+        if (spec.pak.overrides) {
+            if (spec.pak.overrides['*']) {
                 vtrace('Apply', 'Local overrides for all paks')
-                blend(pak.cache, spec.pak.override['*'], {combine: true})
+                blend(pak.cache, spec.pak.overrides['*'], {combine: true})
                 pak.dirty = true
             }
-            if (spec.pak.override[pak.name]) {
+            if (spec.pak.overrides[pak.name]) {
                 vtrace('Apply', 'Local overrides for ' + pak.name)
-                blend(pak.cache, spec.pak.override[pak.name], {combine: true})
+                blend(pak.cache, spec.pak.overrides[pak.name], {combine: true})
                 pak.dirty = true
             }
             /* Saved below to paks/name/package.json */
@@ -979,7 +985,7 @@ class Pak
         /*
             Rewrite the installed pak's package.json if there are local overrides
          */
-        if (pak.dirty && override && (override['*'] || override[pak.name])) {
+        if (pak.dirty && overrides && (overrides['*'] || overrides[pak.name])) {
             let path = pak.installPath.join(PACKAGE)
             path.write(serialize(cleanSpec(pak.cache), {pretty: true, indent: 4}) + '\n')
             vtrace('Save', path + ' with local overrides')
@@ -1297,8 +1303,8 @@ class Pak
         delete spec.dependencies[pak.name]
         delete spec.optionalDependencies[pak.name]
 
-        if (spec.override) {
-            delete spec.override[pak.name]
+        if (spec.overrides) {
+            delete spec.overrides[pak.name]
         }
         let path = Package.getSpecFile('.')
         path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
@@ -1309,6 +1315,7 @@ class Pak
             removeDir(path, true)
         }
         qtrace('Uninstall', pak.name)
+        runScripts(pak, 'postuninstall')
     }
 
     function uninstall(patterns): Void {
@@ -1498,6 +1505,7 @@ class Pak
         let tarName = tempName.joinExt('tar', true)
         let tgzName = tarName.joinExt('gz', true)
         let dest = pak.cachePath
+
         try {
             http.followRedirects = true
             trace('Get', pak.download)
@@ -1524,7 +1532,7 @@ class Pak
             if (pak.catalog == 'npm') {
                 from = dest.parent.join('package')
             } else {
-                from = dest.parent.join(pak.repository + '-' + pak.cacheVersion)
+                from = dest.parent.join(pak.repository + '-' + pak.remoteTag)
             }
             from.rename(dest)
 
@@ -1533,12 +1541,14 @@ class Pak
             tgzName.remove()
             tarName.remove()
             tempName.remove()
-            dest.parent.join(pak.name + '-' + pak.cacheVersion).removeAll()
+            // dest.parent.join(pak.name + '-' + pak.cacheVersion).removeAll()
+            dest.parent.join(pak.repository + '-' + pak.remoteTag).removeAll()
         }
     }
 
     function fetchGlobalOverrides(pak, url = null) {
         pak.overrides ||= []
+        let over
         if (!url && pak.catalog != 'pak') {
             url = catalogs.pak.overrides + '/' + pak.name + '.json'
         }
@@ -1548,7 +1558,7 @@ class Pak
                 http.verify = false
                 http.get(url)
                 if (http.status == 200) {
-                    pak.overrides.push(deserialize(http.response))
+                    over = deserialize(http.response)
                 }
                 http.close()
             } catch (e) {
@@ -1557,7 +1567,51 @@ class Pak
         }
         let path = App.home.join('.pak/overrides', pak.name + '.json')
         if (path.exists) {
-            pak.overrides.push(path.readJSON())
+            over = path.readJSON()
+        }
+        if (over) {
+            if (over[pak.origin]) {
+                let site = over[pak.origin]
+                if (site.versions) {
+                    pak.versionFormat = site.versions
+                }
+                if (site.overrides) {
+                    pak.overrides.push(over)
+                }
+            }
+        }
+    }
+
+    function applyPatch(pak) {
+        let url = pak.cache.repository.patch
+        let temp = Path('').temp()
+        try {
+            let http = new Http
+            http.followRedirects = true
+            let current = App.dir
+            let dest = pak.cachePath
+
+            http.get(url)
+
+            let temp = Path('').temp()
+            let file = File(temp, 'w')
+            let buf = new ByteArray
+            while (http.read(buf) > 0) {
+                let wrote = file.write(buf)
+            }
+            file.close()
+            if (http.status != 200) {
+                throw 'Cannot download ' + pak.download + ' status ' + http.status
+            }
+            http.close()
+
+            Tar(temp, {uncompress: true, dest: dest, trim: 1}).extract()
+            trace('Extract', 'Extract to ' + dest)
+
+        } catch (e) {
+             print("CATCH", e)
+        } finally {
+            temp.remove()
         }
     }
 
@@ -1583,7 +1637,8 @@ class Pak
                     scripts = [scripts]
                 }
                 for each (script in scripts) {
-                    if (script.script) {
+                    if (script is String || script.script) {
+                        vtrace('Run', 'Event "' + event + '"')
                         eval(script.script)
 
                     } else if (script.path) {
@@ -1717,6 +1772,7 @@ class Pak
     private function selectVersion(pak: Package, criteria: String): Boolean {
         let versions = pak.versions || []
         pak.versions = []
+        let tags = {}
         if (pak.owner != '@npm') {
             vtrace('Run', [git, 'ls-remote', '--tags', pak.endpoint].join(' '))
             let data
@@ -1728,18 +1784,31 @@ class Pak
             }
             versions = data.trim().
                 replace(/[ \t]+/g, ' ').
-                replace(/^.+refs\/tags\//mg, '').
+                replace(/^.+refs\/tags\/v*/mg, '').
                 split(/[\r\n]+/).
-                filter(function(e) !e.match(/\{/))
+                filter(function(e) !e.match(/\{/))      
+                /* } */
+            if (pak.versionFormat) {
+                let re = RegExp(pak.versionFormat)
+                let matching = []
+                for each (v in versions) {
+                    if (v.match(re)) {
+                        let trimmed = v.match(re).slice(1).join('.')
+                        matching.push(trimmed)
+                        tags[trimmed] = v
+                    }
+                }
+                versions = matching
+            }
         }
-        versions = versions.sort(null, -1)
+        Version.sort(versions, -1)
         let found
         for each (v in versions) {
             if (v && Version(v).acceptable(criteria)) {
                 pak.versions.push(v)
                 if (!found) {
                     found = true
-                    pak.setRemoteVersion(v)
+                    pak.setRemoteVersion(tags[v] ? tags[v] : v)
                     pak.setCacheVersion(v)
                 }
             }
@@ -1754,9 +1823,9 @@ class Pak
                 return false
             }
         }
-        vtrace('Select', pak + ' ' + pak.remoteVersion)
+        vtrace('Select', pak + ' ' + pak.cacheVersion)
         let download = catalogs[pak.catalog || 'pak'].download
-        let download = download.expand({OWNER: pak.owner, NAME: pak.repository, TAG: pak.remoteTag})
+        download = download.expand({OWNER: pak.owner, NAME: pak.repository, TAG: pak.remoteTag})
         pak.setDownload(download)
         pak.resolve()
         return true
@@ -1768,6 +1837,7 @@ class Pak
     private function locatePak(pak: Package, exceptions = true): Boolean {
         let location
         if (pak.endpoint) {
+            fetchGlobalOverrides(pak)
             location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
         } else {
             for (let [cname, catalog] in catalogs) {
@@ -1828,6 +1898,11 @@ class Pak
                         selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
 
                     } else if (cname == 'npm') {
+                        for (let [key,value] in response.versions) {
+                            if (value.deprecated) {
+                                delete response.versions[key] 
+                            }
+                        }
                         pak.versions = Object.getOwnPropertyNames(response.versions).map(function(e) e.trimStart('v'))
                         if (options.debug) {
                             vtrace('Info', 'Available versions:')
