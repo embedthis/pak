@@ -7,7 +7,8 @@
                 "description": "OpenSSL Source Code",
                 "repository": {
                     "type": "git",
-                    "url": "git://github.com/openssl/openssl.git"
+                    "url": "git://github.com/openssl/openssl.git",
+                    "patch": "https://github.com/embedthis/test/archive/1.0.0.tar.gz"
                 }
             }
         }
