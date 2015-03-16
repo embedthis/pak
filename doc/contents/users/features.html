@@ -6,34 +6,29 @@
 
             <p>Pak has the following major features:</p>
             <ul>
-                <li>Install, list and uninstall packages into a local application</li>
-                <li>Automatically retrieves and installs dependant paks</li>
-                <li>Update and upgrade paks and their dependencies</li>
-                <li>Manage pak versions and dependencies</li>
-                <li>Support complex version expressions using <a href="http://semver.org">Semantic Versioning 2.0</a></li>
-                <li>Manages a local cache of retrieved packages</li>
-                <li>Provides a global catalog to search for public paks</li>
-                <li>Integrated with the <a href="http://bower.io/search">Bower</a> and 
-                    <a href="http://npmjs.org">NPM</a> catalogs</a> for thousands of
-                    of extra paks</li>
+                <li>Install, list and uninstall packages into a local application.</li>
+                <li>Manage package versions and dependencies.</li>
+                <li>Automatically retrieves and installs dependant packages.</li>
+                <li>Update and upgrade packages and their dependencies.</li>
+                <li>Publish and retract packages in the 
+                    <a href="https://embedthis.com/catalog/">Pak Catalog</a>.</li>
+                <li>Support version expressions using <a href="http://semver.org">Semantic Versioning 2.0</a>.</li>
+                <li>Packages are described via a Package.json file that is compatible with 
+                    <a href="http://nodejs.org">NodeJS</a>.</li>
                 <li>Supports <a href="http://github.org">GitHub</a> and <a href="npmjs.org">NPM</a> as the primary 
-                    pak storage repositories</li>
-                <li>Online <a href="https://embedthis.com/catalog/">Pak Catalog</a> to locate installable paks</li>
-                <li>Publish and retract paks in the <a href="https://embedthis.com/catalog/">Pak Catalog</a></li>
-                <li>Post install configuration of paks by selectively exporting pak contents into local "lib" directory</li>
-                <li>Customization by package.json overrides for customize installation of third party packages</li>
-                <li>Open Source</li>
+                    Pak storage repositories.</li>
+                <li>Manages a local cache of retrieved packages.</li>
             </ul>
 
-            <h2>Nice Parts</h2>
-            <p>While Pak has a strong feature set, there are some characteristics that make Pak particularly sweet.</p>
-            <ul>
-                <li>Local cache of paks supports fast offline use and local component sharing between apps</li>
-                <li>Can publish, modify and retract paks in the Pak catalog</li>
-                <li>Web portal to manage your published paks</li>
-                <li>Packages are described via a Package.json file that is compatible with 
-                    <a href="http://nodejs.org">Node</a></li>
-                <li>Fast operation</li>
+            <h2>What's Unique</h2>
+            <p>While Pak has a strong feature set, there are some characteristics that make Pak unique.</p>
+                <li>Pak is a meta-package manager in that is works with multiple package catalogs. </li>
+                <li>Integrated with the <a href="http://bower.io/search">Bower</a> and 
+                    <a href="http://npmjs.org">NPM</a> catalogs</a> for over 150,000 extra packages.</li>
+                <li>Post install configuration of packages by selectively exporting package contents into 
+                    local "lib" directory.</li>
+                <li>Can override and wrap existing 3rd party packages.</li>
+                <li>Very fast operation.</li>
             </ul>
 
             <h2>Commands</h2>
@@ -41,22 +36,22 @@
             <table class="ui table segment">
                 <thead><tr><th>Command</th><th>Description</th></tr></thead>
                 <tbody>
-                <tr><td>cache</td><td>Download and save paks to the the local pak cache</td></tr>
-                <tr><td>cached</td><td>List paks in the cache</td></tr>
+                <tr><td>cache</td><td>Download and save packages to the the local package cache</td></tr>
+                <tr><td>cached</td><td>List packages in the cache</td></tr>
                 <tr><td>config</td><td>Show the Pak configuration</td></tr>
-                <tr><td>depend</td><td>Display installed pak dependencies</td></tr>
-                <tr><td>edit</td><td>Edit a pak description file</td></tr>
+                <tr><td>depend</td><td>Display installed package dependencies</td></tr>
+                <tr><td>edit</td><td>Edit a package description file</td></tr>
                 <tr><td>help</td><td>Display this usage help</td></tr>
-                <tr><td>info</td><td>Display README for a pak</td></tr>
+                <tr><td>info</td><td>Display README for a package</td></tr>
                 <tr><td>init</td><td>Create a new package.json</td></tr>
-                <tr><td>install</td><td>Install a pak on the local system</td></tr>
-                <tr><td>list</td><td>list installed paks</td></tr>
-                <tr><td>prune</td><td>Prune named paks</td></tr>
-                <tr><td>publish</td><td>publish a pak in a catalog</td></tr>
-                <tr><td>retract</td><td>Unpublish a pak</td></tr>
-                <tr><td>search</td><td>Search for paks in the catalog</td></tr>
-                <tr><td>uninstall</td><td>Uninstall a pak on the local system</td></tr>
-                <tr><td>update</td><td>Update the cache with latest version of paks</td></tr>
-                <tr><td>upgrade</td><td>Upgrade installed paks</td></tr>
+                <tr><td>install</td><td>Install a package on the local system</td></tr>
+                <tr><td>list</td><td>list installed packages</td></tr>
+                <tr><td>prune</td><td>Prune named packages</td></tr>
+                <tr><td>publish</td><td>publish a package in a catalog</td></tr>
+                <tr><td>retract</td><td>Unpublish a package</td></tr>
+                <tr><td>search</td><td>Search for packages in the catalog</td></tr>
+                <tr><td>uninstall</td><td>Uninstall a package on the local system</td></tr>
+                <tr><td>update</td><td>Update the cache with latest version of packages</td></tr>
+                <tr><td>upgrade</td><td>Upgrade installed packages</td></tr>
                 </tbody>
             </table>
