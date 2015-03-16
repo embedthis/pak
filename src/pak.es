@@ -1157,6 +1157,7 @@ class Pak
         /* Remove parent only if empty */
         removeDir(pak.cachePath.dirname, false)
         qtrace('Info', pak + ' successfully pruned')
+        runScripts(pak, 'postprune')
     }
 
     function search(args: Array) {

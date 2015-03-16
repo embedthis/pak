@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Quick Tour</title>
+    <title>Package Events</title>
     <!-- Copyright Embedthis Software. All Rights Reserved. -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8" />
@@ -119,13 +119,13 @@
             <a class="section" href="../">Home</a>
             
             <div class="divider">/</div>
-            <a class="section" href="tour.html">
-                User's Guide
+            <a class="section" href="index.html">
+                Developer's Guide
             </a>
             
             
             <div class="divider">/</div>
-            <a class="active section" href="tour.html">Quick Tour</a>
+            <a class="active section" href="events.html">Package Events</a>
             
         </div>
         
@@ -136,60 +136,71 @@
     </div>
     <div class="content">
 
-            <h1>Quick Tour of Pak</h1>
+            <h1>Package Events</h1>
+            <p>Sometimes a package needs to perform custom actions when it is downloaded, installed, 
+            or uninstalled. To support such custom actions, Pak triggers events that can be hooked 
+            at various points of the package management lifecycle.</p>
 
-            <h2>Installing Paks</h2>
-            <p>To install named packages:</p>
-            <code>pak install NAME...</code>
-            <p>Where NAME can be the name of a package published in the Pak catalog, NPM or bower catalog, 
-            a GitHub repository endpoint, a GitHub account/repository or a path to a local 
-            package directory. Here are some of the forms you can use to install packages.</p>
-<code>pak install jquery
-pak install jquery
-pak install npm:jquery
-pak install bower:jquery
-pak install https://github.com/embedthis/jquery.git
-pak install git@github.com:embedthis/jquery
-pak install embedthis/jquery</code>
+            <table class="ui celled table">
+                <thead>
+                    <tr><th>Event</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>preinstall</td><td>Before installing and after caching package</td></tr>
+                    <tr><td>preupdate</td><td>Before updating cached packages</td></tr>
+                    <tr><td>preupgrade</td><td>Before upgrading installed packages</td></tr>
+                    <tr><td>install</td><td>After installing files localled</td></tr>
+                    <tr><td>postcache</td><td>After saving package to the cache</td></tr>
+                    <tr><td>postprune</td><td>After removing a package from the cache</td></tr>
+                    <tr><td>postuninstall</td><td>After uninstalling package locally</td></tr>
+                </tbody>
+            </table>
 
-            <p>When a package is installed, all required dependent packages will be automatically installed.</p>
+            <h2>Hooking Events</h2>
+            <p>Events may be hooked by defining event scripts via the <em>scripts</em> package.json property.
+            Event handlers be defined inside the scripts collection. For example:</p>
+            <code class="inverted">"scripts": {
+    "postcache": {
+        "script": "print('Any script in here')"
+    }
+}
+</code>
+            <h3>Literal Scripts</h3>
+            <p>Each event may define a literal script or define a script filename. If the event value is a
+                string, it will be interpreted as a literal script to execute. For example:</p>
+            <code class="inverted">"scripts": {
+    "postcache": "run('npm install -g babel')"
+}
+</code>
+            <p>This is quivalent to the following:</p>
+            <code class="inverted">"scripts": {
+    "postcache": {
+        "script": "run('npm install -g babel')"
+    }
+}
+</code>
+            <h3>Event Script Files</h3>
+            <p>You can externalize the event script in a file by using the <em>path</em> property inside the
+                event definition.</p>
+            <code class="inverted">"scripts": {
+    "postcache": {
+        "path": "run('npm install -g babel')"
+    }
+}
+</code>
 
-            <h3>Installing Specific Versions</h3>
-            <p>A PAK name may have a <em>#version</em> suffix that nominates a specific version to install. 
-            <code>pak install 'jquery#2.1.3'</code>
+            <h3>MakeMe Scripts</h3>
+            <p>If the script file has a <em>.me</em> extension, the script will be interpreted as a MakeMe
+            build file and will be invoked with:</p>
+            <code>me -q --file PATH</code>
 
-            <p>To install all the packages required by an application as specified in its package.json:</p>
-            <code>pak install</code>
+            <h2>Automatic MakeMe Events</h2>
+            <p>If the package does not define event handlers, but provides a <em>start.me</em> MakeMe 
+            project file, then it will be invoked with the name of the event as a target. For example:</p>
+            <code class="inverted">me -q --file PATH EVENT</code>
+            <p>This can be a convenient way of handling Pak events via MakeMe project files.</p> 
 
-            <h2>Removing Paks</h2>
-            <p>To uninstall a package from your local directory. The package will remain in the local Pak cache under
-                <em>~/.paks</em>.</p>
-            <code>pak uninstall PAK...</code>
 
-            <h2>List Paks</h2>
-            <p>To list installed packages in your local directory:</p>
-            <code>pak list</code>
-            <p>The list will display the package name, installed version and from where the package was downloaded. 
-            Paks may designated as optional if the package.json describes them in the 'optionalDependencies' list. </p>
-
-            <h2>Pak Dependencies</h2>
-            <p>To display dependencies for installed packages in your local directory</p>
-            <code>pak depend</code>
-            <p>This will display the installed packages and their dependencies with versions.</p>
-    
-            <h2>Cached Paks</h2>
-            <p>When Pak installs a package, it keeps a copy of the package in the Pak cache which is typically at 
-                <em>~/.paks</em>.
-            The cache stores all versions downloaded of a Pak.</p>
-            <code>pak cached</code>
-
-            <h2>Pre-Caching</h2>
-            <p>To download and cache a package but not install in the local directory</p>
-            <code>pak cache Name</code>
-
-            <h2>Pruning Paks</h2>
-            <p>To prune old versions from the cache</p>
-            <code>pak prune Name</code>
 
     </div>
     <div class="terms ui basic center aligned segment">
@@ -215,7 +226,7 @@ pak install embedthis/jquery</code>
             sessionStorage.setItem('scroll-top', $('.sidebar').scrollTop());
         });
         $(function() {
-            var url = '../users/tour.html';
+            var url = '../developers/events.html';
             var active = $('.sidebar a[href="' + url +'"]');
             active.addClass('active');
             $('.sidebar').scrollTop(sessionStorage.getItem('scroll-top'));

@@ -1,0 +1,71 @@
+{
+    title: "Package Events",
+    crumbs: [
+        { "Developer's Guide": "index.html" },
+    ],
+}
+            <h1>Package Events</h1>
+            <p>Sometimes a package needs to perform custom actions when it is downloaded, installed, 
+            or uninstalled. To support such custom actions, Pak triggers events that can be hooked 
+            at various points of the package management lifecycle.</p>
+
+            <table class="ui celled table">
+                <thead>
+                    <tr><th>Event</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>preinstall</td><td>Before installing and after caching package</td></tr>
+                    <tr><td>preupdate</td><td>Before updating cached packages</td></tr>
+                    <tr><td>preupgrade</td><td>Before upgrading installed packages</td></tr>
+                    <tr><td>install</td><td>After installing files localled</td></tr>
+                    <tr><td>postcache</td><td>After saving package to the cache</td></tr>
+                    <tr><td>postprune</td><td>After removing a package from the cache</td></tr>
+                    <tr><td>postuninstall</td><td>After uninstalling package locally</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Hooking Events</h2>
+            <p>Events may be hooked by defining event scripts via the <em>scripts</em> package.json property.
+            Event handlers be defined inside the scripts collection. For example:</p>
+            <code class="inverted">"scripts": {
+    "postcache": {
+        "script": "print('Any script in here')"
+    }
+}
+</code>
+            <h3>Literal Scripts</h3>
+            <p>Each event may define a literal script or define a script filename. If the event value is a
+                string, it will be interpreted as a literal script to execute. For example:</p>
+            <code class="inverted">"scripts": {
+    "postcache": "run('npm install -g babel')"
+}
+</code>
+            <p>This is quivalent to the following:</p>
+            <code class="inverted">"scripts": {
+    "postcache": {
+        "script": "run('npm install -g babel')"
+    }
+}
+</code>
+            <h3>Event Script Files</h3>
+            <p>You can externalize the event script in a file by using the <em>path</em> property inside the
+                event definition.</p>
+            <code class="inverted">"scripts": {
+    "postcache": {
+        "path": "run('npm install -g babel')"
+    }
+}
+</code>
+
+            <h3>MakeMe Scripts</h3>
+            <p>If the script file has a <em>.me</em> extension, the script will be interpreted as a MakeMe
+            build file and will be invoked with:</p>
+            <code>me -q --file PATH</code>
+
+            <h2>Automatic MakeMe Events</h2>
+            <p>If the package does not define event handlers, but provides a <em>start.me</em> MakeMe 
+            project file, then it will be invoked with the name of the event as a target. For example:</p>
+            <code class="inverted">me -q --file PATH EVENT</code>
+            <p>This can be a convenient way of handling Pak events via MakeMe project files.</p> 
+
+
