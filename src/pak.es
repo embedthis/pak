@@ -73,8 +73,7 @@ class Pak
             }
         },
         directories: {
-            /* exports */
-            lib: (!Path('lib').exists && Path('src').exists) ? 'src' : 'lib'
+            export: (!Path('lib').exists && Path('src').exists) ? 'src' : 'lib'
             paks: 'paks',
             pakcache: '~/.paks',
             top: '.',
@@ -548,7 +547,7 @@ class Pak
             }
             return
         }
-        trace('Cache', pak.origin || pak.name, pak.cacheVersion)
+        trace('Cache', pak.name, pak.cacheVersion)
         let dest = pak.cachePath
         if (!dest) {
             throw new Error('Empty cache path for ' + pak.name)
@@ -585,7 +584,12 @@ class Pak
             if (!pak.cache) {
                 throw new Error('Missing cache for ', pak.name)
             }
-            if (!pak.sourcePath) {
+            if (pak.sourcePath) {
+                /* Update origin */
+                pak.source.pak.origin = pak.origin
+                let path = pak.cachePath.join(PACKAGE)
+                path.write(serialize(cleanSpec(pak.source), {pretty: true, indent: 4}) + '\n')
+            } else {
                 if (pak.origin) {
                     /* Apply global override downloaded from catalog */
                     for each (over in pak.overrides) {
@@ -899,15 +903,14 @@ class Pak
         }
         blendPak(pak)
 
+/* UNUSED
         if (pak.cache.pak.install === false) {
-            /*
-                Pak prefers to execute from cache. Don't install locally unless "force" and not "upgrade"
-             */
             if (!state.force || state.upgrade) {
                 trace('Cached', pak + ' ' + pak.cacheVersion)
             }
             return
         }
+ */
         qtrace(state.reinstall ? 'Reinstall': 'Install', pak.name, pak.cacheVersion)
         let dest = pak.installPath
         vtrace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
@@ -1059,7 +1062,7 @@ class Pak
             let opt = optional(pak.name) ? ' optional' : ''
             let cached = !pak.installVersion && pak.cacheVersion ? ' cached' : ''
             let installed = pak.installVersion ? ' installed' : ''
-            let uninstalled = pak.installVersion || pak.cache.pak.install === false ? '' : ' uninstalled'
+            let uninstalled = (pak.installVersion /* UNUSED || pak.cache.pak.install === false */) ? '' : ' uninstalled'
             let from = ''
             if (pak.install && pak.install.pak.origin) {
                 from = ' from ' + pak.install.pak.origin
@@ -1069,12 +1072,12 @@ class Pak
             let frozen = (pak.install && pak.install.pak.frozen) ? ' frozen' : ''
             let version = pak.installVersion || pak.cacheVersion
             if (!spec.dependencies[pak.name] && !optional(pak.name) && options.versions) {
-                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, cached, uninstalled, installed, from,
+                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, from,
                     opt, frozen)
             } else if (options.details && pak.install) {
                 print(pak.name + ' ' + serialize(pak.install, {pretty: true, indent: 4}))
             } else if (options.versions) {
-                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, cached, uninstalled, installed, from,
+                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, from,
                     opt, frozen)
             } else {
                 print('')
@@ -1310,7 +1313,7 @@ class Pak
         path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
         removeDir(pak.installPath, true)
 
-        path = directories.lib.join(pak.name)
+        path = directories.export.join(pak.name)
         if (path.exists) {
             removeDir(path, true)
         }
@@ -1444,7 +1447,7 @@ class Pak
                         pat.overwrite = true
                     }
                 }
-                let dir = Path(directories.export || directories.lib)
+                let dir = Path(directories.export || directories.export)
                 let to = dir.join(pat.to.toString().expand(dirTokens, {fill: '.'}))
                 if (!to.childOf('.')) {
                     throw 'Copy destination "' + to + '" for pak "' + pak.name + '" is outside current directory'
@@ -1549,7 +1552,7 @@ class Pak
     function fetchGlobalOverrides(pak, url = null) {
         pak.overrides ||= []
         let over
-        if (!url && pak.catalog != 'pak') {
+        if (!url) {
             url = catalogs.pak.overrides + '/' + pak.name + '.json'
         }
         if (url) {
