@@ -51,7 +51,6 @@ class Pak
                 //  MOB - add "catalog"
                 lookup:    'http://localhost:4000/search/${NAME}',
                 query:     'http://localhost:4000/search/${NAME}',
-                //  MOB - must be https
                 publish:   'http://localhost:4000/pak/publish',
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
                 overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
@@ -1503,18 +1502,13 @@ class Pak
     }
 
     private function fetchPak(pak: Package) {
-        let http = new Http
-        let current = App.dir
-        let tempName = Path('').temp()
-        let tarName = tempName.joinExt('tar', true)
-        let tgzName = tarName.joinExt('gz', true)
-        let dest = pak.cachePath
-
+        let temp = Path('').temp()
         try {
+            let http = new Http
             http.followRedirects = true
             trace('Get', pak.download)
             http.get(pak.download)
-            let file = File(tgzName, 'w')
+            let file = File(temp, 'w')
             let buf = new ByteArray
             while (http.read(buf) > 0) {
                 let wrote = file.write(buf)
@@ -1524,29 +1518,13 @@ class Pak
                 throw 'Cannot download ' + pak.download + ' status ' + http.status
             }
             http.close()
-            Zlib.uncompress(tgzName, tarName)
-            let tar = new Tar(tarName.absolute)
-            chdir(dest.parent)
-            trace('Extract', 'Extract to ' + dest)
-            //  Better to strip first part of file name and extract into the right place first time
-            //  Tar options strip: 1
-            tar.extract()
-            removeDir(dest, true)
-            let from
-            if (pak.catalog == 'npm') {
-                from = dest.parent.join('package')
-            } else {
-                from = dest.parent.join(pak.repository + '-' + pak.remoteTag)
-            }
-            from.rename(dest)
-
+            print("TEMP", temp)
+            trace('Extract', 'Extract to ' + pak.cachePath)
+            Tar(temp, {uncompress: true, dest: pak.cachePath, trim: 1}).extract()
+        } catch {
+            pak.cachePath.removeAll()
         } finally {
-            chdir(current)
-            tgzName.remove()
-            tarName.remove()
-            tempName.remove()
-            // dest.parent.join(pak.name + '-' + pak.cacheVersion).removeAll()
-            dest.parent.join(pak.repository + '-' + pak.remoteTag).removeAll()
+            temp.remove()
         }
     }
 
@@ -1609,8 +1587,8 @@ class Pak
             }
             http.close()
 
-            Tar(temp, {uncompress: true, dest: dest, trim: 1}).extract()
             trace('Extract', 'Extract to ' + dest)
+            Tar(temp, {uncompress: true, dest: dest, trim: 1}).extract()
 
         } catch (e) {
              print("CATCH", e)
@@ -1788,7 +1766,7 @@ class Pak
             }
             versions = data.trim().
                 replace(/[ \t]+/g, ' ').
-                replace(/^.+refs\/tags\/v*/mg, '').
+                replace(/^.+refs\/tags\/*/mg, '').
                 split(/[\r\n]+/).
                 filter(function(e) !e.match(/\{/))      
                 /* } */
