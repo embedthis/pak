@@ -1518,7 +1518,6 @@ class Pak
                 throw 'Cannot download ' + pak.download + ' status ' + http.status
             }
             http.close()
-            print("TEMP", temp)
             trace('Extract', 'Extract to ' + pak.cachePath)
             Tar(temp, {uncompress: true, dest: pak.cachePath, trim: 1}).extract()
         } catch {
