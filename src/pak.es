@@ -49,13 +49,13 @@ class Pak
         catalogs: {
             pak: {
                 //  MOB - add "catalog"
-                lookup:    'http://localhost:4000/search/${NAME}',
-                query:     'http://localhost:4000/search/${NAME}',
-                publish:   'http://localhost:4000/pak/publish',
+                lookup:    'https://localhost:4443/search/${NAME}',
+                query:     'https://localhost:4443/search/${NAME}',
+                publish:   'https://localhost:4443/pak/publish',
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
                 overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
 
-                /*
+                /* OLD
                 lookup: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
                 query: 'http://embedthis.com/catalog/pak/search',
                 download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
@@ -902,14 +902,6 @@ class Pak
         }
         blendPak(pak)
 
-/* UNUSED
-        if (pak.cache.pak.install === false) {
-            if (!state.force || state.upgrade) {
-                trace('Cached', pak + ' ' + pak.cacheVersion)
-            }
-            return
-        }
- */
         qtrace(state.reinstall ? 'Reinstall': 'Install', pak.name, pak.cacheVersion)
         let dest = pak.installPath
         vtrace('Info', 'Installing "' + pak.name + '" from "' + pak.cachePath)
@@ -1061,7 +1053,7 @@ class Pak
             let opt = optional(pak.name) ? ' optional' : ''
             let cached = !pak.installVersion && pak.cacheVersion ? ' cached' : ''
             let installed = pak.installVersion ? ' installed' : ''
-            let uninstalled = (pak.installVersion /* UNUSED || pak.cache.pak.install === false */) ? '' : ' uninstalled'
+            let uninstalled = pak.installVersion ? '' : ' uninstalled'
             let from = ''
             if (pak.install && pak.install.pak.origin) {
                 from = ' from ' + pak.install.pak.origin
@@ -1247,7 +1239,6 @@ class Pak
         let uri = catalogs.pak.publish
         try {
             qtrace('Publish', name + ' at ' + uri)
-            // MOB FUTURE http.verifyIssuer = false
             http.post(uri, serialize(data))
             let response = deserialize(http.response)
             if (response.error) {
@@ -1527,28 +1518,36 @@ class Pak
         }
     }
 
+    /*
+        Fetch overrides for a pak ans save in pak.overrides[].
+        If a local ~/.pak/overrides exists, it takes precedence.
+        Otherwise, fetch overrides from the supplied 'url' or 
+        from the pak-overrides repo.
+     */
     function fetchGlobalOverrides(pak, url = null) {
         pak.overrides ||= []
         let over
-        if (!url) {
-            url = catalogs.pak.overrides + '/' + pak.name + '.json'
-        }
-        if (url) {
-            try {
-                let http = new Http
-                http.verify = false
-                http.get(url)
-                if (http.status == 200) {
-                    over = deserialize(http.response)
-                }
-                http.close()
-            } catch (e) {
-                 print("CATCH", e)
-            }
-        }
         let path = App.home.join('.pak/overrides', pak.name + '.json')
         if (path.exists) {
             over = path.readJSON()
+        } else {
+            if (!url) {
+                url = catalogs.pak.overrides + '/' + pak.name + '.json'
+            }
+            if (url) {
+                try {
+                    let http = new Http
+                    http.verify = false
+                    http.get(url)
+                    if (http.status == 200) {
+                        over = deserialize(http.response)
+                        vtrace('Override', 'Got override', url)
+                    }
+                    http.close()
+                } catch (e) {
+                     print("CATCH", e)
+                }
+            }
         }
         if (over) {
             if (over[pak.origin]) {
@@ -1573,7 +1572,6 @@ class Pak
             let dest = pak.cachePath
 
             http.get(url)
-
             let temp = Path('').temp()
             let file = File(temp, 'w')
             let buf = new ByteArray
@@ -1831,6 +1829,7 @@ class Pak
                 try {
                     cmd = cmd.expand({NAME: pak.name})
                     vtrace('Get', cmd)
+http.verify = false
                     http.get(cmd)
                     if (http.status != 200) {
                         vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + 
@@ -1838,6 +1837,7 @@ class Pak
                         continue
                     }
                 } catch (e) {
+                    dump(e)
                     qtrace('Warn', 'Cannot access catalog at: ' + cmd)
                     if (App.config.requirePrimaryCatalog && !state.force) {
                         throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
