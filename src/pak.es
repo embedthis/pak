@@ -48,10 +48,9 @@ class Pak
     private var defaultConfig = {
         catalogs: {
             pak: {
-                //  MOB - add "catalog"
-                lookup:    'https://localhost:4443/search/${NAME}',
-                query:     'https://localhost:4443/search/${NAME}',
-                publish:   'https://localhost:4443/pak/publish',
+                lookup:    'https://embedthis.com/catalog/search/${NAME}',
+                query:     'https://embedthis.com/catalog/search/${NAME}',
+                publish:   'https://embedthis.com/catalog/pak/publish',
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
                 overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
 
