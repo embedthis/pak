@@ -776,7 +776,7 @@ class Pak
             Manage dependencies
          */
         if (topDeps[pak.name] || topDeps[pak.args] || topDeps[pak.origin]) {
-            if (optional(pak.name)) {
+            if (optional(spec, pak.name)) {
                 spec.optionalDependencies ||= {}
                 spec.optionalDependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
                 Object.sortProperties(spec.optionalDependencies)
@@ -1049,7 +1049,7 @@ class Pak
         Object.sortProperties(sets)
         for each (pak in sets) {
             spec.optionalDependencies ||= {}
-            let opt = optional(pak.name) ? ' optional' : ''
+            let opt = optional(spec, pak.name) ? ' optional' : ''
             let cached = !pak.installVersion && pak.cacheVersion ? ' cached' : ''
             let installed = pak.installVersion ? ' installed' : ''
             let uninstalled = pak.installVersion ? '' : ' uninstalled'
@@ -1061,7 +1061,7 @@ class Pak
             }
             let frozen = (pak.install && pak.install.pak.frozen) ? ' frozen' : ''
             let version = pak.installVersion || pak.cacheVersion
-            if (!spec.dependencies[pak.name] && !optional(pak.name) && options.versions) {
+            if (!spec.dependencies[pak.name] && !optional(spec, pak.name) && options.versions) {
                 printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, from,
                     opt, frozen)
             } else if (options.details && pak.install) {
@@ -1364,7 +1364,7 @@ class Pak
             topDeps = deps
             for (let [name,criteria] in deps) {
                 let pak = Package(name, criteria)
-                if (pak.installed || !optional(pak.name)) {
+                if (pak.installed || !optional(spec, pak.name)) {
                     upgradePak(pak)
                 }
             }
@@ -1374,7 +1374,7 @@ class Pak
                 topDeps[name] = true
             }
             for each (name in names) {
-                let criteria = spec.dependencies[name] || optional(name)
+                let criteria = spec.dependencies[name] || optional(spec, name)
                 upgradePak(Package(name, criteria))
             }
         }
