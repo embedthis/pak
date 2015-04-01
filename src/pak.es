@@ -47,6 +47,15 @@ class Pak
     /* This layers over App.config */
     private var defaultConfig = {
         catalogs: {
+        /* KEEP
+            pak: {
+                lookup:    'https://localhost:4443/search/${NAME}',
+                query:     'https://localhost:4443/search/${NAME}',
+                publish:   'https://localhost:4443/pak/publish',
+                download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
+                overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
+            },
+        */
             pak: {
                 lookup:    'https://embedthis.com/catalog/search/${NAME}',
                 query:     'https://embedthis.com/catalog/search/${NAME}',
@@ -54,7 +63,7 @@ class Pak
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
                 overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
 
-                /* OLD
+                /* OLD && KEEP
                 lookup: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
                 query: 'http://embedthis.com/catalog/pak/search',
                 download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
@@ -1683,8 +1692,9 @@ class Pak
 
     private function getDeps(pak: Package, deps = {}, level: Number = 0) {
         if (options.all || level == 0) {
-            if (pak.cache) {
-                for (let [name,criteria] in pak.cache.dependencies) {
+            let obj = pak.install ? pak.install : pak.cache
+            if (obj) {
+                for (let [name,criteria] in obj.dependencies) {
                     let dep = Package(name, criteria)
                     getDeps(dep, deps, level + 1)
                 }
