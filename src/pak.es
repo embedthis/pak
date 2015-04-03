@@ -1467,17 +1467,18 @@ class Pak
                 }
             },
             postPerform: function(from, to, options) {
-                if (export[from]) {
-                    let base: Path = export[from].to
+                let exp = export[from]
+                if (exp) {
+                    let base: Path = exp.to
                     let path = from.relativeTo(fromDir)
-                    if (export[from].trim) {
-                        path = path.components.slice(export[from].trim).join(path.separator)
+                    if (exp.trim) {
+                        path = path.components.slice(exp.trim).join(path.separator)
                     }
                     let to = base.join(path).relative
                     if (from.isDir) {
                         global.pak.makeDir(to)
                     } else {
-                        if (!to.exists || export[from].overwrite) {
+                        if (!to.exists || exp.overwrite) {
                             global.pak.makeDir(to.dirname)
                             if (to.exists) {
                                 vtrace('Overwrite', to)
@@ -1626,7 +1627,7 @@ class Pak
                 for each (script in scripts) {
                     if (script is String || script.script) {
                         vtrace('Run', 'Event "' + event + '"')
-                        eval(script.script)
+                        eval('require ejs.unix\n' + script.script)
 
                     } else if (script.path) {
                         let path = pak.cachePath.join(script.path)
@@ -1838,7 +1839,8 @@ class Pak
                 try {
                     cmd = cmd.expand({NAME: pak.name})
                     vtrace('Get', cmd)
-http.verify = false
+                    //  MOB
+                    http.verify = false
                     http.get(cmd)
                     if (http.status != 200) {
                         vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + 
