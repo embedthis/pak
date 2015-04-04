@@ -19,9 +19,9 @@
             <h2>Publishing to the Pak Catalog</h2>
             <p>To publish a new package in the Pak catalog, <a href="creating.html">create your package.json</a> 
             and then run <em>pak publish</em> in your application directory.</p>
-            <code class="inverted">$ pak publish
+            <pre class="code">$ pak publish
 
-$ pak publish NAME ENDPOINT EMAIL [OVERRIDE]</code>
+$ pak publish NAME ENDPOINT EMAIL [OVERRIDE]</pre>
 
             <p>In the first example, the package name, repository endpoint and author's email address will be extracted 
             from the <em>package.json</em>. The third example supplies the name, endpoint and email. You will be prompted
@@ -39,24 +39,28 @@ $ pak publish NAME ENDPOINT EMAIL [OVERRIDE]</code>
                 This email address will be used for password reset requests. </p>
 
             <p>The package endpoint is a valid GitHub account or endpoint that hosts your package contents. For example:</p>
-<code>pak publish jquery/jquery ...
+<pre class="code">pak publish jquery/jquery ...
 pak publish https://github.com/jquery/jquery.git ...
 pak publish git@github.com:jquery/jquery ...
-pak publish git@github.com:jquery/jquery ...</code>
+pak publish git@github.com:jquery/jquery ...</pre>
 
             <p>To publish a package that is hosted on <a href="http://npmjs.org">NPM</a>, use an <em>@npm:</em> package
             alias to query the NPM catalog. For example:</p>
-<code>pak publish @npm:jquery name@example.com</code>
+
+            <pre class="code">pak publish @npm:jquery name@example.com</pre>
 
             <h2>Package Aliases</h2>
             <p>You can publish an alias entry in the catalog that redirects Pak to use another package name. 
             To create an alias, simply use an <em>@</em> prefix on the endpoint. For example:</p>
-            <code class="inverted">pak publish my-angular @angular ...</code>
+
+            <pre class="code">pak publish my-angular @angular ...</pre>
 
             <p>When Pak installs <em>my-angular</em> it will redirect and search for the <em>angular</em> package 
             and install it instead. You can use a catalog prefix <em>pak:</em>, <em>bower:</em> and <em>npm:</em> to direct 
             Pak to search in the designated catalog. For example:</p>
-            <code class="inverted">pak publish my-angular @bower:angular ...</code>
+
+            <pre class="code">pak publish my-angular @bower:angular ...</pre>
+
             <p>This will search for <em>angular</em> in the Bower catalog.</p>
 
             <a name="override"></a>
@@ -68,8 +72,8 @@ pak publish git@github.com:jquery/jquery ...</code>
             If the package does not have its own package.json, then this file will be used to create a package.json. 
             For example:</p>
 
-            <code>pak publish my-openssl openssl/openssl me@example.com &rarr;
-    http://example.com/openssl.json</code>
+            <pre class="code">pak publish my-openssl openssl/openssl me@example.com &rarr;
+    http://example.com/openssl.json</pre>
 
             <p>You can directly access override files in GitHub via the <em>raw.githubusercontent.com</em> site.
             For example: <em>raw.githubusercontent.com/embedthis/pak/master/overrides/openssl.json</em>.</p>
@@ -89,9 +93,9 @@ pak publish git@github.com:jquery/jquery ...</code>
             <p>For example, here is a portion of the jQuery override file in the 
             Pak catalog. It has different configuration for version 1.x and 2.x and provides unique configuration
             when hosted from NPM:</p>
-            <code>{
+            <pre class="code">{
     "jquery/jquery": {
-        ">=2.1.0": {
+        "&gt;=2.1.0": {
             "pak": {
                 "export": {
                     "from":  "dist/jquery.*",
@@ -99,7 +103,7 @@ pak publish git@github.com:jquery/jquery ...</code>
                 }
             }
         },
-        ">=1.11.0": {
+        "&gt;=1.11.0": {
             "pak": {
                 "export": {
                     "from":  "dist/jquery.js",
@@ -112,17 +116,17 @@ pak publish git@github.com:jquery/jquery ...</code>
         ...
     }
 }
-</code>
+</pre>
             <p>An override file is a hash of endpoints that provide the package. Inside each endpoint property hash is
             a set of configurations for different version expressions.
             See <a href="../users/versions.html#expressions">Version Expressions</a> for details on the version 
             expression syntax.</p>
             <p>Here are some example override files from the Pak Catalog:</p>
             <ul>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/angular.json">Angular</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/angular-route.json">Angular Route</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/bootstrap.json">Bootstrap</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/font-awesome.json">Font Awesome</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/jquery.json">JQuery</a></li>
-                <li><a href="https://github.com/embedthis/pak/tree/dev/override/semantic-ui-css.json">Semantic-UI</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/dev/angular.json">Angular</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/dev/angular-route.json">Angular Route</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/dev/bootstrap.json">Bootstrap</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/dev/font-awesome.json">Font Awesome</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/dev/jquery.json">JQuery</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/dev/semantic-ui-css.json">Semantic-UI</a></li>
             </ul>

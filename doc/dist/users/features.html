@@ -144,16 +144,17 @@
                 <li>Support version expressions using <a href="http://semver.org">Semantic Versioning 2.0</a>.</li>
                 <li>Packages are described via a Package.json file that is compatible with 
                     <a href="http://nodejs.org">NodeJS</a>.</li>
-                <li>Supports <a href="http://github.org">GitHub</a> and <a href="npmjs.org">NPM</a> as the primary 
+                <li>Supports <a href="http://github.org">GitHub</a> and <a href="http://npmjs.org/">NPM</a> as the primary 
                     Pak storage repositories.</li>
                 <li>Manages a local cache of retrieved packages.</li>
             </ul>
 
             <h2>What's Unique</h2>
             <p>While Pak has a strong feature set, there are some characteristics that make Pak unique.</p>
-                <li>Pak is a meta-package manager in that is works with multiple package catalogs. </li>
+            <ul>
+                <li>Pak is a meta-package manager in that is works with multiple package catalogs.</li>
                 <li>Integrated with the <a href="http://bower.io/search">Bower</a> and 
-                    <a href="http://npmjs.org">NPM</a> catalogs</a> for over 150,000 extra packages.</li>
+                    <a href="http://npmjs.org">NPM</a> catalogs for over 150,000 extra packages.</li>
                 <li>Post install configuration of packages by selectively exporting package contents into 
                     local "lib" directory.</li>
                 <li>Can override and wrap existing 3rd party packages.</li>
@@ -162,7 +163,7 @@
 
             <h2>Commands</h2>
             <p>The Pak command has the following commands:</p>
-            <table class="ui table segment">
+            <table class="ui table segment" title="commands">
                 <thead><tr><th>Command</th><th>Description</th></tr></thead>
                 <tbody>
                 <tr><td>cache</td><td>Download and save packages to the the local package cache</td></tr>
