@@ -10,7 +10,7 @@
                 Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
                 major.minor.patch[-pre-release] which prescribes the precise meaning of each component of the 
                 version string. For example:</p>
-            <code>$ <b>pak search bootstrap</b>
+            <pre class="code">$ <b>pak search bootstrap</b>
 {
     "name": "kickstart",
     "version": "0.8.1",
@@ -19,10 +19,9 @@
         "esp-mgr-skeleton": "^5.3"
     }
 }
-</code>
+</pre>
 
-            <p></p>
-            <table class="ui table">
+            <table class="ui table" title="properties">
                 <thead>
                     <tr><th>Field</th><th>Usage</th><th>Description</th></tr>
                 </thead>
@@ -37,27 +36,28 @@
 
             <p>Version expressions are also used in Pak override files. See <a href="customizing.html">Customizing
             Packages</a> for more details.</p>
-            <code>
+            <pre class="code">
 {
     "jquery/jquery": {
-        ">=2.1.0": {
+        "&gt;=2.1.0": {
             "pak": { 
                 /* more */ 
             }
         },
-        ">=1.11.0": {
+        "&gt;=1.11.0": {
             "pak": { 
                 /* more */ 
             }
         }
     }
 }
-</code>
+</pre>
 
             <a name="expressions"></a>
             <h2>Version Expressions</h2>
             <p>Version expressions are used by <em>dependency</em>, <em>optionalDependency</em> properties in the
             package.json file and in package override files. The following terms are permitted in version expressions.</p>
+
             <table title="versions" class="ui celled table segment">
                 <thead>
                     <tr>
@@ -80,13 +80,13 @@
             </table>
 
             <p>For example:</p>
-            <code>
+            <pre class="code">
 { 
     "dependencies" : { 
         "simple" : "2.0.1",
 
         /* Range of acceptable versions */
-        "foo"    : ">=1.0.0 <2.10.20",
+        "foo"    : "&gt;=1.0.0 &lt;2.10.20",
 
         /* Compatible with 1.2 - same minor number, allows pre-releases */
         "compat" : "~1.2",
@@ -97,5 +97,5 @@
         "complex": "1.2.3 || 1.2.8 || 1.3.*",
     }
 }
-</code>
+</pre>
                     

@@ -64,7 +64,7 @@
             <p>The syntax to override exports in your application's package.json file is via a
                 <em>pak.override.PACKAGE.pak.export</em> definition, where PACKAGE is the name of the package.
                 For example:</p>
-                <code>
+                <pre class="code">
 "pak": {
     "override": {
         <b>"jquery"</b>: {
@@ -74,7 +74,7 @@
         }
     }
 }
-</code>
+</pre>
             <p>This example overrides the default jquery exporting of the <em>dist</em> directory, and exports just the
             <em>dist/jquery.js</em> file. It does this by overriding the jquery package.json export details.</p>
 
@@ -93,7 +93,7 @@
             <p>Export properties provide a simple, and flexible means of selecting and remapping the files to export.
             You specify the file patterns to export, the destination directory and other optional processing instructions.
             For example:</p>
-            <code>
+            <pre class="code">
 "export": {
     "from": [
         "src/js/**",
@@ -102,24 +102,24 @@
     "to": "lib",
     trim: 1
 }
-</code>
+</pre>
             <p>This copies the files under <em>src/js</em> and <em>src/css</em> to the <em>lib/PACKAGE</em> directory 
             after trimmming one segment off the path. i.e. this trims the <em>src</em> segment from the filenames. 
             The result will be the directories <em>lib/PACKAGE/js</em> and <em>lib/PACKAGE/css</em>.</p>
 
             <p>If you are exporting a full path to the <em>/lib/PACKAGE</em> directory, you may use conventient 
             abbreviated short forms. For example:</p>
-<code>"export": "*.js"
+<pre class="code">"export": "*.js"
 
 "export": [ "*.js", "**.css" ]
-</code>
+</pre>
             <p>The export property can be set to a string, an array of strings or to object instructions. 
                 In the example above, the <em>**.css</em> selects all CSS files in any subdirectory. 
                 If the package already has an export definition in its own package.json file, then use 
                 <em>=export</em> "assign" this export definition and replace any previous definition.</p>
 
             <p>The full set of export properties are:</p>
-            <table class="ui table">
+            <table class="ui table" title="export">
                 <thead>
                     <tr><th>Property</th><th>Description</th></tr>
                 </thead>
@@ -145,7 +145,6 @@
                     </tr> 
                 </tbody>
             </table>
-            </ul>
 
             <h4>Wild Cards</h4>
             <p>The <em>from</em> property value (or the <em>export</em> property if it is set to a simple string) 
@@ -162,7 +161,7 @@
             <p>If you have export needs that go beyond what can be expressed via export properties, you can also use 
             the full scripting power of <a href="http://embedthis.com/ejscript/">Ejscript</a> to create
                 custom export scripts. For example:</p>
-                <code>
+                <pre class="code">
 "export": {
     "script": `
         let path = Path('paks/jquery')
@@ -174,17 +173,17 @@
         }
     `
 }
-</code>
+</pre>
             <p>Pak supports an extended JSON syntax where multi-line strings can be used. Strings can be    
             delimited by single, double or back quote characters. Also, property names do not need to be quoted.
             However, if you are using the package.json for any other purposes, you may need to use strict JSON with
             single line strings only. In this case, it may be easier to put your export script in a separate file.</p>
-            For example:</p>
-                <code>
+            <p>For example:</p>
+                <pre class="code">
 "export": {
     "script": "load('export.js')"
 }
-</code>
+</pre>
             <h2>Disabling Exports</h2>
             <p>The exporting of package contents is globally enabled or disabled for an application via the 
             <em>pak.import</em> property. Setting the <em>pak.import</em> property to <em>false</em> in your 
@@ -196,7 +195,7 @@
             <h2>Customizing the Export Directory</h2>
             <p>The export directory can be customized in your package.json <em>directories</em> properties. By default
             it is set to <em>lib</em>. To modify, update the <em>lib</em> directory property. For example:</p>
-            <code>directories: {
+            <pre class="code">directories: {
     "lib": "www/lib"
 }
-</code>
+</pre>
