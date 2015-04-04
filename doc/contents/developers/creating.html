@@ -14,10 +14,10 @@
 
             <h2>Creating package.json</h2>
             <p>You can create a package.json file with <em>pak init</em>
-            <pre class="code>$ pak init</pre></p>
+            <pre class="code>$ pak init</pre>
 
             <p>This will generate a stub package.json that you can edit to reflect the details of your package.
-            For example:</p>
+            <p>For example:</p>
 <pre class="code>{
     <b>"name": "Package name - one word"</b>
     "description": "Package description - one line"
@@ -58,7 +58,6 @@
             <ul>
                 <li><p>dependencies &mdash; List of packages and the acceptable versions. Version fields may include
                         expressions that describe a range of acceptable versions. For example:</p>
-                    <p>
                     <table title="versions" class="ui celled table segment">
                         <thead>
                             <tr>
@@ -77,7 +76,6 @@
                             <tr><td>expression expression </td><td>same as &amp;&amp;</td></tr>
                         </tbody>
                     </table>
-                    </p>
                 </li>
                 <li>files &mdash; list of files to include when caching and installing the package. These are 
                     applied before considering export definitions.</li>
@@ -119,7 +117,7 @@
             local files that you do not want to publish. Use the <em>files</em> property to specify the files that should
             be in the package and use the <em>ignore</em> property to specify the files to keep out. These properties
             may be filename patterns that optionally include wild cards, or they may be arrays of patterns. For example:</p>
-            <pre class="code>{
+            <pre class="code">{
     "files": [
         "dist/js/*",
         "dist/css/*",
@@ -136,7 +134,9 @@
             to specify these files.</p>
 
             <h3>Locations</h3>
-            <p>During package installation, the package contents will be cached under <em>~/.paks/PACKAGE/ACCOUNT/VERSION</em>,
+            <p>During package installation, the package contents will be cached under 
+                    <em>~/.paks/PACKAGE/ACCOUNT/VERSION</em>,
+
             where PACKAGE is the name of the package, ACCOUNT is the GitHub account name or @npm if the package is being
             hosted on NPM. Once installed in an application, the package files will be saved under the 
             <em>paks/PACKAGE</em> local directory.</p>
@@ -165,7 +165,7 @@
             <p>Export properties provide a simple, and flexible means of selecting and remapping the files to export.
             You specify the file patterns to export, the destination directory and other optional processing instructions.
             For example:</p>
-            <pre class="code>
+            <pre class="code">
 "export": {
     "from": [
         "src/js/**",
@@ -181,7 +181,7 @@
             The result will be the directories <em>lib/myapp/js</em> and <em>lib/myapp/css</em>.</p>
 
             <p>You may also use these conventient short forms. For example:</p>
-<pre class="code>"export": "*.js"
+<pre class="code">"export": "*.js"
 
 "export": [ "*.js", "**.css" ]
 </pre>
