@@ -78,10 +78,21 @@ While Pak has a strong feature set, there are some characteristics that make Pak
 .SH BASIC USAGE
 .PP
 To install packages:
-    pak install Names...
+    pak install Endpoints...
+
+Where an ENDPOINT can be the name of a package published in the Pak catalog, NPM or bower catalog, a GitHub repository endpoint, a GitHub account/repository or a path to a local package directory. For example:
+
+    pak install jquery
+    pak install pak:jquery
+    pak install npm:jquery
+    pak install bower:jquery
+    pak install embedthis/exp-js
+    pak install https://github.com/embedthis/exp-js.git
+    pak install git@github.com:embedthis/jquery
+    pak install ./my-source/graphics
 
 To uninstall 
-    pak uninstall Names...
+    pak uninstall Endpoints...
 
 To list installed packages
     pak list

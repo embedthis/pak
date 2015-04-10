@@ -89,10 +89,23 @@ NICE PARTS
 
 BASIC USAGE
        To install packages:
-           pak install Names...
+           pak install Endpoints...
+
+       Where an ENDPOINT can be the name of a package  published  in  the  Pak
+       catalog,  NPM  or bower catalog, a GitHub repository endpoint, a GitHub
+       account/repository or a path to a local package directory. For example:
+
+           pak install jquery
+           pak install pak:jquery
+           pak install npm:jquery
+           pak install bower:jquery
+           pak install embedthis/exp-js
+           pak install https://github.com/embedthis/exp-js.git
+           pak install git@github.com:embedthis/jquery
+           pak install ./my-source/graphics
 
        To uninstall
-           pak uninstall Names...
+           pak uninstall Endpoints...
 
        To list installed packages
            pak list
@@ -100,7 +113,7 @@ BASIC USAGE
        To display package dependencies
            pak depend
 
-       To show what packages are present in the cache and  where  they  origi-
+       To  show  what  packages are present in the cache and where they origi-
        nated
            pak cached
 
@@ -113,7 +126,7 @@ BASIC USAGE
 
 
 OVERVIEW
-       A  package  is described by a CommonJS package.json file. This provides
+       A package is described by a CommonJS package.json file.  This  provides
        at a minimum the following properties.
 
             {
@@ -145,8 +158,8 @@ OVERVIEW
 
 
 RUNNING
-       To run Pak with more verbose  trace  output,  use  the  [-v]  --verbose
-       switch.  To  run  with less trace, use the [-q] --quiet switch.  To run
+       To  run  Pak  with  more  verbose  trace output, use the [-v] --verbose
+       switch. To run with less trace, use the [-q] --quiet  switch.   To  run
        completely silently except for hard-errors, use --silent.
 
 
@@ -157,13 +170,13 @@ PUBLISHING
            pak publish
 
        Where NAME is the name of package, REPOSITORY is the GitHub endpoint of
-       the package. You will be prompted to enter a  password  to  manage  the
-       package.  You  will need this password to modify or retract the package
+       the  package.  You  will  be prompted to enter a password to manage the
+       package. You will need this password to modify or retract  the  package
        in the future.  Safeguard it well.
 
 
 CONFIGURATION
-       On startup, Pak reads  configuration  from  a  pakrc  file.  This  file
+       On  startup,  Pak  reads  configuration  from  a  pakrc file. This file
        defines the operational configuration for Pak. For example:
         {
            catalogs: {
@@ -193,8 +206,8 @@ CONFIGURATION
         }
 
        The "catalogs" property defines sites that index and catalog packs. The
-       "paks" directory is the name of the local directory in which  to  store
-       packages.  The  "pakcache" directory defines where to cache packages on
+       "paks"  directory  is the name of the local directory in which to store
+       packages. The "pakcache" directory defines where to cache  packages  on
        the local system.
 
        Pak locates a valid pakrc file by searching in order:
@@ -228,8 +241,8 @@ COMMANDS
 
        install packages...
               Install a package on the local system. The package name can be a
-              name  in an online catalog or it can be a GitHub endpoint URL or
-              of the form 'account/repositiory'. The package name may  have  a
+              name in an online catalog or it can be a GitHub endpoint URL  or
+              of  the  form 'account/repositiory'. The package name may have a
               catalog prefix "pak", "npm" or "bower" to select a specific cat-
               alog to use when locating the package repository endpoint.
 
@@ -237,7 +250,7 @@ COMMANDS
               List the installed packages.
 
        lockdown
-              Lockdown  the  version  criteria  for  all  dependencies.   This
+              Lockdown   the  version  criteria  for  all  dependencies.  This
               rewrites the package.json to define a compatible version expres-
               sion for all installed dependencies.
 
@@ -273,7 +286,7 @@ OPTIONS
 
 
        --cache directory
-              Specify the directory to use for the paks cache. This  overrides
+              Specify  the directory to use for the paks cache. This overrides
               the values specified in the various pakrc or package.json files.
 
 
@@ -286,17 +299,17 @@ OPTIONS
 
 
        --force
-              Force the command to continue. This  is  useful  to  install  or
-              cache  a  package  when dependencies cannot be satisfied.  It is
-              also useful to cache  or  install  an  already  cached/installed
+              Force  the  command  to  continue.  This is useful to install or
+              cache a package when dependencies cannot be  satisfied.   It  is
+              also  useful  to  cache  or  install an already cached/installed
               pack. Aliased as -f.
 
 
        --log logName[:logLevel]
-              Specify  a file to log internal execution messages. Bit will log
+              Specify a file to log internal execution messages. Bit will  log
               execution related trace to the log file. The log level specifies
-              the  desired  verbosity  of output. Level 0 is the least verbose
-              and level 9 is the most. The '-v' switch is an alias for  '--log
+              the desired verbosity of output. Level 0 is  the  least  verbose
+              and  level 9 is the most. The '-v' switch is an alias for '--log
               stderr:2'.
 
 
@@ -306,12 +319,12 @@ OPTIONS
 
        --paks directory
               Specify the local "paks" directory in which to install packages.
-              This overrides the values specified  in  the  various  pakrc  or
+              This  overrides  the  values  specified  in the various pakrc or
               package.json files.
 
 
        --password file
-              Specify  the  a  file  containing the password to use when doing
+              Specify the a file containing the password  to  use  when  doing
               "pak publish".
 
 
@@ -320,7 +333,7 @@ OPTIONS
 
 
        --silent
-              Run in silent mode suppressing all but hard errors.  Aliased  as
+              Run  in  silent mode suppressing all but hard errors. Aliased as
               -s.
 
 
@@ -333,7 +346,7 @@ REPORTING BUGS
        Report bugs to dev@embedthis.com.
 
 COPYRIGHT
-       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
+       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
        Embedthis Software.
 
 SEE ALSO
