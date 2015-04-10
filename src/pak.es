@@ -1059,24 +1059,24 @@ class Pak
         for each (pak in sets) {
             spec.optionalDependencies ||= {}
             let opt = optional(spec, pak.name) ? ' optional' : ''
-            let cached = !pak.installVersion && pak.cacheVersion ? ' cached' : ''
+            let cached = pak.cacheVersion ? ' cached' : ' uncached'
             let installed = pak.installVersion ? ' installed' : ''
             let uninstalled = pak.installVersion ? '' : ' uninstalled'
-            let from = ''
+            let at = ''
             if (pak.install && pak.install.pak.origin) {
-                from = ' from ' + pak.install.pak.origin
+                at = ' at ' + pak.install.pak.origin
             } else if (pak.cache && pak.cache.pak.origin) {
-                from = ' from ' + pak.cache.pak.origin
+                at = ' at ' + pak.cache.pak.origin
             }
             let frozen = (pak.install && pak.install.pak.frozen) ? ' frozen' : ''
-            let version = pak.installVersion || pak.cacheVersion
+            let version = pak.installVersion || pak.cacheVersion || '----'
             if (!spec.dependencies[pak.name] && !optional(spec, pak.name) && options.versions) {
-                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, from,
+                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, at,
                     opt, frozen)
             } else if (options.details && pak.install) {
                 print(pak.name + ' ' + serialize(pak.install, {pretty: true, indent: 4}))
             } else if (options.versions) {
-                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, from,
+                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, at,
                     opt, frozen)
             } else {
                 print('')
@@ -2116,7 +2116,9 @@ class Pak
                     result[name] = dep
                 }
                 if (!dep.install && !dep.cache) {
-                    throw 'Cannot find package "' + dep.name + '" referenced by "' + pak.name + '"'
+                    // trace('Warn', 'Cannot find package "' + dep.name + '" referenced by "' + pak.name + '"')
+                    dep.cache = { dependencies: {}, pak: {} }
+                    continue
                 }
                 getDepPaks(result, patterns, dep.install || dep.cache)
             }
