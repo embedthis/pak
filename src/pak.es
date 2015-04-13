@@ -517,7 +517,9 @@ class Pak
             if (Path(dep.name).isDir) {
                 dep.setSource(dep.name)
             }
-            if (!dep.cached) {
+            if (state.installing && dep.install) {
+                trace('Info', 'Dependency ' + dep.name + ' installed')
+            } else if (!dep.cached) {
                 if (dep.sourcePath) {
                     trace('Info', 'Caching required dependency from source at: ' + dep.sourcePath)
                     cachePak(dep)
@@ -844,7 +846,7 @@ class Pak
                     qtrace('Info', pak + ' is already installed')
                     return
                 }
-                if (state.upgrade) {
+                if (state.upgrading) {
                     if (Version(pak.cache.version).acceptable('>' + pak.installVersion)) {
                         trace('Upgrade', pak.name + ' from ' + pak.installVersion +
                                        ' to ' + pak.cache.version)
@@ -861,6 +863,7 @@ class Pak
                 }
             }
         }
+        state.installing = true
         if (!pak.cache || !Version(pak.cache.version).acceptable(pak.versionCriteria)) {
             locatePak(pak)
             cachePak(pak)
@@ -1411,9 +1414,9 @@ class Pak
             return
         }
         runScripts(pak, 'preupgrade')
-        state.upgrade = true
+        state.upgrading = true
         installCommon(pak)
-        delete state.upgrade
+        delete state.upgrading
     }
 
     function copyTree(pak, fromDir: Path, toDir: Path, ignore, files, exportList: Array?) {
