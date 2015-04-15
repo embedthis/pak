@@ -39,3 +39,4 @@ windows*.bit
 /build
 .DS_Store
 override/SAVE
+.cdrc
