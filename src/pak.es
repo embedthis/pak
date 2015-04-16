@@ -346,8 +346,9 @@ class Pak
                 } else {
                     trace('Warn', 'Using deprecated "' + name + '" property. Use "pak.' + name + '" instead.')
                     spec.pak[name] = spec[name]
+                    spec.copied ||= {}
+                    spec.copied[name] = true
                 }
-                delete spec[name]
             }
         }
         state.force = options.force
@@ -508,8 +509,7 @@ class Pak
             if (criteria == 'match') {
                 criteria = '^' + Version(pak.cache.version).compatible
                 pak.cache.dependencies[other] = criteria
-                let path = pak.cachePath.join(PACKAGE)
-                path.write(serialize(cleanSpec(pak.cache), {pretty: true, indent: 4}) + '\n')
+                saveSpec(pak.cachePath.join(PACKAGE), pak.cache)
             }
             if (pak.catalog) {
                 other = pak.catalog + ':' + other
@@ -586,8 +586,7 @@ class Pak
             if (!Package.getSpecFile(pak.cachePath)) {
                 trace('Create', 'package.json for', pak.name)
                 pak.cache = { name: pak.name, version: pak.cacheVersion.toString(), dependencies: {} }
-                let path = pak.cachePath.join(PACKAGE)
-                path.write(serialize(cleanSpec(pak.cache), {pretty: true, indent: 4}) + '\n')
+                saveSpec(pak.cachePath.join(PACKAGE), pak.cache)
             }
             pak.resolve()
 
@@ -597,8 +596,7 @@ class Pak
             if (pak.sourcePath) {
                 /* Update origin */
                 pak.source.pak.origin = pak.origin
-                let path = pak.cachePath.join(PACKAGE)
-                path.write(serialize(cleanSpec(pak.source), {pretty: true, indent: 4}) + '\n')
+                saveSpec(pak.cachePath.join(PACKAGE), pak.source)
             } else {
                 if (pak.origin) {
                     /* Apply global override downloaded from catalog */
@@ -615,8 +613,7 @@ class Pak
                     }
                     pak.cache.pak ||= {}
                     pak.cache.pak.origin = pak.origin
-                    let path = pak.cachePath.join(PACKAGE)
-                    path.write(serialize(cleanSpec(pak.cache), {pretty: true, indent: 4}) + '\n')
+                    saveSpec(pak.cachePath.join(PACKAGE), pak.cache)
                     /*
                         Resolve after updating the package.json as it will be re-read
                      */
@@ -735,7 +732,7 @@ class Pak
         } else {
             pspec.name = options.name || App.dir.basename.toLowerCase()
         }
-        Path(PACKAGE).write(serialize(cleanSpec(pspec), {pretty: true, indent: 4}))
+        saveSpec(PACKAGE, pspec)
     }
 
     private var blending = {}
@@ -879,7 +876,7 @@ class Pak
             vtrace('Update', path)
         }
         if (!options.nodeps) {
-            path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
+            saveSpec(path, spec)
         }
         runScripts(pak, 'install')
     }
@@ -993,7 +990,7 @@ class Pak
          */
         if (pak.dirty && overrides && (overrides['*'] || overrides[pak.name])) {
             let path = pak.installPath.join(PACKAGE)
-            path.write(serialize(cleanSpec(pak.cache), {pretty: true, indent: 4}) + '\n')
+            saveSpec(path, pak.cache)
             vtrace('Save', path + ' with local overrides')
         }
     }
@@ -1107,7 +1104,7 @@ class Pak
             }
         }
         let path = Package.getSpecFile('.')
-        path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
+        saveSpec(path, spec)
     }
 
     function mode(newMode, meta) {
@@ -1313,7 +1310,7 @@ class Pak
             delete spec.overrides[pak.name]
         }
         let path = Package.getSpecFile('.')
-        path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
+        saveSpec(path, spec)
         removeDir(pak.installPath, true)
 
         path = directories.export.join(pak.name)
@@ -2025,7 +2022,7 @@ class Pak
             deps.append(dep)
         }
         spec.dependencies = deps
-        PACKAGE.write(serialize(cleanSpec(spec), {pretty: true}))
+        saveSpec(PACKAGE, spec)
     }
 
     function validatePak(pak: Package): Boolean {
@@ -2047,7 +2044,6 @@ class Pak
                 throw 'Reserved pak name ' + name
             }
         }
-        if (pspec.name.start)
         if (!pspec.description) {
             throw 'Invalid package name: ' + pspec.description
         }
@@ -2245,7 +2241,7 @@ class Pak
         }
         obj[key] = value
         path = Package.getSpecFile('.')
-        path.write(serialize(cleanSpec(spec), {pretty: true}) + '\n')
+        saveSpec(path, spec)
     }
 
     public function makeDir(path: String): Void
@@ -2273,6 +2269,17 @@ class Pak
 
     private function optional(obj, name)
         spec.optionalDependencies ? spec.optionalDependencies[name] : null
+
+    private function saveSpec(path: Path, spec) {
+        spec = spec.clone(true)
+        if (spec.pak) {
+            for (key in spec.copied) {
+                delete spec.pak[key]
+            }
+        }
+        delete spec.copied
+        path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
+    }
 }
 
 /*
