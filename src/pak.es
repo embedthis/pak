@@ -323,8 +323,9 @@ class Pak
         spec.dependencies ||= {}
         spec.optionalDependencies ||= {}
 
-        if (spec.pak.version && !Version(Config.Version).acceptable(spec.pak.version)) {
-            throw '' + spec.title + ' requires Pak ' + spec.pak.version + '. Pak version ' + Config.Version +
+        let pver = spec.pak.pak || spec.pak.version
+        if (pver && !Version(Config.Version).acceptable(pver)) {
+            throw '' + spec.title + ' requires Pak ' + pver + '. Pak version ' + Config.Version +
                             ' is not compatible with this requirement.' + '\n'
         }
         if (spec.pak.mode && spec.pak.modes && spec.pak.modes[spec.pak.mode]) {
