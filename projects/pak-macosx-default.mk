@@ -643,5 +643,5 @@ uninstall: $(DEPS_40)
 #
 
 version: $(DEPS_41)
-	echo 0.10.1
+	echo $(VERSION)
 
