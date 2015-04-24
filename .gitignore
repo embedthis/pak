@@ -40,3 +40,4 @@ windows*.bit
 .DS_Store
 override/SAVE
 .cdrc
+doc/.expansive-lastgen
