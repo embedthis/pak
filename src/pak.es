@@ -300,7 +300,7 @@ class Pak
         if (options.name) {
             aname = options.name
             PakTemplate.name = aname
-            PakTemplate.title = aname.toPascal() + ' Application'
+            PakTemplate.title = aname.toPascal()
             PakTemplate.description = aname.toPascal() + ' Application'
         }
     }
@@ -354,6 +354,13 @@ class Pak
         state.force = options.force
     }
 
+    function checkDir() {
+        let path = Package.getSpecFile('.') || Path(PACKAGE)
+        if (!path.exists) {
+            throw 'Missing package.json. Check you are in the right directory or do "pak init" first.'
+        }
+    }
+
     function process() {
         let rest = args.rest
         let task = rest.shift()
@@ -374,10 +381,12 @@ class Pak
             break
 
         case 'depend':
+            checkDir()
             depend(rest)
             break
 
         case 'edit':
+            checkDir()
             edit(rest)
             break
 
@@ -394,6 +403,7 @@ class Pak
             break
 
         case 'install':
+            checkDir()
             install(rest)
             break
 
@@ -403,14 +413,17 @@ class Pak
 
         case 'list':
         case 'installed':
+            checkDir()
             list(rest)
             break
 
         case 'lockdown':
+            checkDir()
             lockdown()
             break
 
         case 'mode':
+            checkDir()
             mode(rest)
             break
 
@@ -432,6 +445,7 @@ class Pak
             break
 
         case 'uninstall':
+            checkDir()
             uninstall(rest)
             break
 
@@ -440,10 +454,12 @@ class Pak
             break
 
         case 'upgrade':
+            checkDir()
             upgrade(rest)
             break
 
         case 'setdeps':
+            checkDir()
             setdeps()
             break
 
@@ -1060,24 +1076,23 @@ class Pak
         for each (pak in sets) {
             spec.optionalDependencies ||= {}
             let opt = optional(spec, pak.name) ? ' optional' : ''
-            let cached = pak.cacheVersion ? ' cached' : ' uncached'
             let installed = pak.installVersion ? ' installed' : ''
             let uninstalled = pak.installVersion ? '' : ' uninstalled'
             let at = ''
             if (pak.install && pak.install.pak.origin) {
-                at = ' at ' + pak.install.pak.origin
+                at = ' ' + pak.install.pak.origin
             } else if (pak.cache && pak.cache.pak.origin) {
-                at = ' at ' + pak.cache.pak.origin
+                at = ' ' + pak.cache.pak.origin
             }
             let frozen = (pak.install && pak.install.pak.frozen) ? ' frozen' : ''
-            let version = pak.installVersion || pak.cacheVersion || '----'
+            let version = pak.installVersion || pak.cacheVersion || '-----'
             if (!spec.dependencies[pak.name] && !optional(spec, pak.name) && options.versions) {
-                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, at,
+                printf('%24s %6s %s%s%s%s%s\n', pak.name, version, uninstalled, installed, at,
                     opt, frozen)
             } else if (options.details && pak.install) {
                 print(pak.name + ' ' + serialize(pak.install, {pretty: true, indent: 4}))
             } else if (options.versions) {
-                printf('%24s %6s %s%s%s%s%s%s\n', pak.name, version, uninstalled, installed, cached, at,
+                printf('%24s %6s %s%s%s%s%s\n', pak.name, version, uninstalled, installed, at,
                     opt, frozen)
             } else {
                 print('')

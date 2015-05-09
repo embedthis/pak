@@ -8,7 +8,7 @@ Me.load({
     plugins: [ 'configuration', 'installs' ],
 
     blend: [
-        'ejs',
+        'src/*/*.me',
         'doc/doc.me',
     ],
 
@@ -27,7 +27,6 @@ Me.load({
     ],
 
     settings: {
-        me: '=>0.8.4',
         integrate: true,
 
         /*
@@ -85,7 +84,6 @@ Me.load({
 
     scripts: {
         loaded: `
-            me.targets.makerom.enable = false
             me.targets.httpcmd.enable = false
             me.targets.ejscmd.enable = false
             me.settings.esflags = (me.platform.profile == 'debug' || me.platform.profile == 'mine') ? '--debug' : ''
@@ -110,7 +108,7 @@ Me.load({
             files: [ 'src/*.es', 'paks/ejs-version/Version.es' ],
             build: `
                 trace('Compile', 'src/*.es')
-                run('${BIN}/ejsc ${settings.esflags} --out ${BIN}/pak.mod --optimize 9 ${FILES}')
+                run('"${BIN}/ejsc" ${settings.esflags} --out "${BIN}/pak.mod" --optimize 9 ${FILES}')
             `,
             depends: [ 'ejs.mod' ],
         },
