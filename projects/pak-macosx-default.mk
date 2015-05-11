@@ -381,6 +381,9 @@ DEPS_25 += $(BUILD)/inc/mpr.h
 DEPS_25 += $(BUILD)/obj/mprLib.o
 
 ifeq ($(ME_COM_EST),1)
+    LIBS_25 += -lestssl
+endif
+ifeq ($(ME_COM_EST),1)
     LIBS_25 += -lest
 endif
 ifeq ($(ME_COM_OPENSSL),1)
@@ -394,9 +397,6 @@ endif
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_25 += -lcrypto
     LIBPATHS_25 += -L"$(ME_COM_OPENSSL_PATH)"
-endif
-ifeq ($(ME_COM_EST),1)
-    LIBS_25 += -lestssl
 endif
 
 $(BUILD)/bin/libmpr.dylib: $(DEPS_25)
@@ -431,6 +431,9 @@ ifeq ($(ME_COM_PCRE),1)
 endif
 LIBS_27 += -lmpr
 ifeq ($(ME_COM_EST),1)
+    LIBS_27 += -lestssl
+endif
+ifeq ($(ME_COM_EST),1)
     LIBS_27 += -lest
 endif
 ifeq ($(ME_COM_OPENSSL),1)
@@ -444,9 +447,6 @@ endif
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_27 += -lcrypto
     LIBPATHS_27 += -L"$(ME_COM_OPENSSL_PATH)"
-endif
-ifeq ($(ME_COM_EST),1)
-    LIBS_27 += -lestssl
 endif
 
 $(BUILD)/bin/libhttp.dylib: $(DEPS_27)
@@ -496,6 +496,9 @@ ifeq ($(ME_COM_PCRE),1)
 endif
 LIBS_29 += -lmpr
 ifeq ($(ME_COM_EST),1)
+    LIBS_29 += -lestssl
+endif
+ifeq ($(ME_COM_EST),1)
     LIBS_29 += -lest
 endif
 ifeq ($(ME_COM_OPENSSL),1)
@@ -509,9 +512,6 @@ endif
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_29 += -lcrypto
     LIBPATHS_29 += -L"$(ME_COM_OPENSSL_PATH)"
-endif
-ifeq ($(ME_COM_EST),1)
-    LIBS_29 += -lestssl
 endif
 
 $(BUILD)/bin/libejs.dylib: $(DEPS_29)
@@ -538,6 +538,9 @@ ifeq ($(ME_COM_PCRE),1)
 endif
 LIBS_30 += -lmpr
 ifeq ($(ME_COM_EST),1)
+    LIBS_30 += -lestssl
+endif
+ifeq ($(ME_COM_EST),1)
     LIBS_30 += -lest
 endif
 ifeq ($(ME_COM_OPENSSL),1)
@@ -551,9 +554,6 @@ endif
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_30 += -lcrypto
     LIBPATHS_30 += -L"$(ME_COM_OPENSSL_PATH)"
-endif
-ifeq ($(ME_COM_EST),1)
-    LIBS_30 += -lestssl
 endif
 
 $(BUILD)/bin/ejsc: $(DEPS_30)
@@ -622,6 +622,9 @@ ifeq ($(ME_COM_PCRE),1)
 endif
 LIBS_34 += -lmpr
 ifeq ($(ME_COM_EST),1)
+    LIBS_34 += -lestssl
+endif
+ifeq ($(ME_COM_EST),1)
     LIBS_34 += -lest
 endif
 ifeq ($(ME_COM_OPENSSL),1)
@@ -635,9 +638,6 @@ endif
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_34 += -lcrypto
     LIBPATHS_34 += -L"$(ME_COM_OPENSSL_PATH)"
-endif
-ifeq ($(ME_COM_EST),1)
-    LIBS_34 += -lestssl
 endif
 
 $(BUILD)/bin/pak: $(DEPS_34)
