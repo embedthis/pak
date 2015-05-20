@@ -584,7 +584,7 @@ DEPS_32 += src/http/ca.crt
 $(BUILD)/bin/ca.crt: $(DEPS_32)
 	@echo '      [Copy] $(BUILD)/bin/ca.crt'
 	mkdir -p "$(BUILD)/bin"
-	cp src/http/ca.crt $(BUILD)/bin/ca.crt
+	cp src/http/src/http/ca.crt $(BUILD)/bin/ca.crt
 
 #
 #   pak.mod

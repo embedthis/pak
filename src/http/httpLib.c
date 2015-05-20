@@ -6120,11 +6120,12 @@ PUBLIC void httpIO(HttpConn *conn, int eventMask)
         conn->secure = 1;
         if (sp->peerCert) {
             httpTrace(conn, "connection.ssl", "context", "msg:'Connection secured with peer certificate'," \
-                "secure:true,cipher:'%s',peerName:'%s',subject:'%s',issuer:'%s'", 
-                sp->cipher, sp->peerName, sp->peerCert, sp->peerCertIssuer);
+                "secure:true,cipher:'%s',peerName:'%s',subject:'%s',issuer:'%s',session:'%s'",
+                sp->cipher, sp->peerName, sp->peerCert, sp->peerCertIssuer, sp->session);
         } else {
             httpTrace(conn, "connection.ssl", "context",
-                "msg:'Connection secured without peer certificate',secure:true,cipher:'%s'", sp->cipher);
+                "msg:'Connection secured without peer certificate',secure:true,cipher:'%s',session:'%s'",
+                sp->cipher, sp->session);
         }
     }
     /*
@@ -9159,7 +9160,7 @@ PUBLIC void httpLogRoutes(HttpHost *host, bool full)
     if (!host) {
         host = httpGetDefaultHost();
     }
-    if (mprGetListLength(host->routes) == 0) {
+    if (mprGetListLength(host->routes) == 0 && !host->defaultRoute) {
         printf("\nRoutes for host: %s: none\n", host->name ? host->name : "default");
     } else {
         if (!full) {
@@ -9168,9 +9169,9 @@ PUBLIC void httpLogRoutes(HttpHost *host, bool full)
         for (index = 0; (route = mprGetNextItem(host->routes, &index)) != 0; ) {
             printRoute(route, index - 1, full, methodsLen, patternLen, targetLen);
         }
-    }
-    if (mprLookupItem(host->routes, host->defaultRoute) < 0) {
-        printRoute(host->defaultRoute, index, full, methodsLen, patternLen, targetLen);
+        if (mprLookupItem(host->routes, host->defaultRoute) < 0) {
+            printRoute(host->defaultRoute, index, full, methodsLen, patternLen, targetLen);
+        }
     }
     printf("\n");
 }
@@ -16376,7 +16377,7 @@ static bool parseRequestLine(HttpConn *conn, HttpPacket *packet)
     }
     protocol = getToken(conn, "\r\n");
     conn->protocol = supper(protocol);
-    if (strcmp(conn->protocol, "HTTP/1.0") == 0) {
+    if (smatch(conn->protocol, "HTTP/1.0") || *conn->protocol == 0) {
         if (rx->flags & (HTTP_POST|HTTP_PUT)) {
             rx->remainingContent = HTTP_UNLIMITED;
             rx->needInputPipeline = 1;
@@ -16384,7 +16385,7 @@ static bool parseRequestLine(HttpConn *conn, HttpPacket *packet)
         conn->http10 = 1;
         conn->mustClose = 1;
     } else if (strcmp(protocol, "HTTP/1.1") != 0) {
-        conn->protocol = sclone("HTTP/1.1");
+        conn->protocol = sclone("HTTP/1.0");
         httpBadRequestError(conn, HTTP_ABORT | HTTP_CODE_NOT_ACCEPTABLE, "Unsupported HTTP protocol");
         return 0;
     }
@@ -16453,7 +16454,7 @@ static bool parseResponseLine(HttpConn *conn, HttpPacket *packet)
     }
     if (rx->status == HTTP_CODE_CONTINUE) {
         /* Eat the blank line and wait for the real response */
-        mprAdjustBufStart(content, 2);
+        mprAdjustBufStart(packet->content, 2);
         return 0;
     }
     return 1;
@@ -17586,7 +17587,7 @@ static void addMatchEtag(HttpConn *conn, char *etag)
 
 /*
     Get the next input token. The content buffer is advanced to the next token. This routine always returns a
-    non-zero token. The empty string means the delimiter was not found. The delimiter is a string to match and not
+    non-null token. The empty string means the delimiter was not found. The delimiter is a string to match and not
     a set of characters. If null, it means use white space (space or tab) as a delimiter.
  */
 static char *getToken(HttpConn *conn, cchar *delim)
@@ -17595,10 +17596,12 @@ static char *getToken(HttpConn *conn, cchar *delim)
     char    *token, *endToken, *nextToken;
 
     buf = conn->input->content;
-    token = mprGetBufStart(buf);
     nextToken = mprGetBufEnd(buf);
-    for (token = mprGetBufStart(buf); (*token == ' ' || *token == '\t') && token < mprGetBufEnd(buf); token++) {}
 
+    for (token = mprGetBufStart(buf); (*token == ' ' || *token == '\t') && token < nextToken; token++) {}
+    if (token >= nextToken) {
+        return "";
+    }
     if (delim == 0) {
         delim = " \t";
         if ((endToken = strpbrk(token, delim)) != 0) {
@@ -21705,16 +21708,15 @@ PUBLIC HttpUri *httpCompleteUri(HttpUri *uri, HttpUri *base)
                 uri->reference = base->reference;
             }
         }
-    } else {
-        if (!uri->scheme) {
-            uri->scheme = sclone("http");
-        }
-        if (!uri->host) {
-            uri->host = sclone("localhost");
-        }
-        if (!uri->path) {
-            uri->path = sclone("/");
-        }
+    }
+    if (!uri->scheme) {
+        uri->scheme = sclone("http");
+    }
+    if (!uri->host) {
+        uri->host = sclone("localhost");
+    }
+    if (!uri->path) {
+        uri->path = sclone("/");
     }
     uri->secure = (smatch(uri->scheme, "https") || smatch(uri->scheme, "wss"));
     uri->webSockets = (smatch(uri->scheme, "ws") || smatch(uri->scheme, "wss"));
@@ -21743,22 +21745,21 @@ PUBLIC char *httpFormatUri(cchar *scheme, cchar *host, int port, cchar *path, cc
                 host = "localhost";
             }
         }
-    } else if (!host) {
-        host = "";
-    }
+    } 
     if (scheme) {
         hostDelim = "://";
     }
-    if (host) {
-        if (mprIsIPv6(host)) {
-            if (*host != '[') {
-                host = sfmt("[%s]", host);
-            } else if ((cp = scontains(host, "]:")) != 0) {
-                port = 0;
-            }
-        } else if (schr(host, ':')) {
+    if (!host) {
+        host = "";
+    }
+    if (mprIsIPv6(host)) {
+        if (*host != '[') {
+            host = sfmt("[%s]", host);
+        } else if ((cp = scontains(host, "]:")) != 0) {
             port = 0;
         }
+    } else if (schr(host, ':')) {
+        port = 0;
     }
     if (port != 0 && port != getDefaultPort(scheme)) {
         portStr = itos(port);
@@ -21768,7 +21769,7 @@ PUBLIC char *httpFormatUri(cchar *scheme, cchar *host, int port, cchar *path, cc
         scheme = "";
     }
     if (path && *path) {
-        if (*hostDelim) {
+        if (*host) {
             pathDelim = (*path == '/') ? "" :  "/";
         } else {
             pathDelim = "";

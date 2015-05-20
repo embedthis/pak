@@ -696,7 +696,7 @@ DEPS_35 = $(DEPS_35) src\http\ca.crt
 build\$(CONFIG)\bin\ca.crt: $(DEPS_35)
 	@echo ..... [Copy] build\$(CONFIG)\bin\ca.crt
 	if not exist "build\$(CONFIG)\bin" md "build\$(CONFIG)\bin"
-	copy /Y /B src\http\ca.crt+modified build\$(CONFIG)\bin\ca.crt $(LOG)
+	copy /Y /B src\http\src\http\ca.crt+modified build\$(CONFIG)\bin\ca.crt $(LOG)
 
 #
 #   pak.mod
