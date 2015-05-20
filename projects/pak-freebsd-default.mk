@@ -86,8 +86,8 @@ ME_SRC_PREFIX         ?= $(ME_ROOT_PREFIX)$(NAME)-$(VERSION)
 ifeq ($(ME_COM_EJS),1)
     TARGETS           += $(BUILD)/bin/ejs.mod
 endif
-TARGETS               += $(BUILD)/bin/ca.crt
 TARGETS               += $(BUILD)/bin/pak
+TARGETS               += $(BUILD)/bin/roots.crt
 
 unexport CDPATH
 
@@ -127,7 +127,6 @@ clean:
 	rm -f "$(BUILD)/obj/pcre.o"
 	rm -f "$(BUILD)/obj/zlib.o"
 	rm -f "$(BUILD)/bin/ejsc"
-	rm -f "$(BUILD)/bin/ca.crt"
 	rm -f "$(BUILD)/bin/libejs.so"
 	rm -f "$(BUILD)/bin/libhttp.so"
 	rm -f "$(BUILD)/bin/libmpr.so"
@@ -135,6 +134,7 @@ clean:
 	rm -f "$(BUILD)/bin/libzlib.so"
 	rm -f "$(BUILD)/bin/libopenssl.a"
 	rm -f "$(BUILD)/bin/pak"
+	rm -f "$(BUILD)/bin/roots.crt"
 
 clobber: clean
 	rm -fr ./$(BUILD)
@@ -577,72 +577,72 @@ $(BUILD)/bin/ejs.mod: $(DEPS_31)
 endif
 
 #
-#   http-ca-crt
-#
-DEPS_32 += src/http/ca.crt
-
-$(BUILD)/bin/ca.crt: $(DEPS_32)
-	@echo '      [Copy] $(BUILD)/bin/ca.crt'
-	mkdir -p "$(BUILD)/bin"
-	cp src/http/src/http/ca.crt $(BUILD)/bin/ca.crt
-
-#
 #   pak.mod
 #
-DEPS_33 += src/Package.es
-DEPS_33 += src/pak.es
-DEPS_33 += paks/ejs-version/Version.es
+DEPS_32 += src/Package.es
+DEPS_32 += src/pak.es
+DEPS_32 += paks/ejs-version/Version.es
 ifeq ($(ME_COM_EJS),1)
-    DEPS_33 += $(BUILD)/bin/ejs.mod
+    DEPS_32 += $(BUILD)/bin/ejs.mod
 endif
 
-$(BUILD)/bin/pak.mod: $(DEPS_33)
+$(BUILD)/bin/pak.mod: $(DEPS_32)
 	"./$(BUILD)/bin/ejsc"  --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
 
 #
 #   pak
 #
 ifeq ($(ME_COM_EJS),1)
-    DEPS_34 += $(BUILD)/bin/libejs.so
+    DEPS_33 += $(BUILD)/bin/libejs.so
 endif
-DEPS_34 += $(BUILD)/bin/pak.mod
-DEPS_34 += $(BUILD)/obj/pak.o
+DEPS_33 += $(BUILD)/bin/pak.mod
+DEPS_33 += $(BUILD)/obj/pak.o
 
 ifeq ($(ME_COM_EJS),1)
-    LIBS_34 += -lejs
+    LIBS_33 += -lejs
 endif
 ifeq ($(ME_COM_ZLIB),1)
-    LIBS_34 += -lzlib
+    LIBS_33 += -lzlib
 endif
 ifeq ($(ME_COM_HTTP),1)
-    LIBS_34 += -lhttp
+    LIBS_33 += -lhttp
 endif
 ifeq ($(ME_COM_PCRE),1)
-    LIBS_34 += -lpcre
+    LIBS_33 += -lpcre
 endif
-LIBS_34 += -lmpr
+LIBS_33 += -lmpr
 ifeq ($(ME_COM_EST),1)
-    LIBS_34 += -lestssl
+    LIBS_33 += -lestssl
 endif
 ifeq ($(ME_COM_EST),1)
-    LIBS_34 += -lest
+    LIBS_33 += -lest
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_34 += -lopenssl
-    LIBPATHS_34 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_33 += -lopenssl
+    LIBPATHS_33 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_34 += -lssl
-    LIBPATHS_34 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_33 += -lssl
+    LIBPATHS_33 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_34 += -lcrypto
-    LIBPATHS_34 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_33 += -lcrypto
+    LIBPATHS_33 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 
-$(BUILD)/bin/pak: $(DEPS_34)
+$(BUILD)/bin/pak: $(DEPS_33)
 	@echo '      [Link] $(BUILD)/bin/pak'
-	$(CC) -o $(BUILD)/bin/pak $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/pak.o" $(LIBPATHS_34) $(LIBS_34) $(LIBS_34) $(LIBS) $(LIBS) 
+	$(CC) -o $(BUILD)/bin/pak $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/pak.o" $(LIBPATHS_33) $(LIBS_33) $(LIBS_33) $(LIBS) $(LIBS) 
+
+#
+#   roots.crt
+#
+DEPS_34 += src/certs/roots.crt
+
+$(BUILD)/bin/roots.crt: $(DEPS_34)
+	@echo '      [Copy] $(BUILD)/bin/roots.crt'
+	mkdir -p "$(BUILD)/bin"
+	cp src/certs/roots.crt $(BUILD)/bin/roots.crt
 
 #
 #   installPrep
@@ -674,7 +674,7 @@ installBinary: $(DEPS_37)
 	rm -f "$(ME_BIN_PREFIX)/pak" ; \
 	ln -s "$(ME_VAPP_PREFIX)/bin/pak" "$(ME_BIN_PREFIX)/pak" ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
-	cp $(BUILD)/bin/ca.crt $(ME_VAPP_PREFIX)/bin/ca.crt ; \
+	cp src/certs/roots.crt $(ME_VAPP_PREFIX)/bin/roots.crt ; \
 	cp $(BUILD)/bin/ejs.mod $(ME_VAPP_PREFIX)/bin/ejs.mod ; \
 	cp $(BUILD)/bin/pak.mod $(ME_VAPP_PREFIX)/bin/pak.mod ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
