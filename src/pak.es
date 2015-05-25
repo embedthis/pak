@@ -192,6 +192,7 @@ class Pak
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
             name: { range: String },
             nodeps: { alias: 'n' },
+            optional: { alias: 'o' },
             paks: { range: String },
             password: { range: String },
             quiet: { alias: 'q' },
@@ -234,6 +235,7 @@ class Pak
             '    --log file:level         # Send output to a file at a given level\n' +
             '    --name name              # Set an application name for "pak init"\n' +
             '    --nodeps                 # Do not install or upgrade dependencies\n' +
+            '    --optional               # Install as an optional dependency\n' +
             '    --paks dir               # Use given directory for "paks" directory\n' +
             '    --password file          # File containing the package password\n' +
             '    --quiet, -q              # Run in quiet mode\n' +
@@ -804,12 +806,13 @@ class Pak
             Manage dependencies
          */
         if (topDeps[pak.name] || topDeps[pak.args] || topDeps[pak.origin]) {
-            if (optional(spec, pak.name)) {
+            if (optional(spec, pak.name) || (options.optional && !spec.dependencies[pak.name])) {
                 spec.optionalDependencies ||= {}
                 spec.optionalDependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
                 Object.sortProperties(spec.optionalDependencies)
             } else {
                 if (!options.nodeps) {
+                    //  Should already be created
                     spec.dependencies ||= {}
                     spec.dependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
                     Object.sortProperties(spec.dependencies)

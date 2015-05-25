@@ -15,6 +15,7 @@ SYNOPSIS
            --log file:level
            --name name
            --nodeps
+           --optional
            --paks dir
            --password file
            --quiet
@@ -317,14 +318,19 @@ OPTIONS
               Used to suppress installing or upgrading dependent packages.
 
 
+       --optional
+              Used when installing packages to add them to the 'optionalDepen-
+              dencies' list instead of as a hard dependency.
+
+
        --paks directory
               Specify the local "paks" directory in which to install packages.
-              This  overrides  the  values  specified  in the various pakrc or
+              This overrides the values specified  in  the  various  pakrc  or
               package.json files.
 
 
        --password file
-              Specify the a file containing the password  to  use  when  doing
+              Specify  the  a  file  containing the password to use when doing
               "pak publish".
 
 
@@ -333,7 +339,7 @@ OPTIONS
 
 
        --silent
-              Run  in  silent mode suppressing all but hard errors. Aliased as
+              Run in silent mode suppressing all but hard errors.  Aliased  as
               -s.
 
 
@@ -346,7 +352,7 @@ REPORTING BUGS
        Report bugs to dev@embedthis.com.
 
 COPYRIGHT
-       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
+       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 SEE ALSO

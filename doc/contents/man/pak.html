@@ -19,6 +19,7 @@ PAK(1)                           User Commands                          PAK(1)
            <B>--log file:level</B>
            <B>--name name</B>
            <B>--nodeps</B>
+           <B>--optional</B>
            <B>--paks dir</B>
            <B>--password file</B>
            <B>--quiet</B>
@@ -298,20 +299,24 @@ PAK(1)                           User Commands                          PAK(1)
        <B>--nodeps</B>
               Used to suppress installing or upgrading dependent packages.
 
+       <B>--optional</B>
+              Used when installing packages to add them to the 'optionalDepen-
+              dencies' list instead of as a hard dependency.
+
        <B>--paks directory</B>
               Specify the local "paks" directory in which to install packages.
-              This  overrides  the  values  specified  in the various pakrc or
+              This overrides the values specified  in  the  various  pakrc  or
               package.json files.
 
        <B>--password file</B>
-              Specify the a file containing the password  to  use  when  doing
+              Specify  the  a  file  containing the password to use when doing
               "pak publish".
 
        <B>--quiet</B>
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
        <B>--silent</B>
-              Run  in  silent mode suppressing all but hard errors. Aliased as
+              Run in silent mode suppressing all but hard errors.  Aliased  as
               -s.
 
        <B>--versions URI</B>
@@ -321,7 +326,7 @@ PAK(1)                           User Commands                          PAK(1)
        Report bugs to dev@embedthis.com.
 
 <B>COPYRIGHT</B>
-       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
+       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 <B>SEE ALSO</B>

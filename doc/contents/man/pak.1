@@ -11,6 +11,7 @@ pak \- Embedthis Pak -- Package Manager
     \fB--log file:level\fR
     \fB--name name\fR
     \fB--nodeps\fR
+    \fB--optional\fR
     \fB--paks dir\fR
     \fB--password file\fR
     \fB--quiet\fR
@@ -285,6 +286,10 @@ an alias for '--log stderr:2'.
 .TP
 \fB\--nodeps\fR
 Used to suppress installing or upgrading dependent packages.
+
+.TP
+\fB\--optional\fR
+Used when installing packages to add them to the 'optionalDependencies' list instead of as a hard dependency.
 
 .TP
 \fB\--paks directory\fR
