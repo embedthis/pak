@@ -21,8 +21,9 @@ const BOWER: Path = Path('bower.json')
 
 var PakFiles = [ PACKAGE, BOWER ]
 
+//  TODO - convert to public members of Pak
 var catalogs: Object?
-var directories: Object
+// UNUSED var directories: Object
 var dirTokens: Object
 var files: Object
 var options: Object
@@ -35,6 +36,8 @@ class Pak
     private const RC: String = 'pakrc'
     private const DOTRC: String = '.pakrc'
     private const DIR_PERMS: Number = 0775
+
+    public var directories: Object
 
     private var appName: String = 'pak'
     private var args: Args
