@@ -1533,7 +1533,7 @@ class Pak
             let file = File(temp, 'w')
             let buf = new ByteArray
             while (http.read(buf) > 0) {
-                let wrote = file.write(buf)
+                file.write(buf)
             }
             file.close()
             if (http.status != 200) {
@@ -1542,8 +1542,11 @@ class Pak
             http.close()
             trace('Extract', 'Extract to ' + pak.cachePath)
             Tar(temp, {uncompress: true, dest: pak.cachePath, trim: 1}).extract()
-        } catch {
+        } catch (e) {
             pak.cachePath.removeAll()
+            /* Remove empty directories */
+            pak.cachePath.parent.remove()
+            pak.cachePath.parent.parent.remove()
         } finally {
             temp.remove()
         }
