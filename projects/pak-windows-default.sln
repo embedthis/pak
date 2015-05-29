@@ -142,6 +142,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ejs.mod", "pak-windows-defa
 		{5460A9D7-52CA-499B-A416-4A80F1D5DA79} = {5460A9D7-52CA-499B-A416-4A80F1D5DA79}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "install-certs", "pak-windows-default\install-certs.vcxproj", "{AF7CB4F1-515B-4212-8418-31C3C3787CAC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{AF7CB4F1-515B-4212-8418-31C3C3787CAC} = {AF7CB4F1-515B-4212-8418-31C3C3787CAC}
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libest", "pak-windows-default\libest.vcxproj", "{28B90510-C3EA-4A67-BF51-9F0D663CD8C1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
@@ -234,14 +242,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pak", "pak-windows-default\
 		{74E7024E-7596-450E-AE71-D91DA0254F2D} = {74E7024E-7596-450E-AE71-D91DA0254F2D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "roots.crt", "pak-windows-default\roots.crt.vcxproj", "{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}"
-	ProjectSection(ProjectDependencies) = postProject
-		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
-	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
-		{44C0D3EE-5950-486F-8FAB-AC42014CB0B8} = {44C0D3EE-5950-486F-8FAB-AC42014CB0B8}
-	EndProjectSection
-EndProject
 
     Global
         GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -315,6 +315,14 @@ EndProject
 {5460A9D7-52CA-499B-A416-4A80F1D5DA79}.Release|Win32.Build.0 = Release|Win32
 {5460A9D7-52CA-499B-A416-4A80F1D5DA79}.Release|x64.ActiveCfg = Release|x64
 {5460A9D7-52CA-499B-A416-4A80F1D5DA79}.Release|x64.Build.0 = Release|x64
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Debug|Win32.ActiveCfg = Debug|Win32
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Debug|Win32.Build.0 = Debug|Win32
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Debug|x64.ActiveCfg = Debug|x64
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Debug|x64.Build.0 = Debug|x64
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Release|Win32.ActiveCfg = Release|Win32
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Release|Win32.Build.0 = Release|Win32
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Release|x64.ActiveCfg = Release|x64
+{AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Release|x64.Build.0 = Release|x64
 {28B90510-C3EA-4A67-BF51-9F0D663CD8C1}.Debug|Win32.ActiveCfg = Debug|Win32
 {28B90510-C3EA-4A67-BF51-9F0D663CD8C1}.Debug|Win32.Build.0 = Debug|Win32
 {28B90510-C3EA-4A67-BF51-9F0D663CD8C1}.Debug|x64.ActiveCfg = Debug|x64
@@ -347,14 +355,6 @@ EndProject
 {74E7024E-7596-450E-AE71-D91DA0254F2D}.Release|Win32.Build.0 = Release|Win32
 {74E7024E-7596-450E-AE71-D91DA0254F2D}.Release|x64.ActiveCfg = Release|x64
 {74E7024E-7596-450E-AE71-D91DA0254F2D}.Release|x64.Build.0 = Release|x64
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Debug|Win32.ActiveCfg = Debug|Win32
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Debug|Win32.Build.0 = Debug|Win32
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Debug|x64.ActiveCfg = Debug|x64
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Debug|x64.Build.0 = Debug|x64
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Release|Win32.ActiveCfg = Release|Win32
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Release|Win32.Build.0 = Release|Win32
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Release|x64.ActiveCfg = Release|x64
-{44C0D3EE-5950-486F-8FAB-AC42014CB0B8}.Release|x64.Build.0 = Release|x64
 EndGlobalSection
 
       GlobalSection(SolutionProperties) = preSolution
