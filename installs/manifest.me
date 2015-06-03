@@ -40,6 +40,24 @@ Me.load({
                     to:         '${abin}/',
                     symlink:    '${bin}/',
 
+                 }, {
+                    from: [
+                                'libssl*${SHOBJ}*',
+                                'libcrypto*${SHOBJ}*',
+                    ],
+                    to:         '${abin}/',
+                    enable:     "me.platform.os != 'windows' && !makeme.options.gen",
+                    ifdef:      'openssl',
+
+                }, {
+                    from: [
+                                'libeay32${SHOBJ}',
+                                'ssleay32${SHOBJ}',
+                    ],
+                    to:         '${abin}/',
+                    enable:     "me.platform.os == 'windows'",
+                    ifdef:      'openssl',
+
                 }, { 
                     from: [
                                 '${BIN}/roots.crt',
