@@ -145,7 +145,7 @@ ME_SRC_PREFIX         = $(ME_VAPP_PREFIX)\src
 TARGETS               = $(TARGETS) build\$(CONFIG)\bin\ejs.mod
 !ENDIF
 !IF "$(ME_COM_SSL)" == "1"
-TARGETS               = $(TARGETS) build\$(CONFIG)\bin
+TARGETS               = $(TARGETS) build\$(CONFIG)\.install-certs-modified
 !ENDIF
 TARGETS               = $(TARGETS) build\$(CONFIG)\bin\pak.exe
 
@@ -193,7 +193,7 @@ clean:
 	if exist "build\$(CONFIG)\bin\ejsc.lib" del /Q "build\$(CONFIG)\bin\ejsc.lib"
 	if exist "build\$(CONFIG)\bin\ejsc.pdb" del /Q "build\$(CONFIG)\bin\ejsc.pdb"
 	if exist "build\$(CONFIG)\bin\ejsc.exp" del /Q "build\$(CONFIG)\bin\ejsc.exp"
-	if exist "build\$(CONFIG)\bin" del /Q "build\$(CONFIG)\bin"
+	if exist "build\$(CONFIG)\.install-certs-modified" del /Q "build\$(CONFIG)\.install-certs-modified"
 	if exist "build\$(CONFIG)\bin\libejs.dll" del /Q "build\$(CONFIG)\bin\libejs.dll"
 	if exist "build\$(CONFIG)\bin\libejs.lib" del /Q "build\$(CONFIG)\bin\libejs.lib"
 	if exist "build\$(CONFIG)\bin\libejs.pdb" del /Q "build\$(CONFIG)\bin\libejs.pdb"
@@ -813,7 +813,7 @@ DEPS_35 = $(DEPS_35) src\certs\samples\self.key
 DEPS_35 = $(DEPS_35) src\certs\samples\test.crt
 DEPS_35 = $(DEPS_35) src\certs\samples\test.key
 
-build\$(CONFIG)\bin: $(DEPS_35)
+build\$(CONFIG)\.install-certs-modified: $(DEPS_35)
 	@echo ..... [Copy] build\$(CONFIG)\bin
 	if not exist "build\$(CONFIG)\bin" md "build\$(CONFIG)\bin"
 	copy /Y /B src\certs\samples\ca.crt+modified build\$(CONFIG)\bin\ca.crt $(LOG)
@@ -826,6 +826,7 @@ build\$(CONFIG)\bin: $(DEPS_35)
 	copy /Y /B src\certs\samples\self.key+modified build\$(CONFIG)\bin\self.key $(LOG)
 	copy /Y /B src\certs\samples\test.crt+modified build\$(CONFIG)\bin\test.crt $(LOG)
 	copy /Y /B src\certs\samples\test.key+modified build\$(CONFIG)\bin\test.key $(LOG)
+	copy /Y /B nul+modified build\$(CONFIG)\.install-certs-modified $(LOG)
 !ENDIF
 
 #
