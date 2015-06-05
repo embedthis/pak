@@ -766,7 +766,6 @@ $(BUILD)/bin/pak.mod: $(DEPS_37)
 #
 #   pak
 #
-DEPS_38 += init
 ifeq ($(ME_COM_EJS),1)
     DEPS_38 += $(BUILD)/bin/libejs.so
 endif

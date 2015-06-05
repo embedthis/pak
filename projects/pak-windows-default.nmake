@@ -855,7 +855,6 @@ build\$(CONFIG)\obj\pak.obj: \
 #
 #   pak
 #
-DEPS_38 = $(DEPS_38) init
 !IF "$(ME_COM_EJS)" == "1"
 DEPS_38 = $(DEPS_38) build\$(CONFIG)\bin\libejs.dll
 !ENDIF
