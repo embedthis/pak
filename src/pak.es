@@ -1345,13 +1345,15 @@ class Pak
     function uninstall(patterns): Void {
         let list = []
         let sets = getInstalledPaks({}, patterns, spec)
+        for each (pat in patterns) {
         for each (pak in sets) {
-            if (matchPakName(pak.name, patterns)) {
+                if (matchPakName(pak.name, [pat])) {
                 list.push(pak)
                 if (!pak.installed && !pak.cached && !state.force) {
                     throw 'Pak "' + pak + '" is not installed'
                 }
             }
+        }
         }
         checkNamePatterns(patterns, list)
         for each (pak in list) {
@@ -1553,7 +1555,7 @@ class Pak
     }
 
     /*
-        Fetch overrides for a pak ans save in pak.overrides[].
+        Fetch overrides for a pak and save in pak.overrides[].
         If a local ~/.pak/overrides exists, it takes precedence.
         Otherwise, fetch overrides from the supplied 'url' or 
         from the pak-overrides repo.
@@ -1575,7 +1577,7 @@ class Pak
                     http.get(url)
                     if (http.status == 200) {
                         over = deserialize(http.response)
-                        vtrace('Override', 'Got override', url)
+                        vtrace('Fetch', 'Override: ', url)
                     }
                     http.close()
                 } catch (e) {
@@ -1746,8 +1748,9 @@ class Pak
 
     private function requiredCachedPak(pak: Package): Array? {
         let users = []
+        /* Path is: ~/.paks/OWNER/NAME/VERSION */
         for each (path in directories.pakcache.files('*/*/*')) {
-            let name = path.dirname.basename.toString()
+            let name = path.dirname.parent.basename.toString()
             if (name != pak.name) {
                 let pspec = Package.loadPackage(path, {quiet: true})
                 if (pspec && pspec.dependencies) {
@@ -1899,20 +1902,22 @@ class Pak
                                     pak.resolve()
                                     return locatePak(pak)
                                 }
-                                location = item.endpoint
-                                pak.parseEndpoint(location)
+                                pak.parseEndpoint(item.endpoint)
                                 fetchGlobalOverrides(pak, item.override)
                                 pak.resolve()
-                                selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                                location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                                if (location) {
+                                    location = item.endpoint
+                                }
                                 break
                             }
                         }
                     } else if (cname == 'bower') {
-                        location = response.url
                         pak.parseEndpoint(location)
                         fetchGlobalOverrides(pak)
                         pak.resolve()
-                        selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                        location = response.url
 
                     } else if (cname == 'npm') {
                         for (let [key,value] in response.versions) {
