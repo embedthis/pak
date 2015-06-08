@@ -1346,14 +1346,14 @@ class Pak
         let list = []
         let sets = getInstalledPaks({}, patterns, spec)
         for each (pat in patterns) {
-        for each (pak in sets) {
+            for each (pak in sets) {
                 if (matchPakName(pak.name, [pat])) {
-                list.push(pak)
-                if (!pak.installed && !pak.cached && !state.force) {
-                    throw 'Pak "' + pak + '" is not installed'
+                    list.push(pak)
+                    if (!pak.installed && !pak.cached && !state.force) {
+                        throw 'Pak "' + pak + '" is not installed'
+                    }
                 }
             }
-        }
         }
         checkNamePatterns(patterns, list)
         for each (pak in list) {
