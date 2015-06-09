@@ -3,7 +3,7 @@
 #
 
 NAME                  := pak
-VERSION               := 0.10.3
+VERSION               := 0.11.0
 PROFILE               ?= default
 ARCH                  ?= $(shell uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/')
 CC_ARCH               ?= $(shell echo $(ARCH) | sed 's/x86/i686/;s/x64/x86_64/')
@@ -426,7 +426,7 @@ endif
 
 $(BUILD)/bin/libmpr.dylib: $(DEPS_27)
 	@echo '      [Link] $(BUILD)/bin/libmpr.dylib'
-	$(CC) -dynamiclib -o $(BUILD)/bin/libmpr.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  -install_name @rpath/libmpr.dylib -compatibility_version 0.10 -current_version 0.10 "$(BUILD)/obj/mprLib.o" $(LIBPATHS_27) $(LIBS_27) $(LIBS_27) $(LIBS) 
+	$(CC) -dynamiclib -o $(BUILD)/bin/libmpr.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  -install_name @rpath/libmpr.dylib -compatibility_version 0.11 -current_version 0.11 "$(BUILD)/obj/mprLib.o" $(LIBPATHS_27) $(LIBS_27) $(LIBS_27) $(LIBS) 
 
 ifeq ($(ME_COM_PCRE),1)
 #
@@ -437,7 +437,7 @@ DEPS_28 += $(BUILD)/obj/pcre.o
 
 $(BUILD)/bin/libpcre.dylib: $(DEPS_28)
 	@echo '      [Link] $(BUILD)/bin/libpcre.dylib'
-	$(CC) -dynamiclib -o $(BUILD)/bin/libpcre.dylib -arch $(CC_ARCH) $(LDFLAGS) -compatibility_version 0.10 -current_version 0.10 $(LIBPATHS) -install_name @rpath/libpcre.dylib -compatibility_version 0.10 -current_version 0.10 "$(BUILD)/obj/pcre.o" $(LIBS) 
+	$(CC) -dynamiclib -o $(BUILD)/bin/libpcre.dylib -arch $(CC_ARCH) $(LDFLAGS) -compatibility_version 0.11 -current_version 0.11 $(LIBPATHS) -install_name @rpath/libpcre.dylib -compatibility_version 0.11 -current_version 0.11 "$(BUILD)/obj/pcre.o" $(LIBS) 
 endif
 
 ifeq ($(ME_COM_HTTP),1)
@@ -480,7 +480,7 @@ LIBS_29 += -lmpr
 
 $(BUILD)/bin/libhttp.dylib: $(DEPS_29)
 	@echo '      [Link] $(BUILD)/bin/libhttp.dylib'
-	$(CC) -dynamiclib -o $(BUILD)/bin/libhttp.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  -install_name @rpath/libhttp.dylib -compatibility_version 0.10 -current_version 0.10 "$(BUILD)/obj/httpLib.o" $(LIBPATHS_29) $(LIBS_29) $(LIBS_29) $(LIBS) 
+	$(CC) -dynamiclib -o $(BUILD)/bin/libhttp.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  -install_name @rpath/libhttp.dylib -compatibility_version 0.11 -current_version 0.11 "$(BUILD)/obj/httpLib.o" $(LIBPATHS_29) $(LIBS_29) $(LIBS_29) $(LIBS) 
 endif
 
 ifeq ($(ME_COM_ZLIB),1)
@@ -492,7 +492,7 @@ DEPS_30 += $(BUILD)/obj/zlib.o
 
 $(BUILD)/bin/libzlib.dylib: $(DEPS_30)
 	@echo '      [Link] $(BUILD)/bin/libzlib.dylib'
-	$(CC) -dynamiclib -o $(BUILD)/bin/libzlib.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libzlib.dylib -compatibility_version 0.10 -current_version 0.10 "$(BUILD)/obj/zlib.o" $(LIBS) 
+	$(CC) -dynamiclib -o $(BUILD)/bin/libzlib.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) -install_name @rpath/libzlib.dylib -compatibility_version 0.11 -current_version 0.11 "$(BUILD)/obj/zlib.o" $(LIBS) 
 endif
 
 ifeq ($(ME_COM_EJS),1)
@@ -555,7 +555,7 @@ endif
 
 $(BUILD)/bin/libejs.dylib: $(DEPS_31)
 	@echo '      [Link] $(BUILD)/bin/libejs.dylib'
-	$(CC) -dynamiclib -o $(BUILD)/bin/libejs.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  -install_name @rpath/libejs.dylib -compatibility_version 0.10 -current_version 0.10 "$(BUILD)/obj/ejsLib.o" $(LIBPATHS_31) $(LIBS_31) $(LIBS_31) $(LIBS) 
+	$(CC) -dynamiclib -o $(BUILD)/bin/libejs.dylib -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  -install_name @rpath/libejs.dylib -compatibility_version 0.11 -current_version 0.11 "$(BUILD)/obj/ejsLib.o" $(LIBPATHS_31) $(LIBS_31) $(LIBS_31) $(LIBS) 
 endif
 
 ifeq ($(ME_COM_EJS),1)

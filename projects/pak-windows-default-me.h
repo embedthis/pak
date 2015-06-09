@@ -22,7 +22,7 @@
     #define ME_COMPANY "embedthis"
 #endif
 #ifndef ME_COMPATIBLE
-    #define ME_COMPATIBLE "0.10"
+    #define ME_COMPATIBLE "0.11"
 #endif
 #ifndef ME_COMPILER_HAS_ATOMIC
     #define ME_COMPILER_HAS_ATOMIC 0
@@ -96,30 +96,6 @@
 #ifndef ME_ESFLAGS
     #define ME_ESFLAGS ""
 #endif
-#ifndef ME_EST_CAMELLIA
-    #define ME_EST_CAMELLIA 0
-#endif
-#ifndef ME_EST_DES
-    #define ME_EST_DES 0
-#endif
-#ifndef ME_EST_GEN_PRIME
-    #define ME_EST_GEN_PRIME 0
-#endif
-#ifndef ME_EST_PADLOCK
-    #define ME_EST_PADLOCK 0
-#endif
-#ifndef ME_EST_ROM_TABLES
-    #define ME_EST_ROM_TABLES 0
-#endif
-#ifndef ME_EST_SSL_CLIENT
-    #define ME_EST_SSL_CLIENT 0
-#endif
-#ifndef ME_EST_TEST_CERTS
-    #define ME_EST_TEST_CERTS 0
-#endif
-#ifndef ME_EST_XTEA
-    #define ME_EST_XTEA 0
-#endif
 #ifndef ME_HTTP_PAM
     #define ME_HTTP_PAM 0
 #endif
@@ -148,7 +124,7 @@
     #define ME_TUNE "speed"
 #endif
 #ifndef ME_VERSION
-    #define ME_VERSION "0.10.3"
+    #define ME_VERSION "0.11.0"
 #endif
 
 /* Prefixes */
@@ -243,13 +219,13 @@
     #define ME_MAJOR_VERSION 0
 #endif
 #ifndef ME_MINOR_VERSION
-    #define ME_MINOR_VERSION 10
+    #define ME_MINOR_VERSION 11
 #endif
 #ifndef ME_PATCH_VERSION
-    #define ME_PATCH_VERSION 3
+    #define ME_PATCH_VERSION 0
 #endif
 #ifndef ME_VNUM
-    #define ME_VNUM 80003
+    #define ME_VNUM 90000
 #endif
 
 /* Components */
