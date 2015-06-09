@@ -18,6 +18,7 @@ pak \- Embedthis Pak -- Package Manager
     \fB--silent\fR
     \fB--verbose\fR
     \fB--versions\fR 
+    \fB--write\fR
     \fBcommands ...\fB
 .SH ""
 .B Commands:
@@ -219,7 +220,8 @@ Create a new package.json.
 install packages...          
 Install a package on the local system. The package name can be a name in an online catalog or it can be a GitHub endpoint
 URL or of the form 'account/repositiory'. The package name may have a catalog prefix "pak", "npm" or "bower" to select
-a specific catalog to use when locating the package repository endpoint. 
+a specific catalog to use when locating the package repository endpoint. Use the --write option to update the package.json
+dependencies with the install package. Use with the --optional switch to update the optionalDependencies.
 .TP
 list [packages...]           
 List the installed packages.
@@ -246,7 +248,7 @@ search packages...
 Search for packages in the catalogs.
 .TP
 uninstall                
-Uninstall an installed package.
+Uninstall an installed package. Use --write to remove from the package dependencies.
 .TP
 update [packages...]         
 Update the pak cache with latest version.
@@ -311,6 +313,11 @@ Run in silent mode suppressing all but hard errors. Aliased as -s.
 .TP
 \fB\--versions URI\fR
 Show package version information.
+
+.TP
+\fB\--write URI\fR
+Write installed packages to package.json dependencies. Use --optional to update optionalDependencies.
+When uninstalling, --write will remove the package from the dependencies and update the package.json.
 
 .PP
 .SH "REPORTING BUGS"

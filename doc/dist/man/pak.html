@@ -26,6 +26,7 @@ PAK(1)                           User Commands                          PAK(1)
            <B>--silent</B>
            <B>--verbose</B>
            <B>--versions</B>
+           <B>--write</B>
            <B>commands ...</B>
 
        <B>Commands:</B>
@@ -234,13 +235,16 @@ PAK(1)                           User Commands                          PAK(1)
               name in an online catalog or it can be a GitHub endpoint URL  or
               of  the  form 'account/repositiory'. The package name may have a
               catalog prefix "pak", "npm" or "bower" to select a specific cat-
-              alog to use when locating the package repository endpoint.
+              alog  to  use when locating the package repository endpoint. Use
+              the --write option to update the package.json dependencies  with
+              the  install  package.  Use with the --optional switch to update
+              the optionalDependencies.
 
        list [packages...]
               List the installed packages.
 
        lockdown
-              Lockdown   the  version  criteria  for  all  dependencies.  This
+              Lockdown  the  version  criteria  for  all  dependencies.   This
               rewrites the package.json to define a compatible version expres-
               sion for all installed dependencies.
 
@@ -261,7 +265,8 @@ PAK(1)                           User Commands                          PAK(1)
               Search for packages in the catalogs.
 
        uninstall
-              Uninstall an installed package.
+              Uninstall an installed package. Use --write to remove  from  the
+              package dependencies.
 
        update [packages...]
               Update the pak cache with latest version.
@@ -322,11 +327,17 @@ PAK(1)                           User Commands                          PAK(1)
        <B>--versions URI</B>
               Show package version information.
 
+       <B>--write URI</B>
+              Write  installed  packages  to  package.json  dependencies.  Use
+              --optional to update optionalDependencies.   When  uninstalling,
+              --write will remove the package from the dependencies and update
+              the package.json.
+
 <B>REPORTING BUGS</B>
        Report bugs to dev@embedthis.com.
 
 <B>COPYRIGHT</B>
-       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
+       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
        Embedthis Software.
 
 <B>SEE ALSO</B>

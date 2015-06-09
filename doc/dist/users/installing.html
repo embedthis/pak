@@ -130,7 +130,7 @@
         </div>
         
         <div class="version desktop-only">
-            v0.10.3
+            v0.11.0
         </div>
 
     </div>
@@ -139,28 +139,37 @@
             <h1>Installing Packages</h1>
 
             <p>To install named packages, use the <em>pak install PACKAGES ...</em> command and name the packages to 
-            install. Multiple packages can be installed on one command line. For example:</p>
-<code>$ <b>pak install jquery bootstrap</b>
+            install. Multiple packages can be installed on one command line. </p>
+            <p>You first need to run <em>pak init</em> if you do not have a package.json in the current directory.
+            For example:</p>
+
+<code>$ pak init
+<b>pak install jquery bootstrap</b>
 [Install] jquery 2.1.3
 [Install] bootstrap 3.3.2</code>
 
-            <p>Pak will remember which packages are installed by adding an entry to a package.json file in the
-                current directory. Pak will create the package.json file if it does not already exist. The generated
-                package.json will look like this subset:</p>
+            <p>The <em>pak install</em> command will download the packages, save them in the per-user global 
+            package cache and install the package under the <em>paks</em> directory.
+            If invoked with the <em>--write</em> option, Pak will record which packages are required by 
+            adding an entry to a package.json.</p>
+
+            <code>$ <b>pak --write install jquery bootstrap</b></code>
+
+            <p>The updated package.json will look like this subset:</p>
 <code>{
     "name": "my
     "version": "1.0.0",
-    "dependencies": {
+    <b>"dependencies": {
         "bootstrap": "^3.3",
         "jquery": "^2.1"
-    },
+    }</b>,
     "pak": {
         "import": true,
         "mode": "debug"
     }
 }
 </code>
-            <p>The <em>dependencies</em> property will document the installed packages and their versions. 
+            <p>The <em>dependencies</em> property will document the required packages and their versions. 
                 You can modify the version string for packages to specify what range of versions
                 your application can accept. See <a href="versions.html">Pak Versions</a> for 
                 more details.</p>

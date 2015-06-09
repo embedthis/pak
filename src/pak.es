@@ -23,7 +23,6 @@ var PakFiles = [ PACKAGE, BOWER ]
 
 //  TODO - convert to public members of Pak
 var catalogs: Object?
-// UNUSED var directories: Object
 var dirTokens: Object
 var files: Object
 var options: Object
@@ -200,6 +199,7 @@ class Pak
             verbose: { alias: 'v' },
             version: { alias: 'V', range: String },
             versions: {},
+            write: { alias: 'w' },
         },
         usage: usage,
         onerror: 'exit',
@@ -239,8 +239,9 @@ class Pak
             '    --paks dir               # Use given directory for "paks" directory\n' +
             '    --password file          # File containing the package password\n' +
             '    --quiet, -q              # Run in quiet mode\n' +
-            '    --silent, -s             # Run in totally silent mode\n' +
+            '    --silent                 # Run in totally silent mode\n' +
             '    --verbose, -v            # Run in verbose mode\n\n' +
+            '    --write, -w              # Write installed package to package.json dependencies\n' +
             '  List options:\n' +
             '    -a, --all                # Show all versions for a pak\n' +
             '    --details                # Show pak details\n' +
@@ -806,16 +807,18 @@ class Pak
             Manage dependencies
          */
         if (topDeps[pak.name] || topDeps[pak.args] || topDeps[pak.origin]) {
-            if (optional(spec, pak.name) || (options.optional && !spec.dependencies[pak.name])) {
-                spec.optionalDependencies ||= {}
-                spec.optionalDependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
-                Object.sortProperties(spec.optionalDependencies)
-            } else {
-                if (!options.nodeps) {
-                    //  Should already be created
-                    spec.dependencies ||= {}
-                    spec.dependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
-                    Object.sortProperties(spec.dependencies)
+            if (options.write) {
+                if (optional(spec, pak.name) || (options.optional && !spec.dependencies[pak.name])) {
+                    spec.optionalDependencies ||= {}
+                    spec.optionalDependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
+                    Object.sortProperties(spec.optionalDependencies)
+                } else {
+                    if (!options.nodeps) {
+                        //  Should already be created
+                        spec.dependencies ||= {}
+                        spec.dependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
+                        Object.sortProperties(spec.dependencies)
+                    }
                 }
             }
         }
@@ -1324,8 +1327,10 @@ class Pak
         }
         runScripts(pak, 'uninstall')
 
-        delete spec.dependencies[pak.name]
-        delete spec.optionalDependencies[pak.name]
+        if (options.write) {
+            delete spec.dependencies[pak.name]
+            delete spec.optionalDependencies[pak.name]
+        }
 
         if (spec.overrides) {
             delete spec.overrides[pak.name]
