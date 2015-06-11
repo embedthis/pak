@@ -1396,14 +1396,17 @@ class Pak
         if (!PACKAGE.exists || !spec) {
             error('Cannot read package.json')
         }
+        topDeps = {}
         if (names.length == 0) {
             let sets = getPaks({}, [], spec)
             Object.sortProperties(sets)
             for each (pak in sets) {
+                topDeps[pak.name] = true
+            }
+            for each (pak in sets) {
                 upgradePak(pak)
             }
         } else {
-            topDeps = {}
             for each (name in names) {
                 topDeps[name] = true
             }
