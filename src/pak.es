@@ -1397,14 +1397,10 @@ class Pak
             error('Cannot read package.json')
         }
         if (names.length == 0) {
-            let deps = blend({}, spec.dependencies)
-            blend(deps, spec.optionalDependencies)
-            topDeps = deps
-            for (let [name,criteria] in deps) {
-                let pak = Package(name, criteria)
-                if (pak.installed || !optional(spec, pak.name)) {
-                    upgradePak(pak)
-                }
+            let sets = getPaks({}, [], spec)
+            Object.sortProperties(sets)
+            for each (pak in sets) {
+                upgradePak(pak)
             }
         } else {
             topDeps = {}
