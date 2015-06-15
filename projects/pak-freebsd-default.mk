@@ -394,49 +394,70 @@ $(BUILD)/bin/libmpr-openssl.a: $(DEPS_26)
 endif
 endif
 
+ifeq ($(ME_COM_ZLIB),1)
+#
+#   libzlib
+#
+DEPS_27 += $(BUILD)/inc/zlib.h
+DEPS_27 += $(BUILD)/obj/zlib.o
+
+$(BUILD)/bin/libzlib.so: $(DEPS_27)
+	@echo '      [Link] $(BUILD)/bin/libzlib.so'
+	$(CC) -shared -o $(BUILD)/bin/libzlib.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/zlib.o" $(LIBS) 
+endif
+
 #
 #   libmpr
 #
-DEPS_27 += $(BUILD)/inc/osdep.h
+DEPS_28 += $(BUILD)/inc/osdep.h
 ifeq ($(ME_COM_SSL),1)
 ifeq ($(ME_COM_OPENSSL),1)
-    DEPS_27 += $(BUILD)/bin/libmpr-openssl.a
+    DEPS_28 += $(BUILD)/bin/libmpr-openssl.a
 endif
 endif
-DEPS_27 += $(BUILD)/inc/mpr.h
-DEPS_27 += $(BUILD)/obj/mprLib.o
+ifeq ($(ME_COM_ZLIB),1)
+    DEPS_28 += $(BUILD)/bin/libzlib.so
+endif
+DEPS_28 += $(BUILD)/inc/mpr.h
+DEPS_28 += $(BUILD)/obj/mprLib.o
 
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_27 += -lmpr-openssl
-    LIBPATHS_27 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_28 += -lmpr-openssl
+    LIBPATHS_28 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 ifeq ($(ME_COM_OPENSSL),1)
 ifeq ($(ME_COM_SSL),1)
-    LIBS_27 += -lssl
-    LIBPATHS_27 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_28 += -lssl
+    LIBPATHS_28 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_27 += -lcrypto
-    LIBPATHS_27 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_28 += -lcrypto
+    LIBPATHS_28 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_28 += -lzlib
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_27 += -lmpr-openssl
-    LIBPATHS_27 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_28 += -lmpr-openssl
+    LIBPATHS_28 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_28 += -lzlib
 endif
 
-$(BUILD)/bin/libmpr.so: $(DEPS_27)
+$(BUILD)/bin/libmpr.so: $(DEPS_28)
 	@echo '      [Link] $(BUILD)/bin/libmpr.so'
-	$(CC) -shared -o $(BUILD)/bin/libmpr.so $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/mprLib.o" $(LIBPATHS_27) $(LIBS_27) $(LIBS_27) $(LIBS) 
+	$(CC) -shared -o $(BUILD)/bin/libmpr.so $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/mprLib.o" $(LIBPATHS_28) $(LIBS_28) $(LIBS_28) $(LIBS) 
 
 ifeq ($(ME_COM_PCRE),1)
 #
 #   libpcre
 #
-DEPS_28 += $(BUILD)/inc/pcre.h
-DEPS_28 += $(BUILD)/obj/pcre.o
+DEPS_29 += $(BUILD)/inc/pcre.h
+DEPS_29 += $(BUILD)/obj/pcre.o
 
-$(BUILD)/bin/libpcre.so: $(DEPS_28)
+$(BUILD)/bin/libpcre.so: $(DEPS_29)
 	@echo '      [Link] $(BUILD)/bin/libpcre.so'
 	$(CC) -shared -o $(BUILD)/bin/libpcre.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/pcre.o" $(LIBS) 
 endif
@@ -445,55 +466,49 @@ ifeq ($(ME_COM_HTTP),1)
 #
 #   libhttp
 #
-DEPS_29 += $(BUILD)/bin/libmpr.so
+DEPS_30 += $(BUILD)/bin/libmpr.so
 ifeq ($(ME_COM_PCRE),1)
-    DEPS_29 += $(BUILD)/bin/libpcre.so
+    DEPS_30 += $(BUILD)/bin/libpcre.so
 endif
-DEPS_29 += $(BUILD)/inc/http.h
-DEPS_29 += $(BUILD)/obj/httpLib.o
+DEPS_30 += $(BUILD)/inc/http.h
+DEPS_30 += $(BUILD)/obj/httpLib.o
 
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_29 += -lmpr-openssl
-    LIBPATHS_29 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_30 += -lmpr-openssl
+    LIBPATHS_30 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 ifeq ($(ME_COM_OPENSSL),1)
 ifeq ($(ME_COM_SSL),1)
-    LIBS_29 += -lssl
-    LIBPATHS_29 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_30 += -lssl
+    LIBPATHS_30 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_29 += -lcrypto
-    LIBPATHS_29 += -L"$(ME_COM_OPENSSL_PATH)"
+    LIBS_30 += -lcrypto
+    LIBPATHS_30 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
-LIBS_29 += -lmpr
-ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_29 += -lmpr-openssl
-    LIBPATHS_29 += -L"$(ME_COM_OPENSSL_PATH)"
-endif
-ifeq ($(ME_COM_PCRE),1)
-    LIBS_29 += -lpcre
-endif
-ifeq ($(ME_COM_PCRE),1)
-    LIBS_29 += -lpcre
-endif
-LIBS_29 += -lmpr
-
-$(BUILD)/bin/libhttp.so: $(DEPS_29)
-	@echo '      [Link] $(BUILD)/bin/libhttp.so'
-	$(CC) -shared -o $(BUILD)/bin/libhttp.so $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/httpLib.o" $(LIBPATHS_29) $(LIBS_29) $(LIBS_29) $(LIBS) 
-endif
-
 ifeq ($(ME_COM_ZLIB),1)
-#
-#   libzlib
-#
-DEPS_30 += $(BUILD)/inc/zlib.h
-DEPS_30 += $(BUILD)/obj/zlib.o
+    LIBS_30 += -lzlib
+endif
+LIBS_30 += -lmpr
+ifeq ($(ME_COM_OPENSSL),1)
+    LIBS_30 += -lmpr-openssl
+    LIBPATHS_30 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_30 += -lzlib
+endif
+ifeq ($(ME_COM_PCRE),1)
+    LIBS_30 += -lpcre
+endif
+ifeq ($(ME_COM_PCRE),1)
+    LIBS_30 += -lpcre
+endif
+LIBS_30 += -lmpr
 
-$(BUILD)/bin/libzlib.so: $(DEPS_30)
-	@echo '      [Link] $(BUILD)/bin/libzlib.so'
-	$(CC) -shared -o $(BUILD)/bin/libzlib.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/zlib.o" $(LIBS) 
+$(BUILD)/bin/libhttp.so: $(DEPS_30)
+	@echo '      [Link] $(BUILD)/bin/libhttp.so'
+	$(CC) -shared -o $(BUILD)/bin/libhttp.so $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/httpLib.o" $(LIBPATHS_30) $(LIBS_30) $(LIBS_30) $(LIBS) 
 endif
 
 ifeq ($(ME_COM_EJS),1)
@@ -529,10 +544,16 @@ ifeq ($(ME_COM_OPENSSL),1)
     LIBS_31 += -lcrypto
     LIBPATHS_31 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_31 += -lzlib
+endif
 LIBS_31 += -lmpr
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_31 += -lmpr-openssl
     LIBPATHS_31 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_31 += -lzlib
 endif
 ifeq ($(ME_COM_PCRE),1)
     LIBS_31 += -lpcre
@@ -544,12 +565,6 @@ ifeq ($(ME_COM_PCRE),1)
     LIBS_31 += -lpcre
 endif
 LIBS_31 += -lmpr
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_31 += -lzlib
-endif
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_31 += -lzlib
-endif
 ifeq ($(ME_COM_HTTP),1)
     LIBS_31 += -lhttp
 endif
@@ -580,10 +595,16 @@ ifeq ($(ME_COM_OPENSSL),1)
     LIBS_32 += -lcrypto
     LIBPATHS_32 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_32 += -lzlib
+endif
 LIBS_32 += -lmpr
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_32 += -lmpr-openssl
     LIBPATHS_32 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_32 += -lzlib
 endif
 ifeq ($(ME_COM_PCRE),1)
     LIBS_32 += -lpcre
@@ -595,13 +616,7 @@ ifeq ($(ME_COM_PCRE),1)
     LIBS_32 += -lpcre
 endif
 LIBS_32 += -lmpr
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_32 += -lzlib
-endif
 LIBS_32 += -lejs
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_32 += -lzlib
-endif
 ifeq ($(ME_COM_HTTP),1)
     LIBS_32 += -lhttp
 endif
@@ -647,10 +662,16 @@ ifeq ($(ME_COM_OPENSSL),1)
     LIBS_34 += -lcrypto
     LIBPATHS_34 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_34 += -lzlib
+endif
 LIBS_34 += -lmpr
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_34 += -lmpr-openssl
     LIBPATHS_34 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_34 += -lzlib
 endif
 ifeq ($(ME_COM_PCRE),1)
     LIBS_34 += -lpcre
@@ -662,13 +683,7 @@ ifeq ($(ME_COM_PCRE),1)
     LIBS_34 += -lpcre
 endif
 LIBS_34 += -lmpr
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_34 += -lzlib
-endif
 LIBS_34 += -lejs
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_34 += -lzlib
-endif
 ifeq ($(ME_COM_HTTP),1)
     LIBS_34 += -lhttp
 endif
@@ -699,10 +714,16 @@ ifeq ($(ME_COM_OPENSSL),1)
     LIBS_35 += -lcrypto
     LIBPATHS_35 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_35 += -lzlib
+endif
 LIBS_35 += -lmpr
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_35 += -lmpr-openssl
     LIBPATHS_35 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_35 += -lzlib
 endif
 ifeq ($(ME_COM_PCRE),1)
     LIBS_35 += -lpcre
@@ -783,10 +804,16 @@ ifeq ($(ME_COM_OPENSSL),1)
     LIBS_38 += -lcrypto
     LIBPATHS_38 += -L"$(ME_COM_OPENSSL_PATH)"
 endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_38 += -lzlib
+endif
 LIBS_38 += -lmpr
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_38 += -lmpr-openssl
     LIBPATHS_38 += -L"$(ME_COM_OPENSSL_PATH)"
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_38 += -lzlib
 endif
 ifeq ($(ME_COM_PCRE),1)
     LIBS_38 += -lpcre
@@ -798,14 +825,8 @@ ifeq ($(ME_COM_PCRE),1)
     LIBS_38 += -lpcre
 endif
 LIBS_38 += -lmpr
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_38 += -lzlib
-endif
 ifeq ($(ME_COM_EJS),1)
     LIBS_38 += -lejs
-endif
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_38 += -lzlib
 endif
 ifeq ($(ME_COM_HTTP),1)
     LIBS_38 += -lhttp

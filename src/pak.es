@@ -1656,6 +1656,7 @@ class Pak
                     scripts = [scripts]
                 }
                 for each (script in scripts) {
+print("EVENT", event, typeOf(script), script)
                     if (script is String || script.script) {
                         vtrace('Run', 'Event "' + event + '"')
                         eval('require ejs.unix\n' + script.script)
