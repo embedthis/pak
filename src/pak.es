@@ -1085,27 +1085,25 @@ class Pak
         Object.sortProperties(sets)
         for each (pak in sets) {
             spec.optionalDependencies ||= {}
-            let opt = optional(spec, pak.name) ? ' optional' : ''
-            let installed = pak.installVersion ? ' installed' : ''
-            let uninstalled = pak.installVersion ? '' : ' uninstalled'
-            let at = ''
+            let installed = pak.installVersion ? ' installed' : ' uninstalled'
+            let from = 'unknown-origin'
             if (pak.install && pak.install.pak.origin) {
-                at = ' ' + pak.install.pak.origin
+                from = pak.install.pak.origin
             } else if (pak.cache && pak.cache.pak.origin) {
-                at = ' ' + pak.cache.pak.origin
+                from = pak.cache.pak.origin
             }
-            let frozen = (pak.install && pak.install.pak.frozen) ? ' frozen' : ''
+            let frozen = (pak.install && pak.install.pak.frozen) ? 'frozen' : pak.versionCriteria
+            let why = 'local'
+            if (spec.dependencies[pak.name]) {
+                why = 'dependency'
+            } else if (optional(spec, pak.name)) {
+                why = 'optional'
+            }
             let version = pak.installVersion || pak.cacheVersion || '-----'
-            if (!spec.dependencies[pak.name] && !optional(spec, pak.name) && options.versions) {
-                printf('%24s %6s %s%s%s%s%s\n', pak.name, version, uninstalled, installed, at,
-                    opt, frozen)
-            } else if (options.details && pak.install) {
+            if (options.details && pak.install) {
                 print(pak.name + ' ' + serialize(pak.install, {pretty: true, indent: 4}))
-            } else if (options.versions) {
-                printf('%24s %6s %s%s%s%s%s\n', pak.name, version, uninstalled, installed, at,
-                    opt, frozen)
             } else {
-                print('')
+                printf('%24s %6s %12s %11s %7s  %s\n', pak.name, version, installed, why, frozen, from)
             }
         }
     }
@@ -1332,7 +1330,6 @@ class Pak
             delete spec.dependencies[pak.name]
             delete spec.optionalDependencies[pak.name]
         }
-
         if (spec.overrides) {
             delete spec.overrides[pak.name]
         }
@@ -1361,6 +1358,7 @@ class Pak
                     }
                 }
             }
+        }
         }
         checkNamePatterns(patterns, list)
         for each (pak in list) {
