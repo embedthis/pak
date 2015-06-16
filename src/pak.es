@@ -328,8 +328,9 @@ class Pak
         spec.pak ||= {}
         spec.dependencies ||= {}
         spec.optionalDependencies ||= {}
+        spec.devDependencies ||= {}
 
-        let pver = spec.pak.pak || spec.pak.version
+        let pver = spec.pak.pak || spec.pak.version || spec.devDependencies.pak
         if (pver && !Version(Config.Version).acceptable(pver)) {
             throw '' + spec.title + ' requires Pak ' + pver + '. Pak version ' + Config.Version +
                             ' is not compatible with this requirement.' + '\n'
@@ -1349,12 +1350,13 @@ class Pak
 
     function uninstall(patterns): Void {
         let list = []
-        let sets = getInstalledPaks({}, patterns, spec)
+        let sets = getPaks({}, patterns, spec)
         for each (pat in patterns) {
             for each (pak in sets) {
                 if (matchPakName(pak.name, [pat])) {
                     list.push(pak)
-                    if (!pak.installed && !pak.cached && !state.force) {
+                    if (!pak.installed && !state.force) {
+                        if (!((spec.dependencies[pak.name] || spec.optionalDependencies[pak.name]) && options.write)) {
                         throw 'Pak "' + pak + '" is not installed'
                     }
                 }
