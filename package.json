@@ -35,7 +35,7 @@
         "mpr-openssl": "^0.3"
     },
     "devDependencies": {
-        "makeme": "^0.9"
+        "makeme": ">=^0.9"
     },
     "pak": {
         "import": true
