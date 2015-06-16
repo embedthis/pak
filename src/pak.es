@@ -2165,6 +2165,15 @@ print("EVENT", event, typeOf(script), script)
             if (path.isDir) {
                 let dep = Package(path.basename)
                 if (matchPakName(dep.name, patterns)) {
+                    /* Overwrites entry for dependencies if present */
+                    let prior = result[dep.name]
+                    if (prior && (prior.versionCriteria != '^*')) {
+                        if (dep.versionCriteria == '^*') {
+                            dep.versionCriteria = prior.versionCriteria
+                        }
+                    } else if (spec.optionalDependencies[dep.name]) {
+                        dep.versionCriteria = spec.optionalDependencies[dep.name]
+                    }
                     result[dep.name] = dep
                 }
             }
