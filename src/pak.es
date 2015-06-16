@@ -1354,11 +1354,11 @@ class Pak
                     list.push(pak)
                     if (!pak.installed && !state.force) {
                         if (!((spec.dependencies[pak.name] || spec.optionalDependencies[pak.name]) && options.write)) {
-                        throw 'Pak "' + pak + '" is not installed'
+                            throw 'Pak "' + pak + '" is not installed'
+                        }
                     }
                 }
             }
-        }
         }
         checkNamePatterns(patterns, list)
         for each (pak in list) {
