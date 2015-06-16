@@ -2130,6 +2130,15 @@ print("EVENT", event, typeOf(script), script)
             if (typeOf(value) == 'Object') {
                 if (Object.getOwnPropertyCount(value) == 0) {
                     empty.push(key)
+                } else {
+                    /* Deleted items still show in getOwnPropertyCount */
+                    count = 0
+                    for (item in value) {
+                        count++
+                    } 
+                    if (count == 0) {
+                        empty.push(key)
+                    }
                 }
             }
         }
