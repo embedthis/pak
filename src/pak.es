@@ -870,16 +870,7 @@ class Pak
                     qtrace('Info', pak + ' is already installed')
                     return
                 }
-                if (state.upgrading) {
-                    if (Version(pak.cache.version).acceptable('>' + pak.installVersion)) {
-                        trace('Upgrade', pak.name + ' from ' + pak.installVersion +
-                                       ' to ' + pak.cache.version)
-                    } else {
-                        qtrace('Info', pak.name + ' ' + pak.installVersion +
-                               ' is the most recent available in the Pak cache')
-                        return
-                    }
-                } else {
+                if (!state.upgrading) {
                     if (pak.installVersion.acceptable(pak.versionCriteria)) {
                         qtrace('Info', pak + ' is already installed')
                         return
@@ -891,6 +882,14 @@ class Pak
         if (!pak.cache || !Version(pak.cache.version).acceptable(pak.versionCriteria)) {
             locatePak(pak)
             cachePak(pak)
+        }
+        if (state.upgrading && pak.installed) {
+            if (Version(pak.cache.version).acceptable('>' + pak.installVersion)) {
+                trace('Upgrade', pak.name + ' from ' + pak.installVersion + ' to ' + pak.cache.version)
+            } else {
+                qtrace('Info', pak.name + ' ' + pak.installVersion + ' is the most recent acceptable version')
+                return
+            }
         }
         runScripts(pak, 'preinstall')
         installPak(pak, true)
@@ -1865,7 +1864,7 @@ class Pak
                 if (pak.catalog && pak.catalog != cname) {
                     continue
                 }
-                trace('Info', 'Search catalog: "' + cname + '" for ' + pak.name)
+                trace('Info', 'Search catalog: "' + cname + '" for ' + pak.name + ' for version ' + pak.versionCriteria)
                 let cmd = catalog.lookup
                 let http = new Http
                 try {
