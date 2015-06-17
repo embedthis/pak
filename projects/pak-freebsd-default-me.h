@@ -81,32 +81,32 @@
 #ifndef ME_DESCRIPTION
     #define ME_DESCRIPTION "Embedthis Pak Manager"
 #endif
-#ifndef ME_EJS_DB
-    #define ME_EJS_DB 0
-#endif
-#ifndef ME_EJS_MAIL
-    #define ME_EJS_MAIL 0
-#endif
-#ifndef ME_EJS_MAPPER
-    #define ME_EJS_MAPPER 0
-#endif
-#ifndef ME_EJS_SHELL
-    #define ME_EJS_SHELL 0
-#endif
-#ifndef ME_EJS_TAR
-    #define ME_EJS_TAR 1
-#endif
-#ifndef ME_EJS_TEMPLATE
-    #define ME_EJS_TEMPLATE 0
-#endif
-#ifndef ME_EJS_WEB
-    #define ME_EJS_WEB 0
-#endif
-#ifndef ME_EJS_ZLIB
-    #define ME_EJS_ZLIB 1
-#endif
 #ifndef ME_EJS_ONE_MODULE
     #define ME_EJS_ONE_MODULE 1
+#endif
+#ifndef ME_EJSCRIPT_DB
+    #define ME_EJSCRIPT_DB 0
+#endif
+#ifndef ME_EJSCRIPT_MAIL
+    #define ME_EJSCRIPT_MAIL 0
+#endif
+#ifndef ME_EJSCRIPT_MAPPER
+    #define ME_EJSCRIPT_MAPPER 0
+#endif
+#ifndef ME_EJSCRIPT_SHELL
+    #define ME_EJSCRIPT_SHELL 0
+#endif
+#ifndef ME_EJSCRIPT_TAR
+    #define ME_EJSCRIPT_TAR 1
+#endif
+#ifndef ME_EJSCRIPT_TEMPLATE
+    #define ME_EJSCRIPT_TEMPLATE 0
+#endif
+#ifndef ME_EJSCRIPT_WEB
+    #define ME_EJSCRIPT_WEB 0
+#endif
+#ifndef ME_EJSCRIPT_ZLIB
+    #define ME_EJSCRIPT_ZLIB 1
 #endif
 #ifndef ME_ESFLAGS
     #define ME_ESFLAGS ""
@@ -246,6 +246,9 @@
 #endif
 #ifndef ME_COM_EJS
     #define ME_COM_EJS 1
+#endif
+#ifndef ME_COM_EJSCRIPT
+    #define ME_COM_EJSCRIPT 1
 #endif
 #ifndef ME_COM_HTTP
     #define ME_COM_HTTP 1

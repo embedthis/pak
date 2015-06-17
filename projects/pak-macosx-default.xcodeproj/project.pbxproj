@@ -563,10 +563,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F8262D1CF8264B4C00000026 /* ejsc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsc.c; path = src/ejs/ejsc.c; sourceTree = "<group>"; };
-		F8262D1CF8264B4C00000094 /* ejs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.h; path = src/ejs/ejs.h; sourceTree = "<group>"; };
+		F8262D1CF8264B4C00000026 /* ejsc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsc.c; path = src/ejscript/ejsc.c; sourceTree = "<group>"; };
+		F8262D1CF8264B4C00000094 /* ejs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.h; path = src/ejscript/ejs.h; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000095 /* ejsc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ejsc; sourceTree = BUILT_PRODUCTS_DIR; };
-		F8262D1CF8264B4C00000028 /* ejsLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsLib.c; path = src/ejs/ejsLib.c; sourceTree = "<group>"; };
+		F8262D1CF8264B4C00000028 /* ejsLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsLib.c; path = src/ejscript/ejsLib.c; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000096 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpr.h; path = build/macosx-x64-default/inc/mpr.h; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000097 /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcre.h; path = build/macosx-x64-default/inc/pcre.h; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000098 /* me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = me.h; path = build/macosx-x64-default/inc/me.h; sourceTree = "<group>"; };
@@ -953,7 +953,7 @@
     			files = (
     			);
     			inputPaths = (
-    ../src/ejs/ejs.es
+    ../src/ejscript/ejs.es
     			);
     			outputPaths = (
     ../build/macosx-x64-default/bin/ejs.mod
@@ -961,7 +961,8 @@
     			runOnlyForDeploymentPostprocessing = 0;
     			shellPath = /bin/bash;
     			shellScript = "PATH=$PATH:/usr/local/bin
-cd ../src/ejs
+cd ../src/ejscript
+	\"../${OUT_DIR}/bin/ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --optimize 9 --bind --require null ejs.es
 	\"../${OUT_DIR}/bin/ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --optimize 9 --bind --require null ejs.es
 ";
     		};
@@ -1041,14 +1042,14 @@ if ! diff ${INC_DIR}/me.h pak-macosx-default-me.h >/dev/null 2>&1 ; then
 cp pak-macosx-default-me.h ${INC_DIR}/me.h
 fi
 fi
-if [ ../src/ejs/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
-cp ../src/ejs/ejs.h ${OUT_DIR}/inc/ejs.h
+if [ ../src/ejscript/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
+cp ../src/ejscript/ejs.h ${OUT_DIR}/inc/ejs.h
 fi
-if [ ../src/ejs/ejs.slots.h -nt ${OUT_DIR}/inc/ejs.slots.h ] ; then
-cp ../src/ejs/ejs.slots.h ${OUT_DIR}/inc/ejs.slots.h
+if [ ../src/ejscript/ejs.slots.h -nt ${OUT_DIR}/inc/ejs.slots.h ] ; then
+cp ../src/ejscript/ejs.slots.h ${OUT_DIR}/inc/ejs.slots.h
 fi
-if [ ../src/ejs/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
-cp ../src/ejs/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
+if [ ../src/ejscript/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
+cp ../src/ejscript/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
 fi
 if [ ../src/http/http.h -nt ${OUT_DIR}/inc/http.h ] ; then
 cp ../src/http/http.h ${OUT_DIR}/inc/http.h
@@ -1065,14 +1066,14 @@ fi
 if [ ../src/zlib/zlib.h -nt ${OUT_DIR}/inc/zlib.h ] ; then
 cp ../src/zlib/zlib.h ${OUT_DIR}/inc/zlib.h
 fi
-if [ ../src/ejs/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
-cp ../src/ejs/ejs.h ${OUT_DIR}/inc/ejs.h
+if [ ../src/ejscript/ejs.h -nt ${OUT_DIR}/inc/ejs.h ] ; then
+cp ../src/ejscript/ejs.h ${OUT_DIR}/inc/ejs.h
 fi
-if [ ../src/ejs/ejs.slots.h -nt ${OUT_DIR}/inc/ejs.slots.h ] ; then
-cp ../src/ejs/ejs.slots.h ${OUT_DIR}/inc/ejs.slots.h
+if [ ../src/ejscript/ejs.slots.h -nt ${OUT_DIR}/inc/ejs.slots.h ] ; then
+cp ../src/ejscript/ejs.slots.h ${OUT_DIR}/inc/ejs.slots.h
 fi
-if [ ../src/ejs/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
-cp ../src/ejs/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
+if [ ../src/ejscript/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
+cp ../src/ejscript/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
 fi
 if [ ../src/http/http.h -nt ${OUT_DIR}/inc/http.h ] ; then
 cp ../src/http/http.h ${OUT_DIR}/inc/http.h
