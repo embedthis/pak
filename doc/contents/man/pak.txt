@@ -280,10 +280,14 @@ COMMANDS
               package dependencies.
 
        update [packages...]
-              Update the pak cache with latest version.
+              Update  the pak cache with latest available version of the pack-
+              age.
 
        upgrade [packages...]
-              Upgrade installed packages.
+              Upgrade installed packages with the latest version of the  pack-
+              age  available  in  the  local  package  cache.   If there is no
+              acceptable version in the local cache, the cache will be updated
+              as required.
 
 
 OPTIONS

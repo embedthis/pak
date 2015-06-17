@@ -2,7 +2,7 @@
 .SH NAME
 pak \- Embedthis Pak -- Package Manager
 .SH SYNOPSIS
-.B pak 
+.B pak
     \fB--all\fR
     \fB--cache dir\fR
     \fB--details\fR
@@ -17,7 +17,7 @@ pak \- Embedthis Pak -- Package Manager
     \fB--quiet\fR
     \fB--silent\fR
     \fB--verbose\fR
-    \fB--versions\fR 
+    \fB--versions\fR
     \fB--write\fR
     \fBcommands ...\fB
 .SH ""
@@ -31,7 +31,7 @@ pak \- Embedthis Pak -- Package Manager
     init [name [version]]
     install packages...
     list packages...
-    lockdown    
+    lockdown
     mode [debug|release|...]
     prune packages...
     publish [name endpoint email [override]]
@@ -42,14 +42,14 @@ pak \- Embedthis Pak -- Package Manager
     upgrade packages...
 .RE
 .SH DESCRIPTION
-\fBPak\fR is a package manager for application components. 
+\fBPak\fR is a package manager for application components.
 
 .PP
 .SH WHY PAK?
-Existing package managers like NPM are excellent, but they are heavily focussed the needs of NodeJS and not 
-for non-Node applications or general application components. Pak is agnostic to its environment and can be 
+Existing package managers like NPM are excellent, but they are heavily focussed the needs of NodeJS and not
+for non-Node applications or general application components. Pak is agnostic to its environment and can be
 used to install components for any application.
-.PP 
+.PP
 
 .SH FEATURES
 Pak has the following major features:
@@ -93,7 +93,7 @@ Where an ENDPOINT can be the name of a package published in the Pak catalog, NPM
     pak install git@github.com:embedthis/jquery
     pak install ./my-source/graphics
 
-To uninstall 
+To uninstall
     pak uninstall Endpoints...
 
 To list installed packages
@@ -101,7 +101,7 @@ To list installed packages
 
 To display package dependencies
     pak depend
-    
+
 To show what packages are present in the cache and where they originated
     pak cached
 
@@ -146,7 +146,7 @@ For more details, see:
 
 
 .SH RUNNING
-To run Pak with more verbose trace output, use the [-v] --verbose switch. To run with less trace, use the 
+To run Pak with more verbose trace output, use the [-v] --verbose switch. To run with less trace, use the
 [-q] --quiet switch.  To run completely silently except for hard-errors, use --silent.
 
 .SH PUBLISHING
@@ -154,8 +154,8 @@ To publish a new package, create a package.json and then run pak inside the dire
 
     pak publish
 
-Where NAME is the name of package, REPOSITORY is the GitHub endpoint of the package. You will be prompted to enter a 
-password to manage the package. You will need this password to modify or retract the package in the future. 
+Where NAME is the name of package, REPOSITORY is the GitHub endpoint of the package. You will be prompted to enter a
+password to manage the package. You will need this password to modify or retract the package in the future.
 Safeguard it well.
 
 .SH CONFIGURATION
@@ -188,42 +188,42 @@ directory in which to store packages. The "pakcache" directory defines where to 
 .PP
 Pak locates a valid pakrc file by searching in order:
 
-    pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, package.json 
+    pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, package.json
 
 .SH COMMANDS
 
-.TP 
+.TP
 cache [packages...]
 Download and populate the cache with packages.
 .TP
-cached [packages...]         
+cached [packages...]
 List packages in the cache.
 .TP
-config                   
+config
 Show the Pak configuration.
 .TP
-depend [packages...]         
+depend [packages...]
 Display installed package dependencies.
 .TP
-edit key[=value]...      
+edit key[=value]...
 Edit a package description file.
 .TP
 help ...
 Display this Pak usage help.
 .TP
-info packages...             
+info packages...
 Display the README for a cached package.
 .TP
-init [name [version]]    
+init [name [version]]
 Create a new package.json.
 .TP
-install packages...          
+install packages...
 Install a package on the local system. The package name can be a name in an online catalog or it can be a GitHub endpoint
 URL or of the form 'account/repositiory'. The package name may have a catalog prefix "pak", "npm" or "bower" to select
 a specific catalog to use when locating the package repository endpoint. Use the --write option to update the package.json
 dependencies with the install package. Use with the --optional switch to update the optionalDependencies.
 .TP
-list [packages...]           
+list [packages...]
 List the installed packages.
 .TP
 lockdown
@@ -235,26 +235,27 @@ mode
 Index in the modes property. The selected property collection is copied up to the top level. This may be used to select
 a "debug" or "release" configuration.
 .TP
-prune [packages...]          
+prune [packages...]
 Prune named packages.
 .TP
 publish name endpoint password
 Publish a package in the Pak catalog.
 .TP
-retract name [pass]      
+retract name [pass]
 Unpublish a package.
 .TP
-search packages...           
+search packages...
 Search for packages in the catalogs.
 .TP
-uninstall                
+uninstall
 Uninstall an installed package. Use --write to remove from the package dependencies.
 .TP
-update [packages...]         
-Update the pak cache with latest version.
+update [packages...]
+Update the pak cache with latest available version of the package.
 .TP
-upgrade [packages...]        
-Upgrade installed packages.
+upgrade [packages...]
+Upgrade installed packages with the latest version of the package available in the local package cache.
+If there is no acceptable version in the local cache, the cache will be updated as required.
 
 .SH OPTIONS
 .TP
@@ -263,7 +264,7 @@ Show all versions of a package.
 
 .TP
 \fB\--cache directory\fR
-Specify the directory to use for the paks cache. This overrides the values specified in the various pakrc 
+Specify the directory to use for the paks cache. This overrides the values specified in the various pakrc
 or package.json files.
 
 .TP
@@ -295,7 +296,7 @@ Used when installing packages to add them to the 'optionalDependencies' list ins
 
 .TP
 \fB\--paks directory\fR
-Specify the local "paks" directory in which to install packages. This overrides the values specified in the various pakrc 
+Specify the local "paks" directory in which to install packages. This overrides the values specified in the various pakrc
 or package.json files.
 
 .TP

@@ -175,7 +175,7 @@
             <p>In the previous example, Bootstrap internally specifies jQuery as a dependency, so we could have 
             installed just Bootstrap and it would have automatically downloaded and installed jquery &mdash; 
             as it is required by Bootstrap. For example:</p>
-<code>$ <b>pak install bootstrap</b>
+<code>$ <b>pak --write install bootstrap</b>
 [Install] jquery 2.1.3
 [Install] bootstrap 3.3.2</code>
             <p>Without requesting jQuery, Pak knew to install it because it was listed in the Bootstrap dependencies.</p>
@@ -242,11 +242,13 @@ pak install <b>bower:</b>jquery
             <p>To reinstall all the application's packages.</p>
             <code>pak -f install</code>
 
-
             <p>To upgrade all the packages required by an application as specified in package.json:</p>
             <code>pak upgrade</code>
+            <p>This will upgrade the application using the latest versions of packages from the local package cache.
+            If there is not suitable version in the cache, the cache will be updated first.</p>
 
-
+            <p>To update the package cache with the latest available version of a package:</p>
+            <code>pak update NAME</code>
 
 
     </div>
