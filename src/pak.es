@@ -881,7 +881,10 @@ class Pak
         state.installing = true
         if (!pak.cache || !Version(pak.cache.version).acceptable(pak.versionCriteria)) {
             locatePak(pak)
+            let force = state.force
+            state.force = false
             cachePak(pak)
+            state.force = force
         }
         if (state.upgrading && pak.installed) {
             if (Version(pak.cache.version).acceptable('>' + pak.installVersion)) {
@@ -2170,7 +2173,7 @@ class Pak
     function getInstalledPaks(result, patterns, pak) {
         for each (path in directories.paks.files('*')) {
             if (path.isDir) {
-                let dep = Package(path.basename)
+                let dep = Package(path.absolute)
                 if (matchPakName(dep.name, patterns)) {
                     /* Overwrites entry for dependencies if present */
                     let prior = result[dep.name]
