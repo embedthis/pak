@@ -17,7 +17,7 @@
     
 
 </head>
-<body>
+<body class="show-sidebar">
         
 
     <div class="sidebar">
@@ -233,7 +233,7 @@ Start -&gt; Control Panel -&gt; Administrative Tools -&gt; Services
                 $('.sidebar').css('visibility', 'hidden');
             }
         });
-        $('.sidebar-launch').trigger('click');
+        // $('.sidebar-launch').trigger('click');
         $('.sidebar a.item').click(function(e) {
             sessionStorage.setItem('scroll-top', $('.sidebar').scrollTop());
         });
