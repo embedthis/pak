@@ -886,7 +886,7 @@ class Pak
         if (state.upgrading && pak.installed) {
             if (Version(pak.cache.version).acceptable('>' + pak.installVersion)) {
                 trace('Upgrade', pak.name + ' from ' + pak.installVersion + ' to ' + pak.cache.version)
-            } else {
+            } else if (!state.force) {
                 qtrace('Info', pak.name + ' ' + pak.installVersion + ' is the most recent acceptable version')
                 return
             }
