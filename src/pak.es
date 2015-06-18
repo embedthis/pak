@@ -1748,7 +1748,9 @@ class Pak
         }
         for (let [name, dep] in deps) {
             out.write(prefix)
-            out.write('    ' + dep.name + ' ' + (dep.installVersion || pak.cacheVersion) + '\n')
+            //  TODO - should display the version criteria
+            out.write('    ' + dep.name + ' ' + (dep.installVersion || pak.cacheVersion) + ' (' + 
+                dep.versionCriteria + ')\n')
         }
     }
 
