@@ -1550,6 +1550,13 @@ class Pak
             http.close()
             trace('Extract', 'Extract to ' + pak.cachePath)
             Tar(temp, {uncompress: true, dest: pak.cachePath, trim: 1}).extract()
+/* FUTURE
+            Could apply ignore and files 
+            let tmp = Path('').temp()
+            Tar(temp, {uncompress: true, dest: tmp, trim: 1}).extract()
+            copyTree(pak, tmp, pak.cachePath, pak.source.ignore, pak.source.files)
+            tmp.removeAll()
+*/
         } catch (e) {
             pak.cachePath.removeAll()
             /* Remove empty directories */
