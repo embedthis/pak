@@ -208,44 +208,45 @@ class Pak
     function usage(): Void {
         print('\nUsage: pak ' + ' [options] [commands] ...\n\n' +
             '  Commands:\n' +
-            '    cache [paks...]          # Populate the cache with paks\n' +
-            '    cached [paks...]         # List paks in the cache\n' +
-            '    config                   # Show the Pak configuration\n' +
-            '    depend [paks...]         # Display installed pak dependencies\n' +
-            '    edit key[=value]...      # Edit a pak description file \n' +
-            '    help                     # Display this usage help\n' +
-            '    info paks...             # Display README for cached paks\n' +
-            '    init [name [version]]    # Create a new package.json\n' +
-            '    install paks...          # Install a pak on the local system\n' +
-            '    license paks...          # Display LICENSE for paks\n' +
-            '    list [paks...]           # List installed paks\n' +
-            '    lockdown                 # Lockdown dependencies\n' +
-            '    mode [debug|release]     # Select property mode set\n' +
-            '    prune [paks...]          # Prune named paks\n' +
-            '    publish [name uri pass]  # publish a pak in a catalog\n' +
-            '    retract name [pass]      # Unpublish a pak\n' +
-            '    search paks...           # Search for paks in the catalog\n' +
-            '    uninstall paks...        # Uninstall a pak on the local system\n' +
-            '    update [paks...]         # Update the cache with latest version\n' +
-            '    upgrade [paks...]        # Upgrade installed paks\n\n' +
+            '    cache [paks...]             # Populate the cache with paks\n' +
+            '    cached [paks...]            # List paks in the cache\n' +
+            '    config                      # Show the Pak configuration\n' +
+            '    depend [paks...]            # Display installed pak dependencies\n' +
+            '    edit key[=value]...         # Edit a pak description file \n' +
+            '    help                        # Display this usage help\n' +
+            '    info paks...                # Display README for cached paks\n' +
+            '    init [name [version]]       # Create a new package.json\n' +
+            '    install paks...             # Install a pak on the local system\n' +
+            '    license paks...             # Display LICENSE for paks\n' +
+            '    list [paks...]              # List installed paks\n' +
+            '    lockdown                    # Lockdown dependencies\n' +
+            '    mode [debug|release]        # Select property mode set\n' +
+            '    prune [paks...]             # Prune named paks\n' +
+            '    publish [name uri pass]     # publish a pak in a catalog\n' +
+            '    retract name [pass]         # Unpublish a pak\n' +
+            '    search paks...              # Search for paks in the catalog\n' +
+            '    uninstall paks...           # Uninstall a pak on the local system\n' +
+            '    update [paks...]            # Update the cache with latest version\n' +
+            '    upgrade [paks...]           # Upgrade installed paks\n\n' +
+            '    version [major|minor|patch] # Display or increment the version \n' +
             '  General options:\n' +
-            '    --cache dir              # Directory to use for the Pak cache\n' +
-            '    --dir dir                # Change to directory before running\n' +
-            '    --force                  # Force requested action\n' +
-            '    --log file:level         # Send output to a file at a given level\n' +
-            '    --name name              # Set an application name for "pak init"\n' +
-            '    --nodeps                 # Do not install or upgrade dependencies\n' +
-            '    --optional               # Install as an optional dependency\n' +
-            '    --paks dir               # Use given directory for "paks" directory\n' +
-            '    --password file          # File containing the package password\n' +
-            '    --quiet, -q              # Run in quiet mode\n' +
-            '    --silent                 # Run in totally silent mode\n' +
-            '    --verbose, -v            # Run in verbose mode\n\n' +
-            '    --write, -w              # Write installed package to package.json dependencies\n' +
+            '    --cache dir                 # Directory to use for the Pak cache\n' +
+            '    --dir dir                   # Change to directory before running\n' +
+            '    --force                     # Force requested action\n' +
+            '    --log file:level            # Send output to a file at a given level\n' +
+            '    --name name                 # Set an application name for "pak init"\n' +
+            '    --nodeps                    # Do not install or upgrade dependencies\n' +
+            '    --optional                  # Install as an optional dependency\n' +
+            '    --paks dir                  # Use given directory for "paks" directory\n' +
+            '    --password file             # File containing the package password\n' +
+            '    --quiet, -q                 # Run in quiet mode\n' +
+            '    --silent                    # Run in totally silent mode\n' +
+            '    --verbose, -v               # Run in verbose mode\n\n' +
+            '    --write, -w                 # Write installed package to package.json dependencies\n' +
             '  List options:\n' +
-            '    -a, --all                # Show all versions for a pak\n' +
-            '    --details                # Show pak details\n' +
-            '    --versions               # Show pak version information\n' +
+            '    -a, --all                   # Show all versions for a pak\n' +
+            '    --details                   # Show pak details\n' +
+            '    --versions                  # Show pak version information\n' +
             '')
         App.exit(1)
     }
@@ -463,6 +464,11 @@ class Pak
         case 'upgrade':
             checkDir()
             upgrade(rest)
+            break
+
+        case 'version':
+            checkDir()
+            version(rest)
             break
 
         case 'setdeps':
@@ -854,6 +860,9 @@ class Pak
                 let [name,version] = vname.split('#')
                 if (!version && spec.dependencies && spec.dependencies[name]) {
                     version = spec.dependencies[name]
+                }
+                if (!version && spec.optionalDependencies && spec.optionalDependencies[name]) {
+                    version = spec.optionalDependencies[name]
                 }
                 installCommon(Package(name, version))
             }
@@ -1444,6 +1453,24 @@ class Pak
         state.upgrading = true
         installCommon(pak)
         delete state.upgrading
+    }
+
+    function version(rest: Array) {
+        let newVersion = rest.toString()
+        let v = Version(spec.version)
+        if (newVersion == '') {
+            print(spec.version)
+            return
+        }
+        if (newVersion == 'major') {
+            newVersion = (v.major + 1) + '.0.0'
+        } else if (newVersion == 'minor') {
+            newVersion = v.major + '.' + (v.minor + 1) + '.0'
+        } else if (newVersion == 'patch') {
+            newVersion = v.major + '.' + v.minor + '.' + (v.patch + 1)
+        }
+        edit(['version=' + newVersion])
+        edit(['version'])
     }
 
     function copyTree(pak, fromDir: Path, toDir: Path, ignore, files, exportList: Array?) {
