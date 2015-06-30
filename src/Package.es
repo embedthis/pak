@@ -169,6 +169,7 @@ enumerable class Package {
                     if (install.pak && install.pak.origin) {
                         parseEndpoint(install.pak.origin)
                     }
+                    name = install.name
                 }
             }
         }
@@ -180,7 +181,7 @@ enumerable class Package {
         if (cachePath && cachePath.exists) {
             cache = Package.loadPackage(cachePath, {quiet: true})
             if (cache) {
-                name ||= cache.name
+                name = cache.name
                 if (cache.version) {
                     cacheVersion = Version(cache.version)
                 }
