@@ -271,13 +271,15 @@ PAK(1)                           User Commands                          PAK(1)
 
        update [packages...]
               Update  the pak cache with latest available version of the pack-
-              age.
+              age. This will check with catalogs to determine the most  recent
+              versions  of a package and will download the package and save in
+              the cache.
 
        upgrade [packages...]
               Upgrade installed packages with the latest version of the  pack-
-              age  available  in  the  local  package  cache.   If there is no
-              acceptable version in the local cache, the cache will be updated
-              as required.
+              age.  This will update the cache if required.  Use --noupdate to
+              upgrade only from the local cache without downloading  new  ver-
+              sions.
 
        version [major|minor|patch|other]
               Update  the version by incrementing the relevant major, minor or

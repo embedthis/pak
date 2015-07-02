@@ -190,7 +190,8 @@ class Pak
             force: { alias: 'f' },
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
             name: { range: String },
-            nodeps: { alias: 'n' },
+            nodeps: { },
+            noupdate: { alias: 'n' },
             optional: { alias: 'o' },
             paks: { range: String },
             password: { range: String },
@@ -227,7 +228,7 @@ class Pak
             '    search paks...              # Search for paks in the catalog\n' +
             '    uninstall paks...           # Uninstall a pak on the local system\n' +
             '    update [paks...]            # Update the cache with latest version\n' +
-            '    upgrade [paks...]           # Upgrade installed paks\n\n' +
+            '    upgrade [paks...]           # Upgrade installed paks with latest version\n\n' +
             '    version [major|minor|patch] # Display or increment the version \n' +
             '  General options:\n' +
             '    --cache dir                 # Directory to use for the Pak cache\n' +
@@ -236,6 +237,7 @@ class Pak
             '    --log file:level            # Send output to a file at a given level\n' +
             '    --name name                 # Set an application name for "pak init"\n' +
             '    --nodeps                    # Do not install or upgrade dependencies\n' +
+            '    --noupdate                  # Do not update the pak cache when upgrading\n' +
             '    --optional                  # Install as an optional dependency\n' +
             '    --paks dir                  # Use given directory for "paks" directory\n' +
             '    --password file             # File containing the package password\n' +
@@ -450,6 +452,13 @@ class Pak
 
         case 'search':
             search(rest)
+            break
+
+        case 'sync':
+            checkDir()
+            state.force = true
+            options.noupdate = true
+            upgrade(rest)
             break
 
         case 'uninstall':
@@ -1435,8 +1444,10 @@ class Pak
      */
     function upgradePak(pak: Package? = null) {
         let current = pak.installVersion
-        if (!pak.cached) {
-            vtrace('Info', 'Pak "' + pak.name + '" not present in cache. Updating cache first.')
+        if (!options.noupdate || !pak.cached) {
+            if (!pak.cached) {
+                vtrace('Info', 'Pak "' + pak.name + '" not present in cache. Updating cache first.')
+            }
             updatePak(pak)
         }
         if (current && current.same(pak.cacheVersion) && !state.force) {
