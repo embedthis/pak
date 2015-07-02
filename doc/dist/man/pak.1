@@ -40,6 +40,7 @@ pak \- Embedthis Pak -- Package Manager
     uninstall packages...
     update packages...
     upgrade packages...
+    version [major|minor|patch|other]
 .RE
 .SH DESCRIPTION
 \fBPak\fR is a package manager for application components.
@@ -256,6 +257,11 @@ Update the pak cache with latest available version of the package.
 upgrade [packages...]
 Upgrade installed packages with the latest version of the package available in the local package cache.
 If there is no acceptable version in the local cache, the cache will be updated as required.
+.TP
+version [major|minor|patch|other]
+Update the version by incrementing the relevant major, minor or patch portion of the version string.
+Alternatively, provide an exact version string to set. Without any argument, 'pak version' will print the current
+version.
 
 .SH OPTIONS
 .TP

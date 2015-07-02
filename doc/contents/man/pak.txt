@@ -45,6 +45,7 @@ SYNOPSIS
            uninstall packages...
            update packages...
            upgrade packages...
+           version [major|minor|patch|other]
 
 DESCRIPTION
        Pak is a package manager for application components.
@@ -289,6 +290,12 @@ COMMANDS
               acceptable version in the local cache, the cache will be updated
               as required.
 
+       version [major|minor|patch|other]
+              Update  the version by incrementing the relevant major, minor or
+              patch portion of the version string.  Alternatively, provide  an
+              exact version string to set. Without any argument, 'pak version'
+              will print the current version.
+
 
 OPTIONS
        --all URI
@@ -296,7 +303,7 @@ OPTIONS
 
 
        --cache directory
-              Specify  the directory to use for the paks cache. This overrides
+              Specify the directory to use for the paks cache. This  overrides
               the values specified in the various pakrc or package.json files.
 
 
@@ -309,17 +316,17 @@ OPTIONS
 
 
        --force
-              Force  the  command  to  continue.  This is useful to install or
-              cache a package when dependencies cannot be  satisfied.   It  is
-              also  useful  to  cache  or  install an already cached/installed
+              Force the command to continue. This  is  useful  to  install  or
+              cache  a  package  when dependencies cannot be satisfied.  It is
+              also useful to cache  or  install  an  already  cached/installed
               pack. Aliased as -f.
 
 
        --log logName[:logLevel]
-              Specify a file to log internal execution messages. Bit will  log
+              Specify  a file to log internal execution messages. Bit will log
               execution related trace to the log file. The log level specifies
-              the desired verbosity of output. Level 0 is  the  least  verbose
-              and  level 9 is the most. The '-v' switch is an alias for '--log
+              the  desired  verbosity  of output. Level 0 is the least verbose
+              and level 9 is the most. The '-v' switch is an alias for  '--log
               stderr:2'.
 
 
@@ -334,12 +341,12 @@ OPTIONS
 
        --paks directory
               Specify the local "paks" directory in which to install packages.
-              This overrides the values specified  in  the  various  pakrc  or
+              This  overrides  the  values  specified  in the various pakrc or
               package.json files.
 
 
        --password file
-              Specify  the  a  file  containing the password to use when doing
+              Specify the a file containing the password  to  use  when  doing
               "pak publish".
 
 
@@ -348,7 +355,7 @@ OPTIONS
 
 
        --silent
-              Run in silent mode suppressing all but hard errors.  Aliased  as
+              Run  in  silent mode suppressing all but hard errors. Aliased as
               -s.
 
 
@@ -358,7 +365,7 @@ OPTIONS
 
        --write URI
               Write  installed  packages  to  package.json  dependencies.  Use
-              --optional to update optionalDependencies.   When  uninstalling,
+              --optional  to  update optionalDependencies.  When uninstalling,
               --write will remove the package from the dependencies and update
               the package.json.
 
@@ -368,7 +375,7 @@ REPORTING BUGS
        Report bugs to dev@embedthis.com.
 
 COPYRIGHT
-       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
+       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 SEE ALSO

@@ -48,6 +48,7 @@ PAK(1)                           User Commands                          PAK(1)
            uninstall packages...
            update packages...
            upgrade packages...
+           version [major|minor|patch|other]
 
 <B>DESCRIPTION</B>
        <B>Pak </B>is a package manager for application components.
@@ -278,12 +279,18 @@ PAK(1)                           User Commands                          PAK(1)
               acceptable version in the local cache, the cache will be updated
               as required.
 
+       version [major|minor|patch|other]
+              Update  the version by incrementing the relevant major, minor or
+              patch portion of the version string.  Alternatively, provide  an
+              exact version string to set. Without any argument, 'pak version'
+              will print the current version.
+
 <B>OPTIONS</B>
        <B>--all URI</B>
               Show all versions of a package.
 
        <B>--cache directory</B>
-              Specify  the directory to use for the paks cache. This overrides
+              Specify the directory to use for the paks cache. This  overrides
               the values specified in the various pakrc or package.json files.
 
        <B>--details URI</B>
@@ -293,16 +300,16 @@ PAK(1)                           User Commands                          PAK(1)
               Change to the given directory before running.
 
        <B>--force</B>
-              Force  the  command  to  continue.  This is useful to install or
-              cache a package when dependencies cannot be  satisfied.   It  is
-              also  useful  to  cache  or  install an already cached/installed
+              Force the command to continue. This  is  useful  to  install  or
+              cache  a  package  when dependencies cannot be satisfied.  It is
+              also useful to cache  or  install  an  already  cached/installed
               pack. Aliased as -f.
 
        <B>--log logName[:logLevel]</B>
-              Specify a file to log internal execution messages. Bit will  log
+              Specify  a file to log internal execution messages. Bit will log
               execution related trace to the log file. The log level specifies
-              the desired verbosity of output. Level 0 is  the  least  verbose
-              and  level 9 is the most. The '-v' switch is an alias for '--log
+              the  desired  verbosity  of output. Level 0 is the least verbose
+              and level 9 is the most. The '-v' switch is an alias for  '--log
               stderr:2'.
 
        <B>--nodeps</B>
@@ -314,18 +321,18 @@ PAK(1)                           User Commands                          PAK(1)
 
        <B>--paks directory</B>
               Specify the local "paks" directory in which to install packages.
-              This overrides the values specified  in  the  various  pakrc  or
+              This  overrides  the  values  specified  in the various pakrc or
               package.json files.
 
        <B>--password file</B>
-              Specify  the  a  file  containing the password to use when doing
+              Specify the a file containing the password  to  use  when  doing
               "pak publish".
 
        <B>--quiet</B>
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
        <B>--silent</B>
-              Run in silent mode suppressing all but hard errors.  Aliased  as
+              Run  in  silent mode suppressing all but hard errors. Aliased as
               -s.
 
        <B>--versions URI</B>
@@ -333,7 +340,7 @@ PAK(1)                           User Commands                          PAK(1)
 
        <B>--write URI</B>
               Write  installed  packages  to  package.json  dependencies.  Use
-              --optional to update optionalDependencies.   When  uninstalling,
+              --optional  to  update optionalDependencies.  When uninstalling,
               --write will remove the package from the dependencies and update
               the package.json.
 
@@ -341,7 +348,7 @@ PAK(1)                           User Commands                          PAK(1)
        Report bugs to dev@embedthis.com.
 
 <B>COPYRIGHT</B>
-       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
+       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 <B>SEE ALSO</B>
