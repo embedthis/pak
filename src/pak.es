@@ -659,7 +659,9 @@ class Pak
             qtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully cached')
         }
         catch (e) {
-            dest.removeAll()
+            if (!options.debug) {
+                dest.removeAll()
+            }
             throw e
         }
     }
@@ -1724,7 +1726,7 @@ class Pak
                 }
             }
             if (results) {
-                vtrace('Output', results)
+                out.write(results)
             }
         } catch (e) {
             throw 'Cannot run installion script "' + event + '" for ' + pak + '\n' + e
