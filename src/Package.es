@@ -60,7 +60,7 @@ enumerable class Package {
         } else if (ref.contains('#')) {
             [ref, versionCriteria] = ref.split('#')
         }
-        versionCriteria ||= '^*'
+        versionCriteria ||= '~*'
         parseEndpoint(ref)
         resolve()
     }

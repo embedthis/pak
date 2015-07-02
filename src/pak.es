@@ -1899,7 +1899,7 @@ class Pak
         let location
         if (pak.endpoint) {
             fetchGlobalOverrides(pak)
-            location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+            location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '~*'))
         } else {
             for (let [cname, catalog] in catalogs) {
                 if (pak.catalog && pak.catalog != cname) {
@@ -1949,7 +1949,7 @@ class Pak
                                 pak.parseEndpoint(item.endpoint)
                                 fetchGlobalOverrides(pak, item.override)
                                 pak.resolve()
-                                location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                                location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '~*'))
                                 if (location) {
                                     location = item.endpoint
                                 }
@@ -1960,7 +1960,7 @@ class Pak
                         pak.parseEndpoint(location)
                         fetchGlobalOverrides(pak)
                         pak.resolve()
-                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '~*'))
                         location = response.url
 
                     } else if (cname == 'npm') {
@@ -1976,7 +1976,7 @@ class Pak
                         }
                         pak.endpoint = '@npm/' + pak.name
                         fetchGlobalOverrides(pak)
-                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '^*'))
+                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '~*'))
                     }
                     if (location) {
                         vtrace('Found', pak.name + ' in catalog "' + cname + '" at ' + pak.endpoint)
@@ -2057,7 +2057,7 @@ class Pak
                 for (let [pname, location] in index) {
                     if (pname.contains(pak.name)) {
                         trace('Query', pak.name + ' at ' + location)
-                        let criteria = pak.versionCriteria || (options.all ? '*' : '^*')
+                        let criteria = pak.versionCriteria || (options.all ? '*' : '~*')
                         let mpak = Package(location, criteria)
                         if (selectVersion(mpak, criteria)) {
                             matches.push(mpak)
@@ -2215,13 +2215,15 @@ class Pak
                 if (matchPakName(dep.name, patterns)) {
                     /* Overwrites entry for dependencies if present */
                     let prior = result[dep.name]
-                    if (prior && (prior.versionCriteria != '^*')) {
-                        if (dep.versionCriteria == '^*') {
+                    if (prior && (prior.versionCriteria != '~*')) {
+                        if (dep.versionCriteria == '~*') {
                             dep.versionCriteria = prior.versionCriteria
                         }
                     } else if (spec.optionalDependencies[dep.name]) {
                         dep.versionCriteria = spec.optionalDependencies[dep.name]
                     }
+                    dep.cacheVersion = null
+                    dep.resolve(dep.versionCriteria)
                     result[dep.name] = dep
                 }
             }
