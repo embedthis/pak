@@ -244,8 +244,9 @@ pak install <b>bower:</b>jquery
 
             <p>To upgrade all the packages required by an application as specified in package.json:</p>
             <code>pak upgrade</code>
-            <p>This will upgrade the application using the latest versions of packages from the local package cache.
-            If there is not suitable version in the cache, the cache will be updated first.</p>
+            <p>This will upgrade the application using the latest versions of packages. This will download newer
+            package versions and update the cache if required. Use <em>--noupdate</em> to upgrade only from the local
+            cache.</p>
 
             <p>To update the package cache with the latest available version of a package:</p>
             <code>pak update NAME</code>
