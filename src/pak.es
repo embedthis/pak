@@ -1718,8 +1718,12 @@ class Pak
                             vtrace('Run', 'ejs', path)
                             load(path)
                         } else if (path.extension == 'me') {
-                            vtrace('Run', 'me -q --file', path)
-                            results = Cmd.run('me -q --file ' + path)
+                            if (Cmd.locate('me')) {
+                                vtrace('Run', 'me -q --file', path)
+                                results = Cmd.run('me -q --file ' + path)
+                            } else {
+                                throw 'Cannot run MakeMe installation script "' + event + '" for ' + pak + '\n' + e
+                            }
                         } else {
                             vtrace('Run', 'bash', path)
                             results = Cmd.run('bash ' + path)
@@ -1732,15 +1736,19 @@ class Pak
             } else if (pak.cachePath) {
                 path = pak.cachePath.join('start.me')
                 if (path.exists) {
-                    vtrace('Run', 'me -q --file ' + path + ' ' + event)
-                    results = Cmd.run('me -q --file ' + path + ' ' + event)
+                    if (Cmd.locate('me')) {
+                        vtrace('Run', 'me -q --file ' + path + ' ' + event)
+                        results = Cmd.run('me -q --file ' + path + ' ' + event)
+                    } else {
+                        throw 'Cannot run MakeMe installation script "' + event + '" for ' + pak + '\n' + e
+                    }
                 }
             }
             if (results) {
                 out.write(results)
             }
         } catch (e) {
-            throw 'Cannot run installion script "' + event + '" for ' + pak + '\n' + e
+            throw 'Cannot run installation script "' + event + '" for ' + pak + '\n' + e
         }
     }
 
