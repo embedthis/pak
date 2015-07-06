@@ -13,7 +13,7 @@ Me.load({
     ],
 
     configure: {
-        requires:  [ 'osdep', 'ejs', 'http', 'mpr', 'pcre', 'zlib' ],
+        requires:  [ 'osdep', 'ejscript', 'http', 'mpr', 'pcre', 'zlib' ],
         discovers: [ 'ssl' ],
         extras:    [ 'sqlite' ],
     },
@@ -39,9 +39,6 @@ Me.load({
         tune: 'size',
 
         ejscript: {
-            /*
-                Control if ejs.* is enabled or disabled
-             */
             db: false,
             mail: false,
             mapper: false,
@@ -68,14 +65,6 @@ Me.load({
         tune: 'speed',
     },
 
-    scripts: {
-        loaded: `
-            me.targets.httpcmd.enable = false
-            me.targets.ejscmd.enable = false
-            me.settings.esflags = (me.platform.profile == 'debug' || me.platform.profile == 'mine') ? '--debug' : ''
-        `,
-    },
-
     targets: {
         init: {
             first: true,
@@ -94,7 +83,7 @@ Me.load({
             files: [ 'src/*.es', 'paks/ejs-version/Version.es' ],
             build: `
                 trace('Compile', 'src/*.es')
-                run('"${BIN}/ejsc" ${settings.esflags} --out "${BIN}/pak.mod" --optimize 9 ${FILES}')
+                run('"${BIN}/pak-ejsc" ${settings.ejscript.compile} --out "${BIN}/pak.mod" --optimize 9 ${FILES}')
             `,
             depends: [ 'ejs.mod' ],
         },
