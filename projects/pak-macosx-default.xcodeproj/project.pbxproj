@@ -962,7 +962,7 @@
     			shellPath = /bin/bash;
     			shellScript = "PATH=$PATH:/usr/local/bin
 cd ../src/ejscript
-	\"../${OUT_DIR}/bin/pak-ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --optimize 9 --optimize 9 --bind --require null ejs.es
+	\"../${OUT_DIR}/bin/pak-ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --optimize 9 --bind --require null ejs.es
 ";
     		};
 		F8262D1CF8264B4C0000000C /* ShellScript for install-certs */ = {
