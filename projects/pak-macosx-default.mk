@@ -15,7 +15,6 @@ LBIN                  ?= $(BUILD)/bin
 PATH                  := $(LBIN):$(PATH)
 
 ME_COM_COMPILER       ?= 1
-ME_COM_EJS            ?= 1
 ME_COM_EJSCRIPT       ?= 1
 ME_COM_HTTP           ?= 1
 ME_COM_LIB            ?= 1
@@ -40,15 +39,12 @@ endif
 ifeq ($(ME_COM_OPENSSL),1)
     ME_COM_SSL := 1
 endif
-ifeq ($(ME_COM_EJS),1)
-    ME_COM_ZLIB := 1
-endif
 ifeq ($(ME_COM_EJSCRIPT),1)
     ME_COM_ZLIB := 1
 endif
 
 CFLAGS                += -g -w
-DFLAGS                +=  $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_COM_COMPILER=$(ME_COM_COMPILER) -DME_COM_EJS=$(ME_COM_EJS) -DME_COM_EJSCRIPT=$(ME_COM_EJSCRIPT) -DME_COM_HTTP=$(ME_COM_HTTP) -DME_COM_LIB=$(ME_COM_LIB) -DME_COM_MATRIXSSL=$(ME_COM_MATRIXSSL) -DME_COM_MBEDTLS=$(ME_COM_MBEDTLS) -DME_COM_MPR=$(ME_COM_MPR) -DME_COM_NANOSSL=$(ME_COM_NANOSSL) -DME_COM_OPENSSL=$(ME_COM_OPENSSL) -DME_COM_OSDEP=$(ME_COM_OSDEP) -DME_COM_PCRE=$(ME_COM_PCRE) -DME_COM_SQLITE=$(ME_COM_SQLITE) -DME_COM_SSL=$(ME_COM_SSL) -DME_COM_VXWORKS=$(ME_COM_VXWORKS) -DME_COM_WINSDK=$(ME_COM_WINSDK) -DME_COM_ZLIB=$(ME_COM_ZLIB) 
+DFLAGS                +=  $(patsubst %,-D%,$(filter ME_%,$(MAKEFLAGS))) -DME_COM_COMPILER=$(ME_COM_COMPILER) -DME_COM_EJSCRIPT=$(ME_COM_EJSCRIPT) -DME_COM_HTTP=$(ME_COM_HTTP) -DME_COM_LIB=$(ME_COM_LIB) -DME_COM_MATRIXSSL=$(ME_COM_MATRIXSSL) -DME_COM_MBEDTLS=$(ME_COM_MBEDTLS) -DME_COM_MPR=$(ME_COM_MPR) -DME_COM_NANOSSL=$(ME_COM_NANOSSL) -DME_COM_OPENSSL=$(ME_COM_OPENSSL) -DME_COM_OSDEP=$(ME_COM_OSDEP) -DME_COM_PCRE=$(ME_COM_PCRE) -DME_COM_SQLITE=$(ME_COM_SQLITE) -DME_COM_SSL=$(ME_COM_SSL) -DME_COM_VXWORKS=$(ME_COM_VXWORKS) -DME_COM_WINSDK=$(ME_COM_WINSDK) -DME_COM_ZLIB=$(ME_COM_ZLIB) 
 IFLAGS                += "-I$(BUILD)/inc"
 LDFLAGS               += '-Wl,-rpath,@executable_path/' '-Wl,-rpath,@loader_path/'
 LIBPATHS              += -L$(BUILD)/bin
@@ -132,7 +128,7 @@ clean:
 	rm -f "$(BUILD)/obj/pak.o"
 	rm -f "$(BUILD)/obj/pcre.o"
 	rm -f "$(BUILD)/obj/zlib.o"
-	rm -f "$(BUILD)/bin/ejsc"
+	rm -f "$(BUILD)/bin/pak-ejsc"
 	rm -f "$(BUILD)/.install-certs-modified"
 	rm -f "$(BUILD)/bin/libejs.dylib"
 	rm -f "$(BUILD)/bin/libhttp.dylib"
@@ -625,9 +621,9 @@ ifeq ($(ME_COM_HTTP),1)
     LIBS_32 += -lhttp
 endif
 
-$(BUILD)/bin/ejsc: $(DEPS_32)
-	@echo '      [Link] $(BUILD)/bin/ejsc'
-	$(CC) -o $(BUILD)/bin/ejsc -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/ejsc.o" $(LIBPATHS_32) $(LIBS_32) $(LIBS_32) $(LIBS) 
+$(BUILD)/bin/pak-ejsc: $(DEPS_32)
+	@echo '      [Link] $(BUILD)/bin/pak-ejsc'
+	$(CC) -o $(BUILD)/bin/pak-ejsc -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS)  "$(BUILD)/obj/ejsc.o" $(LIBPATHS_32) $(LIBS_32) $(LIBS_32) $(LIBS) 
 endif
 
 ifeq ($(ME_COM_EJSCRIPT),1)
@@ -635,14 +631,13 @@ ifeq ($(ME_COM_EJSCRIPT),1)
 #   ejs.mod
 #
 DEPS_33 += src/ejscript/ejs.es
-DEPS_33 += $(BUILD)/bin/ejsc
+DEPS_33 += $(BUILD)/bin/pak-ejsc
 
 $(BUILD)/bin/ejs.mod: $(DEPS_33)
 	( \
 	cd src/ejscript; \
 	echo '   [Compile] ejs.mod' ; \
-	"../../$(BUILD)/bin/ejsc" --out "../../$(BUILD)/bin/ejs.mod" --optimize 9 --bind --require null ejs.es ; \
-	"../../$(BUILD)/bin/ejsc" --out "../../$(BUILD)/bin/ejs.mod" --optimize 9 --bind --require null ejs.es ; \
+	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --optimize 9 --optimize 9 --bind --require null ejs.es ; \
 	)
 endif
 
@@ -693,9 +688,9 @@ ifeq ($(ME_COM_HTTP),1)
     LIBS_34 += -lhttp
 endif
 
-$(BUILD)/bin/ejs: $(DEPS_34)
-	@echo '      [Link] $(BUILD)/bin/ejs'
-	$(CC) -o $(BUILD)/bin/ejs -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejs.o" $(LIBPATHS_34) $(LIBS_34) $(LIBS_34) $(LIBS) -ledit 
+$(BUILD)/bin/pak-ejs: $(DEPS_34)
+	@echo '      [Link] $(BUILD)/bin/pak-ejs'
+	$(CC) -o $(BUILD)/bin/pak-ejs -arch $(CC_ARCH) $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejs.o" $(LIBPATHS_34) $(LIBS_34) $(LIBS_34) $(LIBS) -ledit 
 endif
 
 ifeq ($(ME_COM_HTTP),1)
@@ -784,7 +779,7 @@ ifeq ($(ME_COM_EJSCRIPT),1)
 endif
 
 $(BUILD)/bin/pak.mod: $(DEPS_37)
-	"./$(BUILD)/bin/ejsc"  --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
+	"./$(BUILD)/bin/pak-ejsc" --optimize 9 --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
 
 #
 #   pak
@@ -867,7 +862,9 @@ installBinary: $(DEPS_41)
 	ln -s "$(VERSION)" "$(ME_APP_PREFIX)/latest" ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
 	cp $(BUILD)/bin/pak $(ME_VAPP_PREFIX)/bin/pak ; \
+	chmod 755 "$(ME_VAPP_PREFIX)/bin/pak" ; \
 	mkdir -p "$(ME_BIN_PREFIX)" ; \
+	chmod 755 "$(ME_BIN_PREFIX)" ; \
 	rm -f "$(ME_BIN_PREFIX)/pak" ; \
 	ln -s "$(ME_VAPP_PREFIX)/bin/pak" "$(ME_BIN_PREFIX)/pak" ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \

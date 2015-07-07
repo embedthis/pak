@@ -565,7 +565,7 @@
 /* Begin PBXFileReference section */
 		F8262D1CF8264B4C00000026 /* ejsc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsc.c; path = src/ejscript/ejsc.c; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000094 /* ejs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ejs.h; path = src/ejscript/ejs.h; sourceTree = "<group>"; };
-		F8262D1CF8264B4C00000095 /* ejsc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ejsc; sourceTree = BUILT_PRODUCTS_DIR; };
+		F8262D1CF8264B4C00000095 /* ejsc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pak-ejsc; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8262D1CF8264B4C00000028 /* ejsLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ejsLib.c; path = src/ejscript/ejsLib.c; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000096 /* mpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpr.h; path = build/macosx-x64-default/inc/mpr.h; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000097 /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcre.h; path = build/macosx-x64-default/inc/pcre.h; sourceTree = "<group>"; };
@@ -962,8 +962,7 @@
     			shellPath = /bin/bash;
     			shellScript = "PATH=$PATH:/usr/local/bin
 cd ../src/ejscript
-	\"../${OUT_DIR}/bin/ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --optimize 9 --bind --require null ejs.es
-	\"../${OUT_DIR}/bin/ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --optimize 9 --bind --require null ejs.es
+	\"../${OUT_DIR}/bin/pak-ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --optimize 9 --optimize 9 --bind --require null ejs.es
 ";
     		};
 		F8262D1CF8264B4C0000000C /* ShellScript for install-certs */ = {
@@ -1018,7 +1017,7 @@ cd ..
     			shellPath = /bin/bash;
     			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-	\"./build/macosx-x64-default/bin/ejsc\"  --out \"./build/macosx-x64-default/bin/pak.mod\" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
+	\"./build/macosx-x64-default/bin/pak-ejsc\" --optimize 9 --out \"./build/macosx-x64-default/bin/pak.mod\" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
 ";
     		};
 		F8262D1CF8264B4C00000024 /* ShellScript for Prep */ = {
@@ -1709,7 +1708,7 @@ fi";
 		F8262D1CF8264B4C000000F3 /* Debug */ = {
     			isa = XCBuildConfiguration;
     			buildSettings = {
-    				PRODUCT_NAME = ejsc;
+    				PRODUCT_NAME = pak-ejsc;
     
     				HEADER_SEARCH_PATHS = (
 					"$(ME_COM_OPENSSL_PATH)/include",
@@ -1736,7 +1735,7 @@ fi";
     		F8262D1CF8264B4C000000F4 /* Release */ = {
     			isa = XCBuildConfiguration;
     			buildSettings = {
-    				PRODUCT_NAME = ejsc;
+    				PRODUCT_NAME = pak-ejsc;
     
     				HEADER_SEARCH_PATHS = (
 					"$(ME_COM_OPENSSL_PATH)/include",
