@@ -202,7 +202,7 @@
 
 /* Profile */
 #ifndef ME_CONFIG_CMD
-    #define ME_CONFIG_CMD "me -d -q -platform windows-x86-default -configure . --without ssl -gen vs"
+    #define ME_CONFIG_CMD "me -d -q -platform windows-x86-default -configure . -without ssl -gen vs"
 #endif
 #ifndef ME_PAK_PRODUCT
     #define ME_PAK_PRODUCT 1
