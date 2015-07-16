@@ -4273,7 +4273,7 @@ static void parseErrors(HttpRoute *route, cchar *key, MprJson *prop)
     int         ji;
 
     for (ITERATE_CONFIG(route, prop, child, ji)) {
-        httpAddRouteErrorDocument(route, (int) stoi(prop->name), prop->value);
+        httpAddRouteErrorDocument(route, (int) stoi(child->name), child->value);
     }
 }
 
@@ -8283,7 +8283,7 @@ static void errorRedirect(HttpConn *conn, cchar *uri)
             No response started and it is an internal redirect, so we can rerun the request.
             Set finalized to "cap" any output. processCompletion() in rx.c will rerun the request using the errorDocument.
          */
-        tx->errorDocument = uri;
+        tx->errorDocument = httpLink(conn, uri);
         tx->finalized = tx->finalizedOutput = tx->finalizedConnector = 1;
     }
 }
@@ -8876,8 +8876,7 @@ PUBLIC int httpHandleDirectory(HttpConn *conn)
     HttpTx      *tx;
     HttpRoute   *route;
     HttpUri     *req;
-    cchar       *index, *pathInfo; 
-    char        *path;
+    cchar       *index, *pathInfo, *path; 
     int         next;
 
     rx = conn->rx;
@@ -8908,6 +8907,12 @@ PUBLIC int httpHandleDirectory(HttpConn *conn)
             path = mprJoinPath(tx->filename, index);
             if (mprPathExists(path, R_OK)) {
                 break;
+            }
+            if (route->map && !(tx->flags & HTTP_TX_NO_MAP)) {
+                path = httpMapContent(conn, path);
+                if (mprPathExists(path, R_OK)) {
+                    break;
+                }
             }
             path = 0;
         }
@@ -13456,7 +13461,7 @@ PUBLIC int httpAddRouteFilter(HttpRoute *route, cchar *name, cchar *extensions, 
 
 PUBLIC int httpAddRouteHandler(HttpRoute *route, cchar *name, cchar *extensions)
 {
-    HttpStage   *handler, *prior;
+    HttpStage   *handler;
     char        *extlist, *word, *tok;
 
     assert(route);
@@ -13490,6 +13495,7 @@ PUBLIC int httpAddRouteHandler(HttpRoute *route, cchar *name, cchar *extensions)
                 } else if (*word == '\"' && word[1] == '\"') {
                     word = "";
                 }
+#if UNUSED
                 prior = mprLookupKey(route->extensions, word);
                 if (prior && prior != handler && *word) {
                     mprLog("warn http route", 0, "Route \"%s\" has multiple handlers defined for extension \"%s\". "
@@ -13498,6 +13504,9 @@ PUBLIC int httpAddRouteHandler(HttpRoute *route, cchar *name, cchar *extensions)
                 } else {
                     mprAddKey(route->extensions, word, handler);
                 }
+#else
+                mprAddKey(route->extensions, word, handler);
+#endif
                 word = stok(NULL, " \t\r\n", &tok);
             }
         }
@@ -20154,7 +20163,7 @@ PUBLIC void httpRedirect(HttpConn *conn, int status, cchar *targetUri)
 
     canonical = conn->host->canonical;
     if (canonical) {
-        base = httpCloneUri(conn->rx->parsedUri, 0);
+        base = httpCloneUri(rx->parsedUri, 0);
         if (canonical->host) {
             base->host = canonical->host;
         }
@@ -20162,7 +20171,7 @@ PUBLIC void httpRedirect(HttpConn *conn, int status, cchar *targetUri)
             base->port = canonical->port;
         }
     } else {
-        base = conn->rx->parsedUri;
+        base = rx->parsedUri;
     }
     /*
         Expand the target for embedded tokens. Resolve relative to the current request URI.
