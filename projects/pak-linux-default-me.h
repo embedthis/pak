@@ -214,7 +214,7 @@
 
 /* Profile */
 #ifndef ME_CONFIG_CMD
-    #define ME_CONFIG_CMD "me -d -q -platform linux-x86-default -configure . --with openssl -gen make"
+    #define ME_CONFIG_CMD "me -d -q -platform linux-x86-default -configure . -gen make"
 #endif
 #ifndef ME_PAK_PRODUCT
     #define ME_PAK_PRODUCT 1
@@ -257,7 +257,7 @@
     #define ME_COM_MATRIXSSL 0
 #endif
 #ifndef ME_COM_MBEDTLS
-    #define ME_COM_MBEDTLS 0
+    #define ME_COM_MBEDTLS 1
 #endif
 #ifndef ME_COM_MPR
     #define ME_COM_MPR 1
@@ -266,7 +266,7 @@
     #define ME_COM_NANOSSL 0
 #endif
 #ifndef ME_COM_OPENSSL
-    #define ME_COM_OPENSSL 1
+    #define ME_COM_OPENSSL 0
 #endif
 #ifndef ME_COM_OSDEP
     #define ME_COM_OSDEP 1
