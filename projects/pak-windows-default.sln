@@ -10,6 +10,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpr", "pak-windows-defau
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
 	EndProjectSection
 EndProject
@@ -24,6 +30,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhttp", "pak-windows-default\libhttp.vcxproj", "{3BC80A8C-23DB-4258-A7B2-A7F553B711DF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
@@ -48,6 +60,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libejs", "pak-windows-defau
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
@@ -66,6 +84,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ejsc", "pak-windows-default\ejsc.vcxproj", "{D768049A-0B3F-4D6C-BB87-D2099C833DA4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
@@ -89,6 +113,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ejs.mod", "pak-windows-default\ejs.mod.vcxproj", "{5460A9D7-52CA-499B-A416-4A80F1D5DA79}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
@@ -120,9 +150,34 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "install-certs", "pak-window
 		{AF7CB4F1-515B-4212-8418-31C3C3787CAC} = {AF7CB4F1-515B-4212-8418-31C3C3787CAC}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmbedtls", "pak-windows-default\libmbedtls.vcxproj", "{06E465D9-F8DF-415F-9F9F-C97E1568E531}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbedtls", "pak-windows-default\mbedtls.vcxproj", "{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pak.mod", "pak-windows-default\pak.mod.vcxproj", "{863459B7-A581-406C-B6BB-1FFFF0EF5CC4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
@@ -152,6 +207,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pak", "pak-windows-default\pak.vcxproj", "{74E7024E-7596-450E-AE71-D91DA0254F2D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C29B740D-1A14-47B8-8D2D-55B7CCD461B6} = {C29B740D-1A14-47B8-8D2D-55B7CCD461B6}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{06E465D9-F8DF-415F-9F9F-C97E1568E531} = {06E465D9-F8DF-415F-9F9F-C97E1568E531}
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1} = {DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{40D07AB8-5586-4EB8-B0E5-29A5AA12297F} = {40D07AB8-5586-4EB8-B0E5-29A5AA12297F}
@@ -262,6 +323,22 @@ EndProject
 {AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Release|Win32.Build.0 = Release|Win32
 {AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Release|x64.ActiveCfg = Release|x64
 {AF7CB4F1-515B-4212-8418-31C3C3787CAC}.Release|x64.Build.0 = Release|x64
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Debug|Win32.ActiveCfg = Debug|Win32
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Debug|Win32.Build.0 = Debug|Win32
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Debug|x64.ActiveCfg = Debug|x64
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Debug|x64.Build.0 = Debug|x64
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Release|Win32.ActiveCfg = Release|Win32
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Release|Win32.Build.0 = Release|Win32
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Release|x64.ActiveCfg = Release|x64
+{06E465D9-F8DF-415F-9F9F-C97E1568E531}.Release|x64.Build.0 = Release|x64
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Debug|Win32.ActiveCfg = Debug|Win32
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Debug|Win32.Build.0 = Debug|Win32
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Debug|x64.ActiveCfg = Debug|x64
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Debug|x64.Build.0 = Debug|x64
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Release|Win32.ActiveCfg = Release|Win32
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Release|Win32.Build.0 = Release|Win32
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Release|x64.ActiveCfg = Release|x64
+{DE4D7C7E-2A36-47B0-B652-1F32F4896BC1}.Release|x64.Build.0 = Release|x64
 {863459B7-A581-406C-B6BB-1FFFF0EF5CC4}.Debug|Win32.ActiveCfg = Debug|Win32
 {863459B7-A581-406C-B6BB-1FFFF0EF5CC4}.Debug|Win32.Build.0 = Debug|Win32
 {863459B7-A581-406C-B6BB-1FFFF0EF5CC4}.Debug|x64.ActiveCfg = Debug|x64
