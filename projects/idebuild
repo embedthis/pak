@@ -6,7 +6,7 @@
 PRODUCT=pak
 XCODE=/usr/bin/xcodebuild
 PROFILE=default
-BINARIES="ejsc pak"
+BINARIES="pak-ejsc pak"
 LIBRARIES="libejs libhttp libmpr libpcre libzlib"
 
 # Just for VS
