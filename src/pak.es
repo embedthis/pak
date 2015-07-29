@@ -188,6 +188,7 @@ class Pak
             details: {},
             dir: { range: String },
             force: { alias: 'f' },
+            init: { alias: 'i' },
             log: { range: /\w+(:\d)/, value: 'stderr:1' },
             name: { range: String },
             nodeps: { },
@@ -314,7 +315,10 @@ class Pak
         }
     }
 
-    function setup() {
+    function setup(task) {
+        if (options.init && task != 'init' && !PACKAGE.exists) {
+            init()
+        }
         setDefaults()
         for (let [d,value] in directories) {
             directories[d] = Path(value.toString().replace('~', HOME))
@@ -375,7 +379,7 @@ class Pak
         let rest = args.rest
         let task = rest.shift()
 
-        setup()
+        setup(task)
 
         switch (task) {
         case 'cache':
@@ -545,7 +549,7 @@ class Pak
         }
         for (let [other, criteria] in pspec.dependencies) {
             if (criteria == 'match') {
-                criteria = '^' + Version(pak.cache.version).compatible
+                criteria = '~' + Version(pak.cache.version).compatible
                 pak.cache.dependencies[other] = criteria
                 saveSpec(pak.cachePath.join(PACKAGE), pak.cache)
             }
@@ -757,13 +761,13 @@ class Pak
         pak init
         Generates package.json template
      */
-    function init(args) {
+    function init(args = null) {
         if (PACKAGE.exists) {
             throw 'Package description "' + PACKAGE + '" .already exists in this directory'
         }
         qtrace('Create', PACKAGE)
         let pspec = PakTemplate.clone()
-        if (args.length > 0) {
+        if (args && args.length > 0) {
             let [name, version] = args
             pspec.name = name
             pspec.title = name.toPascal()
@@ -828,13 +832,13 @@ class Pak
             if (options.write) {
                 if (optional(spec, pak.name) || (options.optional && !spec.dependencies[pak.name])) {
                     spec.optionalDependencies ||= {}
-                    spec.optionalDependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
+                    spec.optionalDependencies[pak.name] ||= '~' + pak.cacheVersion.compatible
                     Object.sortProperties(spec.optionalDependencies)
                 } else {
                     if (!options.nodeps) {
                         //  Should already be created
                         spec.dependencies ||= {}
-                        spec.dependencies[pak.name] ||= '^' + pak.cacheVersion.compatible
+                        spec.dependencies[pak.name] ||= '~' + pak.cacheVersion.compatible
                         Object.sortProperties(spec.dependencies)
                     }
                 }
@@ -1142,7 +1146,7 @@ class Pak
             if (pak.installed) {
                 trace('Lockdown', pak.name + ' to ^' + pak.installVersion.compatible +
                     ' (was ' + deps[pak.name] + ')')
-                spec.dependencies[pak.name] = '^' + pak.installVersion.compatible
+                spec.dependencies[pak.name] = '~' + pak.installVersion.compatible
                 delete spec.optionalDependencies[pak.name]
             } else {
                 trace('Info', pak.name + ' is not installed')
@@ -1448,7 +1452,15 @@ class Pak
             if (!pak.cached) {
                 vtrace('Info', 'Pak "' + pak.name + '" not present in cache. Updating cache first.')
             }
-            updatePak(pak)
+            try {
+                updatePak(pak)
+            } catch (e) {
+                if (pak.cacheVersion) {
+                    trace('Info', 'Continue with cached version', pak.cacheVersion)
+                } else {
+                    throw e
+                }
+            }
         }
         if (current && current.same(pak.cacheVersion) && !state.force) {
             trace('Info', 'Installed ' + pak + ' is current with ' + pak.installVersion +
@@ -1859,7 +1871,7 @@ class Pak
             try {
                 data = Cmd.run([git, 'ls-remote', '--tags', pak.endpoint])
             } catch (e) {
-                print("CATCH", e)
+                trace('Warn', 'Cannot get remote versions for:', pak.endpoint)
                 throw e.message
             }
             versions = data.trim().
@@ -1930,7 +1942,6 @@ class Pak
                 try {
                     cmd = cmd.expand({NAME: pak.name})
                     vtrace('Get', cmd)
-                    //  MOB
                     http.verify = false
                     http.get(cmd)
                     if (http.status != 200) {
@@ -2373,7 +2384,6 @@ class Pak
     function error(msg) App.log.error(msg)
 
     private function getPakSetting(pak, property) {
-        //  MOB - review this. Used for noblend, nodeps, import
         let override = spec.pak.override
         return ((override && override[pak.name] && override[pak.name][property] === true) ||
                       (override && override['*'] && override['*'][property] === true))
