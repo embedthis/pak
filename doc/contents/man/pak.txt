@@ -13,6 +13,7 @@ SYNOPSIS
            --dir dir
            --force
            --log file:level
+           --init
            --name name
            --nodeps
            --optional
@@ -322,6 +323,10 @@ OPTIONS
               cache  a  package  when dependencies cannot be satisfied.  It is
               also useful to cache  or  install  an  already  cached/installed
               pack. Aliased as -f.
+
+              --init  Initialize the directory by creating a package.json file
+              if one does not already exist. The name of  the  application  is
+              set to the basename of the directory.
 
 
        --log logName[:logLevel]

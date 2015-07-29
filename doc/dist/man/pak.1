@@ -9,6 +9,7 @@ pak \- Embedthis Pak -- Package Manager
     \fB--dir dir\fR
     \fB--force\fR
     \fB--log file:level\fR
+    \fB--init\fR
     \fB--name name\fR
     \fB--nodeps\fR
     \fB--optional\fR
@@ -286,6 +287,11 @@ Change to the given directory before running.
 \fB\--force\fR
 Force the command to continue. This is useful to install or cache a package when dependencies cannot be satisfied.
 It is also useful to cache or install an already cached/installed pack. Aliased as -f.
+
+.TOP
+\fB\--init\fR
+Initialize the directory by creating a package.json file if one does not already exist. The name of the application is
+set to the basename of the directory.
 
 .TP
 \fB\--log logName[:logLevel]\fR

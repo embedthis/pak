@@ -17,6 +17,7 @@ PAK(1)                           User Commands                          PAK(1)
            <B>--dir dir</B>
            <B>--force</B>
            <B>--log file:level</B>
+           <B>--init</B>
            <B>--name name</B>
            <B>--nodeps</B>
            <B>--optional</B>
@@ -306,6 +307,10 @@ PAK(1)                           User Commands                          PAK(1)
               cache  a  package  when dependencies cannot be satisfied.  It is
               also useful to cache  or  install  an  already  cached/installed
               pack. Aliased as -f.
+
+              <B>--init  </B>Initialize the directory by creating a package.json file
+              if one does not already exist. The name of  the  application  is
+              set to the basename of the directory.
 
        <B>--log logName[:logLevel]</B>
               Specify  a file to log internal execution messages. Bit will log
