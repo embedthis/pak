@@ -3,7 +3,7 @@
 #
 
 NAME                  = pak
-VERSION               = 0.11.2
+VERSION               = 0.11.3
 
 OS                    = windows
 PA                    = $(PROCESSOR_ARCHITECTURE)
@@ -782,7 +782,7 @@ DEPS_36 = $(DEPS_36) build\$(CONFIG)\bin\pak-ejsc.exe
 build\$(CONFIG)\bin\ejs.mod: $(DEPS_36)
 	cd src\ejscript
 	@echo .. [Compile] ejs.mod
-	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --optimize 9 --bind --require null ejs.es
+	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --debug --optimize 9 --bind --require null ejs.es
 	cd ..\..
 !ENDIF
 
@@ -956,7 +956,7 @@ DEPS_42 = $(DEPS_42) build\$(CONFIG)\bin\ejs.mod
 !ENDIF
 
 build\$(CONFIG)\bin\pak.mod: $(DEPS_42)
-	"./$(BUILD)/bin/pak-ejsc" --optimize 9 --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
+	"./$(BUILD)/bin/pak-ejsc" --debug --optimize 9 --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
 
 #
 #   pak.obj
