@@ -2436,6 +2436,17 @@ public function run(command, copt = {}): String {
     return Cmd.run(command, copt)
 }
 
+public function npm(command, program): Void {
+    if (!Cmd.locate('npm')) {
+        throw 'Cannot locate the "npm" utility.'
+    }
+    if (!Cmd.locate(program)) {
+        command = 'npm ' + command + ' ' + program
+        trace('Run', command)
+        Cmd.run(command)
+    }
+}
+
 public var pak = new Pak
 pak.main()
 
