@@ -29,6 +29,7 @@ var options: Object
 var spec: Object
 var state: Object
 var out: File = App.outputStream
+var currentPak: Package?
 
 class Pak
 {
@@ -210,6 +211,7 @@ class Pak
     function usage(): Void {
         print('\nUsage: pak ' + ' [options] [commands] ...\n\n' +
             '  Commands:\n' +
+            '    build [paks...]             # Build cached paks\n' +
             '    cache [paks...]             # Populate the cache with paks\n' +
             '    cached [paks...]            # List paks in the cache\n' +
             '    config                      # Show the Pak configuration\n' +
@@ -382,6 +384,10 @@ class Pak
         setup(task)
 
         switch (task) {
+        case 'build':
+            build(rest)
+            break
+
         case 'cache':
             cache(rest)
             break
@@ -511,6 +517,20 @@ class Pak
         let sets = getPaks({}, patterns, spec)
         for each (pak in sets) {
             printDeps(pak)
+        }
+    }
+
+    function buildPak(pak: Package) {
+        trace('Building', pak.cachePath)
+        runScripts(pak, 'build')
+    }
+
+    function build(names: Array): Void {
+        if (names.length == 0) {
+            names = directories.pakcache.files('*')
+        }
+        for each (path in names) {
+            buildPak(Package(path.basename))
         }
     }
 
@@ -1697,6 +1717,7 @@ class Pak
 
     /*
         Events:
+            build
             cache
             preinstall
             postcache
@@ -1711,8 +1732,18 @@ class Pak
         }
         try {
             let results
+            currentPak = pak
+
+            let scripts
             if (pak.cache && pak.cache.scripts) {
-                let scripts = pak.cache.scripts[event]
+                trace('Warn', pak.name + ' contains "scripts" in "package.json". Use "pak.scripts" instead')
+                scripts = pak.cache.scripts[event]
+            }
+            if (pak.cache && pak.cache.pak && pak.cache.pak.scripts) {
+                scripts = pak.cache.pak.scripts[event]
+            }
+
+            if (scripts) {
                 if (!(scripts is Array)) {
                     scripts = [scripts]
                 }
@@ -1762,6 +1793,7 @@ class Pak
         } catch (e) {
             throw 'Cannot run installation script "' + event + '" for ' + pak + '\n' + e
         }
+        currentPak = null
     }
 
     private function pakFileExists(path: Path): Boolean {
@@ -2446,6 +2478,30 @@ public function npm(command, program): Void {
         Cmd.run(command)
     }
 }
+
+public function compile(name: Path, files, options) {
+    if (!(files is Array)) {
+        files = [files]
+    }
+    let ejsc: Path = App.getenv('EJSC') || Cmd.locate('ejsc')
+    let ejsVersion = Cmd.run(ejsc + ' -V').trim()
+    let pakDir = currentPak.cachePath
+    let package = pakDir.join('package.json')
+    let version
+    if (package.exists) {
+        version = package.readJSON().version
+    }
+    version ||= '0.0.1'
+    let cacheDir = App.home.join('.ejs').join('ejscript', ejsVersion)
+    cacheDir.makeDir()
+
+    let dest = cacheDir.join(name + '#' + version + '.mod')
+    let switches = options ? options.compile : ''
+    let cmd = ejsc + ' ' + switches + ' --out "' + dest + '" ' + files.map(function(e) '"' + pakDir.join(e) + '"')
+    run(cmd)
+    trace('Cache', dest)
+}
+
 
 public var pak = new Pak
 pak.main()
