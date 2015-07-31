@@ -211,7 +211,9 @@ class Pak
     function usage(): Void {
         print('\nUsage: pak ' + ' [options] [commands] ...\n\n' +
             '  Commands:\n' +
+/* UNDOCUMENTED
             '    build [paks...]             # Build cached paks\n' +
+ */
             '    cache [paks...]             # Populate the cache with paks\n' +
             '    cached [paks...]            # List paks in the cache\n' +
             '    config                      # Show the Pak configuration\n' +
@@ -231,8 +233,8 @@ class Pak
             '    search paks...              # Search for paks in the catalog\n' +
             '    uninstall paks...           # Uninstall a pak on the local system\n' +
             '    update [paks...]            # Update the cache with latest version\n' +
-            '    upgrade [paks...]           # Upgrade installed paks with latest version\n\n' +
-            '    version [major|minor|patch] # Display or increment the version \n' +
+            '    upgrade [paks...]           # Upgrade installed paks with latest version\n' +
+            '    version [major|minor|patch] # Display or increment the version \n\n' +
             '  General options:\n' +
             '    --cache dir                 # Directory to use for the Pak cache\n' +
             '    --dir dir                   # Change to directory before running\n' +
@@ -246,8 +248,8 @@ class Pak
             '    --password file             # File containing the package password\n' +
             '    --quiet, -q                 # Run in quiet mode\n' +
             '    --silent                    # Run in totally silent mode\n' +
-            '    --verbose, -v               # Run in verbose mode\n\n' +
-            '    --write, -w                 # Write installed package to package.json dependencies\n' +
+            '    --verbose, -v               # Run in verbose mode\n' +
+            '    --write, -w                 # Write installed package to package.json dependencies\n\n' +
             '  List options:\n' +
             '    -a, --all                   # Show all versions for a pak\n' +
             '    --details                   # Show pak details\n' +
@@ -529,8 +531,8 @@ class Pak
         if (names.length == 0) {
             names = directories.pakcache.files('*')
         }
-        for each (path in names) {
-            buildPak(Package(path.basename))
+        for each (name in names) {
+            buildPak(Package(Path(name).basename))
         }
     }
 
@@ -1735,10 +1737,12 @@ class Pak
             currentPak = pak
 
             let scripts
+/* UNUSED
             if (pak.cache && pak.cache.scripts) {
                 trace('Warn', pak.name + ' contains "scripts" in "package.json". Use "pak.scripts" instead')
                 scripts = pak.cache.scripts[event]
             }
+*/
             if (pak.cache && pak.cache.pak && pak.cache.pak.scripts) {
                 scripts = pak.cache.pak.scripts[event]
             }
@@ -2489,7 +2493,17 @@ public function compile(name: Path, files, options) {
     let package = pakDir.join('package.json')
     let version
     if (package.exists) {
-        version = package.readJSON().version
+        let spec = package.readJSON()
+        version = spec.version
+        if (spec.devDependencies) {
+            let criteria = spec.devDependencies.ejscript
+            if (criteria) {
+                if (!Version(ejsVersion).acceptable(criteria)) {
+                    throw 'Ejscript version ' + ejsVersion + ' is not supported by ' + name + ': ' + criteria
+                    throw name + ' does not support Ejscript version ' + ejsVersion + '. Criteria: ' + criteria
+                }
+            }
+        }
     }
     version ||= '0.0.1'
     let cacheDir = App.home.join('.ejs').join('ejscript', ejsVersion)
@@ -2498,8 +2512,8 @@ public function compile(name: Path, files, options) {
     let dest = cacheDir.join(name + '#' + version + '.mod')
     let switches = options ? options.compile : ''
     let cmd = ejsc + ' ' + switches + ' --out "' + dest + '" ' + files.map(function(e) '"' + pakDir.join(e) + '"')
+    vtrace('Cache', dest)
     run(cmd)
-    trace('Cache', dest)
 }
 
 
