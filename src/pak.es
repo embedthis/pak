@@ -1793,7 +1793,6 @@ class Pak
                 } else {
                     //  DEPRECATED
                     path = pak.cachePath.join('start.me')
-                    trace('Warn', 'Package ' + pak.name + ' is using deprecated start.me. Use ' + pak.name + '.me instead')
                     if (path.exists) {
                         if (Cmd.locate('me')) {
                             vtrace('Run', 'me -q --file ' + path + ' ' + event)
