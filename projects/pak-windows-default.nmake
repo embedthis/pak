@@ -723,7 +723,7 @@ DEPS_36 = $(DEPS_36) build\$(CONFIG)\bin\pak-ejsc.exe
 build\$(CONFIG)\bin\ejs.mod: $(DEPS_36)
 	cd src\ejscript
 	@echo .. [Compile] ejs.mod
-	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --debug --optimize 9 --bind --require null ejs.es
+	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod"  --bind --require null ejs.es
 	cd ..\..
 !ENDIF
 
@@ -865,13 +865,13 @@ build\$(CONFIG)\.install-certs-modified: $(DEPS_41)
 #
 DEPS_42 = $(DEPS_42) src\Package.es
 DEPS_42 = $(DEPS_42) src\pak.es
-DEPS_42 = $(DEPS_42) paks\ejs-version\Version.es
+DEPS_42 = $(DEPS_42) paks\ejs.version\Version.es
 !IF "$(ME_COM_EJSCRIPT)" == "1"
 DEPS_42 = $(DEPS_42) build\$(CONFIG)\bin\ejs.mod
 !ENDIF
 
 build\$(CONFIG)\bin\pak.mod: $(DEPS_42)
-	"./$(BUILD)/bin/pak-ejsc" --debug --optimize 9 --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
+	"./$(BUILD)/bin/pak-ejsc"  --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
 
 #
 #   pak.obj

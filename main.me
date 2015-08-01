@@ -39,7 +39,6 @@ Me.load({
         tune: 'size',
 
         ejscript: {
-            compile: '--debug --optimize 9',
             db: false,
             mail: false,
             mapper: false,
@@ -81,7 +80,7 @@ Me.load({
         },
         'pak.mod': {
             path: '${BIN}/pak.mod',
-            files: [ 'src/*.es', 'paks/ejs-version/Version.es' ],
+            files: [ 'src/*.es', 'paks/ejs.version/Version.es' ],
             build: `
                 trace('Compile', 'src/*.es')
                 run('"${BIN}/pak-ejsc" ${settings.ejscript.compile} --out "${BIN}/pak.mod" --optimize 9 ${FILES}')

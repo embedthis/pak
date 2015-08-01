@@ -677,7 +677,7 @@ $(BUILD)/bin/ejs.mod: $(DEPS_39)
 	( \
 	cd src/ejscript; \
 	echo '   [Compile] ejs.mod' ; \
-	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --debug --optimize 9 --bind --require null ejs.es ; \
+	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod"  --bind --require null ejs.es ; \
 	)
 endif
 
@@ -799,13 +799,13 @@ $(BUILD)/.install-certs-modified: $(DEPS_42)
 #
 DEPS_43 += src/Package.es
 DEPS_43 += src/pak.es
-DEPS_43 += paks/ejs-version/Version.es
+DEPS_43 += paks/ejs.version/Version.es
 ifeq ($(ME_COM_EJSCRIPT),1)
     DEPS_43 += $(BUILD)/bin/ejs.mod
 endif
 
 $(BUILD)/bin/pak.mod: $(DEPS_43)
-	"./$(BUILD)/bin/pak-ejsc" --debug --optimize 9 --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs-version/Version.es
+	"./$(BUILD)/bin/pak-ejsc"  --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
 
 #
 #   pak

@@ -523,7 +523,7 @@ class Pak
     }
 
     function buildPak(pak: Package) {
-        trace('Building', pak.cachePath)
+        trace('Building', pak.name)
         runScripts(pak, 'build')
     }
 
@@ -1766,8 +1766,8 @@ class Pak
                             load(path)
                         } else if (path.extension == 'me') {
                             if (Cmd.locate('me')) {
-                                vtrace('Run', 'me -q --file', path)
-                                results = Cmd.run('me -q --file ' + path)
+                                vtrace('Run', 'me -q --file ' + path + ' pak-' + event)
+                                results = Cmd.run('me -q --file ' + path + ' pak-' + event)
                             } else {
                                 throw 'Cannot run MakeMe installation script "' + event + '" for ' + pak + '\n' + e
                             }
@@ -1780,14 +1780,27 @@ class Pak
                         results = Cmd.run(script)
                     }
                 }
+
             } else if (pak.cachePath) {
-                path = pak.cachePath.join('start.me')
+                path = pak.cachePath.join(pak.name + '.me')
                 if (path.exists) {
                     if (Cmd.locate('me')) {
-                        vtrace('Run', 'me -q --file ' + path + ' ' + event)
-                        results = Cmd.run('me -q --file ' + path + ' ' + event)
+                        vtrace('Run', 'me -q --file ' + path + ' pak-' + event)
+                        results = Cmd.run('me -q --file ' + path + ' pak-' + event)
                     } else {
                         throw 'Cannot run MakeMe installation script "' + event + '" for ' + pak + '\n' + e
+                    }
+                } else {
+                    //  DEPRECATED
+                    path = pak.cachePath.join('start.me')
+                    trace('Warn', 'Package ' + pak.name + ' is using deprecated start.me. Use ' + pak.name + '.me instead')
+                    if (path.exists) {
+                        if (Cmd.locate('me')) {
+                            vtrace('Run', 'me -q --file ' + path + ' ' + event)
+                            results = Cmd.run('me -q --file ' + path + ' ' + event)
+                        } else {
+                            throw 'Cannot run MakeMe installation script "' + event + '" for ' + pak + '\n' + e
+                        }
                     }
                 }
             }
@@ -2483,6 +2496,8 @@ public function npm(command, program): Void {
     }
 }
 
+
+/* UNUSED
 public function compile(name: Path, files, options) {
     if (!(files is Array)) {
         files = [files]
@@ -2515,6 +2530,7 @@ public function compile(name: Path, files, options) {
     vtrace('Cache', dest)
     run(cmd)
 }
+*/
 
 
 public var pak = new Pak
