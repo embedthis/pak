@@ -17,45 +17,54 @@
                     <tr><td>preinstall</td><td>Before installing and after caching package</td></tr>
                     <tr><td>preupdate</td><td>Before updating cached packages</td></tr>
                     <tr><td>preupgrade</td><td>Before upgrading installed packages</td></tr>
-                    <tr><td>install</td><td>After installing files localled</td></tr>
+                    <tr><td>install</td><td>After installing files locally</td></tr>
                     <tr><td>postcache</td><td>After saving package to the cache</td></tr>
                     <tr><td>postprune</td><td>After removing a package from the cache</td></tr>
                     <tr><td>postuninstall</td><td>After uninstalling package locally</td></tr>
+                    <tr><td>uninstall</td><td>Before uninstalling package locally</td></tr>
                 </tbody>
             </table>
 
             <h2>Hooking Events</h2>
-            <p>Events may be hooked by defining event scripts via the <em>scripts</em> package.json property.
+            <p>Events may be hooked by defining event scripts via the <em>pak.scripts</em> package.json property.
             Event handlers be defined inside the scripts collection. For example:</p>
-            <pre class="code">"scripts": {
-    "postcache": {
-        "script": "print('Any script in here')"
+            <pre class="code">"pak": {
+    "scripts": {
+        "postcache": {
+            "script": "print('Any script in here')"
+        }
     }
 }
 </pre>
             <h3>Literal Scripts</h3>
             <p>Each event may define a literal script or define a script filename. If the event value is a
                 string, it will be interpreted as a literal script to execute. For example:</p>
-            <pre class="code">"scripts": {
-    "postcache": "run('npm install -g babel')"
+            <pre class="code">"pak": {
+    "scripts": {
+        "postcache": "run('npm install -g babel')"
+    }
 }
 </pre>
             <p>This is quivalent to the following:</p>
-            <pre class="code">"scripts": {
-    "postcache": {
-        "script": "run('npm install -g babel')"
+            <pre class="code">"pak": {
+    "scripts": {
+        "postcache": {
+            "script": "run('npm install -g babel')"
+        }
     }
 }
 </pre>
             <h3>Event Script Files</h3>
             <p>You can externalize the event script in a file by using the <em>path</em> property inside the
                 event definition.</p>
-            <pre class="code">"scripts": {
-    "postcache": {
-        "path": "run('npm install -g babel')"
+            <code>"pak": {
+    "scripts": {
+        "postcache": {
+            "path": "run('npm install -g babel')"
+        }
     }
 }
-</pre>
+</code>
 
             <h3>MakeMe Scripts</h3>
             <p>If the script file has a <em>.me</em> extension, the script will be interpreted as a MakeMe
@@ -63,9 +72,11 @@
             <pre>me -q --file PATH</pre>
 
             <h2>Automatic MakeMe Events</h2>
-            <p>If the package does not define event handlers, but provides a <em>start.me</em> MakeMe 
-            project file, then it will be invoked with the name of the event as a target. For example:</p>
-            <pre class="code">me -q --file PATH EVENT</pre>
+            <p>If the package does not define event handlers, but provides a MakeMe file of the same name 
+            as the package: <em>NAME.me</em>, then
+            then it will be invoked with the name of the event, prefixed with <em>pak-</em> as a target.</p>
+            <p>For example:</p>
+            <pre class="code">me -q --file PATH pak-postcache</pre>
             <p>This can be a convenient way of handling Pak events via MakeMe project files.</p> 
 
 

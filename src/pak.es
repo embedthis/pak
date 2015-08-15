@@ -1720,13 +1720,13 @@ class Pak
     /*
         Events:
             build
-            cache
+            install
             preinstall
             postcache
-            install
-            uninstall
+            postprune
             preupdate
             preupgrade
+            uninstall
      */
     private function runScripts(pak: Package, event: String) {
         if (!pak.cache) {
