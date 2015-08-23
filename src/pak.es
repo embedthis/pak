@@ -1737,16 +1737,9 @@ class Pak
             currentPak = pak
 
             let scripts
-/* UNUSED
-            if (pak.cache && pak.cache.scripts) {
-                trace('Warn', pak.name + ' contains "scripts" in "package.json". Use "pak.scripts" instead')
-                scripts = pak.cache.scripts[event]
-            }
-*/
             if (pak.cache && pak.cache.pak && pak.cache.pak.scripts) {
                 scripts = pak.cache.pak.scripts[event]
             }
-
             if (scripts) {
                 if (!(scripts is Array)) {
                     scripts = [scripts]
@@ -2494,42 +2487,6 @@ public function npm(command, program): Void {
         Cmd.run(command)
     }
 }
-
-
-/* UNUSED
-public function compile(name: Path, files, options) {
-    if (!(files is Array)) {
-        files = [files]
-    }
-    let ejsc: Path = App.getenv('EJSC') || Cmd.locate('ejsc')
-    let ejsVersion = Cmd.run(ejsc + ' -V').trim()
-    let pakDir = currentPak.cachePath
-    let package = pakDir.join('package.json')
-    let version
-    if (package.exists) {
-        let spec = package.readJSON()
-        version = spec.version
-        if (spec.devDependencies) {
-            let criteria = spec.devDependencies.ejscript
-            if (criteria) {
-                if (!Version(ejsVersion).acceptable(criteria)) {
-                    throw 'Ejscript version ' + ejsVersion + ' is not supported by ' + name + ': ' + criteria
-                    throw name + ' does not support Ejscript version ' + ejsVersion + '. Criteria: ' + criteria
-                }
-            }
-        }
-    }
-    version ||= '0.0.1'
-    let cacheDir = App.home.join('.ejs').join('ejscript', ejsVersion)
-    cacheDir.makeDir()
-
-    let dest = cacheDir.join(name + '#' + version + '.mod')
-    let switches = options ? options.compile : ''
-    let cmd = ejsc + ' ' + switches + ' --out "' + dest + '" ' + files.map(function(e) '"' + pakDir.join(e) + '"')
-    vtrace('Cache', dest)
-    run(cmd)
-}
-*/
 
 
 public var pak = new Pak
