@@ -1028,24 +1028,32 @@ class Pak
             files = [files]
         }
         if (spec.pak.import) {
-            if (getPakSetting(pak, 'import') !== false) {
-                let needExports = (export.length == 0)
-                let needFiles = (files.length == 0)
-                for each (dir in ['dist', 'lib']) {
-                    let path = pak.cachePath.join(dir)
-                    if (path.exists) {
-                        if (needFiles) {
-                            files.push('dist/**')
+            let import = getPakSetting(pak, 'import')
+            if (import !== false) {
+                if (spec.pak.override && spec.pak.override[pak.name] && spec.pak.override[pak.name].export) {
+                    export = spec.pak.override[pak.name].export
+                } else {
+                    let needExports = (export.length == 0)
+                    let needFiles = (files.length == 0)
+                    for each (dir in ['dist', 'lib']) {
+                        let path = pak.cachePath.join(dir)
+                        if (path.exists) {
+                            if (needFiles) {
+                                files.push('dist/**')
+                            }
+                            if (needExports) {
+                                export.push({ from: 'dist/', trim: 1 })
+                            }
+                            break
                         }
-                        if (needExports) {
-                            export.push({ from: 'dist/', trim: 1 })
-                        }
-                        break
                     }
                 }
             }
         } else {
             export = []
+        }
+        if (!(export is Array)) {
+            export = [export]
         }
         if (files && !(files is Array)) {
             files = [files]
@@ -2424,6 +2432,9 @@ class Pak
 
     function error(msg) App.log.error(msg)
 
+    /*
+        Get an override property from the application's package.json:pak.override[name]
+     */
     private function getPakSetting(pak, property) {
         let override = spec.pak.override
         return ((override && override[pak.name] && override[pak.name][property] === true) ||
