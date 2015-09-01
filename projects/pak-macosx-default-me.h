@@ -84,6 +84,9 @@
 #ifndef ME_EJS_ONE_MODULE
     #define ME_EJS_ONE_MODULE 1
 #endif
+#ifndef ME_EJSCRIPT___COMPILE
+    #define ME_EJSCRIPT___COMPILE "--debug"
+#endif
 #ifndef ME_EJSCRIPT_DB
     #define ME_EJSCRIPT_DB 0
 #endif
