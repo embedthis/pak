@@ -105,6 +105,8 @@ enumerable class Package {
                     parseEndpoint(package.pak.origin)
                 } else if (package.repository) {
                     parseEndpoint(package.repository.url)
+                } else {
+                    name = Path(ref).basename
                 }
                 if (package.version) {
                     setCacheVersion(package.version)
@@ -228,10 +230,12 @@ enumerable class Package {
         cachePath = null
         cached = false
         if (cacheVersion && cacheVersion.valid) {
-            let cacheBase = repository.join(owner, cacheVersion.toString())
-            cachePath = App.config.directories.pakcache.join(cacheBase)
-            if (cachePath.exists && Package.loadPackage(cachePath, {quiet: true})) {
-                cached = true
+            if (repository) {
+                let cacheBase = repository.join(owner, cacheVersion.toString())
+                cachePath = App.config.directories.pakcache.join(cacheBase)
+                if (cachePath.exists && Package.loadPackage(cachePath, {quiet: true})) {
+                    cached = true
+                }
             }
         }
     }
