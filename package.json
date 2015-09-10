@@ -28,8 +28,8 @@
         "certs": "~0.1",
         "ejs.version": "~0.8",
         "ejscript": "~2.7",
-        "mpr": "~6.1",
-        "mpr-mbedtls": "^0.4",
+        "mpr": "~6.2",
+        "mpr-mbedtls": "~0.4",
         "ssl": "~0.9"
     },
     "optionalDependencies": {
