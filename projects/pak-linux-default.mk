@@ -123,7 +123,7 @@ clean:
 	rm -f "$(BUILD)/obj/ejsc.o"
 	rm -f "$(BUILD)/obj/http.o"
 	rm -f "$(BUILD)/obj/httpLib.o"
-	rm -f "$(BUILD)/obj/mbedtlsLib.o"
+	rm -f "$(BUILD)/obj/mbedtls.o"
 	rm -f "$(BUILD)/obj/mpr-mbedtls.o"
 	rm -f "$(BUILD)/obj/mpr-openssl.o"
 	rm -f "$(BUILD)/obj/mprLib.o"
@@ -249,11 +249,31 @@ $(BUILD)/inc/ejsByteGoto.h: $(DEPS_10)
 	cp src/ejscript/ejsByteGoto.h $(BUILD)/inc/ejsByteGoto.h
 
 #
+#   embedtls.h
+#
+DEPS_11 += src/mbedtls/embedtls.h
+
+$(BUILD)/inc/embedtls.h: $(DEPS_11)
+	@echo '      [Copy] $(BUILD)/inc/embedtls.h'
+	mkdir -p "$(BUILD)/inc"
+	cp src/mbedtls/embedtls.h $(BUILD)/inc/embedtls.h
+
+#
+#   mbedtls-config.h
+#
+DEPS_12 += src/mbedtls/mbedtls-config.h
+
+$(BUILD)/inc/mbedtls-config.h: $(DEPS_12)
+	@echo '      [Copy] $(BUILD)/inc/mbedtls-config.h'
+	mkdir -p "$(BUILD)/inc"
+	cp src/mbedtls/mbedtls-config.h $(BUILD)/inc/mbedtls-config.h
+
+#
 #   mbedtls.h
 #
-DEPS_11 += src/mbedtls/mbedtls.h
+DEPS_13 += src/mbedtls/mbedtls.h
 
-$(BUILD)/inc/mbedtls.h: $(DEPS_11)
+$(BUILD)/inc/mbedtls.h: $(DEPS_13)
 	@echo '      [Copy] $(BUILD)/inc/mbedtls.h'
 	mkdir -p "$(BUILD)/inc"
 	cp src/mbedtls/mbedtls.h $(BUILD)/inc/mbedtls.h
@@ -262,101 +282,101 @@ $(BUILD)/inc/mbedtls.h: $(DEPS_11)
 #   ejs.h
 #
 
-src/ejscript/ejs.h: $(DEPS_12)
+src/ejscript/ejs.h: $(DEPS_14)
 
 #
 #   ejs.o
 #
-DEPS_13 += src/ejscript/ejs.h
+DEPS_15 += src/ejscript/ejs.h
 
 $(BUILD)/obj/ejs.o: \
-    src/ejscript/ejs.c $(DEPS_13)
+    src/ejscript/ejs.c $(DEPS_15)
 	@echo '   [Compile] $(BUILD)/obj/ejs.o'
 	$(CC) -c -o $(BUILD)/obj/ejs.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/ejscript/ejs.c
 
 #
 #   ejsLib.o
 #
-DEPS_14 += src/ejscript/ejs.h
-DEPS_14 += $(BUILD)/inc/mpr.h
-DEPS_14 += $(BUILD)/inc/pcre.h
-DEPS_14 += $(BUILD)/inc/me.h
+DEPS_16 += src/ejscript/ejs.h
+DEPS_16 += $(BUILD)/inc/mpr.h
+DEPS_16 += $(BUILD)/inc/pcre.h
+DEPS_16 += $(BUILD)/inc/me.h
 
 $(BUILD)/obj/ejsLib.o: \
-    src/ejscript/ejsLib.c $(DEPS_14)
+    src/ejscript/ejsLib.c $(DEPS_16)
 	@echo '   [Compile] $(BUILD)/obj/ejsLib.o'
-	$(CC) -c -o $(BUILD)/obj/ejsLib.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 $(IFLAGS) src/ejscript/ejsLib.c
+	$(CC) -c -o $(BUILD)/obj/ejsLib.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE="embedtls.h" $(IFLAGS) src/ejscript/ejsLib.c
 
 #
 #   ejsc.o
 #
-DEPS_15 += src/ejscript/ejs.h
+DEPS_17 += src/ejscript/ejs.h
 
 $(BUILD)/obj/ejsc.o: \
-    src/ejscript/ejsc.c $(DEPS_15)
+    src/ejscript/ejsc.c $(DEPS_17)
 	@echo '   [Compile] $(BUILD)/obj/ejsc.o'
-	$(CC) -c -o $(BUILD)/obj/ejsc.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 $(IFLAGS) src/ejscript/ejsc.c
+	$(CC) -c -o $(BUILD)/obj/ejsc.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE="embedtls.h" $(IFLAGS) src/ejscript/ejsc.c
 
 #
 #   http.h
 #
 
-src/http/http.h: $(DEPS_16)
+src/http/http.h: $(DEPS_18)
 
 #
 #   http.o
 #
-DEPS_17 += src/http/http.h
+DEPS_19 += src/http/http.h
 
 $(BUILD)/obj/http.o: \
-    src/http/http.c $(DEPS_17)
+    src/http/http.c $(DEPS_19)
 	@echo '   [Compile] $(BUILD)/obj/http.o'
 	$(CC) -c -o $(BUILD)/obj/http.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/http/http.c
 
 #
 #   httpLib.o
 #
-DEPS_18 += src/http/http.h
-DEPS_18 += $(BUILD)/inc/pcre.h
+DEPS_20 += src/http/http.h
+DEPS_20 += $(BUILD)/inc/pcre.h
 
 $(BUILD)/obj/httpLib.o: \
-    src/http/httpLib.c $(DEPS_18)
+    src/http/httpLib.c $(DEPS_20)
 	@echo '   [Compile] $(BUILD)/obj/httpLib.o'
-	$(CC) -c -o $(BUILD)/obj/httpLib.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 $(IFLAGS) src/http/httpLib.c
+	$(CC) -c -o $(BUILD)/obj/httpLib.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE="embedtls.h" $(IFLAGS) src/http/httpLib.c
 
 #
 #   mbedtls.h
 #
 
-src/mbedtls/mbedtls.h: $(DEPS_19)
+src/mbedtls/mbedtls.h: $(DEPS_21)
 
 #
-#   mbedtlsLib.o
+#   mbedtls.o
 #
-DEPS_20 += src/mbedtls/mbedtls.h
+DEPS_22 += src/mbedtls/mbedtls.h
 
-$(BUILD)/obj/mbedtlsLib.o: \
-    src/mbedtls/mbedtlsLib.c $(DEPS_20)
-	@echo '   [Compile] $(BUILD)/obj/mbedtlsLib.o'
-	$(CC) -c -o $(BUILD)/obj/mbedtlsLib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/mbedtls/mbedtlsLib.c
+$(BUILD)/obj/mbedtls.o: \
+    src/mbedtls/mbedtls.c $(DEPS_22)
+	@echo '   [Compile] $(BUILD)/obj/mbedtls.o'
+	$(CC) -c -o $(BUILD)/obj/mbedtls.o $(CFLAGS) -DMBEDTLS_USER_CONFIG_FILE="embedtls.h" $(IFLAGS) src/mbedtls/mbedtls.c
 
 #
 #   mpr-mbedtls.o
 #
-DEPS_21 += $(BUILD)/inc/mpr.h
+DEPS_23 += $(BUILD)/inc/mpr.h
 
 $(BUILD)/obj/mpr-mbedtls.o: \
-    src/mpr-mbedtls/mpr-mbedtls.c $(DEPS_21)
+    src/mpr-mbedtls/mpr-mbedtls.c $(DEPS_23)
 	@echo '   [Compile] $(BUILD)/obj/mpr-mbedtls.o'
-	$(CC) -c -o $(BUILD)/obj/mpr-mbedtls.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 $(IFLAGS) src/mpr-mbedtls/mpr-mbedtls.c
+	$(CC) -c -o $(BUILD)/obj/mpr-mbedtls.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE="embedtls.h" $(IFLAGS) src/mpr-mbedtls/mpr-mbedtls.c
 
 #
 #   mpr-openssl.o
 #
-DEPS_22 += $(BUILD)/inc/mpr.h
+DEPS_24 += $(BUILD)/inc/mpr.h
 
 $(BUILD)/obj/mpr-openssl.o: \
-    src/mpr-openssl/mpr-openssl.c $(DEPS_22)
+    src/mpr-openssl/mpr-openssl.c $(DEPS_24)
 	@echo '   [Compile] $(BUILD)/obj/mpr-openssl.o'
 	$(CC) -c -o $(BUILD)/obj/mpr-openssl.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/mpr-openssl/mpr-openssl.c
 
@@ -364,42 +384,42 @@ $(BUILD)/obj/mpr-openssl.o: \
 #   mpr.h
 #
 
-src/mpr/mpr.h: $(DEPS_23)
+src/mpr/mpr.h: $(DEPS_25)
 
 #
 #   mprLib.o
 #
-DEPS_24 += src/mpr/mpr.h
+DEPS_26 += src/mpr/mpr.h
 
 $(BUILD)/obj/mprLib.o: \
-    src/mpr/mprLib.c $(DEPS_24)
+    src/mpr/mprLib.c $(DEPS_26)
 	@echo '   [Compile] $(BUILD)/obj/mprLib.o'
-	$(CC) -c -o $(BUILD)/obj/mprLib.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 $(IFLAGS) src/mpr/mprLib.c
+	$(CC) -c -o $(BUILD)/obj/mprLib.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE="embedtls.h" $(IFLAGS) src/mpr/mprLib.c
 
 #
 #   pak.o
 #
-DEPS_25 += $(BUILD)/inc/ejs.h
+DEPS_27 += $(BUILD)/inc/ejs.h
 
 $(BUILD)/obj/pak.o: \
-    src/pak.c $(DEPS_25)
+    src/pak.c $(DEPS_27)
 	@echo '   [Compile] $(BUILD)/obj/pak.o'
-	$(CC) -c -o $(BUILD)/obj/pak.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 $(IFLAGS) src/pak.c
+	$(CC) -c -o $(BUILD)/obj/pak.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE="embedtls.h" $(IFLAGS) src/pak.c
 
 #
 #   pcre.h
 #
 
-src/pcre/pcre.h: $(DEPS_26)
+src/pcre/pcre.h: $(DEPS_28)
 
 #
 #   pcre.o
 #
-DEPS_27 += $(BUILD)/inc/me.h
-DEPS_27 += src/pcre/pcre.h
+DEPS_29 += $(BUILD)/inc/me.h
+DEPS_29 += src/pcre/pcre.h
 
 $(BUILD)/obj/pcre.o: \
-    src/pcre/pcre.c $(DEPS_27)
+    src/pcre/pcre.c $(DEPS_29)
 	@echo '   [Compile] $(BUILD)/obj/pcre.o'
 	$(CC) -c -o $(BUILD)/obj/pcre.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/pcre/pcre.c
 
@@ -407,16 +427,16 @@ $(BUILD)/obj/pcre.o: \
 #   zlib.h
 #
 
-src/zlib/zlib.h: $(DEPS_28)
+src/zlib/zlib.h: $(DEPS_30)
 
 #
 #   zlib.o
 #
-DEPS_29 += $(BUILD)/inc/me.h
-DEPS_29 += src/zlib/zlib.h
+DEPS_31 += $(BUILD)/inc/me.h
+DEPS_31 += src/zlib/zlib.h
 
 $(BUILD)/obj/zlib.o: \
-    src/zlib/zlib.c $(DEPS_29)
+    src/zlib/zlib.c $(DEPS_31)
 	@echo '   [Compile] $(BUILD)/obj/zlib.o'
 	$(CC) -c -o $(BUILD)/obj/zlib.o $(CFLAGS) $(DFLAGS) $(IFLAGS) src/zlib/zlib.c
 
@@ -424,23 +444,25 @@ ifeq ($(ME_COM_MBEDTLS),1)
 #
 #   libmbedtls
 #
-DEPS_30 += $(BUILD)/inc/osdep.h
-DEPS_30 += $(BUILD)/inc/mbedtls.h
-DEPS_30 += $(BUILD)/obj/mbedtlsLib.o
+DEPS_32 += $(BUILD)/inc/osdep.h
+DEPS_32 += $(BUILD)/inc/embedtls.h
+DEPS_32 += $(BUILD)/inc/mbedtls-config.h
+DEPS_32 += $(BUILD)/inc/mbedtls.h
+DEPS_32 += $(BUILD)/obj/mbedtls.o
 
-$(BUILD)/bin/libmbedtls.a: $(DEPS_30)
+$(BUILD)/bin/libmbedtls.a: $(DEPS_32)
 	@echo '      [Link] $(BUILD)/bin/libmbedtls.a'
-	ar -cr $(BUILD)/bin/libmbedtls.a "$(BUILD)/obj/mbedtlsLib.o"
+	ar -cr $(BUILD)/bin/libmbedtls.a "$(BUILD)/obj/mbedtls.o"
 endif
 
 ifeq ($(ME_COM_MBEDTLS),1)
 #
 #   libmpr-mbedtls
 #
-DEPS_31 += $(BUILD)/bin/libmbedtls.a
-DEPS_31 += $(BUILD)/obj/mpr-mbedtls.o
+DEPS_33 += $(BUILD)/bin/libmbedtls.a
+DEPS_33 += $(BUILD)/obj/mpr-mbedtls.o
 
-$(BUILD)/bin/libmpr-mbedtls.a: $(DEPS_31)
+$(BUILD)/bin/libmpr-mbedtls.a: $(DEPS_33)
 	@echo '      [Link] $(BUILD)/bin/libmpr-mbedtls.a'
 	ar -cr $(BUILD)/bin/libmpr-mbedtls.a "$(BUILD)/obj/mpr-mbedtls.o"
 endif
@@ -449,9 +471,9 @@ ifeq ($(ME_COM_OPENSSL),1)
 #
 #   libmpr-openssl
 #
-DEPS_32 += $(BUILD)/obj/mpr-openssl.o
+DEPS_34 += $(BUILD)/obj/mpr-openssl.o
 
-$(BUILD)/bin/libmpr-openssl.a: $(DEPS_32)
+$(BUILD)/bin/libmpr-openssl.a: $(DEPS_34)
 	@echo '      [Link] $(BUILD)/bin/libmpr-openssl.a'
 	ar -cr $(BUILD)/bin/libmpr-openssl.a "$(BUILD)/obj/mpr-openssl.o"
 endif
@@ -459,61 +481,18 @@ endif
 #
 #   libmpr
 #
-DEPS_33 += $(BUILD)/inc/osdep.h
+DEPS_35 += $(BUILD)/inc/osdep.h
 ifeq ($(ME_COM_MBEDTLS),1)
-    DEPS_33 += $(BUILD)/bin/libmpr-mbedtls.a
+    DEPS_35 += $(BUILD)/bin/libmpr-mbedtls.a
 endif
 ifeq ($(ME_COM_MBEDTLS),1)
-    DEPS_33 += $(BUILD)/bin/libmbedtls.a
+    DEPS_35 += $(BUILD)/bin/libmbedtls.a
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    DEPS_33 += $(BUILD)/bin/libmpr-openssl.a
+    DEPS_35 += $(BUILD)/bin/libmpr-openssl.a
 endif
-DEPS_33 += $(BUILD)/inc/mpr.h
-DEPS_33 += $(BUILD)/obj/mprLib.o
-
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_33 += -lmbedtls
-endif
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_33 += -lmpr-mbedtls
-endif
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_33 += -lmbedtls
-endif
-ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_33 += -lmpr-openssl
-endif
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_33 += -lmpr-mbedtls
-endif
-
-$(BUILD)/bin/libmpr.so: $(DEPS_33)
-	@echo '      [Link] $(BUILD)/bin/libmpr.so'
-	$(CC) -shared -o $(BUILD)/bin/libmpr.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/mprLib.o" $(LIBPATHS_33) $(LIBS_33) $(LIBS_33) $(LIBS) 
-
-ifeq ($(ME_COM_PCRE),1)
-#
-#   libpcre
-#
-DEPS_34 += $(BUILD)/inc/pcre.h
-DEPS_34 += $(BUILD)/obj/pcre.o
-
-$(BUILD)/bin/libpcre.so: $(DEPS_34)
-	@echo '      [Link] $(BUILD)/bin/libpcre.so'
-	$(CC) -shared -o $(BUILD)/bin/libpcre.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/pcre.o" $(LIBS) 
-endif
-
-ifeq ($(ME_COM_HTTP),1)
-#
-#   libhttp
-#
-DEPS_35 += $(BUILD)/bin/libmpr.so
-ifeq ($(ME_COM_PCRE),1)
-    DEPS_35 += $(BUILD)/bin/libpcre.so
-endif
-DEPS_35 += $(BUILD)/inc/http.h
-DEPS_35 += $(BUILD)/obj/httpLib.o
+DEPS_35 += $(BUILD)/inc/mpr.h
+DEPS_35 += $(BUILD)/obj/mprLib.o
 
 ifeq ($(ME_COM_MBEDTLS),1)
     LIBS_35 += -lmbedtls
@@ -527,53 +506,36 @@ endif
 ifeq ($(ME_COM_OPENSSL),1)
     LIBS_35 += -lmpr-openssl
 endif
-LIBS_35 += -lmpr
 ifeq ($(ME_COM_MBEDTLS),1)
     LIBS_35 += -lmpr-mbedtls
 endif
+
+$(BUILD)/bin/libmpr.so: $(DEPS_35)
+	@echo '      [Link] $(BUILD)/bin/libmpr.so'
+	$(CC) -shared -o $(BUILD)/bin/libmpr.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/mprLib.o" $(LIBPATHS_35) $(LIBS_35) $(LIBS_35) $(LIBS) 
+
 ifeq ($(ME_COM_PCRE),1)
-    LIBS_35 += -lpcre
-endif
-ifeq ($(ME_COM_PCRE),1)
-    LIBS_35 += -lpcre
-endif
-LIBS_35 += -lmpr
-
-$(BUILD)/bin/libhttp.so: $(DEPS_35)
-	@echo '      [Link] $(BUILD)/bin/libhttp.so'
-	$(CC) -shared -o $(BUILD)/bin/libhttp.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/httpLib.o" $(LIBPATHS_35) $(LIBS_35) $(LIBS_35) $(LIBS) 
-endif
-
-ifeq ($(ME_COM_ZLIB),1)
 #
-#   libzlib
+#   libpcre
 #
-DEPS_36 += $(BUILD)/inc/zlib.h
-DEPS_36 += $(BUILD)/obj/zlib.o
+DEPS_36 += $(BUILD)/inc/pcre.h
+DEPS_36 += $(BUILD)/obj/pcre.o
 
-$(BUILD)/bin/libzlib.so: $(DEPS_36)
-	@echo '      [Link] $(BUILD)/bin/libzlib.so'
-	$(CC) -shared -o $(BUILD)/bin/libzlib.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/zlib.o" $(LIBS) 
+$(BUILD)/bin/libpcre.so: $(DEPS_36)
+	@echo '      [Link] $(BUILD)/bin/libpcre.so'
+	$(CC) -shared -o $(BUILD)/bin/libpcre.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/pcre.o" $(LIBS) 
 endif
 
-ifeq ($(ME_COM_EJSCRIPT),1)
-#
-#   libejs
-#
 ifeq ($(ME_COM_HTTP),1)
-    DEPS_37 += $(BUILD)/bin/libhttp.so
-endif
+#
+#   libhttp
+#
+DEPS_37 += $(BUILD)/bin/libmpr.so
 ifeq ($(ME_COM_PCRE),1)
     DEPS_37 += $(BUILD)/bin/libpcre.so
 endif
-DEPS_37 += $(BUILD)/bin/libmpr.so
-ifeq ($(ME_COM_ZLIB),1)
-    DEPS_37 += $(BUILD)/bin/libzlib.so
-endif
-DEPS_37 += $(BUILD)/inc/ejs.h
-DEPS_37 += $(BUILD)/inc/ejs.slots.h
-DEPS_37 += $(BUILD)/inc/ejsByteGoto.h
-DEPS_37 += $(BUILD)/obj/ejsLib.o
+DEPS_37 += $(BUILD)/inc/http.h
+DEPS_37 += $(BUILD)/obj/httpLib.o
 
 ifeq ($(ME_COM_MBEDTLS),1)
     LIBS_37 += -lmbedtls
@@ -594,98 +556,94 @@ endif
 ifeq ($(ME_COM_PCRE),1)
     LIBS_37 += -lpcre
 endif
-ifeq ($(ME_COM_HTTP),1)
-    LIBS_37 += -lhttp
-endif
 ifeq ($(ME_COM_PCRE),1)
     LIBS_37 += -lpcre
 endif
 LIBS_37 += -lmpr
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_37 += -lzlib
-endif
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_37 += -lzlib
-endif
-ifeq ($(ME_COM_HTTP),1)
-    LIBS_37 += -lhttp
+
+$(BUILD)/bin/libhttp.so: $(DEPS_37)
+	@echo '      [Link] $(BUILD)/bin/libhttp.so'
+	$(CC) -shared -o $(BUILD)/bin/libhttp.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/httpLib.o" $(LIBPATHS_37) $(LIBS_37) $(LIBS_37) $(LIBS) 
 endif
 
-$(BUILD)/bin/libejs.so: $(DEPS_37)
+ifeq ($(ME_COM_ZLIB),1)
+#
+#   libzlib
+#
+DEPS_38 += $(BUILD)/inc/zlib.h
+DEPS_38 += $(BUILD)/obj/zlib.o
+
+$(BUILD)/bin/libzlib.so: $(DEPS_38)
+	@echo '      [Link] $(BUILD)/bin/libzlib.so'
+	$(CC) -shared -o $(BUILD)/bin/libzlib.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/zlib.o" $(LIBS) 
+endif
+
+ifeq ($(ME_COM_EJSCRIPT),1)
+#
+#   libejs
+#
+ifeq ($(ME_COM_HTTP),1)
+    DEPS_39 += $(BUILD)/bin/libhttp.so
+endif
+ifeq ($(ME_COM_PCRE),1)
+    DEPS_39 += $(BUILD)/bin/libpcre.so
+endif
+DEPS_39 += $(BUILD)/bin/libmpr.so
+ifeq ($(ME_COM_ZLIB),1)
+    DEPS_39 += $(BUILD)/bin/libzlib.so
+endif
+DEPS_39 += $(BUILD)/inc/ejs.h
+DEPS_39 += $(BUILD)/inc/ejs.slots.h
+DEPS_39 += $(BUILD)/inc/ejsByteGoto.h
+DEPS_39 += $(BUILD)/obj/ejsLib.o
+
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_39 += -lmbedtls
+endif
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_39 += -lmpr-mbedtls
+endif
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_39 += -lmbedtls
+endif
+ifeq ($(ME_COM_OPENSSL),1)
+    LIBS_39 += -lmpr-openssl
+endif
+LIBS_39 += -lmpr
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_39 += -lmpr-mbedtls
+endif
+ifeq ($(ME_COM_PCRE),1)
+    LIBS_39 += -lpcre
+endif
+ifeq ($(ME_COM_HTTP),1)
+    LIBS_39 += -lhttp
+endif
+ifeq ($(ME_COM_PCRE),1)
+    LIBS_39 += -lpcre
+endif
+LIBS_39 += -lmpr
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_39 += -lzlib
+endif
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_39 += -lzlib
+endif
+ifeq ($(ME_COM_HTTP),1)
+    LIBS_39 += -lhttp
+endif
+
+$(BUILD)/bin/libejs.so: $(DEPS_39)
 	@echo '      [Link] $(BUILD)/bin/libejs.so'
-	$(CC) -shared -o $(BUILD)/bin/libejs.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejsLib.o" $(LIBPATHS_37) $(LIBS_37) $(LIBS_37) $(LIBS) 
+	$(CC) -shared -o $(BUILD)/bin/libejs.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejsLib.o" $(LIBPATHS_39) $(LIBS_39) $(LIBS_39) $(LIBS) 
 endif
 
 ifeq ($(ME_COM_EJSCRIPT),1)
 #
 #   ejsc
 #
-DEPS_38 += $(BUILD)/bin/libejs.so
-DEPS_38 += $(BUILD)/obj/ejsc.o
-
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_38 += -lmbedtls
-endif
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_38 += -lmpr-mbedtls
-endif
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_38 += -lmbedtls
-endif
-ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_38 += -lmpr-openssl
-endif
-LIBS_38 += -lmpr
-ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_38 += -lmpr-mbedtls
-endif
-ifeq ($(ME_COM_PCRE),1)
-    LIBS_38 += -lpcre
-endif
-ifeq ($(ME_COM_HTTP),1)
-    LIBS_38 += -lhttp
-endif
-ifeq ($(ME_COM_PCRE),1)
-    LIBS_38 += -lpcre
-endif
-LIBS_38 += -lmpr
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_38 += -lzlib
-endif
-LIBS_38 += -lejs
-ifeq ($(ME_COM_ZLIB),1)
-    LIBS_38 += -lzlib
-endif
-ifeq ($(ME_COM_HTTP),1)
-    LIBS_38 += -lhttp
-endif
-
-$(BUILD)/bin/pak-ejsc: $(DEPS_38)
-	@echo '      [Link] $(BUILD)/bin/pak-ejsc'
-	$(CC) -o $(BUILD)/bin/pak-ejsc $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejsc.o" $(LIBPATHS_38) $(LIBS_38) $(LIBS_38) $(LIBS) $(LIBS) 
-endif
-
-ifeq ($(ME_COM_EJSCRIPT),1)
-#
-#   ejs.mod
-#
-DEPS_39 += src/ejscript/ejs.es
-DEPS_39 += $(BUILD)/bin/pak-ejsc
-
-$(BUILD)/bin/ejs.mod: $(DEPS_39)
-	( \
-	cd src/ejscript; \
-	echo '   [Compile] ejs.mod' ; \
-	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod"  --bind --require null ejs.es ; \
-	)
-endif
-
-ifeq ($(ME_COM_EJSCRIPT),1)
-#
-#   ejscmd
-#
 DEPS_40 += $(BUILD)/bin/libejs.so
-DEPS_40 += $(BUILD)/obj/ejs.o
+DEPS_40 += $(BUILD)/obj/ejsc.o
 
 ifeq ($(ME_COM_MBEDTLS),1)
     LIBS_40 += -lmbedtls
@@ -724,62 +682,126 @@ ifeq ($(ME_COM_HTTP),1)
     LIBS_40 += -lhttp
 endif
 
-$(BUILD)/bin/pak-ejs: $(DEPS_40)
+$(BUILD)/bin/pak-ejsc: $(DEPS_40)
+	@echo '      [Link] $(BUILD)/bin/pak-ejsc'
+	$(CC) -o $(BUILD)/bin/pak-ejsc $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejsc.o" $(LIBPATHS_40) $(LIBS_40) $(LIBS_40) $(LIBS) $(LIBS) 
+endif
+
+ifeq ($(ME_COM_EJSCRIPT),1)
+#
+#   ejs.mod
+#
+DEPS_41 += src/ejscript/ejs.es
+DEPS_41 += $(BUILD)/bin/pak-ejsc
+
+$(BUILD)/bin/ejs.mod: $(DEPS_41)
+	( \
+	cd src/ejscript; \
+	echo '   [Compile] ejs.mod' ; \
+	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod"  --bind --require null ejs.es ; \
+	)
+endif
+
+ifeq ($(ME_COM_EJSCRIPT),1)
+#
+#   ejscmd
+#
+DEPS_42 += $(BUILD)/bin/libejs.so
+DEPS_42 += $(BUILD)/obj/ejs.o
+
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_42 += -lmbedtls
+endif
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_42 += -lmpr-mbedtls
+endif
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_42 += -lmbedtls
+endif
+ifeq ($(ME_COM_OPENSSL),1)
+    LIBS_42 += -lmpr-openssl
+endif
+LIBS_42 += -lmpr
+ifeq ($(ME_COM_MBEDTLS),1)
+    LIBS_42 += -lmpr-mbedtls
+endif
+ifeq ($(ME_COM_PCRE),1)
+    LIBS_42 += -lpcre
+endif
+ifeq ($(ME_COM_HTTP),1)
+    LIBS_42 += -lhttp
+endif
+ifeq ($(ME_COM_PCRE),1)
+    LIBS_42 += -lpcre
+endif
+LIBS_42 += -lmpr
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_42 += -lzlib
+endif
+LIBS_42 += -lejs
+ifeq ($(ME_COM_ZLIB),1)
+    LIBS_42 += -lzlib
+endif
+ifeq ($(ME_COM_HTTP),1)
+    LIBS_42 += -lhttp
+endif
+
+$(BUILD)/bin/pak-ejs: $(DEPS_42)
 	@echo '      [Link] $(BUILD)/bin/pak-ejs'
-	$(CC) -o $(BUILD)/bin/pak-ejs $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejs.o" $(LIBPATHS_40) $(LIBS_40) $(LIBS_40) $(LIBS) $(LIBS) 
+	$(CC) -o $(BUILD)/bin/pak-ejs $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/ejs.o" $(LIBPATHS_42) $(LIBS_42) $(LIBS_42) $(LIBS) $(LIBS) 
 endif
 
 ifeq ($(ME_COM_HTTP),1)
 #
 #   httpcmd
 #
-DEPS_41 += $(BUILD)/bin/libhttp.so
-DEPS_41 += $(BUILD)/obj/http.o
+DEPS_43 += $(BUILD)/bin/libhttp.so
+DEPS_43 += $(BUILD)/obj/http.o
 
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_41 += -lmbedtls
+    LIBS_43 += -lmbedtls
 endif
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_41 += -lmpr-mbedtls
+    LIBS_43 += -lmpr-mbedtls
 endif
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_41 += -lmbedtls
+    LIBS_43 += -lmbedtls
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_41 += -lmpr-openssl
+    LIBS_43 += -lmpr-openssl
 endif
-LIBS_41 += -lmpr
+LIBS_43 += -lmpr
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_41 += -lmpr-mbedtls
+    LIBS_43 += -lmpr-mbedtls
 endif
 ifeq ($(ME_COM_PCRE),1)
-    LIBS_41 += -lpcre
+    LIBS_43 += -lpcre
 endif
-LIBS_41 += -lhttp
+LIBS_43 += -lhttp
 ifeq ($(ME_COM_PCRE),1)
-    LIBS_41 += -lpcre
+    LIBS_43 += -lpcre
 endif
-LIBS_41 += -lmpr
+LIBS_43 += -lmpr
 
-$(BUILD)/bin/http: $(DEPS_41)
+$(BUILD)/bin/http: $(DEPS_43)
 	@echo '      [Link] $(BUILD)/bin/http'
-	$(CC) -o $(BUILD)/bin/http $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/http.o" $(LIBPATHS_41) $(LIBS_41) $(LIBS_41) $(LIBS) $(LIBS) 
+	$(CC) -o $(BUILD)/bin/http $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/http.o" $(LIBPATHS_43) $(LIBS_43) $(LIBS_43) $(LIBS) $(LIBS) 
 endif
 
 #
 #   install-certs
 #
-DEPS_42 += src/certs/samples/ca.crt
-DEPS_42 += src/certs/samples/ca.key
-DEPS_42 += src/certs/samples/ec.crt
-DEPS_42 += src/certs/samples/ec.key
-DEPS_42 += src/certs/samples/roots.crt
-DEPS_42 += src/certs/samples/self.crt
-DEPS_42 += src/certs/samples/self.key
-DEPS_42 += src/certs/samples/test.crt
-DEPS_42 += src/certs/samples/test.key
+DEPS_44 += src/certs/samples/ca.crt
+DEPS_44 += src/certs/samples/ca.key
+DEPS_44 += src/certs/samples/ec.crt
+DEPS_44 += src/certs/samples/ec.key
+DEPS_44 += src/certs/samples/roots.crt
+DEPS_44 += src/certs/samples/self.crt
+DEPS_44 += src/certs/samples/self.key
+DEPS_44 += src/certs/samples/test.crt
+DEPS_44 += src/certs/samples/test.key
 
-$(BUILD)/.install-certs-modified: $(DEPS_42)
+$(BUILD)/.install-certs-modified: $(DEPS_44)
 	@echo '      [Copy] $(BUILD)/bin'
 	mkdir -p "$(BUILD)/bin"
 	cp src/certs/samples/ca.crt $(BUILD)/bin/ca.crt
@@ -796,73 +818,73 @@ $(BUILD)/.install-certs-modified: $(DEPS_42)
 #
 #   pak.mod
 #
-DEPS_43 += src/Package.es
-DEPS_43 += src/pak.es
-DEPS_43 += paks/ejs.version/Version.es
+DEPS_45 += src/Package.es
+DEPS_45 += src/pak.es
+DEPS_45 += paks/ejs.version/Version.es
 ifeq ($(ME_COM_EJSCRIPT),1)
-    DEPS_43 += $(BUILD)/bin/ejs.mod
+    DEPS_45 += $(BUILD)/bin/ejs.mod
 endif
 
-$(BUILD)/bin/pak.mod: $(DEPS_43)
+$(BUILD)/bin/pak.mod: $(DEPS_45)
 	"./$(BUILD)/bin/pak-ejsc"  --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
 
 #
 #   pak
 #
 ifeq ($(ME_COM_EJSCRIPT),1)
-    DEPS_44 += $(BUILD)/bin/libejs.so
+    DEPS_46 += $(BUILD)/bin/libejs.so
 endif
-DEPS_44 += $(BUILD)/bin/pak.mod
-DEPS_44 += $(BUILD)/obj/pak.o
+DEPS_46 += $(BUILD)/bin/pak.mod
+DEPS_46 += $(BUILD)/obj/pak.o
 
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_44 += -lmbedtls
+    LIBS_46 += -lmbedtls
 endif
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_44 += -lmpr-mbedtls
+    LIBS_46 += -lmpr-mbedtls
 endif
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_44 += -lmbedtls
+    LIBS_46 += -lmbedtls
 endif
 ifeq ($(ME_COM_OPENSSL),1)
-    LIBS_44 += -lmpr-openssl
+    LIBS_46 += -lmpr-openssl
 endif
-LIBS_44 += -lmpr
+LIBS_46 += -lmpr
 ifeq ($(ME_COM_MBEDTLS),1)
-    LIBS_44 += -lmpr-mbedtls
+    LIBS_46 += -lmpr-mbedtls
 endif
 ifeq ($(ME_COM_PCRE),1)
-    LIBS_44 += -lpcre
+    LIBS_46 += -lpcre
 endif
 ifeq ($(ME_COM_HTTP),1)
-    LIBS_44 += -lhttp
+    LIBS_46 += -lhttp
 endif
 ifeq ($(ME_COM_PCRE),1)
-    LIBS_44 += -lpcre
+    LIBS_46 += -lpcre
 endif
-LIBS_44 += -lmpr
+LIBS_46 += -lmpr
 ifeq ($(ME_COM_ZLIB),1)
-    LIBS_44 += -lzlib
+    LIBS_46 += -lzlib
 endif
 ifeq ($(ME_COM_EJSCRIPT),1)
-    LIBS_44 += -lejs
+    LIBS_46 += -lejs
 endif
 ifeq ($(ME_COM_ZLIB),1)
-    LIBS_44 += -lzlib
+    LIBS_46 += -lzlib
 endif
 ifeq ($(ME_COM_HTTP),1)
-    LIBS_44 += -lhttp
+    LIBS_46 += -lhttp
 endif
 
-$(BUILD)/bin/pak: $(DEPS_44)
+$(BUILD)/bin/pak: $(DEPS_46)
 	@echo '      [Link] $(BUILD)/bin/pak'
-	$(CC) -o $(BUILD)/bin/pak $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/pak.o" $(LIBPATHS_44) $(LIBS_44) $(LIBS_44) $(LIBS) $(LIBS) 
+	$(CC) -o $(BUILD)/bin/pak $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/pak.o" $(LIBPATHS_46) $(LIBS_46) $(LIBS_46) $(LIBS) $(LIBS) 
 
 #
 #   installPrep
 #
 
-installPrep: $(DEPS_45)
+installPrep: $(DEPS_47)
 	if [ "`id -u`" != 0 ] ; \
 	then echo "Must run as root. Rerun with "sudo"" ; \
 	exit 255 ; \
@@ -872,13 +894,13 @@ installPrep: $(DEPS_45)
 #   stop
 #
 
-stop: $(DEPS_46)
+stop: $(DEPS_48)
 
 #
 #   installBinary
 #
 
-installBinary: $(DEPS_47)
+installBinary: $(DEPS_49)
 	mkdir -p "$(ME_APP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	ln -s "$(VERSION)" "$(ME_APP_PREFIX)/latest" ; \
@@ -909,24 +931,24 @@ installBinary: $(DEPS_47)
 #   start
 #
 
-start: $(DEPS_48)
+start: $(DEPS_50)
 
 #
 #   install
 #
-DEPS_49 += installPrep
-DEPS_49 += stop
-DEPS_49 += installBinary
-DEPS_49 += start
+DEPS_51 += installPrep
+DEPS_51 += stop
+DEPS_51 += installBinary
+DEPS_51 += start
 
-install: $(DEPS_49)
+install: $(DEPS_51)
 
 #
 #   uninstall
 #
-DEPS_50 += stop
+DEPS_52 += stop
 
-uninstall: $(DEPS_50)
+uninstall: $(DEPS_52)
 	rm -fr "$(ME_VAPP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	rmdir -p "$(ME_APP_PREFIX)" 2>/dev/null ; true
@@ -935,6 +957,6 @@ uninstall: $(DEPS_50)
 #   version
 #
 
-version: $(DEPS_51)
+version: $(DEPS_53)
 	echo $(VERSION)
 

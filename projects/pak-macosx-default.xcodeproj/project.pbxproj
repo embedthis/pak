@@ -87,7 +87,7 @@
 		F8262D1CF8264B4C00000026 /* ejsc.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C00000027 /* ejsc.c */; };
 		F8262D1CF8264B4C00000028 /* ejsLib.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C00000029 /* ejsLib.c */; };
 		F8262D1CF8264B4C0000002A /* httpLib.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C0000002B /* httpLib.c */; };
-		F8262D1CF8264B4C0000002C /* mbedtlsLib.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C0000002D /* mbedtlsLib.c */; };
+		F8262D1CF8264B4C0000002C /* mbedtls.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C0000002D /* mbedtls.c */; };
 		F8262D1CF8264B4C0000002E /* mprLib.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C0000002F /* mprLib.c */; };
 		F8262D1CF8264B4C00000030 /* mpr-mbedtls.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C00000031 /* mpr-mbedtls.c */; };
 		F8262D1CF8264B4C00000032 /* pcre.c in Sources */ = {isa = PBXBuildFile; fileRef = F8262D1CF8264B4C00000033 /* pcre.c */; };
@@ -641,7 +641,7 @@
 		F8262D1CF8264B4C0000002B /* httpLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = httpLib.c; path = src/http/httpLib.c; sourceTree = "<group>"; };
 		F8262D1CF8264B4C000000B0 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = src/http/http.h; sourceTree = "<group>"; };
 		F8262D1CF8264B4C0000003D /* libhttp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libhttp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		F8262D1CF8264B4C0000002D /* mbedtlsLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mbedtlsLib.c; path = src/mbedtls/mbedtlsLib.c; sourceTree = "<group>"; };
+		F8262D1CF8264B4C0000002D /* mbedtls.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mbedtls.c; path = src/mbedtls/mbedtls.c; sourceTree = "<group>"; };
 		F8262D1CF8264B4C000000B1 /* mbedtls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mbedtls.h; path = src/mbedtls/mbedtls.h; sourceTree = "<group>"; };
 		F8262D1CF8264B4C00000045 /* libmbedtls */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libmbedtls.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8262D1CF8264B4C0000002F /* mprLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mprLib.c; path = src/mpr/mprLib.c; sourceTree = "<group>"; };
@@ -790,7 +790,7 @@
                 isa = PBXGroup;
                 children = (
 				F8262D1CF8264B4C000000B1 /* mbedtls.h */,
-				F8262D1CF8264B4C0000002D /* mbedtlsLib.c */,
+				F8262D1CF8264B4C0000002D /* mbedtls.c */,
 			);
                 name = "libmbedtls";
                 path = ..;
@@ -1154,8 +1154,14 @@ fi
 if [ ../src/ejscript/ejsByteGoto.h -nt ${OUT_DIR}/inc/ejsByteGoto.h ] ; then
 cp ../src/ejscript/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
 fi
+if [ ../src/mbedtls/embedtls.h -nt ${OUT_DIR}/inc/embedtls.h ] ; then
+cp ../src/mbedtls/embedtls.h ${OUT_DIR}/inc/embedtls.h
+fi
 if [ ../src/http/http.h -nt ${OUT_DIR}/inc/http.h ] ; then
 cp ../src/http/http.h ${OUT_DIR}/inc/http.h
+fi
+if [ ../src/mbedtls/mbedtls-config.h -nt ${OUT_DIR}/inc/mbedtls-config.h ] ; then
+cp ../src/mbedtls/mbedtls-config.h ${OUT_DIR}/inc/mbedtls-config.h
 fi
 if [ ../src/mbedtls/mbedtls.h -nt ${OUT_DIR}/inc/mbedtls.h ] ; then
 cp ../src/mbedtls/mbedtls.h ${OUT_DIR}/inc/mbedtls.h
@@ -1183,6 +1189,12 @@ cp ../src/ejscript/ejsByteGoto.h ${OUT_DIR}/inc/ejsByteGoto.h
 fi
 if [ ../src/http/http.h -nt ${OUT_DIR}/inc/http.h ] ; then
 cp ../src/http/http.h ${OUT_DIR}/inc/http.h
+fi
+if [ ../src/mbedtls/embedtls.h -nt ${OUT_DIR}/inc/embedtls.h ] ; then
+cp ../src/mbedtls/embedtls.h ${OUT_DIR}/inc/embedtls.h
+fi
+if [ ../src/mbedtls/mbedtls-config.h -nt ${OUT_DIR}/inc/mbedtls-config.h ] ; then
+cp ../src/mbedtls/mbedtls-config.h ${OUT_DIR}/inc/mbedtls-config.h
 fi
 if [ ../src/mbedtls/mbedtls.h -nt ${OUT_DIR}/inc/mbedtls.h ] ; then
 cp ../src/mbedtls/mbedtls.h ${OUT_DIR}/inc/mbedtls.h
@@ -1265,7 +1277,7 @@ fi";
     			isa = PBXSourcesBuildPhase;
     			buildActionMask = 2147483647;
     			files = (
-    				F8262D1CF8264B4C0000002C /* mbedtlsLib.c in Sources */,
+    				F8262D1CF8264B4C0000002C /* mbedtls.c in Sources */,
     			);
     			runOnlyForDeploymentPostprocessing = 0;
     		};
@@ -1850,6 +1862,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -1863,6 +1876,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
     			};
@@ -1875,6 +1889,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -1888,6 +1903,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
     			};
@@ -1921,6 +1937,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -1934,6 +1951,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
     			};
@@ -1946,6 +1964,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -1959,6 +1978,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
     			};
@@ -1971,6 +1991,7 @@ ENABLE_TESTABILITY = YES;
     				EXECUTABLE_EXTENSION = a;
 
     				GCC_PREPROCESSOR_DEFINITIONS = (
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -1987,7 +2008,11 @@ ENABLE_TESTABILITY = YES;
     				PRODUCT_NAME = libmbedtls;
     				EXECUTABLE_EXTENSION = a;
 
-    				OTHER_LDFLAGS = ();
+    				GCC_PREPROCESSOR_DEFINITIONS = (
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
+					"$(inherited)"
+				);
+				OTHER_LDFLAGS = ();
 
 				MACH_O_TYPE = staticlib;
 
@@ -2001,6 +2026,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -2014,6 +2040,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
     			};
@@ -2027,6 +2054,7 @@ ENABLE_TESTABILITY = YES;
 
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -2045,6 +2073,7 @@ ENABLE_TESTABILITY = YES;
 
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
 				OTHER_LDFLAGS = ();
@@ -2107,6 +2136,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -2120,6 +2150,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
     			};
@@ -2132,6 +2163,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"ME_DEBUG",
 					"$(inherited)"
 				);
@@ -2145,6 +2177,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
+					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
 					"$(inherited)"
 				);
     			};
