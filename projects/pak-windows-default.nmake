@@ -3,7 +3,7 @@
 #
 
 NAME                  = pak
-VERSION               = 0.11.4
+VERSION               = 0.12.0
 
 OS                    = windows
 PA                    = $(PROCESSOR_ARCHITECTURE)
