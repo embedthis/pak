@@ -1,6 +1,6 @@
 Expansive.load({
     transforms: [ {
-        name:       'minify-html',
+        name:       'html',
         mappings:   'html',
         options:    '--remove-comments --collapse-whitespace --prevent-attributes-escaping --remove-empty-attributes --remove-optional-tags'
         script: `
@@ -26,7 +26,7 @@ Expansive.load({
             }
         `
     }, {
-        name:       'canonicalize-html',
+        name: 'canonicalize-html',
         script: `
             public function renderCanonical() {
                 if (meta.dest.basename.trimExt() == 'index') {
