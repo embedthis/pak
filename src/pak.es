@@ -981,6 +981,12 @@ class Pak
             pak.resolve()
         }
         if (installDeps) {
+            try {
+                let dir = blend({}, pak.cache.pak.blend.directories, {combine: true})
+                if (dir.export) {
+                    directories.export = dir.export
+                }
+            } catch {}
             installDependencies(pak)
         }
         blendPak(pak)
