@@ -19,6 +19,18 @@ Expansive.load({
 
         script: `
             let service = expansive.services['css']
+            for each (svc in [ 'prefix-css', 'render-css', 'minify-css' ]) {
+                let sp
+                if ((sp = expansive.services[svc]) != null) {
+                    for each (name in [ 'dotmin', 'minify', 'usemap', 'usemin' ]) {
+                        if (sp[name]) {
+                            service[name] = sp[name] | service[name]
+                            trace('Warn', 'Legacy configuration for ' + svc + '.' + name + 
+                                          ' in expansive.json. Migrate to css.' + name + '.')
+                        }
+                    }
+                }
+            }
             if (service.minify) {
                 service.usemin ||= true
             }
@@ -115,19 +127,22 @@ Expansive.load({
    
     }, {
         name:     'render-css',
+        /*
+            Default to styles from packages under contents/lib
+            Required styles may vary on a page by page basis.
+         */
+        files:    [ '**.css*', '!**.map', '!*.less*' ]
         mappings: {
             'css',
             'min.css'
         },
         script: `
             let service = expansive.services['render-css']
-            let collections = expansive.control.collections
-            if (!collections.styles) {
-                /*
-                    Default to styles from packages under contents/lib
-                 */
-                // collections.styles = [ expansive.getSourcePath(expansive.directories.lib).join('**.css*'), '!*.less*' ]
-                collections.styles = [ '**.css*', '!*.less*' ]
+            if (service.files) {
+                if (!(service.files is Array)) {
+                    service.files = [ service.files ]
+                }
+                expansive.control.collections.styles += service.files
             }
             service.hash = {}
 
@@ -171,9 +186,10 @@ Expansive.load({
             }
 
             /*
-                Render styles is based on 'collections.styles' which defaults to '**.css'
+                Render styles is based on 'collections.styles' which defaults to '**.css' and is modified
+                via expansive.json and addItems.
              */
-            public function renderStyles() {
+            public function renderStyles(filter = null, extras = []) {
                 let collections = expansive.collections
                 if (!collections.styles) {
                     return
@@ -192,7 +208,18 @@ Expansive.load({
                     service.hash[collections.styles] = buildStyleList(files).unique()
                 }
                 for each (style in service.hash[collections.styles]) {
-                    write('<link href="' + meta.top + '/' + style + '" rel="stylesheet" type="text/css" />\n    ')
+                    if (filter && !Path(script).glob(filter)) {
+                        continue
+                    }
+                    let uri = meta.top.join(style).trimStart('./')
+                    write('<link href="' + uri + '" rel="stylesheet" type="text/css" />\n    ')
+                }
+                if (extras && extras is String) {
+                    extras = [extras]
+                }
+                for each (style in extras) {
+                    let uri = meta.top.join(style).trimStart('./')
+                    write('<link href="' + uri + '" rel="stylesheet" type="text/css" />\n    ')
                 }
                 if (expansive.collections['inline-styles']) {
                     write('<style>')
