@@ -13,7 +13,7 @@
     "author": {
         "name": "Embedthis Software",
         "email": "dev@embedthis.com",
-        "url": "http://embedthis.com"
+        "url": "https://embedthis.com"
     },
     "repository": {
         "type": "git",
@@ -21,7 +21,7 @@
     },
     "bugs": {
         "email": "dev@embedthis.com",
-        "url": "http://github.com/embedthis/pak/issues"
+        "url": "https://github.com/embedthis/pak/issues"
     },
     "licenses": "GPL",
     "dependencies": {
