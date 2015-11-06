@@ -1753,8 +1753,7 @@ ENABLE_TESTABILITY = YES;
 					"$(inherited)"
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"ME_DEBUG=0",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
 				LIBRARY_SEARCH_PATHS = (
@@ -1841,7 +1840,6 @@ ENABLE_TESTABILITY = YES;
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ME_DEBUG=0",
-					"ME_DEBUG=0",
 					"$(inherited)"
 				);
 				LIBRARY_SEARCH_PATHS = (
@@ -1868,7 +1866,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -1896,7 +1894,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -1922,7 +1920,7 @@ ENABLE_TESTABILITY = YES;
     				PRODUCT_NAME = install-certs;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -1948,7 +1946,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -1976,7 +1974,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -2004,7 +2002,7 @@ ENABLE_TESTABILITY = YES;
 
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
 				OTHER_LDFLAGS = ();
@@ -2040,7 +2038,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -2069,7 +2067,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
 				OTHER_LDFLAGS = ();
@@ -2105,7 +2103,7 @@ ENABLE_TESTABILITY = YES;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"PCRE_CHAR=char",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -2130,7 +2128,7 @@ ENABLE_TESTABILITY = YES;
     				PRODUCT_NAME = libzlib;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -2156,7 +2154,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -2184,7 +2182,7 @@ ENABLE_TESTABILITY = YES;
     				GCC_PREPROCESSOR_DEFINITIONS = (
 					"_FILE_OFFSET_BITS=64",
 					"MBEDTLS_USER_CONFIG_FILE=\\\"embedtls.h\\\"",
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -2210,7 +2208,7 @@ ENABLE_TESTABILITY = YES;
     				PRODUCT_NAME = All;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
@@ -2234,7 +2232,7 @@ ENABLE_TESTABILITY = YES;
     				PRODUCT_NAME = Prep;
     
     				GCC_PREPROCESSOR_DEFINITIONS = (
-					"ME_DEBUG",
+					"ME_DEBUG=1",
 					"$(inherited)"
 				);
     			};
