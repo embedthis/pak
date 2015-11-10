@@ -1,10 +1,230 @@
-<!DOCTYPE html><html lang="en"><head><title>Publishing Packages</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="description" content="Package manager for Applications"><link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'><link href='https://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'><link href="../images/favicon.ico" rel="shortcut icon"><link href="../lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css"><link href="../css/all.min.css" rel="stylesheet" type="text/css"><link href="../css/api.min.css" rel="stylesheet" type="text/css"><body class="show-sidebar"><div class="sidebar"><div class="ui large left vertical inverted labeled menu"><div class="item"><a href="../index.html" class="logo">Pak Docs</a></div><div class="item"><a href="../index.html"><b>General</b></a><div class="menu"><a class="item" href="../index.html">Pak Overview</a> <a class="item" href="../users/features.html">Pak Features</a> <a class="item" href="https://embedthis.com/pak/download.html">Download</a> <a class="item" href="../licensing/index.html">Licensing</a></div></div><div class="item"><a href="../start/index.html"><b>Getting Started</b></a><div class="menu"><a class="item" href="../start/quick.html">Quick Start</a> <a class="item" href="../start/installing.html">Installing</a> <a class="item" href="../start/releaseNotes.html">Release Notes</a> <a class="item" href="../start/source.html">Building from Source</a></div></div><div class="item"><a href="../users/index.html"><b>User's Guide</b></a><div class="menu"><a class="item" href="../users/tour.html">Quick Tour</a> <a class="item" href="../users/searching.html">Searching for Packages</a> <a class="item" href="../users/installing.html">Installing Packages</a> <a class="item" href="../users/customizing.html">Customizing Packages</a> <a class="item" href="../users/versions.html">Package Versions</a> <a class="item" href="../users/modes.html">Pak Modes</a></div></div><div class="item"><a href="../developers/index.html"><b>Developer's Guide</b></a><div class="menu"><a class="item" href="../developers/creating.html">Creating Packages</a> <a class="item" href="../developers/publishing.html">Publishing Packages</a> <a class="item" href="../developers/events.html">Package Events</a> <a class="item" href="../developers/configuration.html">Pak Configuration</a></div></div><div class="item"><a href="../users/project.html">Project Resources</a><div class="menu"><a class="item" href="http://goo.gl/t5tTNO">Official Pak News</a> <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a> <a class="item" href="https://embedthis.com/catalog/#/">Pak Catalog</a> <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a> <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a> <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a> <a class="item" href="https://github.com/embedthis/pak/milestones">Roadmap</a> <a class="item" href="https://embedthis.com/developers/contributors.html">Contributors Agreement</a></div></div><div class="item"><b>Links</b><div class="menu"><a class="item" href="https://embedthis.com/">Embedthis Web Site</a> <a class="item" href="https://embedthis.com/blog/">Embedthis Blog</a> <a class="item" href="http://twitter.com/mobstream">Twitter</a></div></div></div></div><div class="ui inverted masthead"><div class="ui fixed inverted menu"><div class="ui sidebar-launch button"><i class="icon list layout"></i></div><div class="right menu"><a class="item" href="https://embedthis.com/">Embedthis</a> <a class="item" href="https://embedthis.com/pak/">Pak Site</a> <span class="desktop-only"><a class="item" href="http://goo.gl/Fg0Kf7">Pak News</a> <a class="item" href="https://github.com/embedthis/pak">Repository</a> <a class="item" href="https://embedthis.com/blog/">Blog</a> <a class="item" href="https://twitter.com/mobstream">Twitter</a></span></div></div><div class="ui breadcrumb"><a class="section" href="../">Home</a><div class="divider">/</div><a class="section" href="index.html">Developer's Guide</a><div class="divider">/</div><a class="active section" href="publishing.html">Publishing Packages</a></div><iframe class="version desktop-only" src="../version.html"></iframe></div><div class="content"><h1>Publishing Packages</h1><p>You can publish a package for use by Pak in one of three package catalogs:</p><ul><li><a href="http://bower.io/search/">Bower Catalog</a></li><li><a href="http://npmjs.org/">NPM Catalog</a></li><li><a href="http://embedthis.com/catalog/">Pak Catalog</a></li></ul><p>This document describes the process for creating a package in the Pak catalog. Consult the relevant <a href="http://npmjs.org/">NPM</a> or <a href="http://bower.io/">Bower</a> documentation for creating packages in those catalogs.</p><h2>Publishing to the Pak Catalog</h2><p>To publish a new package in the Pak catalog, <a href="creating.html">create your package.json</a> and then run <em>pak publish</em> in your application directory.</p><pre class="code">$ pak publish
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Publishing Packages</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="description" content="Package manager for Applications">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
+    
+    <link href="../images/favicon.ico" rel="shortcut icon">
+    <link href="../lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/api.min.css" rel="stylesheet" type="text/css">
+    
 
-$ pak publish NAME ENDPOINT EMAIL [OVERRIDE]</pre><p>In the first example, the package name, repository endpoint and author's email address will be extracted from the <em>package.json</em>. The third example supplies the name, endpoint and email. You will be prompted to enter a password to secure management of the package. You can supply a file containing the password via the <em>--password password</em> option. Choose and protect your password very carefully. You may use it to modify or retract your package from the catalog.</p><p>The package name should be a globally unique name for your package. It may contain <em>-</em>, <em>_</em> or <em>.</em> characters. Check the <a href="http://embedthis.com/catalog">Pak Catalog</a> for currently published Pak names to ensure your chosen name is unique. Note that Pak names that start with <em>appweb</em>, <em>esp</em>, <em>ejs</em>, <em>embedthis</em>, <em>exp</em>, <em>expansive</em>, <em>go</em>, <em>goahead</em>, <em>makeme</em>, <em>me</em> and <em>pak</em> are reserved.</p><p>The email address should be that of the person responsible for the catalog entry for the package. This email address will be used for password reset requests.</p><p>The package endpoint is a valid GitHub account or endpoint that hosts your package contents. For example:</p><pre class="code">pak publish jquery/jquery ...
+
+<body class="show-sidebar">
+        
+
+    <div class="sidebar">
+        <div class="ui large left vertical inverted labeled menu">
+            <div class="item">
+                <a href="../index.html" class="logo">Pak Docs</a>
+            </div>
+            <div class="item">
+                <a href="../index.html">
+                    <b>General</b>
+                </a>
+                <div class="menu">
+                    <a class="item" href="../index.html">Pak Overview</a>
+                    <a class="item" href="../users/features.html">Pak Features</a>
+                    <a class="item" href="https://embedthis.com/pak/download.html">Download</a> 
+                    <a class="item" href="../licensing/index.html">Licensing</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../start/index.html">
+                    <b>Getting Started</b>
+                </a>
+                <div class="menu">
+                    <a class="item" href="../start/quick.html">Quick Start</a>
+                    <a class="item" href="../start/installing.html">Installing</a>
+                    <a class="item" href="../start/releaseNotes.html">Release Notes</a>
+                    <a class="item" href="../start/source.html">Building from Source</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../users/index.html"><b>User's Guide</b></a>
+                <div class="menu">
+                    <a class="item" href="../users/tour.html">Quick Tour</a>
+                    <a class="item" href="../users/searching.html">Searching for Packages</a>
+                    <a class="item" href="../users/installing.html">Installing Packages</a>
+                    <a class="item" href="../users/customizing.html">Customizing Packages</a>
+                    <a class="item" href="../users/versions.html">Package Versions</a>
+                    <a class="item" href="../users/modes.html">Pak Modes</a>
+                </div>
+            </div>
+
+            <div class="item">
+                <a href="../developers/index.html"><b>Developer's Guide</b></a>
+                <div class="menu">
+                    <a class="item" href="../developers/creating.html">Creating Packages</a>
+                    <a class="item" href="../developers/publishing.html">Publishing Packages</a>
+                    <a class="item" href="../developers/events.html">Package Events</a>
+                    <a class="item" href="../developers/configuration.html">Pak Configuration</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../users/project.html">Project Resources</a>
+                <div class="menu">
+                    <a class="item" href="http://goo.gl/t5tTNO">Official Pak News</a>
+                    <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
+                    <a class="item" href="https://embedthis.com/catalog/#/">Pak Catalog</a>
+                    <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
+                    <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
+                    <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
+                    <a class="item" href="https://github.com/embedthis/pak/milestones">Roadmap</a>
+                    <a class="item" href="https://embedthis.com/developers/contributors.html">Contributors Agreement</a>
+                </div>
+            </div>
+            <div class="item">
+                <b>Links</b>
+                <div class="menu">
+                    <a class="item" href="https://embedthis.com/">Embedthis Web Site</a>
+                    <a class="item" href="https://embedthis.com/blog/">Embedthis Blog</a>
+                    <a class="item" href="http://twitter.com/mobstream">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="ui inverted masthead">
+         
+        <div class="ui fixed inverted menu">
+            <div class="ui sidebar-launch button">
+                <i class="icon list layout"></i>
+            </div>
+            <div class="right menu">
+                  
+                    <a class="item" href="https://embedthis.com/">Embedthis</a>
+                    <a class="item" href="https://embedthis.com/pak/">Pak Site</a>
+                    <span class="desktop-only">
+                        <a class="item" href="http://goo.gl/Fg0Kf7">Pak News</a>
+                        <a class="item" href="https://github.com/embedthis/pak">Repository</a>
+                        <a class="item" href="https://embedthis.com/blog/">Blog</a>
+                        <a class="item" href="https://twitter.com/mobstream">Twitter</a>
+                    </span>
+
+            </div>
+        </div>
+        
+        <div class="ui breadcrumb">
+            <a class="section" href="../">Home</a>
+            
+            <div class="divider">/</div>
+            <a class="section" href="index.html">
+                Developer's Guide
+            </a>
+            
+            
+            <div class="divider">/</div>
+            <a class="active section" href="publishing.html">Publishing Packages</a>
+            
+        </div>
+        
+        <iframe class="version desktop-only" src="../version.html"></iframe>
+
+    </div>
+    <div class="content">
+
+            <h1>Publishing Packages</h1>
+
+            <p>You can publish a package for use by Pak in one of three package catalogs:</p>
+            <ul>
+                <li><a href="http://bower.io/search/">Bower Catalog</a></li>
+                <li><a href="http://npmjs.org/">NPM Catalog</a></li>
+                <li><a href="http://embedthis.com/catalog/">Pak Catalog</a></li>
+            </ul>
+            <p>This document describes the process for creating a package in the Pak catalog. Consult the relevant
+                <a href="http://npmjs.org/">NPM</a> or <a href="http://bower.io/">Bower</a> documentation for 
+                creating packages in those catalogs.</p>
+
+            <h2>Publishing to the Pak Catalog</h2>
+            <p>To publish a new package in the Pak catalog, <a href="creating.html">create your package.json</a> 
+            and then run <em>pak publish</em> in your application directory.</p>
+            <pre class="code">$ pak publish
+
+$ pak publish NAME ENDPOINT EMAIL [OVERRIDE]</pre>
+
+            <p>In the first example, the package name, repository endpoint and author's email address will be extracted 
+            from the <em>package.json</em>. The third example supplies the name, endpoint and email. You will be prompted
+            to enter a password to secure management of the package. You can supply a file containing the password via
+            the <em>--password password</em> option. Choose and protect your password very carefully. You may 
+            use it to modify or retract your package from the catalog.</p>
+
+            <p>The package name should be a globally unique name for your package. It may contain <em>-</em>, 
+            <em>_</em> or <em>.</em> characters. Check the <a href="http://embedthis.com/catalog">Pak Catalog</a> 
+            for currently published Pak names to ensure your chosen name is unique. Note that Pak names that start 
+            with <em>appweb</em>, <em>esp</em>, <em>ejs</em>, <em>embedthis</em>, <em>exp</em>, <em>expansive</em>, 
+            <em>go</em>, <em>goahead</em>, <em>makeme</em>, <em>me</em> and <em>pak</em> are reserved. </p>
+
+            <p>The email address should be that of the person responsible for the catalog entry for the package. 
+                This email address will be used for password reset requests. </p>
+
+            <p>The package endpoint is a valid GitHub account or endpoint that hosts your package contents. For example:</p>
+<pre class="code">pak publish jquery/jquery ...
 pak publish https://github.com/jquery/jquery.git ...
 pak publish git@github.com:jquery/jquery ...
-pak publish git@github.com:jquery/jquery ...</pre><p>To publish a package that is hosted on <a href="http://npmjs.org">NPM</a>, use an <em>@npm:</em> package alias to query the NPM catalog. For example:</p><pre class="code">pak publish @npm:jquery name@example.com</pre><h2>Package Aliases</h2><p>You can publish an alias entry in the catalog that redirects Pak to use another package name. To create an alias, simply use an <em>@</em> prefix on the endpoint. For example:</p><pre class="code">pak publish my-angular @angular ...</pre><p>When Pak installs <em>my-angular</em> it will redirect and search for the <em>angular</em> package and install it instead. You can use a catalog prefix <em>pak:</em>, <em>bower:</em> and <em>npm:</em> to direct Pak to search in the designated catalog. For example:</p><pre class="code">pak publish my-angular @bower:angular ...</pre><p>This will search for <em>angular</em> in the Bower catalog.</p><a name="override"></a><h2>Override Packages</h2><p>Sometimes you may need to create a package from third-party source that you cannot modify or control. The package source may not even have its own <em>package.json</em> file. To support wrapping such existing packages, you can create an entry in the Pak catalog with an override package.json file. This override file is blended into the package's package.json when it is saved to the Pak cache. If the package does not have its own package.json, then this file will be used to create a package.json. For example:</p><pre class="code">pak publish my-openssl openssl/openssl me@example.com &rarr;
-    http://example.com/openssl.json</pre><p>You can directly access override files in GitHub via the <em>raw.githubusercontent.com</em> site. For example: <em>raw.githubusercontent.com/embedthis/pak/master/overrides/openssl.json</em>.</p><p>Pak considers override instructions from several sources (in order):</p><ul><li>Override instructions from the Pak catalog.</li><li>Over instructions in a local package override file under <em>~/.pak/overrides/NAME.json</em></li><li>Override instructions in your application's <em>package.json</em> file.</li></ul><h3>Override Files</h3><p>Override files in the <em>~/.pak/override</em> directory or in the Pak catalog have a slightly different syntax so they can provide different overrides for various versions of a package. One override file can provide override configuration for all versions of a package and for various endpoints hosting the package.</p><p>For example, here is a portion of the jQuery override file in the Pak catalog. It has different configuration for version 1.x and 2.x and provides unique configuration when hosted from NPM:</p><pre class="code">{
+pak publish git@github.com:jquery/jquery ...</pre>
+
+            <p>To publish a package that is hosted on <a href="http://npmjs.org">NPM</a>, use an <em>@npm:</em> package
+            alias to query the NPM catalog. For example:</p>
+
+            <pre class="code">pak publish @npm:jquery name@example.com</pre>
+
+            <h2>Package Aliases</h2>
+            <p>You can publish an alias entry in the catalog that redirects Pak to use another package name. 
+            To create an alias, simply use an <em>@</em> prefix on the endpoint. For example:</p>
+
+            <pre class="code">pak publish my-angular @angular ...</pre>
+
+            <p>When Pak installs <em>my-angular</em> it will redirect and search for the <em>angular</em> package 
+            and install it instead. You can use a catalog prefix <em>pak:</em>, <em>bower:</em> and <em>npm:</em> to direct 
+            Pak to search in the designated catalog. For example:</p>
+
+            <pre class="code">pak publish my-angular @bower:angular ...</pre>
+
+            <p>This will search for <em>angular</em> in the Bower catalog.</p>
+
+            <a name="override"></a>
+            <h2>Override Packages</h2>
+            <p>Sometimes you may need to create a package from third-party source that you cannot modify or control.
+            The package source may not even have its own <em>package.json</em> file. To support wrapping such existing 
+            packages, you can create an entry in the Pak catalog with an override package.json file. 
+            This override file is blended into the package's package.json when it is saved to the Pak cache. 
+            If the package does not have its own package.json, then this file will be used to create a package.json. 
+            For example:</p>
+
+            <pre class="code">pak publish my-openssl openssl/openssl me@example.com &rarr;
+    http://example.com/openssl.json</pre>
+
+            <p>You can directly access override files in GitHub via the <em>raw.githubusercontent.com</em> site.
+            For example: <em>raw.githubusercontent.com/embedthis/pak/master/overrides/openssl.json</em>.</p>
+
+            <p>Pak considers override instructions from several sources (in order):</p>
+            <ul>
+                <li>Override instructions from the Pak catalog.</li>
+                <li>Over instructions in a local package override file under <em>~/.pak/overrides/NAME.json</em></li>
+                <li>Override instructions in your application's <em>package.json</em> file.</li>
+            </ul>
+
+            <h3>Override Files</h3>
+            <p>Override files in the <em>~/.pak/override</em> directory or in the Pak catalog have a slightly 
+            different syntax so they can provide different overrides for various versions of a package. One 
+            override file can provide override configuration for all versions of a package and for various 
+            endpoints hosting the package. </p>
+            <p>For example, here is a portion of the jQuery override file in the 
+            Pak catalog. It has different configuration for version 1.x and 2.x and provides unique configuration
+            when hosted from NPM:</p>
+            <pre class="code">{
     "jquery/jquery": {
         "&gt;=2.1.0": {
             "pak": {
@@ -27,4 +247,32 @@ pak publish git@github.com:jquery/jquery ...</pre><p>To publish a package that i
         ...
     }
 }
-</pre><p>An override file is a hash of endpoints that provide the package. Inside each endpoint property hash is a set of configurations for different version expressions. See <a href="../users/versions.html#expressions">Version Expressions</a> for details on the version expression syntax.</p><p>Here are some example override files from the Pak Catalog:</p><ul><li><a href="https://github.com/embedthis/pak-overrides/tree/master/angular.json">Angular</a></li><li><a href="https://github.com/embedthis/pak-overrides/tree/master/angular-route.json">Angular Route</a></li><li><a href="https://github.com/embedthis/pak-overrides/tree/master/bootstrap.json">Bootstrap</a></li><li><a href="https://github.com/embedthis/pak-overrides/tree/master/font-awesome.json">Font Awesome</a></li><li><a href="https://github.com/embedthis/pak-overrides/tree/master/jquery.json">JQuery</a></li><li><a href="https://github.com/embedthis/pak-overrides/tree/master/semantic-ui-css.json">Semantic-UI</a></li></ul></div><div class="terms ui basic center aligned segment"><p>&copy; Embedthis Software, 2003-2015. All rights reserved.</p></div><script src="../lib/jquery/jquery.min.js"></script><script src="../lib/semantic-ui/semantic.min.js"></script><script src="../scripts/sidebar.min.js"></script>
+</pre>
+            <p>An override file is a hash of endpoints that provide the package. Inside each endpoint property hash is
+            a set of configurations for different version expressions.
+            See <a href="../users/versions.html#expressions">Version Expressions</a> for details on the version 
+            expression syntax.</p>
+            <p>Here are some example override files from the Pak Catalog:</p>
+            <ul>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/master/angular.json">Angular</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/master/angular-route.json">Angular Route</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/master/bootstrap.json">Bootstrap</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/master/font-awesome.json">Font Awesome</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/master/jquery.json">JQuery</a></li>
+                <li><a href="https://github.com/embedthis/pak-overrides/tree/master/semantic-ui-css.json">Semantic-UI</a></li>
+            </ul>
+
+    </div>
+    <div class="terms ui basic center aligned segment">
+        <p>&copy; Embedthis Software, 2003-2015. All rights reserved.</p>
+    </div>
+
+    <script src="../lib/jquery/jquery.min.js"></script>
+    <script src="../lib/semantic-ui/semantic.min.js"></script>
+    <script src="../scripts/sidebar.min.js"></script>
+     
+
+        
+
+
+
