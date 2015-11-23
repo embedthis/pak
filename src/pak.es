@@ -199,6 +199,7 @@ class Pak
             password: { range: String },
             quiet: { alias: 'q' },
             silent: { alias: 's' },
+            trace: { range: /\w+(:\d)/, value: 'stderr:4' },
             verbose: { alias: 'v' },
             version: { alias: 'V', range: String },
             versions: {},
@@ -1623,13 +1624,14 @@ class Pak
         let temp = Path('').temp()
         try {
             let http = new Http
+            // http.verify = false
             http.followRedirects = true
             trace('Get', pak.download)
             http.get(pak.download)
             let file = File(temp, 'w')
             let buf = new ByteArray
             while (http.read(buf) > 0) {
-                file.write(buf)
+                let wrote = file.write(buf)
             }
             file.close()
             if (http.status != 200) {
@@ -1646,6 +1648,7 @@ class Pak
             tmp.removeAll()
 */
         } catch (e) {
+            trace('Error', e)
             pak.cachePath.removeAll()
             /* Remove empty directories */
             pak.cachePath.parent.remove()
@@ -1674,7 +1677,7 @@ class Pak
             if (url) {
                 try {
                     let http = new Http
-                    http.verify = false
+                    // http.verify = false
                     http.get(url)
                     if (http.status == 200) {
                         over = deserialize(http.response)
@@ -1682,7 +1685,7 @@ class Pak
                     }
                     http.close()
                 } catch (e) {
-                     print("CATCH", e)
+                    trace('Error', e)
                 }
             }
         }
@@ -1704,6 +1707,7 @@ class Pak
         let temp = Path('').temp()
         try {
             let http = new Http
+            http.verify = false
             http.followRedirects = true
             let current = App.dir
             let dest = pak.cachePath
@@ -1725,7 +1729,7 @@ class Pak
             Tar(temp, {uncompress: true, dest: dest, trim: 1}).extract()
 
         } catch (e) {
-             print("CATCH", e)
+            trace('Error', e)
         } finally {
             temp.remove()
         }
@@ -1934,7 +1938,6 @@ class Pak
                 replace(/^.+refs\/tags\/*/mg, '').
                 split(/[\r\n]+/).
                 filter(function(e) !e.match(/\{/))      
-                /* } */
             if (pak.versionFormat) {
                 let re = RegExp(pak.versionFormat)
                 let matching = []
@@ -1997,7 +2000,7 @@ class Pak
                 try {
                     cmd = cmd.expand({NAME: pak.name})
                     vtrace('Get', cmd)
-                    http.verify = false
+                    // http.verify = false
                     http.get(cmd)
                     if (http.status != 200) {
                         vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + 
@@ -2005,7 +2008,7 @@ class Pak
                         continue
                     }
                 } catch (e) {
-                    dump(e)
+                    print(e)
                     qtrace('Warn', 'Cannot access catalog at: ' + cmd)
                     if (App.config.requirePrimaryCatalog && !state.force) {
                         throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
@@ -2458,6 +2461,7 @@ class Pak
             }
         }
         delete spec.copied
+        path.dirname.makeDir()
         path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
     }
 }
