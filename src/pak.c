@@ -29,8 +29,8 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
     Mpr         *mpr;
     Ejs         *ejs;
     EcCompiler  *ec;
-    char    *argp, *searchPath, *homeDir;
-    int     nextArg, err, flags;
+    char        *argp, *searchPath, *homeDir, *traceSpec;
+    int         nextArg, err, flags;
 
     /*  
         Initialize Multithreaded Portable Runtime (MPR)
@@ -45,6 +45,7 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
         return EJS_ERR;
     }
     err = 0;
+    traceSpec = 0;
     searchPath = 0;
     argc = mpr->argc;
     argv = (char**) mpr->argv;
@@ -86,6 +87,13 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
                 searchPath = argv[++nextArg];
             }
 
+        } else if (smatch(argp, "--trace") || smatch(argp, "-t")) {
+            if (nextArg >= argc) {
+                err++;
+            } else {
+                traceSpec = argv[++nextArg];
+            }
+
         } else if (smatch(argp, "--verbose") || smatch(argp, "-v")) {
             mprStartLogging("stderr:1", 0);
             mprSetCmdlineLogging(1);
@@ -103,7 +111,10 @@ MAIN(ejsMain, int argc, char **argv, char **envp)
         return MPR_ERR_CANT_FIND;
     }
     mprLog("pak", 2, "Using pak script %s", app->script);
-
+    if (traceSpec) {
+        httpCreate(HTTP_CLIENT_SIDE);
+        httpStartTracing(traceSpec);
+    }
     argv[0] = (char*) app->script;
     if ((ejs = ejsCreateVM(argc, (cchar**) &argv[0], 0)) == 0) {
         return MPR_ERR_MEMORY;
