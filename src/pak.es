@@ -1712,6 +1712,7 @@ class Pak
             let current = App.dir
             let dest = pak.cachePath
 
+            trace('Fetch', 'Patch:', url)
             http.get(url)
             let temp = Path('').temp()
             let file = File(temp, 'w')
