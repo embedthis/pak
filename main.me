@@ -67,18 +67,6 @@ Me.load({
     },
 
     targets: {
-        init: {
-            first: true,
-            path: 'init',
-            'future-generate-make': `
-                if [ ! -d /usr/include/openssl ] ; then echo
-                    echo Install libssl-dev to get /usr/include/openssl
-                    exit 255
-                fi
-            `,
-            action: ' ',
-            enable: "me.platform.os == 'linux'",
-        },
         'pak.mod': {
             path: '${BIN}/pak.mod',
             files: [ 'src/*.es', 'paks/ejs.version/Version.es' ],
