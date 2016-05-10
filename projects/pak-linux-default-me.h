@@ -84,8 +84,8 @@
 #ifndef ME_EJS_ONE_MODULE
     #define ME_EJS_ONE_MODULE 1
 #endif
-#ifndef ME_EJSCRIPT__COMPILE
-    #define ME_EJSCRIPT__COMPILE "--debug"
+#ifndef ME_EJSCRIPT_COMPILE
+    #define ME_EJSCRIPT_COMPILE "--debug"
 #endif
 #ifndef ME_EJSCRIPT_DB
     #define ME_EJSCRIPT_DB 0
@@ -139,7 +139,7 @@
     #define ME_TUNE "speed"
 #endif
 #ifndef ME_VERSION
-    #define ME_VERSION "0.12.1"
+    #define ME_VERSION "0.12.2"
 #endif
 
 /* Prefixes */
@@ -159,7 +159,7 @@
     #define ME_APP_PREFIX "/usr/local/lib/pak"
 #endif
 #ifndef ME_VAPP_PREFIX
-    #define ME_VAPP_PREFIX "/usr/local/lib/pak/0.12.1"
+    #define ME_VAPP_PREFIX "/usr/local/lib/pak/0.12.2"
 #endif
 #ifndef ME_BIN_PREFIX
     #define ME_BIN_PREFIX "/usr/local/bin"
@@ -192,7 +192,7 @@
     #define ME_CACHE_PREFIX "/var/spool/pak/cache"
 #endif
 #ifndef ME_SRC_PREFIX
-    #define ME_SRC_PREFIX "pak-0.12.1"
+    #define ME_SRC_PREFIX "pak-0.12.2"
 #endif
 
 /* Suffixes */
@@ -234,10 +234,10 @@
     #define ME_MINOR_VERSION 12
 #endif
 #ifndef ME_PATCH_VERSION
-    #define ME_PATCH_VERSION 1
+    #define ME_PATCH_VERSION 2
 #endif
 #ifndef ME_VNUM
-    #define ME_VNUM 100001
+    #define ME_VNUM 100002
 #endif
 
 /* Components */

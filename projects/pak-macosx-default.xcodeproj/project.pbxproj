@@ -1082,7 +1082,7 @@
     			shellPath = /bin/bash;
     			shellScript = "PATH=$PATH:/usr/local/bin
 cd ../src/ejscript
-	\"../${OUT_DIR}/bin/pak-ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\"  --bind --require null ejs.es
+	\"../${OUT_DIR}/bin/pak-ejsc\" --out \"../${OUT_DIR}/bin/ejs.mod\" --debug --bind --require null ejs.es
 ";
     		};
 		F8262D1CF8264B4C0000000C /* ShellScript for install-certs */ = {
@@ -1137,7 +1137,7 @@ cd ..
     			shellPath = /bin/bash;
     			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-	\"./build/macosx-x64-default/bin/pak-ejsc\"  --out \"./build/macosx-x64-default/bin/pak.mod\" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
+	\"./build/macosx-x64-default/bin/pak-ejsc\" --debug --out \"./build/macosx-x64-default/bin/pak.mod\" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
 ";
     		};
 		F8262D1CF8264B4C00000025 /* ShellScript for Prep */ = {

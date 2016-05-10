@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
     <title>Running the Pak Service</title>
-    
+    <!-- Copyright Embedthis Software. All Rights Reserved. -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <meta name="description" content="Package manager for Applications">
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Package manager for Applications" />
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700'
+        rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
     
-    <link href="../images/favicon.ico" rel="shortcut icon">
-    <link href="../lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css">
-    <link href="../css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="../css/api.min.css" rel="stylesheet" type="text/css">
+    <link href="../images/favicon.ico" rel="shortcut icon" />
+    <link href="../lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
+    <link href="../css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="../css/api.min.css" rel="stylesheet" type="text/css" />
     
 
-
+</head>
 <body class="show-sidebar">
         
 
@@ -158,16 +159,16 @@
             <pre class="ui code segment">appman commands...</pre>
             <p>Where commands can be:</p>
             <table title="commands" class="ui table segment">
-                <thead><tr><th>Command<th>Details
+                <thead><tr><th>Command</th><th>Details</th></tr></thead>
                 <tbody>
-                    <tr><td>install<td>Install Pak service
-                    <tr><td>uninstall<td>Uninstall Pak service
-                    <tr><td>enable<td>Enable Pak to start automatically on system boot
-                    <tr><td>disable<td>Disable Pak from automatically starting
-                    <tr><td>start<td>Start Pak manually
-                    <tr><td>stop<td>Stop Pak
-                    <tr><td>run<td>Run Pak and monitor its execution. Restart if it fails.
-                
+                    <tr><td>install</td><td>Install Pak service</td></tr>
+                    <tr><td>uninstall</td><td>Uninstall Pak service</td></tr>
+                    <tr><td>enable</td><td>Enable Pak to start automatically on system boot</td></tr>
+                    <tr><td>disable</td><td>Disable Pak from automatically starting</td></tr>
+                    <tr><td>start</td><td>Start Pak manually</td></tr>
+                    <tr><td>stop</td><td>Stop Pak</td></tr>
+                    <tr><td>run</td><td>Run Pak and monitor its execution. Restart if it fails.</td></tr>
+                </tbody>
             </table>
             <h3>Stopping Pak as a Service</h3>
             <p>Use the following command to stop Pak running as a service permanently:</p>
@@ -200,7 +201,7 @@ Start -&gt; Control Panel -&gt; Administrative Tools -&gt; Services
             <p>Then select and double click on the <b>Embedthis Pak</b> service. A dialog panel will be displayed
             from which you can start and stop the manager (appman) process.</p>
 
-            <img src="../images/services.jpg" alt="services" class="bare-screen">
+            <img src="../images/services.jpg" alt="services" class="bare-screen" />
             <p>When started or stopped, the manager will first do the same operation on the real Pak instance. Pausing
             the manager will have no effect on Pak, but will pause the manager itself.</p>
             <p>Once installed, you will need to start the service via the Services control applet.</p>
@@ -210,7 +211,7 @@ Start -&gt; Control Panel -&gt; Administrative Tools -&gt; Services
             restart Pak. You can also launch a browser to display the documentation or the Pak management console
             (future feature).</p>
 
-            <img src="../images/tray.jpg" alt="tray" class="bare-screen">
+            <img src="../images/tray.jpg" alt="tray" class="bare-screen" />
             <p>When you select 'stop' Pak, you actually stop the manager process which in turn stops Pak. Similarly,
             when you select 'start' Pak, you are really starting the manager which detects that Pak is not running
             and automatically launches it. </p>
@@ -227,5 +228,5 @@ Start -&gt; Control Panel -&gt; Administrative Tools -&gt; Services
 
         
 
-
-
+</body>
+</html>

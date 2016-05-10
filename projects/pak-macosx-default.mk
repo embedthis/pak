@@ -3,7 +3,7 @@
 #
 
 NAME                  := pak
-VERSION               := 0.12.1
+VERSION               := 0.12.2
 PROFILE               ?= default
 ARCH                  ?= $(shell uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/')
 CC_ARCH               ?= $(shell echo $(ARCH) | sed 's/x86/i686/;s/x64/x86_64/')
@@ -698,7 +698,7 @@ $(BUILD)/bin/ejs.mod: $(DEPS_41)
 	( \
 	cd src/ejscript; \
 	echo '   [Compile] ejs.mod' ; \
-	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod"  --bind --require null ejs.es ; \
+	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --debug --bind --require null ejs.es ; \
 	)
 endif
 
@@ -826,7 +826,7 @@ ifeq ($(ME_COM_EJSCRIPT),1)
 endif
 
 $(BUILD)/bin/pak.mod: $(DEPS_45)
-	"./$(BUILD)/bin/pak-ejsc"  --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
+	"./$(BUILD)/bin/pak-ejsc" --debug --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
 
 #
 #   pak
@@ -886,7 +886,7 @@ $(BUILD)/bin/pak: $(DEPS_46)
 
 installPrep: $(DEPS_47)
 	if [ "`id -u`" != 0 ] ; \
-	then echo "Must run as root. Rerun with "sudo"" ; \
+	then echo "Must run as root. Rerun with sudo." ; \
 	exit 255 ; \
 	fi
 
@@ -904,11 +904,12 @@ installBinary: $(DEPS_49)
 	mkdir -p "$(ME_APP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	ln -s "$(VERSION)" "$(ME_APP_PREFIX)/latest" ; \
+	mkdir -p "$(ME_MAN_PREFIX)/man1" ; \
+	chmod 755 "$(ME_MAN_PREFIX)/man1" ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
 	cp $(BUILD)/bin/pak $(ME_VAPP_PREFIX)/bin/pak ; \
 	chmod 755 "$(ME_VAPP_PREFIX)/bin/pak" ; \
 	mkdir -p "$(ME_BIN_PREFIX)" ; \
-	chmod 755 "$(ME_BIN_PREFIX)" ; \
 	rm -f "$(ME_BIN_PREFIX)/pak" ; \
 	ln -s "$(ME_VAPP_PREFIX)/bin/pak" "$(ME_BIN_PREFIX)/pak" ; \
 	mkdir -p "$(ME_VAPP_PREFIX)/bin" ; \
@@ -949,6 +950,12 @@ install: $(DEPS_51)
 DEPS_52 += stop
 
 uninstall: $(DEPS_52)
+
+#
+#   uninstallBinary
+#
+
+uninstallBinary: $(DEPS_53)
 	rm -fr "$(ME_VAPP_PREFIX)" ; \
 	rm -f "$(ME_APP_PREFIX)/latest" ; \
 	rmdir -p "$(ME_APP_PREFIX)" 2>/dev/null ; true
@@ -957,6 +964,6 @@ uninstall: $(DEPS_52)
 #   version
 #
 
-version: $(DEPS_53)
+version: $(DEPS_54)
 	echo $(VERSION)
 
