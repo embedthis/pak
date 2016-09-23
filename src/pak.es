@@ -1524,12 +1524,20 @@ class Pak
             print(spec.version)
             return
         }
+        if (newVersion == 'bump') {
+            newVersion = v.pre ? 'pre' : 'patch'
+        }
         if (newVersion == 'major') {
             newVersion = (v.major + 1) + '.0.0'
         } else if (newVersion == 'minor') {
             newVersion = v.major + '.' + (v.minor + 1) + '.0'
         } else if (newVersion == 'patch') {
             newVersion = v.major + '.' + v.minor + '.' + (v.patch + 1)
+        } else if (newVersion == 'pre' || newVersion == 'prerelease') {
+            let parts = v.pre.split('.')
+            let d = (parts[parts.length - 1] cast Number) + 1
+            let pre = parts.slice(0, -1) + '.' + d
+            newVersion = v.major + '.' + v.minor + '.' + v.patch + pre
         }
         edit(['version=' + newVersion])
         edit(['version'])
