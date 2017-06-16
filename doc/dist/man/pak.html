@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+<title>Pak Man Page</title>
+</head>
+<BODY><PRE>
+PAK(1)                           User Commands                          PAK(1)
+
+<B>NAME</B>
+       pak - Embedthis Pak -- Package Manager
+
+<B>SYNOPSIS</B>
+       <B>pak</B>
+           <B>--all</B>
+           <B>--cache dir</B>
+           <B>--details</B>
+           <B>--dir dir</B>
+           <B>--force</B>
+           <B>--log file:level</B>
+           <B>--init</B>
+           <B>--name name</B>
+           <B>--nodeps</B>
+           <B>--optional</B>
+           <B>--paks dir</B>
+           <B>--password file</B>
+           <B>--quiet</B>
+           <B>--silent</B>
+           <B>--verbose</B>
+           <B>--versions</B>
+           <B>--write</B>
+           <B>commands ...</B>
+
+       <B>Commands:</B>
+           cache packages...
+           cached packages...
+           config
+           depend packages...
+           edit key[=value]
+           help
+           init [name [version]]
+           install packages...
+           list packages...
+           lockdown
+           mode [debug|release|...]
+           prune packages...
+           publish [name endpoint email [override]]
+           retract name [password]
+           search packages...
+           uninstall packages...
+           update packages...
+           upgrade packages...
+           version [major|minor|patch|other]
+
+<B>DESCRIPTION</B>
+       <B>Pak </B>is a package manager for application components.
+
+<B>WHY PAK?</B>
+       Existing  package managers like NPM are excellent, but they are heavily
+       focussed the needs of NodeJS and not for non-Node applications or  gen-
+       eral application components. Pak is agnostic to its environment and can
+       be used to install components for any application.
+
+<B>FEATURES</B>
+       Pak has the following major features:
+
+           . Install, list and uninstall packages into a local application
+           . Manages a local cache of retrieved packages
+           . Provides a global catalog to search for public packages
+           . Easy upgrading packages when new versions become available
+           . Automatically retrieves and installs dependant packages
+           . Supports the CommonJS package standard
+           . Supports the SemVer package versioning standard
+           . Supports using GitHub and NPM as the primary package repository
+           . Retrieves packages using the Pak, NPM and Bower catalogs
+
+<B>NICE PARTS</B>
+       While Pak has a strong feature set, there are some characteristics that
+       make Pak particularly sweet.
+
+           . Fast, fast, fast.
+           . Local cache of packages supports fast offline use.
+           . Share packages by publishing to a common public catalog.
+           . Catalog web portal to search published packages.
+           .  Pak  integrates with the Bower repository to seamlessly download
+       Bower components.
+           . Package.json is compatible with nodejs.
+           . Retrieve packs from NPM and bower.
+           . Easy overriding to tailor packages from NPM and bower.
+
+<B>BASIC USAGE</B>
+       To install packages:
+           pak install Endpoints...
+
+       Where an ENDPOINT can be the name of a package  published  in  the  Pak
+       catalog,  NPM  or bower catalog, a GitHub repository endpoint, a GitHub
+       account/repository or a path to a local package directory. For example:
+
+           pak install jquery
+           pak install pak:jquery
+           pak install npm:jquery
+           pak install bower:jquery
+           pak install embedthis/exp-js
+           pak install https://github.com/embedthis/exp-js.git
+           pak install git@github.com:embedthis/jquery
+           pak install ./my-source/graphics
+
+       To uninstall
+           pak uninstall Endpoints...
+
+       To list installed packages
+           pak list
+
+       To display package dependencies
+           pak depend
+
+       To  show  what  packages are present in the cache and where they origi-
+       nated
+           pak cached
+
+       To download and cache a package but not install in the local directory
+           pak cache Name
+
+       To prune old versions from the cache
+           pak prune
+
+<B>OVERVIEW</B>
+       A package is described by a CommonJS package.json file.  This  provides
+       at a minimum the following properties.
+
+            {
+                "name": "Package name - one word"
+                "description": "Package description - one line"
+                "version": "1.2.3",
+                "keywords": [
+                    "comms", "websockets", "sockets", "ssl",
+                ],
+                "author": {
+                    "name": "Your name",
+                    "email": "Your email",
+                    "url": "Your web site"
+                },
+                "bugs": {
+                    "email": "name@example.com",
+                    "url": "http://example.com/bugs"
+                },
+                "license": "GPL",
+                "dependencies": {
+                    "name": "version"
+                } }
+
+       For more details, see:
+           http://package.json.nodejitsu.com
+           http://wiki.commonjs.org/wiki/Packages/1.1
+           https://npmjs.org/doc/json.html
+
+<B>RUNNING</B>
+       To  run  Pak  with  more  verbose  trace output, use the [-v] --verbose
+       switch. To run with less trace, use the [-q] --quiet  switch.   To  run
+       completely silently except for hard-errors, use --silent.
+
+<B>PUBLISHING</B>
+       To publish a new package, create a package.json and then run pak inside
+       the directory of the package to be published:
+
+           pak publish
+
+       Where NAME is the name of package, REPOSITORY is the GitHub endpoint of
+       the  package.  You  will  be prompted to enter a password to manage the
+       package. You will need this password to modify or retract  the  package
+       in the future.  Safeguard it well.
+
+<B>CONFIGURATION</B>
+       On  startup,  Pak  reads  configuration  from  a  pakrc file. This file
+       defines the operational configuration for Pak. For example:
+        {
+           catalogs: {
+               pak: {
+                   list: 'http://embedthis.com/catalog/do/pak/search',
+                   query:     'http://embedthis.com/catalog/do/pak/search?key-
+       words=${NAME}',
+                   download:          'https://github.com/${OWNER}/${NAME}/ar-
+       chive/${TAG}.tar.gz',
+               },
+               bower: {
+                   list: 'http://bower.herokuapp.com/packages',
+                   query: 'http://bower.herokuapp.com/packages/${NAME}',
+                   download:          'https://github.com/${OWNER}/${NAME}/ar-
+       chive/${TAG}.tar.gz',
+               },
+               npm: {
+                   query: 'http://registry.npmjs.org/${NAME}',
+                   download:                                      'http://reg-
+       istry.npmjs.org/${NAME}/-/${NAME}-${TAG}.tgz',
+               }
+           },
+           "directories": {
+               "paks": "paks",
+               "pakcache": "~/.paks",
+           },
+        }
+
+       The "catalogs" property defines sites that index and catalog packs. The
+       "paks"  directory  is the name of the local directory in which to store
+       packages. The "pakcache" directory defines where to cache  packages  on
+       the local system.
+
+       Pak locates a valid pakrc file by searching in order:
+
+           pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, package.json
+
+<B>COMMANDS</B>
+       cache [packages...]
+              Download and populate the cache with packages.
+
+       cached [packages...]
+              List packages in the cache.
+
+       config Show the Pak configuration.
+
+       depend [packages...]
+              Display installed package dependencies.
+
+       edit key[=value]...
+              Edit a package description file.
+
+       help ...
+              Display this Pak usage help.
+
+       info packages...
+              Display the README for a cached package.
+
+       init [name [version]]
+              Create a new package.json.
+
+       install packages...
+              Install a package on the local system. The package name can be a
+              name in an online catalog or it can be a GitHub endpoint URL  or
+              of  the  form 'account/repositiory'. The package name may have a
+              catalog prefix "pak", "npm" or "bower" to select a specific cat-
+              alog  to  use when locating the package repository endpoint. Use
+              the --write option to update the package.json dependencies  with
+              the  install  package.  Use with the --optional switch to update
+              the optionalDependencies.
+
+       list [packages...]
+              List the installed packages.
+
+       lockdown
+              Lockdown  the  version  criteria  for  all  dependencies.   This
+              rewrites the package.json to define a compatible version expres-
+              sion for all installed dependencies.
+
+       mode   Index in the modes property. The selected property collection is
+              copied up to the top level. This may be used to select a "debug"
+              or "release" configuration.
+
+       prune [packages...]
+              Prune named packages.
+
+       publish name endpoint password
+              Publish a package in the Pak catalog.
+
+       retract name [pass]
+              Unpublish a package.
+
+       search packages...
+              Search for packages in the catalogs.
+
+       uninstall
+              Uninstall an installed package. Use --write to remove  from  the
+              package dependencies.
+
+       update [packages...]
+              Update  the pak cache with latest available version of the pack-
+              age. This will check with catalogs to determine the most  recent
+              versions  of a package and will download the package and save in
+              the cache.
+
+       upgrade [packages...]
+              Upgrade installed packages with the latest version of the  pack-
+              age.  This will update the cache if required.  Use --noupdate to
+              upgrade only from the local cache without downloading  new  ver-
+              sions.
+
+       version [major|minor|patch|other]
+              Update  the version by incrementing the relevant major, minor or
+              patch portion of the version string.  Alternatively, provide  an
+              exact version string to set. Without any argument, 'pak version'
+              will print the current version.
+
+<B>OPTIONS</B>
+       <B>--all URI</B>
+              Show all versions of a package.
+
+       <B>--cache directory</B>
+              Specify the directory to use for the paks cache. This  overrides
+              the values specified in the various pakrc or package.json files.
+
+       <B>--details URI</B>
+              Show more package details. Useful with "pak list".
+
+       <B>--dir directory</B>
+              Change to the given directory before running.
+
+       <B>--force</B>
+              Force the command to continue. This  is  useful  to  install  or
+              cache  a  package  when dependencies cannot be satisfied.  It is
+              also useful to cache  or  install  an  already  cached/installed
+              pack. Aliased as -f.
+
+              <B>--init  </B>Initialize the directory by creating a package.json file
+              if one does not already exist. The name of  the  application  is
+              set to the basename of the directory.
+
+       <B>--log logName[:logLevel]</B>
+              Specify  a file to log internal execution messages. Bit will log
+              execution related trace to the log file. The log level specifies
+              the  desired  verbosity  of output. Level 0 is the least verbose
+              and level 9 is the most. The '-v' switch is an alias for  '--log
+              stderr:2'.
+
+       <B>--nodeps</B>
+              Used to suppress installing or upgrading dependent packages.
+
+       <B>--optional</B>
+              Used when installing packages to add them to the 'optionalDepen-
+              dencies' list instead of as a hard dependency.
+
+       <B>--paks directory</B>
+              Specify the local "paks" directory in which to install packages.
+              This  overrides  the  values  specified  in the various pakrc or
+              package.json files.
+
+       <B>--password file</B>
+              Specify the a file containing the password  to  use  when  doing
+              "pak publish".
+
+       <B>--quiet</B>
+              Run in quiet mode with less verbose otuput. Aliased as -q.
+
+       <B>--silent</B>
+              Run  in  silent mode suppressing all but hard errors. Aliased as
+              -s.
+
+       <B>--versions URI</B>
+              Show package version information.
+
+       <B>--write URI</B>
+              Write  installed  packages  to  package.json  dependencies.  Use
+              --optional  to  update optionalDependencies.  When uninstalling,
+              --write will remove the package from the dependencies and update
+              the package.json.
+
+<B>REPORTING BUGS</B>
+       Report bugs to dev@embedthis.com.
+
+<B>COPYRIGHT</B>
+       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
+       Embedthis Software.
+
+<B>SEE ALSO</B>
+       http://embedthis.com/pak/
+
+pak                               March 2014                            PAK(1)
+</PRE></BODY>
+</html>

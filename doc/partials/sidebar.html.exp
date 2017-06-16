@@ -1,4 +1,4 @@
-    
+
 
     <div class="sidebar">
         <div class="ui large left vertical inverted labeled menu">
@@ -12,7 +12,7 @@
                 <div class="menu">
                     <a class="item" href="@~/index.html">Pak Overview</a>
                     <a class="item" href="@~/users/features.html">Pak Features</a>
-                    <a class="item" href="https://embedthis.com/pak/download.html">Download</a> 
+                    <a class="item" href="https://embedthis.com/pak/download.html">Download</a>
                     <a class="item" href="@~/licensing/index.html">Licensing</a>
                 </div>
             </div>
@@ -51,7 +51,7 @@
             <div class="item">
                 <a href="@~/users/project.html">Project Resources</a>
                 <div class="menu">
-                    <a class="item" href="http://goo.gl/t5tTNO">Official Pak News</a>
+                    <a class="item" href="https://embedthis.com/blog/categories/Pak/">Official Pak News</a>
                     <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
                     <a class="item" href="https://embedthis.com/catalog/#/">Pak Catalog</a>
                     <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
