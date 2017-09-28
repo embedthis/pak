@@ -237,339 +237,68 @@ build\$(CONFIG)\inc\osdep.h: $(DEPS_2)
 	copy /Y /B src\osdep\osdep.h+modified build\$(CONFIG)\inc\osdep.h $(LOG)
 
 #
-#   embedtls.h
-#
-DEPS_3 = $(DEPS_3) src\mbedtls\embedtls.h
-
-build\$(CONFIG)\inc\embedtls.h: $(DEPS_3)
-	@echo ..... [Copy] build\$(CONFIG)\inc\embedtls.h
-	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
-	copy /Y /B src\mbedtls\embedtls.h+modified build\$(CONFIG)\inc\embedtls.h $(LOG)
-
-#
-#   mbedtls-config.h
-#
-DEPS_4 = $(DEPS_4) src\mbedtls\mbedtls-config.h
-
-build\$(CONFIG)\inc\mbedtls-config.h: $(DEPS_4)
-	@echo ..... [Copy] build\$(CONFIG)\inc\mbedtls-config.h
-	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
-	copy /Y /B src\mbedtls\mbedtls-config.h+modified build\$(CONFIG)\inc\mbedtls-config.h $(LOG)
-
-#
-#   mbedtls.h
-#
-DEPS_5 = $(DEPS_5) src\mbedtls\mbedtls.h
-
-build\$(CONFIG)\inc\mbedtls.h: $(DEPS_5)
-	@echo ..... [Copy] build\$(CONFIG)\inc\mbedtls.h
-	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
-	copy /Y /B src\mbedtls\mbedtls.h+modified build\$(CONFIG)\inc\mbedtls.h $(LOG)
-
-#
-#   mbedtls.h
-#
-
-src\mbedtls\mbedtls.h: $(DEPS_6)
-
-#
-#   mbedtls.obj
-#
-DEPS_7 = $(DEPS_7) src\mbedtls\mbedtls.h
-
-build\$(CONFIG)\obj\mbedtls.obj: \
-    src\mbedtls\mbedtls.c $(DEPS_7)
-	@echo .. [Compile] build\$(CONFIG)\obj\mbedtls.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\mbedtls.obj -Fd$(BUILD)\obj\mbedtls.pdb -nologo -GR- -Zi -Od -MDd $(DFLAGS) -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\mbedtls\mbedtls.c $(LOG)
-
-!IF "$(ME_COM_MBEDTLS)" == "1"
-#
-#   libmbedtls
-#
-DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\osdep.h
-DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\embedtls.h
-DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\mbedtls-config.h
-DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\mbedtls.h
-DEPS_8 = $(DEPS_8) build\$(CONFIG)\obj\mbedtls.obj
-
-build\$(CONFIG)\bin\libmbedtls.lib: $(DEPS_8)
-	@echo ..... [Link] build\$(CONFIG)\bin\libmbedtls.lib
-	"lib.exe" -nologo -out:$(BUILD)\bin\libmbedtls.lib "$(BUILD)\obj\mbedtls.obj" $(LOG)
-!ENDIF
-
-#
 #   mpr.h
 #
-DEPS_9 = $(DEPS_9) src\mpr\mpr.h
-DEPS_9 = $(DEPS_9) build\$(CONFIG)\inc\me.h
-DEPS_9 = $(DEPS_9) build\$(CONFIG)\inc\osdep.h
+DEPS_3 = $(DEPS_3) src\mpr\mpr.h
+DEPS_3 = $(DEPS_3) build\$(CONFIG)\inc\me.h
+DEPS_3 = $(DEPS_3) build\$(CONFIG)\inc\osdep.h
 
-build\$(CONFIG)\inc\mpr.h: $(DEPS_9)
+build\$(CONFIG)\inc\mpr.h: $(DEPS_3)
 	@echo ..... [Copy] build\$(CONFIG)\inc\mpr.h
 	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
 	copy /Y /B src\mpr\mpr.h+modified build\$(CONFIG)\inc\mpr.h $(LOG)
 
 #
-#   mpr-mbedtls.obj
-#
-DEPS_10 = $(DEPS_10) build\$(CONFIG)\inc\mpr.h
-
-build\$(CONFIG)\obj\mpr-mbedtls.obj: \
-    src\mpr-mbedtls\mpr-mbedtls.c $(DEPS_10)
-	@echo .. [Compile] build\$(CONFIG)\obj\mpr-mbedtls.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\mpr-mbedtls.obj -Fd$(BUILD)\obj\mpr-mbedtls.pdb -nologo -GR- -Zi -Od -MDd $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\mpr-mbedtls\mpr-mbedtls.c $(LOG)
-
-!IF "$(ME_COM_MBEDTLS)" == "1"
-#
-#   libmpr-mbedtls
-#
-DEPS_11 = $(DEPS_11) build\$(CONFIG)\bin\libmbedtls.lib
-DEPS_11 = $(DEPS_11) build\$(CONFIG)\obj\mpr-mbedtls.obj
-
-build\$(CONFIG)\bin\libmpr-mbedtls.lib: $(DEPS_11)
-	@echo ..... [Link] build\$(CONFIG)\bin\libmpr-mbedtls.lib
-	"lib.exe" -nologo -out:$(BUILD)\bin\libmpr-mbedtls.lib "$(BUILD)\obj\mpr-mbedtls.obj" $(LOG)
-!ENDIF
-
-#
-#   mpr-openssl.obj
-#
-DEPS_12 = $(DEPS_12) build\$(CONFIG)\inc\mpr.h
-
-build\$(CONFIG)\obj\mpr-openssl.obj: \
-    src\mpr-openssl\mpr-openssl.c $(DEPS_12)
-	@echo .. [Compile] build\$(CONFIG)\obj\mpr-openssl.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\mpr-openssl.obj -Fd$(BUILD)\obj\mpr-openssl.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\mpr-openssl\mpr-openssl.c $(LOG)
-
-!IF "$(ME_COM_OPENSSL)" == "1"
-#
-#   libmpr-openssl
-#
-DEPS_13 = $(DEPS_13) build\$(CONFIG)\obj\mpr-openssl.obj
-
-build\$(CONFIG)\bin\libmpr-openssl.lib: $(DEPS_13)
-	@echo ..... [Link] build\$(CONFIG)\bin\libmpr-openssl.lib
-	"lib.exe" -nologo -out:$(BUILD)\bin\libmpr-openssl.lib "$(BUILD)\obj\mpr-openssl.obj" $(LOG)
-!ENDIF
-
-#
-#   mpr.h
-#
-
-src\mpr\mpr.h: $(DEPS_14)
-
-#
-#   mprLib.obj
-#
-DEPS_15 = $(DEPS_15) src\mpr\mpr.h
-
-build\$(CONFIG)\obj\mprLib.obj: \
-    src\mpr\mprLib.c $(DEPS_15)
-	@echo .. [Compile] build\$(CONFIG)\obj\mprLib.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\mprLib.obj -Fd$(BUILD)\obj\mprLib.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\mpr\mprLib.c $(LOG)
-
-#
-#   libmpr
-#
-DEPS_16 = $(DEPS_16) build\$(CONFIG)\inc\osdep.h
-!IF "$(ME_COM_MBEDTLS)" == "1"
-DEPS_16 = $(DEPS_16) build\$(CONFIG)\bin\libmpr-mbedtls.lib
-!ENDIF
-!IF "$(ME_COM_MBEDTLS)" == "1"
-DEPS_16 = $(DEPS_16) build\$(CONFIG)\bin\libmbedtls.lib
-!ENDIF
-!IF "$(ME_COM_OPENSSL)" == "1"
-DEPS_16 = $(DEPS_16) build\$(CONFIG)\bin\libmpr-openssl.lib
-!ENDIF
-DEPS_16 = $(DEPS_16) build\$(CONFIG)\inc\mpr.h
-DEPS_16 = $(DEPS_16) build\$(CONFIG)\obj\mprLib.obj
-
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_16 = $(LIBS_16) libmbedtls.lib
-!ENDIF
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_16 = $(LIBS_16) libmpr-mbedtls.lib
-!ENDIF
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_16 = $(LIBS_16) libmbedtls.lib
-!ENDIF
-!IF "$(ME_COM_OPENSSL)" == "1"
-LIBS_16 = $(LIBS_16) libmpr-openssl.lib
-!ENDIF
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_16 = $(LIBS_16) libmpr-mbedtls.lib
-!ENDIF
-
-build\$(CONFIG)\bin\libmpr.dll: $(DEPS_16)
-	@echo ..... [Link] build\$(CONFIG)\bin\libmpr.dll
-	"$(LD)" -dll -out:$(BUILD)\bin\libmpr.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\mprLib.obj" $(LIBPATHS_16) $(LIBS_16) $(LIBS_16) $(LIBS)  $(LOG)
-
-#
-#   pcre.h
-#
-DEPS_17 = $(DEPS_17) src\pcre\pcre.h
-
-build\$(CONFIG)\inc\pcre.h: $(DEPS_17)
-	@echo ..... [Copy] build\$(CONFIG)\inc\pcre.h
-	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
-	copy /Y /B src\pcre\pcre.h+modified build\$(CONFIG)\inc\pcre.h $(LOG)
-
-#
-#   pcre.h
-#
-
-src\pcre\pcre.h: $(DEPS_18)
-
-#
-#   pcre.obj
-#
-DEPS_19 = $(DEPS_19) build\$(CONFIG)\inc\me.h
-DEPS_19 = $(DEPS_19) src\pcre\pcre.h
-
-build\$(CONFIG)\obj\pcre.obj: \
-    src\pcre\pcre.c $(DEPS_19)
-	@echo .. [Compile] build\$(CONFIG)\obj\pcre.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\pcre.obj -Fd$(BUILD)\obj\pcre.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\pcre\pcre.c $(LOG)
-
-!IF "$(ME_COM_PCRE)" == "1"
-#
-#   libpcre
-#
-DEPS_20 = $(DEPS_20) build\$(CONFIG)\inc\pcre.h
-DEPS_20 = $(DEPS_20) build\$(CONFIG)\obj\pcre.obj
-
-build\$(CONFIG)\bin\libpcre.dll: $(DEPS_20)
-	@echo ..... [Link] build\$(CONFIG)\bin\libpcre.dll
-	"$(LD)" -dll -out:$(BUILD)\bin\libpcre.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\pcre.obj" $(LIBS)  $(LOG)
-!ENDIF
-
-#
 #   http.h
 #
-DEPS_21 = $(DEPS_21) src\http\http.h
-DEPS_21 = $(DEPS_21) build\$(CONFIG)\inc\mpr.h
+DEPS_4 = $(DEPS_4) src\http\http.h
+DEPS_4 = $(DEPS_4) build\$(CONFIG)\inc\mpr.h
 
-build\$(CONFIG)\inc\http.h: $(DEPS_21)
+build\$(CONFIG)\inc\http.h: $(DEPS_4)
 	@echo ..... [Copy] build\$(CONFIG)\inc\http.h
 	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
 	copy /Y /B src\http\http.h+modified build\$(CONFIG)\inc\http.h $(LOG)
 
 #
-#   http.h
+#   ejs.slots.h
 #
 
-src\http\http.h: $(DEPS_22)
+src\ejscript\ejs.slots.h: $(DEPS_5)
 
 #
-#   httpLib.obj
+#   pcre.h
 #
-DEPS_23 = $(DEPS_23) src\http\http.h
-DEPS_23 = $(DEPS_23) build\$(CONFIG)\inc\pcre.h
+DEPS_6 = $(DEPS_6) src\pcre\pcre.h
 
-build\$(CONFIG)\obj\httpLib.obj: \
-    src\http\httpLib.c $(DEPS_23)
-	@echo .. [Compile] build\$(CONFIG)\obj\httpLib.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\httpLib.obj -Fd$(BUILD)\obj\httpLib.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\http\httpLib.c $(LOG)
-
-!IF "$(ME_COM_HTTP)" == "1"
-#
-#   libhttp
-#
-DEPS_24 = $(DEPS_24) build\$(CONFIG)\bin\libmpr.dll
-!IF "$(ME_COM_PCRE)" == "1"
-DEPS_24 = $(DEPS_24) build\$(CONFIG)\bin\libpcre.dll
-!ENDIF
-DEPS_24 = $(DEPS_24) build\$(CONFIG)\inc\http.h
-DEPS_24 = $(DEPS_24) build\$(CONFIG)\obj\httpLib.obj
-
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_24 = $(LIBS_24) libmbedtls.lib
-!ENDIF
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_24 = $(LIBS_24) libmpr-mbedtls.lib
-!ENDIF
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_24 = $(LIBS_24) libmbedtls.lib
-!ENDIF
-!IF "$(ME_COM_OPENSSL)" == "1"
-LIBS_24 = $(LIBS_24) libmpr-openssl.lib
-!ENDIF
-LIBS_24 = $(LIBS_24) libmpr.lib
-!IF "$(ME_COM_MBEDTLS)" == "1"
-LIBS_24 = $(LIBS_24) libmpr-mbedtls.lib
-!ENDIF
-!IF "$(ME_COM_PCRE)" == "1"
-LIBS_24 = $(LIBS_24) libpcre.lib
-!ENDIF
-!IF "$(ME_COM_PCRE)" == "1"
-LIBS_24 = $(LIBS_24) libpcre.lib
-!ENDIF
-LIBS_24 = $(LIBS_24) libmpr.lib
-
-build\$(CONFIG)\bin\libhttp.dll: $(DEPS_24)
-	@echo ..... [Link] build\$(CONFIG)\bin\libhttp.dll
-	"$(LD)" -dll -out:$(BUILD)\bin\libhttp.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\httpLib.obj" $(LIBPATHS_24) $(LIBS_24) $(LIBS_24) $(LIBS)  $(LOG)
-!ENDIF
+build\$(CONFIG)\inc\pcre.h: $(DEPS_6)
+	@echo ..... [Copy] build\$(CONFIG)\inc\pcre.h
+	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
+	copy /Y /B src\pcre\pcre.h+modified build\$(CONFIG)\inc\pcre.h $(LOG)
 
 #
 #   zlib.h
 #
-DEPS_25 = $(DEPS_25) src\zlib\zlib.h
-DEPS_25 = $(DEPS_25) build\$(CONFIG)\inc\me.h
+DEPS_7 = $(DEPS_7) src\zlib\zlib.h
+DEPS_7 = $(DEPS_7) build\$(CONFIG)\inc\me.h
 
-build\$(CONFIG)\inc\zlib.h: $(DEPS_25)
+build\$(CONFIG)\inc\zlib.h: $(DEPS_7)
 	@echo ..... [Copy] build\$(CONFIG)\inc\zlib.h
 	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
 	copy /Y /B src\zlib\zlib.h+modified build\$(CONFIG)\inc\zlib.h $(LOG)
 
 #
-#   zlib.h
-#
-
-src\zlib\zlib.h: $(DEPS_26)
-
-#
-#   zlib.obj
-#
-DEPS_27 = $(DEPS_27) build\$(CONFIG)\inc\me.h
-DEPS_27 = $(DEPS_27) src\zlib\zlib.h
-
-build\$(CONFIG)\obj\zlib.obj: \
-    src\zlib\zlib.c $(DEPS_27)
-	@echo .. [Compile] build\$(CONFIG)\obj\zlib.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\zlib.obj -Fd$(BUILD)\obj\zlib.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\zlib\zlib.c $(LOG)
-
-!IF "$(ME_COM_ZLIB)" == "1"
-#
-#   libzlib
-#
-DEPS_28 = $(DEPS_28) build\$(CONFIG)\inc\zlib.h
-DEPS_28 = $(DEPS_28) build\$(CONFIG)\obj\zlib.obj
-
-build\$(CONFIG)\bin\libzlib.dll: $(DEPS_28)
-	@echo ..... [Link] build\$(CONFIG)\bin\libzlib.dll
-	"$(LD)" -dll -out:$(BUILD)\bin\libzlib.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\zlib.obj" $(LIBS)  $(LOG)
-!ENDIF
-
-#
-#   ejs.slots.h
-#
-
-src\ejscript\ejs.slots.h: $(DEPS_29)
-
-#
 #   ejs.h
 #
-DEPS_30 = $(DEPS_30) src\ejscript\ejs.h
-DEPS_30 = $(DEPS_30) build\$(CONFIG)\inc\me.h
-DEPS_30 = $(DEPS_30) build\$(CONFIG)\inc\osdep.h
-DEPS_30 = $(DEPS_30) build\$(CONFIG)\inc\mpr.h
-DEPS_30 = $(DEPS_30) build\$(CONFIG)\inc\http.h
-DEPS_30 = $(DEPS_30) src\ejscript\ejs.slots.h
-DEPS_30 = $(DEPS_30) build\$(CONFIG)\inc\pcre.h
-DEPS_30 = $(DEPS_30) build\$(CONFIG)\inc\zlib.h
+DEPS_8 = $(DEPS_8) src\ejscript\ejs.h
+DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\me.h
+DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\osdep.h
+DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\mpr.h
+DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\http.h
+DEPS_8 = $(DEPS_8) src\ejscript\ejs.slots.h
+DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\pcre.h
+DEPS_8 = $(DEPS_8) build\$(CONFIG)\inc\zlib.h
 
-build\$(CONFIG)\inc\ejs.h: $(DEPS_30)
+build\$(CONFIG)\inc\ejs.h: $(DEPS_8)
 	@echo ..... [Copy] build\$(CONFIG)\inc\ejs.h
 	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
 	copy /Y /B src\ejscript\ejs.h+modified build\$(CONFIG)\inc\ejs.h $(LOG)
@@ -577,9 +306,9 @@ build\$(CONFIG)\inc\ejs.h: $(DEPS_30)
 #
 #   ejs.slots.h
 #
-DEPS_31 = $(DEPS_31) src\ejscript\ejs.slots.h
+DEPS_9 = $(DEPS_9) src\ejscript\ejs.slots.h
 
-build\$(CONFIG)\inc\ejs.slots.h: $(DEPS_31)
+build\$(CONFIG)\inc\ejs.slots.h: $(DEPS_9)
 	@echo ..... [Copy] build\$(CONFIG)\inc\ejs.slots.h
 	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
 	copy /Y /B src\ejscript\ejs.slots.h+modified build\$(CONFIG)\inc\ejs.slots.h $(LOG)
@@ -587,50 +316,258 @@ build\$(CONFIG)\inc\ejs.slots.h: $(DEPS_31)
 #
 #   ejsByteGoto.h
 #
-DEPS_32 = $(DEPS_32) src\ejscript\ejsByteGoto.h
+DEPS_10 = $(DEPS_10) src\ejscript\ejsByteGoto.h
 
-build\$(CONFIG)\inc\ejsByteGoto.h: $(DEPS_32)
+build\$(CONFIG)\inc\ejsByteGoto.h: $(DEPS_10)
 	@echo ..... [Copy] build\$(CONFIG)\inc\ejsByteGoto.h
 	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
 	copy /Y /B src\ejscript\ejsByteGoto.h+modified build\$(CONFIG)\inc\ejsByteGoto.h $(LOG)
 
 #
+#   embedtls.h
+#
+DEPS_11 = $(DEPS_11) src\mbedtls\embedtls.h
+
+build\$(CONFIG)\inc\embedtls.h: $(DEPS_11)
+	@echo ..... [Copy] build\$(CONFIG)\inc\embedtls.h
+	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
+	copy /Y /B src\mbedtls\embedtls.h+modified build\$(CONFIG)\inc\embedtls.h $(LOG)
+
+#
+#   mbedtls-config.h
+#
+DEPS_12 = $(DEPS_12) src\mbedtls\mbedtls-config.h
+
+build\$(CONFIG)\inc\mbedtls-config.h: $(DEPS_12)
+	@echo ..... [Copy] build\$(CONFIG)\inc\mbedtls-config.h
+	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
+	copy /Y /B src\mbedtls\mbedtls-config.h+modified build\$(CONFIG)\inc\mbedtls-config.h $(LOG)
+
+#
+#   mbedtls.h
+#
+DEPS_13 = $(DEPS_13) src\mbedtls\mbedtls.h
+
+build\$(CONFIG)\inc\mbedtls.h: $(DEPS_13)
+	@echo ..... [Copy] build\$(CONFIG)\inc\mbedtls.h
+	if not exist "build\$(CONFIG)\inc" md "build\$(CONFIG)\inc"
+	copy /Y /B src\mbedtls\mbedtls.h+modified build\$(CONFIG)\inc\mbedtls.h $(LOG)
+
+#
 #   ejs.h
 #
 
-src\ejscript\ejs.h: $(DEPS_33)
+src\ejscript\ejs.h: $(DEPS_14)
+
+#
+#   ejs.obj
+#
+DEPS_15 = $(DEPS_15) src\ejscript\ejs.h
+
+build\$(CONFIG)\obj\ejs.obj: \
+    src\ejscript\ejs.c $(DEPS_15)
+	@echo .. [Compile] build\$(CONFIG)\obj\ejs.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\ejs.obj -Fd$(BUILD)\obj\ejs.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\ejscript\ejs.c $(LOG)
 
 #
 #   ejsLib.obj
 #
-DEPS_34 = $(DEPS_34) src\ejscript\ejs.h
-DEPS_34 = $(DEPS_34) build\$(CONFIG)\inc\mpr.h
-DEPS_34 = $(DEPS_34) build\$(CONFIG)\inc\pcre.h
-DEPS_34 = $(DEPS_34) build\$(CONFIG)\inc\me.h
+DEPS_16 = $(DEPS_16) src\ejscript\ejs.h
+DEPS_16 = $(DEPS_16) build\$(CONFIG)\inc\mpr.h
+DEPS_16 = $(DEPS_16) build\$(CONFIG)\inc\pcre.h
+DEPS_16 = $(DEPS_16) build\$(CONFIG)\inc\me.h
 
 build\$(CONFIG)\obj\ejsLib.obj: \
-    src\ejscript\ejsLib.c $(DEPS_34)
+    src\ejscript\ejsLib.c $(DEPS_16)
 	@echo .. [Compile] build\$(CONFIG)\obj\ejsLib.obj
 	"$(CC)" -c -Fo$(BUILD)\obj\ejsLib.obj -Fd$(BUILD)\obj\ejsLib.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\ejscript\ejsLib.c $(LOG)
 
-!IF "$(ME_COM_EJSCRIPT)" == "1"
 #
-#   libejs
+#   ejsc.obj
 #
-!IF "$(ME_COM_HTTP)" == "1"
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\bin\libhttp.dll
+DEPS_17 = $(DEPS_17) src\ejscript\ejs.h
+
+build\$(CONFIG)\obj\ejsc.obj: \
+    src\ejscript\ejsc.c $(DEPS_17)
+	@echo .. [Compile] build\$(CONFIG)\obj\ejsc.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\ejsc.obj -Fd$(BUILD)\obj\ejsc.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\ejscript\ejsc.c $(LOG)
+
+#
+#   http.h
+#
+
+src\http\http.h: $(DEPS_18)
+
+#
+#   http.obj
+#
+DEPS_19 = $(DEPS_19) src\http\http.h
+
+build\$(CONFIG)\obj\http.obj: \
+    src\http\http.c $(DEPS_19)
+	@echo .. [Compile] build\$(CONFIG)\obj\http.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\http.obj -Fd$(BUILD)\obj\http.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\http\http.c $(LOG)
+
+#
+#   httpLib.obj
+#
+DEPS_20 = $(DEPS_20) src\http\http.h
+DEPS_20 = $(DEPS_20) build\$(CONFIG)\inc\pcre.h
+
+build\$(CONFIG)\obj\httpLib.obj: \
+    src\http\httpLib.c $(DEPS_20)
+	@echo .. [Compile] build\$(CONFIG)\obj\httpLib.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\httpLib.obj -Fd$(BUILD)\obj\httpLib.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\http\httpLib.c $(LOG)
+
+#
+#   mbedtls.h
+#
+
+src\mbedtls\mbedtls.h: $(DEPS_21)
+
+#
+#   mbedtls.obj
+#
+DEPS_22 = $(DEPS_22) src\mbedtls\mbedtls.h
+
+build\$(CONFIG)\obj\mbedtls.obj: \
+    src\mbedtls\mbedtls.c $(DEPS_22)
+	@echo .. [Compile] build\$(CONFIG)\obj\mbedtls.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\mbedtls.obj -Fd$(BUILD)\obj\mbedtls.pdb -nologo -GR- -Zi -Od -MDd $(DFLAGS) -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\mbedtls\mbedtls.c $(LOG)
+
+#
+#   mpr-mbedtls.obj
+#
+DEPS_23 = $(DEPS_23) build\$(CONFIG)\inc\mpr.h
+
+build\$(CONFIG)\obj\mpr-mbedtls.obj: \
+    src\mpr-mbedtls\mpr-mbedtls.c $(DEPS_23)
+	@echo .. [Compile] build\$(CONFIG)\obj\mpr-mbedtls.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\mpr-mbedtls.obj -Fd$(BUILD)\obj\mpr-mbedtls.pdb -nologo -GR- -Zi -Od -MDd $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\mpr-mbedtls\mpr-mbedtls.c $(LOG)
+
+#
+#   mpr-openssl.obj
+#
+DEPS_24 = $(DEPS_24) build\$(CONFIG)\inc\mpr.h
+
+build\$(CONFIG)\obj\mpr-openssl.obj: \
+    src\mpr-openssl\mpr-openssl.c $(DEPS_24)
+	@echo .. [Compile] build\$(CONFIG)\obj\mpr-openssl.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\mpr-openssl.obj -Fd$(BUILD)\obj\mpr-openssl.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\mpr-openssl\mpr-openssl.c $(LOG)
+
+#
+#   mpr.h
+#
+
+src\mpr\mpr.h: $(DEPS_25)
+
+#
+#   mprLib.obj
+#
+DEPS_26 = $(DEPS_26) src\mpr\mpr.h
+
+build\$(CONFIG)\obj\mprLib.obj: \
+    src\mpr\mprLib.c $(DEPS_26)
+	@echo .. [Compile] build\$(CONFIG)\obj\mprLib.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\mprLib.obj -Fd$(BUILD)\obj\mprLib.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\mpr\mprLib.c $(LOG)
+
+#
+#   pak.obj
+#
+DEPS_27 = $(DEPS_27) build\$(CONFIG)\inc\ejs.h
+
+build\$(CONFIG)\obj\pak.obj: \
+    src\pak.c $(DEPS_27)
+	@echo .. [Compile] build\$(CONFIG)\obj\pak.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\pak.obj -Fd$(BUILD)\obj\pak.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\pak.c $(LOG)
+
+#
+#   pcre.h
+#
+
+src\pcre\pcre.h: $(DEPS_28)
+
+#
+#   pcre.obj
+#
+DEPS_29 = $(DEPS_29) build\$(CONFIG)\inc\me.h
+DEPS_29 = $(DEPS_29) src\pcre\pcre.h
+
+build\$(CONFIG)\obj\pcre.obj: \
+    src\pcre\pcre.c $(DEPS_29)
+	@echo .. [Compile] build\$(CONFIG)\obj\pcre.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\pcre.obj -Fd$(BUILD)\obj\pcre.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\pcre\pcre.c $(LOG)
+
+#
+#   zlib.h
+#
+
+src\zlib\zlib.h: $(DEPS_30)
+
+#
+#   zlib.obj
+#
+DEPS_31 = $(DEPS_31) build\$(CONFIG)\inc\me.h
+DEPS_31 = $(DEPS_31) src\zlib\zlib.h
+
+build\$(CONFIG)\obj\zlib.obj: \
+    src\zlib\zlib.c $(DEPS_31)
+	@echo .. [Compile] build\$(CONFIG)\obj\zlib.obj
+	"$(CC)" -c -Fo$(BUILD)\obj\zlib.obj -Fd$(BUILD)\obj\zlib.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\zlib\zlib.c $(LOG)
+
+!IF "$(ME_COM_MBEDTLS)" == "1"
+#
+#   libmbedtls
+#
+DEPS_32 = $(DEPS_32) build\$(CONFIG)\inc\osdep.h
+DEPS_32 = $(DEPS_32) build\$(CONFIG)\inc\embedtls.h
+DEPS_32 = $(DEPS_32) build\$(CONFIG)\inc\mbedtls-config.h
+DEPS_32 = $(DEPS_32) build\$(CONFIG)\inc\mbedtls.h
+DEPS_32 = $(DEPS_32) build\$(CONFIG)\obj\mbedtls.obj
+
+build\$(CONFIG)\bin\libmbedtls.lib: $(DEPS_32)
+	@echo ..... [Link] build\$(CONFIG)\bin\libmbedtls.lib
+	"lib.exe" -nologo -out:$(BUILD)\bin\libmbedtls.lib "$(BUILD)\obj\mbedtls.obj" $(LOG)
 !ENDIF
-!IF "$(ME_COM_PCRE)" == "1"
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\bin\libpcre.dll
+
+!IF "$(ME_COM_MBEDTLS)" == "1"
+#
+#   libmpr-mbedtls
+#
+DEPS_33 = $(DEPS_33) build\$(CONFIG)\bin\libmbedtls.lib
+DEPS_33 = $(DEPS_33) build\$(CONFIG)\obj\mpr-mbedtls.obj
+
+build\$(CONFIG)\bin\libmpr-mbedtls.lib: $(DEPS_33)
+	@echo ..... [Link] build\$(CONFIG)\bin\libmpr-mbedtls.lib
+	"lib.exe" -nologo -out:$(BUILD)\bin\libmpr-mbedtls.lib "$(BUILD)\obj\mpr-mbedtls.obj" $(LOG)
 !ENDIF
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\bin\libmpr.dll
-!IF "$(ME_COM_ZLIB)" == "1"
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\bin\libzlib.dll
+
+!IF "$(ME_COM_OPENSSL)" == "1"
+#
+#   libmpr-openssl
+#
+DEPS_34 = $(DEPS_34) build\$(CONFIG)\obj\mpr-openssl.obj
+
+build\$(CONFIG)\bin\libmpr-openssl.lib: $(DEPS_34)
+	@echo ..... [Link] build\$(CONFIG)\bin\libmpr-openssl.lib
+	"lib.exe" -nologo -out:$(BUILD)\bin\libmpr-openssl.lib "$(BUILD)\obj\mpr-openssl.obj" $(LOG)
 !ENDIF
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\inc\ejs.h
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\inc\ejs.slots.h
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\inc\ejsByteGoto.h
-DEPS_35 = $(DEPS_35) build\$(CONFIG)\obj\ejsLib.obj
+
+#
+#   libmpr
+#
+DEPS_35 = $(DEPS_35) build\$(CONFIG)\inc\osdep.h
+!IF "$(ME_COM_MBEDTLS)" == "1"
+DEPS_35 = $(DEPS_35) build\$(CONFIG)\bin\libmpr-mbedtls.lib
+!ENDIF
+!IF "$(ME_COM_MBEDTLS)" == "1"
+DEPS_35 = $(DEPS_35) build\$(CONFIG)\bin\libmbedtls.lib
+!ENDIF
+!IF "$(ME_COM_OPENSSL)" == "1"
+DEPS_35 = $(DEPS_35) build\$(CONFIG)\bin\libmpr-openssl.lib
+!ENDIF
+DEPS_35 = $(DEPS_35) build\$(CONFIG)\inc\mpr.h
+DEPS_35 = $(DEPS_35) build\$(CONFIG)\obj\mprLib.obj
 
 !IF "$(ME_COM_MBEDTLS)" == "1"
 LIBS_35 = $(LIBS_35) libmbedtls.lib
@@ -644,51 +581,36 @@ LIBS_35 = $(LIBS_35) libmbedtls.lib
 !IF "$(ME_COM_OPENSSL)" == "1"
 LIBS_35 = $(LIBS_35) libmpr-openssl.lib
 !ENDIF
-LIBS_35 = $(LIBS_35) libmpr.lib
 !IF "$(ME_COM_MBEDTLS)" == "1"
 LIBS_35 = $(LIBS_35) libmpr-mbedtls.lib
 !ENDIF
+
+build\$(CONFIG)\bin\libmpr.dll: $(DEPS_35)
+	@echo ..... [Link] build\$(CONFIG)\bin\libmpr.dll
+	"$(LD)" -dll -out:$(BUILD)\bin\libmpr.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\mprLib.obj" $(LIBPATHS_35) $(LIBS_35) $(LIBS_35) $(LIBS)  $(LOG)
+
 !IF "$(ME_COM_PCRE)" == "1"
-LIBS_35 = $(LIBS_35) libpcre.lib
+#
+#   libpcre
+#
+DEPS_36 = $(DEPS_36) build\$(CONFIG)\inc\pcre.h
+DEPS_36 = $(DEPS_36) build\$(CONFIG)\obj\pcre.obj
+
+build\$(CONFIG)\bin\libpcre.dll: $(DEPS_36)
+	@echo ..... [Link] build\$(CONFIG)\bin\libpcre.dll
+	"$(LD)" -dll -out:$(BUILD)\bin\libpcre.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\pcre.obj" $(LIBS)  $(LOG)
 !ENDIF
+
 !IF "$(ME_COM_HTTP)" == "1"
-LIBS_35 = $(LIBS_35) libhttp.lib
-!ENDIF
+#
+#   libhttp
+#
+DEPS_37 = $(DEPS_37) build\$(CONFIG)\bin\libmpr.dll
 !IF "$(ME_COM_PCRE)" == "1"
-LIBS_35 = $(LIBS_35) libpcre.lib
+DEPS_37 = $(DEPS_37) build\$(CONFIG)\bin\libpcre.dll
 !ENDIF
-LIBS_35 = $(LIBS_35) libmpr.lib
-!IF "$(ME_COM_ZLIB)" == "1"
-LIBS_35 = $(LIBS_35) libzlib.lib
-!ENDIF
-!IF "$(ME_COM_ZLIB)" == "1"
-LIBS_35 = $(LIBS_35) libzlib.lib
-!ENDIF
-!IF "$(ME_COM_HTTP)" == "1"
-LIBS_35 = $(LIBS_35) libhttp.lib
-!ENDIF
-
-build\$(CONFIG)\bin\libejs.dll: $(DEPS_35)
-	@echo ..... [Link] build\$(CONFIG)\bin\libejs.dll
-	"$(LD)" -dll -out:$(BUILD)\bin\libejs.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\ejsLib.obj" $(LIBPATHS_35) $(LIBS_35) $(LIBS_35) $(LIBS)  $(LOG)
-!ENDIF
-
-#
-#   ejsc.obj
-#
-DEPS_36 = $(DEPS_36) src\ejscript\ejs.h
-
-build\$(CONFIG)\obj\ejsc.obj: \
-    src\ejscript\ejsc.c $(DEPS_36)
-	@echo .. [Compile] build\$(CONFIG)\obj\ejsc.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\ejsc.obj -Fd$(BUILD)\obj\ejsc.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\ejscript\ejsc.c $(LOG)
-
-!IF "$(ME_COM_EJSCRIPT)" == "1"
-#
-#   ejsc
-#
-DEPS_37 = $(DEPS_37) build\$(CONFIG)\bin\libejs.dll
-DEPS_37 = $(DEPS_37) build\$(CONFIG)\obj\ejsc.obj
+DEPS_37 = $(DEPS_37) build\$(CONFIG)\inc\http.h
+DEPS_37 = $(DEPS_37) build\$(CONFIG)\obj\httpLib.obj
 
 !IF "$(ME_COM_MBEDTLS)" == "1"
 LIBS_37 = $(LIBS_37) libmbedtls.lib
@@ -709,59 +631,94 @@ LIBS_37 = $(LIBS_37) libmpr-mbedtls.lib
 !IF "$(ME_COM_PCRE)" == "1"
 LIBS_37 = $(LIBS_37) libpcre.lib
 !ENDIF
-!IF "$(ME_COM_HTTP)" == "1"
-LIBS_37 = $(LIBS_37) libhttp.lib
-!ENDIF
 !IF "$(ME_COM_PCRE)" == "1"
 LIBS_37 = $(LIBS_37) libpcre.lib
 !ENDIF
 LIBS_37 = $(LIBS_37) libmpr.lib
-!IF "$(ME_COM_ZLIB)" == "1"
-LIBS_37 = $(LIBS_37) libzlib.lib
+
+build\$(CONFIG)\bin\libhttp.dll: $(DEPS_37)
+	@echo ..... [Link] build\$(CONFIG)\bin\libhttp.dll
+	"$(LD)" -dll -out:$(BUILD)\bin\libhttp.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\httpLib.obj" $(LIBPATHS_37) $(LIBS_37) $(LIBS_37) $(LIBS)  $(LOG)
 !ENDIF
-LIBS_37 = $(LIBS_37) libejs.lib
+
 !IF "$(ME_COM_ZLIB)" == "1"
-LIBS_37 = $(LIBS_37) libzlib.lib
+#
+#   libzlib
+#
+DEPS_38 = $(DEPS_38) build\$(CONFIG)\inc\zlib.h
+DEPS_38 = $(DEPS_38) build\$(CONFIG)\obj\zlib.obj
+
+build\$(CONFIG)\bin\libzlib.dll: $(DEPS_38)
+	@echo ..... [Link] build\$(CONFIG)\bin\libzlib.dll
+	"$(LD)" -dll -out:$(BUILD)\bin\libzlib.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\zlib.obj" $(LIBS)  $(LOG)
+!ENDIF
+
+!IF "$(ME_COM_EJSCRIPT)" == "1"
+#
+#   libejs
+#
+!IF "$(ME_COM_HTTP)" == "1"
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\bin\libhttp.dll
+!ENDIF
+!IF "$(ME_COM_PCRE)" == "1"
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\bin\libpcre.dll
+!ENDIF
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\bin\libmpr.dll
+!IF "$(ME_COM_ZLIB)" == "1"
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\bin\libzlib.dll
+!ENDIF
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\inc\ejs.h
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\inc\ejs.slots.h
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\inc\ejsByteGoto.h
+DEPS_39 = $(DEPS_39) build\$(CONFIG)\obj\ejsLib.obj
+
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_39 = $(LIBS_39) libmbedtls.lib
+!ENDIF
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_39 = $(LIBS_39) libmpr-mbedtls.lib
+!ENDIF
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_39 = $(LIBS_39) libmbedtls.lib
+!ENDIF
+!IF "$(ME_COM_OPENSSL)" == "1"
+LIBS_39 = $(LIBS_39) libmpr-openssl.lib
+!ENDIF
+LIBS_39 = $(LIBS_39) libmpr.lib
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_39 = $(LIBS_39) libmpr-mbedtls.lib
+!ENDIF
+!IF "$(ME_COM_PCRE)" == "1"
+LIBS_39 = $(LIBS_39) libpcre.lib
 !ENDIF
 !IF "$(ME_COM_HTTP)" == "1"
-LIBS_37 = $(LIBS_37) libhttp.lib
+LIBS_39 = $(LIBS_39) libhttp.lib
+!ENDIF
+!IF "$(ME_COM_PCRE)" == "1"
+LIBS_39 = $(LIBS_39) libpcre.lib
+!ENDIF
+LIBS_39 = $(LIBS_39) libmpr.lib
+!IF "$(ME_COM_ZLIB)" == "1"
+LIBS_39 = $(LIBS_39) libzlib.lib
+!ENDIF
+!IF "$(ME_COM_ZLIB)" == "1"
+LIBS_39 = $(LIBS_39) libzlib.lib
+!ENDIF
+!IF "$(ME_COM_HTTP)" == "1"
+LIBS_39 = $(LIBS_39) libhttp.lib
 !ENDIF
 
-build\$(CONFIG)\bin\pak-ejsc.exe: $(DEPS_37)
-	@echo ..... [Link] build\$(CONFIG)\bin\pak-ejsc.exe
-	"$(LD)" -nologo -out:$(BUILD)\bin\pak-ejsc.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\ejsc.obj" $(LIBPATHS_37) $(LIBS_37) $(LIBS_37) $(LIBS)  $(LOG)
+build\$(CONFIG)\bin\libejs.dll: $(DEPS_39)
+	@echo ..... [Link] build\$(CONFIG)\bin\libejs.dll
+	"$(LD)" -dll -out:$(BUILD)\bin\libejs.dll -entry:$(ENTRY) $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\ejsLib.obj" $(LIBPATHS_39) $(LIBS_39) $(LIBS_39) $(LIBS)  $(LOG)
 !ENDIF
 
 !IF "$(ME_COM_EJSCRIPT)" == "1"
 #
-#   ejs.mod
-#
-DEPS_38 = $(DEPS_38) src\ejscript\ejs.es
-DEPS_38 = $(DEPS_38) build\$(CONFIG)\bin\pak-ejsc.exe
-
-build\$(CONFIG)\bin\ejs.mod: $(DEPS_38)
-	cd src\ejscript
-	@echo .. [Compile] ejs.mod
-	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --debug --bind --require null ejs.es
-	cd ..\..
-!ENDIF
-
-#
-#   ejs.obj
-#
-DEPS_39 = $(DEPS_39) src\ejscript\ejs.h
-
-build\$(CONFIG)\obj\ejs.obj: \
-    src\ejscript\ejs.c $(DEPS_39)
-	@echo .. [Compile] build\$(CONFIG)\obj\ejs.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\ejs.obj -Fd$(BUILD)\obj\ejs.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\ejscript\ejs.c $(LOG)
-
-!IF "$(ME_COM_EJSCRIPT)" == "1"
-#
-#   ejscmd
+#   ejsc
 #
 DEPS_40 = $(DEPS_40) build\$(CONFIG)\bin\libejs.dll
-DEPS_40 = $(DEPS_40) build\$(CONFIG)\obj\ejs.obj
+DEPS_40 = $(DEPS_40) build\$(CONFIG)\obj\ejsc.obj
 
 !IF "$(ME_COM_MBEDTLS)" == "1"
 LIBS_40 = $(LIBS_40) libmbedtls.lib
@@ -800,27 +757,31 @@ LIBS_40 = $(LIBS_40) libzlib.lib
 LIBS_40 = $(LIBS_40) libhttp.lib
 !ENDIF
 
-build\$(CONFIG)\bin\pak-ejs.exe: $(DEPS_40)
-	@echo ..... [Link] build\$(CONFIG)\bin\pak-ejs.exe
-	"$(LD)" -nologo -out:$(BUILD)\bin\pak-ejs.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\ejs.obj" $(LIBPATHS_40) $(LIBS_40) $(LIBS_40) $(LIBS)  $(LOG)
+build\$(CONFIG)\bin\pak-ejsc.exe: $(DEPS_40)
+	@echo ..... [Link] build\$(CONFIG)\bin\pak-ejsc.exe
+	"$(LD)" -nologo -out:$(BUILD)\bin\pak-ejsc.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\ejsc.obj" $(LIBPATHS_40) $(LIBS_40) $(LIBS_40) $(LIBS)  $(LOG)
 !ENDIF
 
+!IF "$(ME_COM_EJSCRIPT)" == "1"
 #
-#   http.obj
+#   ejs.mod
 #
-DEPS_41 = $(DEPS_41) src\http\http.h
+DEPS_41 = $(DEPS_41) src\ejscript\ejs.es
+DEPS_41 = $(DEPS_41) build\$(CONFIG)\bin\pak-ejsc.exe
 
-build\$(CONFIG)\obj\http.obj: \
-    src\http\http.c $(DEPS_41)
-	@echo .. [Compile] build\$(CONFIG)\obj\http.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\http.obj -Fd$(BUILD)\obj\http.pdb $(CFLAGS) $(DFLAGS) $(IFLAGS) src\http\http.c $(LOG)
+build\$(CONFIG)\bin\ejs.mod: $(DEPS_41)
+	cd src\ejscript
+	@echo .. [Compile] ejs.mod
+	"../../$(BUILD)/bin/pak-ejsc" --out "../../$(BUILD)/bin/ejs.mod" --debug --bind --require null ejs.es
+	cd ..\..
+!ENDIF
 
-!IF "$(ME_COM_HTTP)" == "1"
+!IF "$(ME_COM_EJSCRIPT)" == "1"
 #
-#   httpcmd
+#   ejscmd
 #
-DEPS_42 = $(DEPS_42) build\$(CONFIG)\bin\libhttp.dll
-DEPS_42 = $(DEPS_42) build\$(CONFIG)\obj\http.obj
+DEPS_42 = $(DEPS_42) build\$(CONFIG)\bin\libejs.dll
+DEPS_42 = $(DEPS_42) build\$(CONFIG)\obj\ejs.obj
 
 !IF "$(ME_COM_MBEDTLS)" == "1"
 LIBS_42 = $(LIBS_42) libmbedtls.lib
@@ -841,31 +802,80 @@ LIBS_42 = $(LIBS_42) libmpr-mbedtls.lib
 !IF "$(ME_COM_PCRE)" == "1"
 LIBS_42 = $(LIBS_42) libpcre.lib
 !ENDIF
+!IF "$(ME_COM_HTTP)" == "1"
 LIBS_42 = $(LIBS_42) libhttp.lib
+!ENDIF
 !IF "$(ME_COM_PCRE)" == "1"
 LIBS_42 = $(LIBS_42) libpcre.lib
 !ENDIF
 LIBS_42 = $(LIBS_42) libmpr.lib
+!IF "$(ME_COM_ZLIB)" == "1"
+LIBS_42 = $(LIBS_42) libzlib.lib
+!ENDIF
+LIBS_42 = $(LIBS_42) libejs.lib
+!IF "$(ME_COM_ZLIB)" == "1"
+LIBS_42 = $(LIBS_42) libzlib.lib
+!ENDIF
+!IF "$(ME_COM_HTTP)" == "1"
+LIBS_42 = $(LIBS_42) libhttp.lib
+!ENDIF
 
-build\$(CONFIG)\bin\http.exe: $(DEPS_42)
+build\$(CONFIG)\bin\pak-ejs.exe: $(DEPS_42)
+	@echo ..... [Link] build\$(CONFIG)\bin\pak-ejs.exe
+	"$(LD)" -nologo -out:$(BUILD)\bin\pak-ejs.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\ejs.obj" $(LIBPATHS_42) $(LIBS_42) $(LIBS_42) $(LIBS)  $(LOG)
+!ENDIF
+
+!IF "$(ME_COM_HTTP)" == "1"
+#
+#   httpcmd
+#
+DEPS_43 = $(DEPS_43) build\$(CONFIG)\bin\libhttp.dll
+DEPS_43 = $(DEPS_43) build\$(CONFIG)\obj\http.obj
+
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_43 = $(LIBS_43) libmbedtls.lib
+!ENDIF
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_43 = $(LIBS_43) libmpr-mbedtls.lib
+!ENDIF
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_43 = $(LIBS_43) libmbedtls.lib
+!ENDIF
+!IF "$(ME_COM_OPENSSL)" == "1"
+LIBS_43 = $(LIBS_43) libmpr-openssl.lib
+!ENDIF
+LIBS_43 = $(LIBS_43) libmpr.lib
+!IF "$(ME_COM_MBEDTLS)" == "1"
+LIBS_43 = $(LIBS_43) libmpr-mbedtls.lib
+!ENDIF
+!IF "$(ME_COM_PCRE)" == "1"
+LIBS_43 = $(LIBS_43) libpcre.lib
+!ENDIF
+LIBS_43 = $(LIBS_43) libhttp.lib
+!IF "$(ME_COM_PCRE)" == "1"
+LIBS_43 = $(LIBS_43) libpcre.lib
+!ENDIF
+LIBS_43 = $(LIBS_43) libmpr.lib
+
+build\$(CONFIG)\bin\http.exe: $(DEPS_43)
 	@echo ..... [Link] build\$(CONFIG)\bin\http.exe
-	"$(LD)" -nologo -out:$(BUILD)\bin\http.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\http.obj" $(LIBPATHS_42) $(LIBS_42) $(LIBS_42) $(LIBS)  $(LOG)
+	"$(LD)" -nologo -out:$(BUILD)\bin\http.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\http.obj" $(LIBPATHS_43) $(LIBS_43) $(LIBS_43) $(LIBS)  $(LOG)
 !ENDIF
 
 #
 #   install-certs
 #
-DEPS_43 = $(DEPS_43) src\certs\samples\ca.crt
-DEPS_43 = $(DEPS_43) src\certs\samples\ca.key
-DEPS_43 = $(DEPS_43) src\certs\samples\ec.crt
-DEPS_43 = $(DEPS_43) src\certs\samples\ec.key
-DEPS_43 = $(DEPS_43) src\certs\samples\roots.crt
-DEPS_43 = $(DEPS_43) src\certs\samples\self.crt
-DEPS_43 = $(DEPS_43) src\certs\samples\self.key
-DEPS_43 = $(DEPS_43) src\certs\samples\test.crt
-DEPS_43 = $(DEPS_43) src\certs\samples\test.key
+DEPS_44 = $(DEPS_44) src\certs\samples\ca.crt
+DEPS_44 = $(DEPS_44) src\certs\samples\ca.key
+DEPS_44 = $(DEPS_44) src\certs\samples\ec.crt
+DEPS_44 = $(DEPS_44) src\certs\samples\ec.key
+DEPS_44 = $(DEPS_44) src\certs\samples\roots.crt
+DEPS_44 = $(DEPS_44) src\certs\samples\self.crt
+DEPS_44 = $(DEPS_44) src\certs\samples\self.key
+DEPS_44 = $(DEPS_44) src\certs\samples\test.crt
+DEPS_44 = $(DEPS_44) src\certs\samples\test.key
 
-build\$(CONFIG)\.install-certs-modified: $(DEPS_43)
+build\$(CONFIG)\.install-certs-modified: $(DEPS_44)
 	@echo ..... [Copy] build\$(CONFIG)\bin
 	if not exist "build\$(CONFIG)\bin" md "build\$(CONFIG)\bin"
 	copy /Y /B src\certs\samples\ca.crt+modified build\$(CONFIG)\bin\ca.crt $(LOG)
@@ -882,25 +892,15 @@ build\$(CONFIG)\.install-certs-modified: $(DEPS_43)
 #
 #   pak.mod
 #
-DEPS_44 = $(DEPS_44) src\Package.es
-DEPS_44 = $(DEPS_44) src\pak.es
-DEPS_44 = $(DEPS_44) paks\ejs.version\Version.es
+DEPS_45 = $(DEPS_45) src\Package.es
+DEPS_45 = $(DEPS_45) src\pak.es
+DEPS_45 = $(DEPS_45) paks\ejs.version\Version.es
 !IF "$(ME_COM_EJSCRIPT)" == "1"
-DEPS_44 = $(DEPS_44) build\$(CONFIG)\bin\ejs.mod
+DEPS_45 = $(DEPS_45) build\$(CONFIG)\bin\ejs.mod
 !ENDIF
 
-build\$(CONFIG)\bin\pak.mod: $(DEPS_44)
+build\$(CONFIG)\bin\pak.mod: $(DEPS_45)
 	"./$(BUILD)/bin/pak-ejsc" --debug --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
-
-#
-#   pak.obj
-#
-DEPS_45 = $(DEPS_45) build\$(CONFIG)\inc\ejs.h
-
-build\$(CONFIG)\obj\pak.obj: \
-    src\pak.c $(DEPS_45)
-	@echo .. [Compile] build\$(CONFIG)\obj\pak.obj
-	"$(CC)" -c -Fo$(BUILD)\obj\pak.obj -Fd$(BUILD)\obj\pak.pdb $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src\pak.c $(LOG)
 
 #
 #   pak
@@ -953,4 +953,83 @@ LIBS_46 = $(LIBS_46) libhttp.lib
 build\$(CONFIG)\bin\pak.exe: $(DEPS_46)
 	@echo ..... [Link] build\$(CONFIG)\bin\pak.exe
 	"$(LD)" -nologo -out:$(BUILD)\bin\pak.exe -entry:mainCRTStartup -subsystem:console $(LDFLAGS) $(LIBPATHS) "$(BUILD)\obj\pak.obj" $(LIBPATHS_46) $(LIBS_46) $(LIBS_46) $(LIBS)  $(LOG)
+
+#
+#   installPrep
+#
+
+installPrep: $(DEPS_47)
+	if [ "`id -u`" != 0 ]
+	then echo "Must run as root. Rerun with sudo."
+	exit 255
+	fi
+
+#
+#   stop
+#
+
+stop: $(DEPS_48)
+#  Omit build script stop
+
+#
+#   installBinary
+#
+
+installBinary: $(DEPS_49)
+	if not exist "$(ME_VAPP_PREFIX)\man\man1" md "$(ME_VAPP_PREFIX)\man\man1"
+	if not exist "$(ME_VAPP_PREFIX)\bin" md "$(ME_VAPP_PREFIX)\bin"
+	copy /Y /B build\$(CONFIG)\bin\pak.exe+modified "$(ME_VAPP_PREFIX)\bin\pak.exe" $(LOG)
+	if not exist "$(ME_VAPP_PREFIX)\bin" md "$(ME_VAPP_PREFIX)\bin"
+	copy /Y /B build\$(CONFIG)\bin\roots.crt+modified "$(ME_VAPP_PREFIX)\bin\roots.crt" $(LOG)
+	copy /Y /B build\$(CONFIG)\bin\ejs.mod+modified "$(ME_VAPP_PREFIX)\bin\ejs.mod" $(LOG)
+	copy /Y /B build\$(CONFIG)\bin\pak.mod+modified "$(ME_VAPP_PREFIX)\bin\pak.mod" $(LOG)
+	if not exist "$(ME_VAPP_PREFIX)\bin" md "$(ME_VAPP_PREFIX)\bin"
+	copy /Y /B build\$(CONFIG)\bin\libejs.dll+modified "$(ME_VAPP_PREFIX)\bin\libejs.dll" $(LOG)
+	copy /Y /B build\$(CONFIG)\bin\libhttp.dll+modified "$(ME_VAPP_PREFIX)\bin\libhttp.dll" $(LOG)
+	copy /Y /B build\$(CONFIG)\bin\libmpr.dll+modified "$(ME_VAPP_PREFIX)\bin\libmpr.dll" $(LOG)
+	copy /Y /B build\$(CONFIG)\bin\libpcre.dll+modified "$(ME_VAPP_PREFIX)\bin\libpcre.dll" $(LOG)
+	copy /Y /B build\$(CONFIG)\bin\libzlib.dll+modified "$(ME_VAPP_PREFIX)\bin\libzlib.dll" $(LOG)
+
+#
+#   start
+#
+
+start: $(DEPS_50)
+#  Omit build script start
+
+#
+#   install
+#
+DEPS_51 = $(DEPS_51) installPrep
+DEPS_51 = $(DEPS_51) stop
+DEPS_51 = $(DEPS_51) installBinary
+DEPS_51 = $(DEPS_51) start
+
+install: $(DEPS_51)
+#  Omit build script install
+
+#
+#   uninstall
+#
+DEPS_52 = $(DEPS_52) stop
+
+uninstall: $(DEPS_52)
+#  Omit build script uninstall
+
+#
+#   uninstallBinary
+#
+
+uninstallBinary: $(DEPS_53)
+	if exist "$(ME_VAPP_PREFIX)" rd /Q /S "$(ME_VAPP_PREFIX)"
+	if exist "$(ME_VAPP_PREFIX)\bin" rd /Q "$(ME_VAPP_PREFIX)\bin"
+	if exist "$(ME_VAPP_PREFIX)\man" rd /Q "$(ME_VAPP_PREFIX)\man"
+	if exist "$(ME_VAPP_PREFIX)" rd /Q "$(ME_VAPP_PREFIX)"
+
+#
+#   version
+#
+
+version: $(DEPS_54)
+	echo $(VERSION)
 
