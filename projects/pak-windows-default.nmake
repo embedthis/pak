@@ -3,7 +3,7 @@
 #
 
 NAME                  = pak
-VERSION               = 0.12.3
+VERSION               = 0.12.4
 
 OS                    = windows
 PA                    = $(PROCESSOR_ARCHITECTURE)
@@ -892,15 +892,15 @@ build\$(CONFIG)\.install-certs-modified: $(DEPS_44)
 #
 #   pak.mod
 #
+DEPS_45 = $(DEPS_45) paks\ejs.version\Version.es
 DEPS_45 = $(DEPS_45) src\Package.es
 DEPS_45 = $(DEPS_45) src\pak.es
-DEPS_45 = $(DEPS_45) paks\ejs.version\Version.es
 !IF "$(ME_COM_EJSCRIPT)" == "1"
 DEPS_45 = $(DEPS_45) build\$(CONFIG)\bin\ejs.mod
 !ENDIF
 
 build\$(CONFIG)\bin\pak.mod: $(DEPS_45)
-	"./$(BUILD)/bin/pak-ejsc" --debug --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
+	"./$(BUILD)/bin/pak-ejsc" --debug --out "./$(BUILD)/bin/pak.mod" --optimize 9 paks/ejs.version/Version.es src/Package.es src/pak.es
 
 #
 #   pak

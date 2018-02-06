@@ -3,7 +3,7 @@
 #
 
 NAME                  := pak
-VERSION               := 0.12.3
+VERSION               := 0.12.4
 PROFILE               ?= default
 ARCH                  ?= $(shell uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/')
 CC_ARCH               ?= $(shell echo $(ARCH) | sed 's/x86/i686/;s/x64/x86_64/')
@@ -818,15 +818,15 @@ $(BUILD)/.install-certs-modified: $(DEPS_44)
 #
 #   pak.mod
 #
+DEPS_45 += paks/ejs.version/Version.es
 DEPS_45 += src/Package.es
 DEPS_45 += src/pak.es
-DEPS_45 += paks/ejs.version/Version.es
 ifeq ($(ME_COM_EJSCRIPT),1)
     DEPS_45 += $(BUILD)/bin/ejs.mod
 endif
 
 $(BUILD)/bin/pak.mod: $(DEPS_45)
-	"./$(BUILD)/bin/pak-ejsc" --debug --out "./$(BUILD)/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
+	"./$(BUILD)/bin/pak-ejsc" --debug --out "./$(BUILD)/bin/pak.mod" --optimize 9 paks/ejs.version/Version.es src/Package.es src/pak.es
 
 #
 #   pak

@@ -100,7 +100,7 @@
 
       <CustomBuildStep>
         <Command>cd ..\..
-"./build/windows-x86-default/bin/pak-ejsc" --debug --out "./build/windows-x86-default/bin/pak.mod" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
+"./build/windows-x86-default/bin/pak-ejsc" --debug --out "./build/windows-x86-default/bin/pak.mod" --optimize 9 paks/ejs.version/Version.es src/Package.es src/pak.es
 cd projects\pak-windows-default</Command>
         <Outputs>$(BinDir)\pak.mod</Outputs>
       </CustomBuildStep>

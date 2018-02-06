@@ -1126,9 +1126,9 @@ cd ..
     			files = (
     			);
     			inputPaths = (
-    ../src/Package.es,
-../src/pak.es,
-../paks/ejs.version/Version.es
+    ../paks/ejs.version/Version.es,
+../src/Package.es,
+../src/pak.es
     			);
     			outputPaths = (
     ../build/macosx-x64-default/bin/pak.mod
@@ -1137,7 +1137,7 @@ cd ..
     			shellPath = /bin/bash;
     			shellScript = "PATH=$PATH:/usr/local/bin
 cd ..
-	\"./build/macosx-x64-default/bin/pak-ejsc\" --debug --out \"./build/macosx-x64-default/bin/pak.mod\" --optimize 9 src/Package.es src/pak.es paks/ejs.version/Version.es
+	\"./build/macosx-x64-default/bin/pak-ejsc\" --debug --out \"./build/macosx-x64-default/bin/pak.mod\" --optimize 9 paks/ejs.version/Version.es src/Package.es src/pak.es
 ";
     		};
 		F8262D1CF8264B4C00000025 /* ShellScript for Prep */ = {
