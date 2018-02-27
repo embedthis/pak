@@ -315,8 +315,6 @@ class Pak
                 //  Try to determine if this is a legacy package.json
                 if (package.pak || package.export || package.origin) {
                     spec = package
-                } else {
-                    throw 'Missing pak.json or legacy package.json with pak properties'
                 }
             } else if (package.version && spec.version) {
                 qtrace('Warn', 'Version property exists in package.json and pak.json')
