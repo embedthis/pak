@@ -1,8 +1,6 @@
 #!/usr/bin/env ejs
 
 /*
-    pak.es -- Embedthis Pak Manager
-
     Copyright (c) All Rights Reserved. See details at the end of the file.
  */
 
@@ -16,10 +14,10 @@ require ejs.version
 const MAX_VER: Number = 1000000000
 const VER_FACTOR: Number = 1000
 const HOME = App.home
+const PAK: Path = Path('pak.json')
 const PACKAGE: Path = Path('package.json')
-const BOWER: Path = Path('bower.json')
 
-var PakFiles = [ PACKAGE, BOWER ]
+var PakFiles = [ PAK, PACKAGE ]
 
 //  TODO - convert to public members of Pak
 var catalogs: Object?
@@ -91,7 +89,7 @@ class Pak
         requirePrimaryCatalog: true,
     }
 
-    private var requiredKeywords = [ 'description', 'license', 'name', 'repository', 'version' ]
+    private var requiredKeywords = [ 'description', 'name', 'version' ]
 
     private var sysdirs = {
         '',
@@ -140,30 +138,8 @@ class Pak
 
     private var PakTemplate = {
         name: aname.toLowerCase()
-        title: aname.toPascal() + ' Application',
-        description: aname.toPascal() + ' Application',
         version: '1.0.0',
-        keywords: [
-            'Put search keywords here',
-        ],
-        author: {
-            name: 'Your name',
-            email: 'Your email',
-            url: 'Your web site',
-        },
-        bugs: {
-            email: 'name@example.com',
-            url: 'http://example.com/bugs',
-        },
-        repository: {
-            type: 'git',
-            url: 'git://github.com/user/repo.git',
-        },
-        license: 'GPL',
         dependencies: {},
-        optionalDependencies: {},
-        files: [ 'dist/**' ],
-        ignore: [ '*.tmp' ],
         pak: {
             import: true,
             mode: 'debug',
@@ -212,9 +188,6 @@ class Pak
     function usage(): Void {
         print('\nUsage: pak ' + ' [options] [commands] ...\n\n' +
             '  Commands:\n' +
-/* UNDOCUMENTED
-            '    build [paks...]             # Build cached paks\n' +
- */
             '    cache [paks...]             # Populate the cache with paks\n' +
             '    cached [paks...]            # List paks in the cache\n' +
             '    config                      # Show the Pak configuration\n' +
@@ -222,7 +195,7 @@ class Pak
             '    edit key[=value]...         # Edit a pak description file \n' +
             '    help                        # Display this usage help\n' +
             '    info paks...                # Display README for cached paks\n' +
-            '    init [name [version]]       # Create a new package.json\n' +
+            '    init [name [version]]       # Initialize directory for pak\n' +
             '    install paks...             # Install a pak on the local system\n' +
             '    license paks...             # Display LICENSE for paks\n' +
             '    list [paks...]              # List installed paks\n' +
@@ -250,7 +223,7 @@ class Pak
             '    --quiet, -q                 # Run in quiet mode\n' +
             '    --silent                    # Run in totally silent mode\n' +
             '    --verbose, -v               # Run in verbose mode\n' +
-            '    --write, -w                 # Write installed package to package.json dependencies\n\n' +
+            '    --write, -w                 # Write installed package to dependencies\n\n' +
             '  List options:\n' +
             '    -a, --all                   # Show all versions for a pak\n' +
             '    --details                   # Show pak details\n' +
@@ -315,8 +288,6 @@ class Pak
         if (options.name) {
             aname = options.name
             PakTemplate.name = aname
-            PakTemplate.title = aname.toPascal()
-            PakTemplate.description = aname.toPascal() + ' Application'
         }
     }
 
@@ -335,48 +306,54 @@ class Pak
         if (!git) {
             throw 'Cannot find "git" utility. Please install git first.'
         }
-        let path = Package.getSpecFile('.') || Path(PACKAGE)
-        spec = path.exists ? path.readJSON() : PakTemplate.clone()
-        spec.pak ||= {}
+        if (PAK.exists) {
+            spec = PAK.readJSON()
+        }
+        if (PACKAGE.exists) {
+            let package = PACKAGE.readJSON()
+            if (!spec) {
+                //  Try to determine if this is a legacy package.json
+                if (package.pak || package.export || package.origin) {
+                    spec = package
+                } else {
+                    throw 'Missing pak.json or legacy package.json with pak properties'
+                }
+            } else if (package.version && spec.version) {
+                qtrace('Warn', 'Version property exists in package.json and pak.json')
+            }
+            spec.name ||= package.name
+            spec.version ||= package.version
+            spec.repository ||= package.repository
+        } else if (!spec) {
+            spec = PakTemplate.clone()
+        }
         spec.dependencies ||= {}
         spec.optionalDependencies ||= {}
         spec.devDependencies ||= {}
 
-        let pver = spec.pak.pak || spec.pak.version || spec.devDependencies.pak
+        //  DEPRECATE
+        if (spec.pak) {
+            if (spec.pak.version) {
+                delete spec.pak.version
+            }
+            blend(spec, spec.pak)
+            delete spec.pak
+        }
+        let pver = spec.pak || spec.devDependencies.pak
         if (pver && !Version(Config.Version).acceptable(pver)) {
             throw '' + spec.name + ' requires Pak ' + pver + '. Pak version ' + Config.Version +
                             ' is not compatible with this requirement.' + '\n'
         }
-        if (spec.pak.mode && spec.pak.modes && spec.pak.modes[spec.pak.mode]) {
-            blend(spec, spec.pak.modes[spec.pak.mode], {combine: true})
-        }
-        if (spec.pak is String) {
-            trace('Warn', 'Using deprecated "pak" property as a version string. Use "pak.version" instead.')
-            let version = spec.pak
-            spec.pak = { version: version }
-        }
-        //  DEPRECATE
-        for each (name in ['app', 'blend', 'combine', 'export', 'frozen', 'import', 'install', 'mode', 'modes',
-                'origin', 'paks', 'precious', 'render']) {
-            if (spec[name] != null) {
-                if (name == 'blend') {
-                    trace('Warn', 'Using deprecated "blend" property. Use "pak.manage" instead.')
-                    spec.pak.manage = spec.blend
-                } else {
-                    trace('Warn', 'Using deprecated "' + name + '" property. Use "pak.' + name + '" instead.')
-                    spec.pak[name] = spec[name]
-                    spec.copied ||= {}
-                    spec.copied[name] = true
-                }
-            }
+        if (spec.mode && spec.modes && spec.modes[spec.mode]) {
+            blend(spec, spec.modes[spec.mode], {combine: true})
         }
         state.force = options.force
     }
 
     function checkDir() {
-        let path = Package.getSpecFile('.') || Path(PACKAGE)
-        if (!path.exists) {
-            throw 'Missing package.json. Check you are in the right directory or do "pak init" first.'
+        let path = Package.getSpecFile('.')
+        if (!path || !path.exists) {
+            throw 'Missing pak json. Check you are in the right directory or do "pak init" first.'
         }
     }
 
@@ -539,7 +516,7 @@ class Pak
 
     function cache(names: Array): Void {
         if (names.length == 0) {
-            if (!PACKAGE.exists) {
+            if (!PAK.exists && !PACKAGE.exists) {
                 error('Nothing to install')
             } else {
                 let pak = Package(spec.name)
@@ -574,7 +551,7 @@ class Pak
             if (criteria == 'match') {
                 criteria = '~' + Version(pak.cache.version).compatible
                 pak.cache.dependencies[other] = criteria
-                saveSpec(pak.cachePath.join(PACKAGE), pak.cache)
+                saveSpec(pak.cachePath.join(PAK), pak.cache)
             }
             if (pak.catalog) {
                 other = pak.catalog + ':' + other
@@ -642,16 +619,16 @@ class Pak
                 vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' +
                     pak.cachePath + '"')
                 if (pak.source.files) {
-                    pak.source.files = (pak.source.files + ['package.json', 'README.md', 'LICENSE.md']).unique()
+                    pak.source.files = (pak.source.files + ['pak.json', 'package.json', 'README.md', 'LICENSE.md']).unique()
                 }
                 copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
             } else {
                 throw 'Cannot find package ' + pak.name + ' to install'
             }
             if (!Package.getSpecFile(pak.cachePath)) {
-                trace('Create', 'package.json for', pak.name)
+                trace('Create', 'pak.json for', pak.name)
                 pak.cache = { name: pak.name, version: pak.cacheVersion.toString(), dependencies: {} }
-                saveSpec(pak.cachePath.join(PACKAGE), pak.cache)
+                saveSpec(pak.cachePath.join(PAK), pak.cache)
             }
             pak.resolve()
 
@@ -660,8 +637,8 @@ class Pak
             }
             if (pak.sourcePath) {
                 /* Update origin */
-                pak.source.pak.origin = pak.origin
-                saveSpec(pak.cachePath.join(PACKAGE), pak.source)
+                pak.source.origin = pak.origin
+                saveSpec(pak.cachePath.join(PAK), pak.source)
             } else {
                 if (pak.origin) {
                     /* Apply global override downloaded from catalog */
@@ -676,11 +653,10 @@ class Pak
                             }
                         }
                     }
-                    pak.cache.pak ||= {}
-                    pak.cache.pak.origin = pak.origin
-                    saveSpec(pak.cachePath.join(PACKAGE), pak.cache)
+                    pak.cache.origin = pak.origin
+                    saveSpec(pak.cachePath.join(PAK), pak.cache)
                     /*
-                        Resolve after updating the package.json as it will be re-read
+                        Resolve after updating the json file as it will be re-read
                      */
                     pak.resolve()
                 }
@@ -785,21 +761,19 @@ class Pak
         Generates package.json template
      */
     function init(args = null) {
-        if (PACKAGE.exists) {
-            throw 'Package description "' + PACKAGE + '" .already exists in this directory'
+        if (PAK.exists) {
+            throw 'Package description "' + PAK + '" .already exists in this directory'
         }
-        qtrace('Create', PACKAGE)
+        qtrace('Create', PAK)
         let pspec = PakTemplate.clone()
         if (args && args.length > 0) {
             let [name, version] = args
             pspec.name = name
-            pspec.title = name.toPascal()
-            pspec.description = pspec.title + ' Application'
             pspec.version = version
         } else {
             pspec.name = options.name || App.dir.basename.toLowerCase()
         }
-        saveSpec(PACKAGE, pspec)
+        saveSpec(PAK, pspec)
     }
 
     private var blending = {}
@@ -809,7 +783,7 @@ class Pak
      */
     private function blendPak(pak: Package) {
         if (!pak.cache) {
-            throw new Error('Pak ' + pak + ' at ' + pak.cachePath + ' is missing a package.json')
+            throw new Error('Pak ' + pak + ' at ' + pak.cachePath + ' is incomplete')
         }
         if (blending[pak.name]) {
             return
@@ -824,20 +798,24 @@ class Pak
     }
 
     private function blendSpec(pak: Package) {
-        if (pak.cache.pak.blend) {
-            blend(spec, pak.cache.pak.blend, {combine: true})
+        if (pak.cache.blend) {
+            blend(spec, pak.cache.blend, {combine: true})
         }
         for (let [k,v] in spec.directories) {
             spec.directories[k] = Path(v)
             directories[k] = Path(v)
         }
-        if (pak.cache.pak.mode) {
-            spec.pak.mode ||= pak.cache.pak.mode
+        if (pak.cache.pak) {
+            blend(pak.cache, pak.cache.pak)
+            delete pak.cache.pak
+        }
+        if (pak.cache.mode) {
+            spec.mode ||= pak.cache.mode
         }
         /*
             Manage external json files (esp.json, expansive.json)
          */
-        let manage = pak.cache.pak.manage
+        let manage = pak.cache.manage
         if (manage && !(manage is Array)) {
             manage = [manage]
         }
@@ -871,7 +849,7 @@ class Pak
 
     function install(names: Array) {
         if (names.length == 0) {
-            if (!PACKAGE.exists) {
+            if (!PAK.exists && !PACKAGE.exists) {
                 error('Nothing to install')
             } else {
                 if (spec) {
@@ -926,7 +904,7 @@ class Pak
             }
         }
         state.installing = true
-        if (!pak.cache || !Version(pak.cache.version).acceptable(pak.versionCriteria)) {
+        if (!pak.cache || !pak.cache.version || !Version(pak.cache.version).acceptable(pak.versionCriteria)) {
             locatePak(pak)
             let force = state.force
             state.force = false
@@ -944,8 +922,8 @@ class Pak
         runScripts(pak, 'preinstall')
         installPak(pak, true)
 
-        let path = Package.getSpecFile('.') || Path(PACKAGE)
-        if (!path.exists) {
+        let path = Package.getSpecFile('.')
+        if (!path || !path.exists) {
             vtrace('Create', path)
         } else {
             vtrace('Update', path)
@@ -966,7 +944,7 @@ class Pak
         }
         installed[pak.name] = true
         let installDeps = !options.nodeps
-        if (PACKAGE.exists) {
+        if (PAK.exists) {
             if (getPakSetting(pak, 'nodeps')) {
                 installDeps = false
             }
@@ -983,7 +961,7 @@ class Pak
         }
         if (installDeps) {
             try {
-                let dir = blend({}, pak.cache.pak.blend.directories, {combine: true})
+                let dir = blend({}, pak.cache.blend.directories, {combine: true})
                 if (dir.export) {
                     directories.export = dir.export
                 }
@@ -1004,27 +982,27 @@ class Pak
             mkdir(dest)
         }
         /*
-            Override installed pak based on local overrides from the application's package.json in 'spec'
+            Override installed pak based on local overrides from the application's json in 'spec'
          */
-        let overrides = spec.pak.overrides
-        if (spec.pak.overrides) {
-            if (spec.pak.overrides['*']) {
+        let overrides = spec.overrides
+        if (spec.overrides) {
+            if (spec.overrides['*']) {
                 vtrace('Apply', 'Local overrides for all paks')
-                blend(pak.cache, spec.pak.overrides['*'], {combine: true})
+                blend(pak.cache, spec.overrides['*'], {combine: true})
                 pak.dirty = true
             }
-            if (spec.pak.overrides[pak.name]) {
+            if (spec.overrides[pak.name]) {
                 vtrace('Apply', 'Local overrides for ' + pak.name)
-                blend(pak.cache, spec.pak.overrides[pak.name], {combine: true})
+                blend(pak.cache, spec.overrides[pak.name], {combine: true})
                 pak.dirty = true
             }
-            /* Saved below to paks/name/package.json */
+            /* Saved below to paks/name/*.json */
         }
         let ignore = pak.cache.ignore || []
         if (!(ignore is Array)) {
             ignore = [ignore]
         }
-        let export = pak.cache.pak.export || []
+        let export = pak.cache.export || []
         if (!(export is Array)) {
             export = [export]
         }
@@ -1034,11 +1012,11 @@ class Pak
         if (!(files is Array)) {
             files = [files]
         }
-        if (spec.pak.import) {
+        if (spec.import) {
             let import = getPakSetting(pak, 'import')
             if (import !== false) {
-                if (spec.pak.override && spec.pak.override[pak.name] && spec.pak.override[pak.name].export) {
-                    export = spec.pak.override[pak.name].export
+                if (spec.override && spec.override[pak.name] && spec.override[pak.name].export) {
+                    export = spec.override[pak.name].export
                 } else {
                     let needExports = (export.length == 0)
                     let needFiles = (files.length == 0)
@@ -1046,7 +1024,7 @@ class Pak
                         let path = pak.cachePath.join(dir)
                         if (path.exists) {
                             if (needFiles) {
-                                files.push('dist/**')
+                                files.push('dist/' + '**')
                             }
                             if (needExports) {
                                 export.push({ from: 'dist/', trim: 1 })
@@ -1068,17 +1046,17 @@ class Pak
         if (!files || files.length == 0) {
             files = ['**']
         } else {
-            files = (files + ['package.json']).unique()
+            files = (files + ['pak.json', 'package.json']).unique()
         }
         copyTree(pak, from, dest, ignore, files, export || [])
         vtrace('Info', pak + ' ' + pak.cacheVersion + ' successfully installed')
         vtrace('Info', 'Use "pak info ' + pak.name + '" to view the README')
 
         /*
-            Rewrite the installed pak's package.json if there are local overrides
+            Rewrite the installed pak's json if there are local overrides
          */
         if (pak.dirty && overrides && (overrides['*'] || overrides[pak.name])) {
-            let path = pak.installPath.join(PACKAGE)
+            let path = Package.getSpecFile(pak.installPath)
             saveSpec(path, pak.cache)
             vtrace('Save', path + ' with local overrides')
         }
@@ -1150,12 +1128,12 @@ class Pak
             spec.optionalDependencies ||= {}
             let installed = pak.installVersion ? ' installed' : ' uninstalled'
             let from = 'unknown-origin'
-            if (pak.install && pak.install.pak.origin) {
-                from = pak.install.pak.origin
-            } else if (pak.cache && pak.cache.pak.origin) {
-                from = pak.cache.pak.origin
+            if (pak.install && pak.install.origin) {
+                from = pak.install.origin
+            } else if (pak.cache && pak.cache.origin) {
+                from = pak.cache.origin
             }
-            let frozen = (pak.install && pak.install.pak.frozen) ? 'frozen' : pak.versionCriteria
+            let frozen = (pak.install && pak.install.frozen) ? 'frozen' : pak.versionCriteria
             let why = 'local'
             if (spec.dependencies[pak.name]) {
                 why = 'dependency'
@@ -1195,10 +1173,10 @@ class Pak
 
     function mode(newMode, meta) {
         if (newMode.length == 0) {
-            print(spec.pak.mode)
+            print(spec.mode)
         } else {
             setValue('pak.mode', newMode[0])
-            trace('Set', 'Mode to "' + spec.pak.mode + '"')
+            trace('Set', 'Mode to "' + spec.mode + '"')
         }
     }
 
@@ -1224,7 +1202,7 @@ class Pak
         if (!latest) {
             throw 'Nothing to prune for "' + pak + '"'
         }
-        if (pak.cache && pak.cache.pak.precious && !state.force) {
+        if (pak.cache && pak.cache.precious && !state.force) {
             qtrace('Warn', 'Cannot prune "' + pak + '" designated as precious. Use --force to force pruning.')
             return
         }
@@ -1286,8 +1264,8 @@ class Pak
         let passfile = options.password
         let name, endpoint, over
         if (args.length == 0) {
-            if (!PACKAGE.exists) {
-                throw 'Cannot find package.json in current directory'
+            if (!PAK.exists && !PACKAGE.exists) {
+                throw 'Cannot find pak json in current directory'
             }
             let pak = new Package(spec.name)
             if (pak.publish === false) {
@@ -1309,7 +1287,7 @@ class Pak
             throw 'Incorrect args for publish'
         }
         if (!endpoint) {
-            throw 'Missing repository property in package.json.'
+            throw 'Missing repository property in pak json.'
         }
         let password
         if (passfile) {
@@ -1331,7 +1309,7 @@ class Pak
         let http = new Http
         let data = { name: name, endpoint: endpoint, password: password, override: over }
         http.setHeader('Content-Type', 'application/json')
-        let uri = catalogs.pak.publish
+        let uri = catalogs.publish
         try {
             qtrace('Publish', name + ' at ' + uri)
             http.post(uri, serialize(data))
@@ -1456,8 +1434,8 @@ class Pak
     }
 
     function upgrade(names: Array) {
-        if (!PACKAGE.exists || !spec) {
-            error('Cannot read package.json')
+        if ((!PAK.exists && !PACKAGE.exists) || !spec) {
+            error('Cannot read pak json')
         }
         topDeps = {}
         if (names.length == 0) {
@@ -1507,7 +1485,7 @@ class Pak
         if (state.force && pak.installVersion && pak.installVersion.same(pak.cacheVersion)) {
             state.reinstall = true
         }
-        if (pak.install && pak.install.pak.frozen) {
+        if (pak.install && pak.install.frozen) {
             trace('Info', 'Installed ' + pak + ' ' + pak.installVersion + ' is frozen')
             return
         }
@@ -1550,7 +1528,7 @@ class Pak
         if (!files || files.length == 0) {
             files = ['**']
         } else {
-            files = (files + ['package.json', 'README.md', 'LICENSE.md']).unique()
+            files = (files + ['pak.json', 'package.json', 'README.md', 'LICENSE.md']).unique()
         }
         if (ignore && !(ignore is Array)) {
             ignore = [ignore]
@@ -1649,7 +1627,7 @@ class Pak
             trace('Extract', 'Extract to ' + pak.cachePath)
             Tar(temp, {uncompress: true, dest: pak.cachePath, trim: 1}).extract()
 /* FUTURE
-            Could apply ignore and files 
+            Could apply ignore and files
             let tmp = Path('').temp()
             Tar(temp, {uncompress: true, dest: tmp, trim: 1}).extract()
             copyTree(pak, tmp, pak.cachePath, pak.source.ignore, pak.source.files)
@@ -1669,7 +1647,7 @@ class Pak
     /*
         Fetch overrides for a pak and save in pak.overrides[].
         If a local ~/.pak/overrides exists, it takes precedence.
-        Otherwise, fetch overrides from the supplied 'url' or 
+        Otherwise, fetch overrides from the supplied 'url' or
         from the pak-overrides repo.
      */
     function fetchGlobalOverrides(pak, url = null) {
@@ -1764,8 +1742,8 @@ class Pak
             currentPak = pak
 
             let scripts
-            if (pak.cache && pak.cache.pak && pak.cache.pak.scripts) {
-                scripts = pak.cache.pak.scripts[event]
+            if (pak.cache && pak.cache.pak && pak.cache.scripts) {
+                scripts = pak.cache.scripts[event]
             }
             if (scripts) {
                 if (!(scripts is Array)) {
@@ -1884,7 +1862,7 @@ class Pak
         for (let [name, dep] in deps) {
             out.write(prefix)
             //  TODO - should display the version criteria
-            out.write('    ' + dep.name + ' ' + (dep.installVersion || pak.cacheVersion) + ' (' + 
+            out.write('    ' + dep.name + ' ' + (dep.installVersion || pak.cacheVersion) + ' (' +
                 dep.versionCriteria + ')\n')
         }
     }
@@ -1946,7 +1924,7 @@ class Pak
                 replace(/[ \t]+/g, ' ').
                 replace(/^.+refs\/tags\/*/mg, '').
                 split(/[\r\n]+/).
-                filter(function(e) !e.match(/\{/))      
+                filter(function(e) !e.match(/\{/))
             if (pak.versionFormat) {
                 let re = RegExp(pak.versionFormat)
                 let matching = []
@@ -2012,7 +1990,7 @@ class Pak
                     // http.verify = false
                     http.get(cmd)
                     if (http.status != 200) {
-                        vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname + 
+                        vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname +
                                '" catalog. Status ' + http.status)
                         continue
                     }
@@ -2063,7 +2041,7 @@ class Pak
                     } else if (cname == 'npm') {
                         for (let [key,value] in response.versions) {
                             if (value.deprecated) {
-                                delete response.versions[key] 
+                                delete response.versions[key]
                             }
                         }
                         pak.versions = Object.getOwnPropertyNames(response.versions).map(function(e) e.trimStart('v'))
@@ -2192,16 +2170,12 @@ class Pak
             deps.append(dep)
         }
         spec.dependencies = deps
-        saveSpec(PACKAGE, spec)
+        saveSpec(PAK, spec)
     }
 
     function validatePak(pak: Package): Boolean {
-        let requiredFiles = [ PACKAGE ]
-        for each (file in requiredFiles) {
-            let path = pak.sourcePath.join(file)
-            if (!exists(path) && !path.isDir) {
-                throw 'Pak is missing required file "' + file + '"'
-            }
+        if (!pak.sourcePath.join(PAK).exists && !pak.sourcePath.join(PACKAGE)) {
+            throw 'Pak is missing required pak json file '
         }
         let pspec = pak.source
         let name = pspec.name
@@ -2224,7 +2198,7 @@ class Pak
     }
 
     /*
-        Validate a package.json object
+        Validate a pak json object
      */
     function validateJson(pak: Object): Boolean {
         if (!pak) {
@@ -2271,7 +2245,7 @@ class Pak
                     count = 0
                     for (item in value) {
                         count++
-                    } 
+                    }
                     if (count == 0) {
                         empty.push(key)
                     }
@@ -2348,7 +2322,7 @@ class Pak
     }
 
     /*
-        Search order: pakrc : .pakrc : ../.../[pakrc|.pakrc] : package.json (for directories only)
+        Search order: pakrc : .pakrc : ../.../[pakrc|.pakrc] : json (for directories only)
      */
     function setDefaults() {
         if (RC.exists) {
@@ -2430,8 +2404,14 @@ class Pak
             obj = obj[thisKey]
         }
         obj[key] = value
-        path = Package.getSpecFile('.')
-        saveSpec(path, spec)
+        if (key == 'version' && PACKAGE.exists) {
+            let data = PACKAGE.readJSON()
+            data.version = value
+            PACKAGE.write(serialize(cleanSpec(data), {pretty: true, indent: 4}) + '\n')
+        } else {
+            path = Package.getSpecFile('.')
+            saveSpec(path, spec)
+        }
     }
 
     public function makeDir(path: String): Void
@@ -2451,10 +2431,10 @@ class Pak
     function error(msg) App.log.error(msg)
 
     /*
-        Get an override property from the application's package.json:pak.override[name]
+        Get an override property from the application's json:pak.override[name]
      */
     private function getPakSetting(pak, property) {
-        let override = spec.pak.override
+        let override = spec.override
         return ((override && override[pak.name] && override[pak.name][property] === true) ||
                       (override && override['*'] && override['*'][property] === true))
     }
@@ -2464,13 +2444,13 @@ class Pak
 
     private function saveSpec(path: Path, spec) {
         spec = spec.clone(true)
-        if (spec.pak) {
-            for (key in spec.copied) {
-                delete spec.pak[key]
+        path.dirname.makeDir()
+        if (PACKAGE.exists) {
+            let data = PACKAGE.readJSON()
+            if (data.version) {
+                delete spec.version
             }
         }
-        delete spec.copied
-        path.dirname.makeDir()
         path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
     }
 }

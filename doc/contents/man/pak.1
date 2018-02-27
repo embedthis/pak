@@ -58,25 +58,19 @@ Pak has the following major features:
 
     . Install, list and uninstall packages into a local application
     . Manages a local cache of retrieved packages
-    . Provides a global catalog to search for public packages
     . Easy upgrading packages when new versions become available
-    . Automatically retrieves and installs dependant packages
+    . Automatically retrieves and installs dependent packages
     . Supports the CommonJS package standard
     . Supports the SemVer package versioning standard
     . Supports using GitHub and NPM as the primary package repository
-    . Retrieves packages using the Pak, NPM and Bower catalogs
 
 .SH NICE PARTS
 While Pak has a strong feature set, there are some characteristics that make Pak particularly sweet.
 
     . Fast, fast, fast.
     . Local cache of packages supports fast offline use.
-    . Share packages by publishing to a common public catalog.
     . Catalog web portal to search published packages.
-    . Pak integrates with the Bower repository to seamlessly download Bower components.
     . Package.json is compatible with nodejs.
-    . Retrieve packs from NPM and bower.
-    . Easy overriding to tailor packages from NPM and bower.
 
 .PP
 .SH BASIC USAGE
@@ -84,12 +78,9 @@ While Pak has a strong feature set, there are some characteristics that make Pak
 To install packages:
     pak install Endpoints...
 
-Where an ENDPOINT can be the name of a package published in the Pak catalog, NPM or bower catalog, a GitHub repository endpoint, a GitHub account/repository or a path to a local package directory. For example:
+Where an ENDPOINT can be the name of a package published in a GitHub account/repository or a path to a local package directory. For example:
 
     pak install jquery
-    pak install pak:jquery
-    pak install npm:jquery
-    pak install bower:jquery
     pak install embedthis/exp-js
     pak install https://github.com/embedthis/exp-js.git
     pak install git@github.com:embedthis/jquery
@@ -115,7 +106,7 @@ To prune old versions from the cache
 
 .PP
 .SH OVERVIEW
-A package is described by a CommonJS package.json file. This provides at a minimum the following properties.
+A package is described by a pak.json file (similar to the NPM package.json file). This provides at a minimum the following properties.
 .PP
 .RS 5
 {
@@ -152,7 +143,7 @@ To run Pak with more verbose trace output, use the [-v] --verbose switch. To run
 [-q] --quiet switch.  To run completely silently except for hard-errors, use --silent.
 
 .SH PUBLISHING
-To publish a new package, create a package.json and then run pak inside the directory of the package to be published:
+To publish a new package, create a pak.json and then run pak inside the directory of the package to be published:
 
     pak publish
 
@@ -161,36 +152,14 @@ password to manage the package. You will need this password to modify or retract
 Safeguard it well.
 
 .SH CONFIGURATION
-On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak. For example:
- {
-    catalogs: {
-        pak: {
-            list: 'http://embedthis.com/catalog/do/pak/search',
-            query: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
-            download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
-        },
-        bower: {
-            list: 'http://bower.herokuapp.com/packages',
-            query: 'http://bower.herokuapp.com/packages/${NAME}',
-            download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
-        },
-        npm: {
-            query: 'http://registry.npmjs.org/${NAME}',
-            download: 'http://registry.npmjs.org/${NAME}/-/${NAME}-${TAG}.tgz',
-        }
-    },
-    "directories": {
-        "paks": "paks",
-        "pakcache": "~/.paks",
-    },
- }
+On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak.
 
 The "catalogs" property defines sites that index and catalog packs. The "paks" directory is the name of the local
 directory in which to store packages. The "pakcache" directory defines where to cache packages on the local system.
 .PP
 Pak locates a valid pakrc file by searching in order:
 
-    pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, package.json
+    pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, pak.json
 
 .SH COMMANDS
 
@@ -217,24 +186,21 @@ info packages...
 Display the README for a cached package.
 .TP
 init [name [version]]
-Create a new package.json.
+Create a new pak.json.
 .TP
 install packages...
 Install a package on the local system. The package name can be a name in an online catalog or it can be a GitHub endpoint
-URL or of the form 'account/repositiory'. The package name may have a catalog prefix "pak", "npm" or "bower" to select
-a specific catalog to use when locating the package repository endpoint. Use the --write option to update the package.json
+URL or of the form 'account/repositiory'. Use the --write option to update the pak.json
 dependencies with the install package. Use with the --optional switch to update the optionalDependencies.
 .TP
 list [packages...]
 List the installed packages.
 .TP
 lockdown
-Lockdown the version criteria for all dependencies. This rewrites the
-package.json to define a compatible version expression for all installed
-dependencies.
+Lockdown the version criteria for all dependencies. This rewrites the pak.json to define a compatible version expression for all installed dependencies.
 .TP
-mode
-Index in the modes property. The selected property collection is copied up to the top level. This may be used to select
+profile
+Index in the profiles property. The selected property collection is copied up to the top level. This may be used to select
 a "debug" or "release" configuration.
 .TP
 prune [packages...]
@@ -273,7 +239,7 @@ Show all versions of a package.
 .TP
 \fB\--cache directory\fR
 Specify the directory to use for the paks cache. This overrides the values specified in the various pakrc
-or package.json files.
+or pak.json files.
 
 .TP
 \fB\--details URI\fR
@@ -290,7 +256,7 @@ It is also useful to cache or install an already cached/installed pack. Aliased 
 
 .TOP
 \fB\--init\fR
-Initialize the directory by creating a package.json file if one does not already exist. The name of the application is
+Initialize the directory by creating a pak.json file if one does not already exist. The name of the application is
 set to the basename of the directory.
 
 .TP
@@ -310,7 +276,7 @@ Used when installing packages to add them to the 'optionalDependencies' list ins
 .TP
 \fB\--paks directory\fR
 Specify the local "paks" directory in which to install packages. This overrides the values specified in the various pakrc
-or package.json files.
+or pak.json files.
 
 .TP
 \fB\--password file\fR
@@ -330,8 +296,8 @@ Show package version information.
 
 .TP
 \fB\--write URI\fR
-Write installed packages to package.json dependencies. Use --optional to update optionalDependencies.
-When uninstalling, --write will remove the package from the dependencies and update the package.json.
+Write installed packages to pak.json dependencies. Use --optional to update optionalDependencies.
+When uninstalling, --write will remove the package from the dependencies and update the pak.json.
 
 .PP
 .SH "REPORTING BUGS"

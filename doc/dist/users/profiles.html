@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Pak Modes</title>
+    <title>Pak Profiles</title>
     <!-- Copyright Embedthis Software. All Rights Reserved. -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8" />
@@ -13,9 +13,9 @@
     <link href='https://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
     
     <link href="../images/favicon.ico" rel="shortcut icon" />
-    <link href="../lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/api.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="../lib/semantic-ui/semantic.css" rel="stylesheet" type="text/css" />
+    <link href="../css/all.css" rel="stylesheet" type="text/css" />
+    <link href="../css/api.css" rel="stylesheet" type="text/css" />
     
 
 </head>
@@ -51,11 +51,13 @@
                 <a href="../users/index.html"><b>User's Guide</b></a>
                 <div class="menu">
                     <a class="item" href="../users/tour.html">Quick Tour</a>
+                    <!--
                     <a class="item" href="../users/searching.html">Searching for Packages</a>
+                    -->
                     <a class="item" href="../users/installing.html">Installing Packages</a>
                     <a class="item" href="../users/customizing.html">Customizing Packages</a>
                     <a class="item" href="../users/versions.html">Package Versions</a>
-                    <a class="item" href="../users/modes.html">Pak Modes</a>
+                    <a class="item" href="../users/profiles.html">Pak Profiles</a>
                 </div>
             </div>
 
@@ -63,7 +65,9 @@
                 <a href="../developers/index.html"><b>Developer's Guide</b></a>
                 <div class="menu">
                     <a class="item" href="../developers/creating.html">Creating Packages</a>
+                    <!--
                     <a class="item" href="../developers/publishing.html">Publishing Packages</a>
+                    -->
                     <a class="item" href="../developers/events.html">Package Events</a>
                     <a class="item" href="../developers/configuration.html">Pak Configuration</a>
                 </div>
@@ -73,7 +77,9 @@
                 <div class="menu">
                     <a class="item" href="https://embedthis.com/blog/categories/Pak/">Official Pak News</a>
                     <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
+                    <!--
                     <a class="item" href="https://embedthis.com/catalog/#/">Pak Catalog</a>
+                    -->
                     <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
                     <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
                     <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
@@ -123,7 +129,7 @@
             
             
             <div class="divider">/</div>
-            <a class="active section" href="modes.html">Pak Modes</a>
+            <a class="active section" href="profiles.html">Pak Profiles</a>
             
         </div>
         
@@ -133,50 +139,46 @@
     <div class="content">
 
 
-            <h1>Pak Modes</h1>
-            <p>Pak supports the definition of execution modes / profiles. For example: <em>debug</em>, <em>test</em>
-                or <em>release</em> mode. By defining an execution mode, a specific Pak configuration may be easily
+            <h1>Pak Profiles</h1>
+            <p>Pak supports the definition of execution profiles. For example: <em>debug</em>, <em>test</em>
+                or <em>release</em> profile. By defining an execution profile, a specific Pak configuration may be easily
                 defined and enabled.</p>
 
-            <p>The Pak mode is defined via the <em>pak.mode</em> property. This then selects collections of properties
-            under the <em>pak.modes</em> property. For example:
+            <p>The Pak profile is defined via the <em>profile</em> property. This then selects collections of properties
+            under the <em>profiles</em> property. For example:
             <code>{
-    "pak": {
-        <b>"mode": "debug"</b>,
-        "modes": {
-            "debug": {
-                "import": true,
-            },
-            "release": {
-                "pak": {
-                    "import": false,
-                }
-            }
+    <b>"profile": "debug"</b>,
+    "profiles": {
+        "debug": {
+            "import": true,
+        },
+        "release": {
+            "import": false,
         }
     }
 }
 </code>
-            <p>When the mode is set to <em>debug</em>, the properties under <em>pak.modes.debug</em> are 
-            logically copied to the top level of the package.json properties. i.e. <em>pak.import</em> is set to true.
+            <p>When the profile is set to <em>debug</em>, the properties under <em>profiles.debug</em> are
+            logically copied to the top level of the pak.json properties. i.e. <em>import</em> is set to true.
 
-            <h2>Changing Mode</h2>
-            <p>Use the <em>pak mode MODE</em> command to change the execution mode. For example:</p>
-            <code>pak mode debug</code>
-            <p>To display the current mode, run: <code>pak mode</code></p>
+            <h2>Changing Profile</h2>
+            <p>Use the <em>pak profile MODE</em> command to change the execution profile. For example:</p>
+            <code>pak profile debug</code>
+            <p>To display the current profile, run: <code>pak profile</code></p>
 
             <h2>Other Applications</h2>
-            <p>Other applications such as <a href="http://embedthis.com/expansive/">Expansive</a> utilize the 
-            package.json <em>pak.mode</em> setting and modify their execution mode similarly. The 
-            <a href="http://embedthis.com/esp/">ESP Web Framework</a> also uses the <em>pak.mode</em> setting.</p>
-                
+            <p>Other applications such as <a href="http://embedthis.com/expansive/">Expansive</a> utilize the
+            pak.json <em>profile</em> setting and modify their execution profile similarly. The
+            <a href="http://embedthis.com/esp/">ESP Web Framework</a> also uses the <em>profile</em> setting.</p>
+
     </div>
     <div class="terms ui basic center aligned segment">
-        <p>&copy; Embedthis Software, 2003-2015. All rights reserved.</p>
+        <p>&copy; Embedthis Software. All rights reserved.</p>
     </div>
 
     <script src="../lib/jquery/jquery.min.js"></script>
-    <script src="../lib/semantic-ui/semantic.min.js"></script>
-    <script src="../scripts/sidebar.min.js"></script>
+    <script src="../lib/semantic-ui/semantic.js"></script>
+    <script src="../scripts/sidebar.js"></script>
      
 
     

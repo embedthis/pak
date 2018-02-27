@@ -9,13 +9,16 @@
             <h2>Installing Paks</h2>
             <p>To install named packages:</p>
             <code>pak install NAME...</code>
-            <p>Where NAME can be the name of a package published in the Pak catalog, NPM or bower catalog, 
-            a GitHub repository endpoint, a GitHub account/repository or a path to a local 
+            <p>Where NAME can be the name of a package published in the Pak catalog, NPM or bower catalog,
+            a GitHub repository endpoint, a GitHub account/repository or a path to a local
             package directory. Here are some of the forms you can use to install packages.</p>
-<code>pak install jquery
-pak install jquery
+            <!--
 pak install npm:jquery
 pak install bower:jquery
+-->
+
+<code>pak install jquery
+pak install jquery
 pak install https://github.com/embedthis/jquery.git
 pak install git@github.com:embedthis/jquery
 pak install embedthis/jquery</code>
@@ -23,10 +26,10 @@ pak install embedthis/jquery</code>
             <p>When a package is installed, all required dependent packages will be automatically installed.</p>
 
             <h3>Installing Specific Versions</h3>
-            <p>A PAK name may have a <em>#version</em> suffix that nominates a specific version to install. 
+            <p>A PAK name may have a <em>#version</em> suffix that nominates a specific version to install.
             <code>pak install 'jquery#2.1.3'</code>
 
-            <p>To install all the packages required by an application as specified in its package.json:</p>
+            <p>To install all the packages required by an application as specified in its pak.json:</p>
             <code>pak install</code>
 
             <h2>Removing Paks</h2>
@@ -37,16 +40,16 @@ pak install embedthis/jquery</code>
             <h2>List Paks</h2>
             <p>To list installed packages in your local directory:</p>
             <code>pak list</code>
-            <p>The list will display the package name, installed version and from where the package was downloaded. 
-            Paks may designated as optional if the package.json describes them in the 'optionalDependencies' list. </p>
+            <p>The list will display the package name, installed version and from where the package was downloaded.
+            Paks may designated as optional if the pak.json describes them in the 'optionalDependencies' list. </p>
 
             <h2>Pak Dependencies</h2>
             <p>To display dependencies for installed packages in your local directory</p>
             <code>pak depend</code>
             <p>This will display the installed packages and their dependencies with versions.</p>
-    
+
             <h2>Cached Paks</h2>
-            <p>When Pak installs a package, it keeps a copy of the package in the Pak cache which is typically at 
+            <p>When Pak installs a package, it keeps a copy of the package in the Pak cache which is typically at
                 <em>~/.paks</em>.
             The cache stores all versions downloaded of a Pak.</p>
             <code>pak cached</code>

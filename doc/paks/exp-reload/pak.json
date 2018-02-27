@@ -1,0 +1,35 @@
+{
+    "name": "exp-reload",
+    "description": "Live browser reload plugin for Expansive",
+    "keywords": [
+        "expansive-plugin",
+        "reload"
+    ],
+    "licenses": "GPL",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/embedthis/exp-reload.git"
+    },
+    "dependencies": {
+        "jquery": "~2"
+    },
+    "devDependencies": {
+        "expansive": ">=0.7.0",
+        "pak": ">=0.11.3"
+    },
+    "export": [
+        {
+            "from": [
+                "partials/**",
+                "contents/**"
+            ],
+            "to": "${TOP}"
+        },
+        {
+            "from": "*.js.exp",
+            "to": "exp-reload"
+        }
+    ],
+    "origin": "embedthis/exp-reload",
+    "migrated": true
+}

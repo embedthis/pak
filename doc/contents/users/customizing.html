@@ -10,81 +10,78 @@
                 <h2 class="center"><i class="large warning icon"></i>The Problem with Packages</h2>
                 <h3>How can you control what files are installed and to where?</h3>
             </div>
-            <p>Currently, packages use different conventions for what files are included in the 
-                package distribution and where files will be installed. For example: some packages distribute CSS files, 
-                while others provide Less or Sass stylesheets. Some packages distribute raw source, others 
-                provide only minified versions versions of source, and yet others provide minfied source with 
+            <p>Currently, packages use different conventions for what files are included in the
+                package distribution and where files will be installed. For example: some packages distribute CSS files,
+                while others provide Less or Sass stylesheets. Some packages distribute raw source, others
+                provide only minified versions versions of source, and yet others provide minfied source with
                 map files. There is no consistent approach.</p>
 
             <p>However, we need to be able to install a package and customize how it integrates into our application.
-                Currently, we have to manually copy required files out of installed packages. Each time the 
-                package is reinstalled or upgraded, this manual process must be repeated. It can be automated by 
+                Currently, we have to manually copy required files out of installed packages. Each time the
+                package is reinstalled or upgraded, this manual process must be repeated. It can be automated by
                 custom <a href="http://gulpjs.com">Gulp</a> tasks, but there is no uniform solution for all applications.</p>
 
-            <p>Pak addresses this problem by allowing each application to override how a package is installed. Pak 
+            <p>Pak addresses this problem by allowing each application to override how a package is installed. Pak
             does this by adding an automated export step to the installation process.</p>
 
             <h2>Exporting Pak Contents</h2>
-            <p>When a package is installed, Pak will first store the package contents locally under the 
-            <em>paks</em> directory. This is a complete copy of the package distribution from the package 
+            <p>When a package is installed, Pak will first store the package contents locally under the
+            <em>paks</em> directory. This is a complete copy of the package distribution from the package
             repository. This typically includes many more files than you need in your application, but the files are all
             there, incase you need them.</p>
 
-            <p>Next, Pak will selectively export a subset of the package files from the <em>paks</em> directory to 
-            the <em>lib</em>. How does Pak select which files to export and where to export to? 
+            <p>Next, Pak will selectively export a subset of the package files from the <em>paks</em> directory to
+            the <em>lib</em>. How does Pak select which files to export and where to export to?
             There are several methods for how you can customize what is exported.
             These alternatives are examined in the following order:</p>
             <ul>
-                <li>Use export override instructions in your application's <em>package.json</em> file.</li>
-                <li>Use export override instructions from a package override file in your <em>~/.pak/override</em> 
+                <li>Use export override instructions in your application's <em>pak.json</em> file.</li>
+                <li>Use export override instructions from a package override file in your <em>~/.pak/override</em>
                     directory.</li>
                 <li>Use export override instructions from the Pak catalog.</li>
-                <li>Use export instructions in the package's <em>package.json</em> file.</li>
+                <li>Use export instructions in the package's <em>pak.json</em> or <em>pak.json</em> file.</li>
                 <li>Export all the files under the <em>dist</em> directory [default].</li>
             </ul>
 
             <p>Some packages create a <em>dist</em> directory with a subset of common package files. If this subset
-                is exactly the set of files that you want, then the contents of the <em>dist</em> directory will 
+                is exactly the set of files that you want, then the contents of the <em>dist</em> directory will
                 be exported. This is the default if no export instructions are specified.</p>
 
-            <p>However, if you want to override how a third party package is installed, you 
-                can override the package by adding export instructions for the package in your 
-                application's <em>package.json</em> file, or you can create a package override file in the 
+            <p>However, if you want to override how a third party package is installed, you
+                can override the package by adding export instructions for the package in your
+                application's <em>pak.json</em> file, or you can create a package override file in the
                 <em>~/.pak/override</em> directory or create an override package. </p>
-            <p>If you are a developer of a package, you can add export instructions to your package's 
-                <em>package.json</em> file to export the most common subset of files. </p>
+            <p>If you are a developer of a package, you can add export instructions to your package's
+                <em>pak.json</em> file to export the most common subset of files. </p>
 
             <h3>Export Overrides</h3>
             <p>When you cannot modify a third-party package, you can create overrides to provide the export instructions.
-            Pak supports overriding exports in your application's <em>package.json</em> file and also via special
-            override packages. For more details please read 
-            <a href="../developers/publishing.html#override">Overide Packages</a> in the 
-            <a href="../developers/">Developers Guide</a>.</p> 
+            Pak supports overriding exports in your application's <em>pak.json</em> file and also via special
+            override packages. For more details please read
+            <a href="../developers/publishing.html#override">Overide Packages</a> in the
+            <a href="../developers/">Developers Guide</a>.</p>
 
-            <p>The syntax to override exports in your application's package.json file is via a
-                <em>pak.override.PACKAGE.pak.export</em> definition, where PACKAGE is the name of the package.
+            <p>The syntax to override exports in your application's pak.json file is via a
+                <em>override.PACKAGE.export</em> definition, where PACKAGE is the name of the package.
                 For example:</p>
                 <pre class="code">
-"pak": {
     "override": {
         <b>"jquery"</b>: {
-            "pak": {
-                "export": "dist/jquery.js"
-            }
+            "export": "dist/jquery.js"
         }
     }
 }
 </pre>
             <p>This example overrides the default jquery exporting of the <em>dist</em> directory, and exports just the
-            <em>dist/jquery.js</em> file. It does this by overriding the jquery package.json export details.</p>
+            <em>dist/jquery.js</em> file. It does this by overriding the jquery pak.json export details.</p>
 
             <h3>Override Files</h3>
-            <p>For details on creating a local override file, please see 
-            <a href="../developers/publishing.html#overrideFiles">Overide Files</a> in the 
+            <p>For details on creating a local override file, please see
+            <a href="../developers/publishing.html#overrideFiles">Overide Files</a> in the
             <a href="../developers/">Developers Guide</a>.</p>
 
             <h3>Export Instructions</h3>
-            <p>Export instructions in a <em>package.json</em> file may be specified two ways:</p>
+            <p>Export instructions in a <em>pak.json</em> file may be specified two ways:</p>
             <ul>
                 <li>Export properties</li>
                 <li>Export scripts</li>
@@ -103,19 +100,19 @@
     trim: 1
 }
 </pre>
-            <p>This copies the files under <em>src/js</em> and <em>src/css</em> to the <em>lib/PACKAGE</em> directory 
-            after trimmming one segment off the path. i.e. this trims the <em>src</em> segment from the filenames. 
+            <p>This copies the files under <em>src/js</em> and <em>src/css</em> to the <em>lib/PACKAGE</em> directory
+            after trimmming one segment off the path. i.e. this trims the <em>src</em> segment from the filenames.
             The result will be the directories <em>lib/PACKAGE/js</em> and <em>lib/PACKAGE/css</em>.</p>
 
-            <p>If you are exporting a full path to the <em>/lib/PACKAGE</em> directory, you may use conventient 
+            <p>If you are exporting a full path to the <em>/lib/PACKAGE</em> directory, you may use conventient
             abbreviated short forms. For example:</p>
 <pre class="code">"export": "*.js"
 
 "export": [ "*.js", "**.css" ]
 </pre>
-            <p>The export property can be set to a string, an array of strings or to object instructions. 
-                In the example above, the <em>**.css</em> selects all CSS files in any subdirectory. 
-                If the package already has an export definition in its own package.json file, then use 
+            <p>The export property can be set to a string, an array of strings or to object instructions.
+                In the example above, the <em>**.css</em> selects all CSS files in any subdirectory.
+                If the package already has an export definition in its own pak.json file, then use
                 <em>=export</em> "assign" this export definition and replace any previous definition.</p>
 
             <p>The full set of export properties are:</p>
@@ -135,30 +132,30 @@
                     </tr>
                     <tr>
                         <td>to</td>
-                        <td>Optional target directory for the files. Defaults to <em>lib/PACKAGE</em> where PACKAGE 
-                        is the name of the package. Use <em>${TOP}</em> for the application's top directory 
+                        <td>Optional target directory for the files. Defaults to <em>lib/PACKAGE</em> where PACKAGE
+                        is the name of the package. Use <em>${TOP}</em> for the application's top directory
                         and <em>${LIB}</em> for the application's export lib directory.</td>
                     </tr>
                     <tr>
                         <td>trim</td>
                         <td>Number of directory components to trim from filenames when exporting.</td>
-                    </tr> 
+                    </tr>
                 </tbody>
             </table>
 
             <h4>Wild Cards</h4>
-            <p>The <em>from</em> property value (or the <em>export</em> property if it is set to a simple string) 
+            <p>The <em>from</em> property value (or the <em>export</em> property if it is set to a simple string)
             may contain wild cards. The following wild cards are supported.</p>
             <ul>
                 <li>The wildcard <em>?</em> matches any single character.</li>
                 <li><em>*</em> matches zero or more characters in a filename or directory.</li>
                 <li><em>**</em> matches zero or more files or directories and matches recursively in a directory tree.</li>
-                <li><em>!</em> Negates pattern. This removes matching patterns from the set. These are applied after 
+                <li><em>!</em> Negates pattern. This removes matching patterns from the set. These are applied after
                 all source patterns have been processed.</li>
             </ul>
 
             <h3>Scripted Export</h3>
-            <p>If you have export needs that go beyond what can be expressed via export properties, you can also use 
+            <p>If you have export needs that go beyond what can be expressed via export properties, you can also use
             the full scripting power of <a href="http://embedthis.com/ejscript/">Ejscript</a> to create
                 custom export scripts. For example:</p>
                 <pre class="code">
@@ -174,10 +171,8 @@
     `
 }
 </pre>
-            <p>Pak supports an extended JSON syntax where multi-line strings can be used. Strings can be    
-            delimited by single, double or back quote characters. Also, property names do not need to be quoted.
-            However, if you are using the package.json for any other purposes, you may need to use strict JSON with
-            single line strings only. In this case, it may be easier to put your export script in a separate file.</p>
+            <p>Pak supports an extended JSON syntax where multi-line strings can be used. Strings can be
+            delimited by single, double or back quote characters. Also, property names do not need to be quoted.</p>
             <p>For example:</p>
                 <pre class="code">
 "export": {
@@ -185,15 +180,15 @@
 }
 </pre>
             <h2>Disabling Exports</h2>
-            <p>The exporting of package contents is globally enabled or disabled for an application via the 
-            <em>pak.import</em> property. Setting the <em>pak.import</em> property to <em>false</em> in your 
-            application's package.json file, will disable exporting contents from any package. This property 
-            defaults to <em>false</em>, so the absense of this property will disable exporting of package contents. 
-            When Pak creates a package.json file, it will include a <em>"import": true</em> definition to 
+            <p>The exporting of package contents is globally enabled or disabled for an application via the
+            <em>import</em> property. Setting the <em>import</em> property to <em>false</em> in your
+            application's pak.json file, will disable exporting contents from any package. This property
+            defaults to <em>false</em>, so the absense of this property will disable exporting of package contents.
+            When Pak creates a pak.json file, it will include a <em>"import": true</em> definition to
             enable package exports for all subsequently installed packages.</p>
 
             <h2>Customizing the Export Directory</h2>
-            <p>The export directory can be customized in your package.json <em>directories</em> properties. By default
+            <p>The export directory can be customized in your pak.json <em>directories</em> properties. By default
             it is set to <em>lib</em>. To modify, update the <em>lib</em> directory property. For example:</p>
             <pre class="code">directories: {
     "lib": "www/lib"

@@ -6,9 +6,9 @@
 }
 
             <h1>Package Versions</h1>
-            <p>Pak uses version strings in the <em>package.json</em> file in several places. 
+            <p>Pak uses version strings in the <em>pak.json</em> file in several places.
                 Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
-                major.minor.patch[-pre-release] which prescribes the precise meaning of each component of the 
+                major.minor.patch[-pre-release] which prescribes the precise meaning of each component of the
                 version string. For example:</p>
             <pre class="code">$ <b>pak search bootstrap</b>
 {
@@ -27,9 +27,9 @@
                 </thead>
                 <tbody>
                     <tr><td>version</td><td>Version String</td><td>Package version number.</td></tr>
-                    <tr><td>dependencies</td><td>Version Expression</td><td>Object collection of dependent packages 
+                    <tr><td>dependencies</td><td>Version Expression</td><td>Object collection of dependent packages
                         and a version expression criteria.</td> </tr>
-                    <tr><td>optionalDependencies</td><td>Version Expression</td><td>Object collection of optionally dependent packages 
+                    <tr><td>optionalDependencies</td><td>Version Expression</td><td>Object collection of optionally dependent packages
                         and a version expression criteria.</td> </tr>
                 </tbody>
             </table>
@@ -40,14 +40,10 @@
 {
     "jquery/jquery": {
         "&gt;=2.1.0": {
-            "pak": { 
-                /* more */ 
-            }
+            /* more */
         },
         "&gt;=1.11.0": {
-            "pak": { 
-                /* more */ 
-            }
+            /* more */
         }
     }
 }
@@ -56,7 +52,7 @@
             <a name="expressions"></a>
             <h2>Version Expressions</h2>
             <p>Version expressions are used by <em>dependency</em>, <em>optionalDependency</em> properties in the
-            package.json file and in package override files. The following terms are permitted in version expressions.</p>
+            pak.json file and in package override files. The following terms are permitted in version expressions.</p>
 
             <table title="versions" class="ui celled table segment">
                 <thead>
@@ -68,9 +64,9 @@
                 <tbody>
                     <tr><td>1.2.3</td><td>Simple version. Allows prereleases.</td></tr>
                     <tr><td>1.2.X </td><td>Any patch for 1.2. Allows prereleases.</td></tr>
-                    <tr><td>^1.2.3</td><td>Compatible with 1.2. Same as &gt;=1.2.3 &lt;2.0.0 &mdash; 
+                    <tr><td>^1.2.3</td><td>Compatible with 1.2. Same as &gt;=1.2.3 &lt;2.0.0 &mdash;
                         does not allow prereleases.</td></tr>
-                    <tr><td>~1.2.3</td><td>Compatible with 1.2. Same as &gt;=1.2.3 &lt;2.0.0 &mdash; 
+                    <tr><td>~1.2.3</td><td>Compatible with 1.2. Same as &gt;=1.2.3 &lt;2.0.0 &mdash;
                         allows prereleases.</td></tr>
                     <tr><td>&gt;, &gt;=, &lt;, &lt;=, ==, != </td><td>Version comparison.</td></tr>
                     <tr><td>expression || expression </td><td>Either expression matches.</td></tr>
@@ -81,8 +77,8 @@
 
             <p>For example:</p>
             <pre class="code">
-{ 
-    "dependencies" : { 
+{
+    "dependencies" : {
         "simple" : "2.0.1",
 
         /* Range of acceptable versions */
@@ -98,4 +94,3 @@
     }
 }
 </pre>
-                    

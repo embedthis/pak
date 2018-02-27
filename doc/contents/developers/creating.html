@@ -6,17 +6,16 @@
 }
             <h1>Creating Packages</h1>
 
-            <p>Packages are defined by a <em>package.json</em> file that specifies a package. It defines the 
+            <p>Packages are defined by a <em>pak.json</em> file that specifies a package. It defines the
                 package name, version, author details and dependencies. The format is specified by
                 <a href="http://wiki.commonjs.org/wiki/Packages/1.1">CommonJS</a> and also used by
-                the <a href="http://npmjs.org">NPM</a> and you should be able to use a single package.json file
-                for both Pak and NPM if you wish.</p>
+                the <a href="http://npmjs.org">NPM package.json</a> file.</p>
 
-            <h2>Creating package.json</h2>
-            <p>You can create a package.json file with <em>pak init</em>
+            <h2>Creating pak.json</h2>
+            <p>You can create a pak.json file with <em>pak init</em>
             <pre class="code">$ pak init</pre>
 
-            <p>This will generate a stub package.json that you can edit to reflect the details of your package.
+            <p>This will generate a stub pak.json that you can edit to reflect the details of your package.
             <p>For example:</p>
 <pre class="code">{
     <b>"name": "Package name - one word"</b>
@@ -45,14 +44,12 @@
     "ignore": [
         "*.tmp"
     ],
-    "pak": {
-        "import": true,
-        "mode": "debug"
-    }
+    "import": true,
+    "profile": "debug"
 }</pre>
-            <p>At a minimum, a package.json must have a <em>name</em>, <em>description</em> and <em>version</em>. 
+            <p>At a minimum, a pak.json must have a <em>name</em>, <em>description</em> and <em>version</em>.
             Other fields are optional. Versions follow the <a href="http://semver.org">Semver 2</a> standard. i.e.
-            major.minor.patch[-pre-release]. See <a href="../users/versions.html">Package Versions</a> 
+            major.minor.patch[-pre-release]. See <a href="../users/versions.html">Package Versions</a>
             for more details.</p>
             <h2>Standard Fields</h2>
             <ul>
@@ -77,37 +74,36 @@
                         </tbody>
                     </table>
                 </li>
-                <li>files &mdash; list of files to include when caching and installing the package. These are 
+                <li>files &mdash; list of files to include when caching and installing the package. These are
                     applied before considering export definitions.</li>
-                <li>ignore &mdash; list of files to exclude when caching and installing the package. These are 
+                <li>ignore &mdash; list of files to exclude when caching and installing the package. These are
                     applied before considering export definitions.</li>
             </ul>
 
             <h2>Pak Configuration Properties</h2>
-            <p>Pak defines some properties in the <em>package.json</em> file under the <em>pak</em> property.
-            All other property names under the <em>pak</em> property are reserved. If you need custom configuration
-            settings for your application, you should create your own top-level package.json property set.</p>
+            <p>All property names under the <em>pak</em> property are reserved. If you need custom configuration
+            settings for your application, you should create your own unique top-level pak.json property.</p>
 
             <table class="ui celled table" title="configuration">
                 <thead>
                     <tr><th>Name</th><th>Description</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>blend</td><td>Properties to blend from a package into the application package.json when
+                    <tr><td>blend</td><td>Properties to blend from a package into the application pak.json when
                         installing the package.</td></tr>
-                    <tr><td>export</td><td>Export instructions to export package files from the <em>paks</em> directory 
+                    <tr><td>export</td><td>Export instructions to export package files from the <em>paks</em> directory
                         into the application's <em>lib</em> directory.</td></tr>
                     <tr><td>frozen</td><td>Define the package as frozen and impervious to upgrades.</td></tr>
-                    <tr><td>import</td><td>Enable exporting of package conents when installing packages. 
+                    <tr><td>import</td><td>Enable exporting of package conents when installing packages.
                         Defaults to false.</td></tr>
                     <tr><td>manage</td><td>Array of external json files to manage by blending their properties when
                         installing the package.</td></tr>
-                    <tr><td>mode</td><td>Application execution mode. Selects a property set from the 
-                        <em>pak.modes</em> collection and copy to the top level.</td></tr>
-                    <tr><td>modes</td><td>Properties to be blended into the top-level application package.json.</td></tr>
                     <tr><td>origin</td><td>Location of the package in the Pak cache.</td></tr>
-                    <tr><td>override</td><td>Local overrides for package package.json properties.</td></tr>
+                    <tr><td>override</td><td>Local overrides for package pak.json properties.</td></tr>
                     <tr><td>precious</td><td>Protect a package in the cache from pruning unless forced.</td></tr>
+                    <tr><td>profile</td><td>Application execution profile. Selects a property set from the
+                        <em>profiles</em> collection and copy to the top level.</td></tr>
+                    <tr><td>profiles</td><td>Properties to be blended into the top-level application pak.json.</td></tr>
                     <tr><td>version</td><td>Pak program version (expression) required by this package.</td></tr>
                 </tbody>
             </table>
@@ -128,35 +124,35 @@
         "*.tmp"
     ]
 }</pre>
-            <p>You can use the <em>**</em> wild card to match files in all subdirectories, and use <em>!</em> to negate a 
-            pattern and exclude files from the set. When Pak publishes a package, it will always include 
-            the <em>package.json</em>, <em>README.md</em> and <em>LICENSE.md</em> files. You do not need 
+            <p>You can use the <em>**</em> wild card to match files in all subdirectories, and use <em>!</em> to negate a
+            pattern and exclude files from the set. When Pak publishes a package, it will always include
+            the <em>pak.json</em>, <em>README.md</em> and <em>LICENSE.md</em> files. You do not need
             to specify these files.</p>
 
             <h3>Locations</h3>
-            <p>During package installation, the package contents will be cached under 
+            <p>During package installation, the package contents will be cached under
                     <em>~/.paks/PACKAGE/ACCOUNT/VERSION</em>,
 
             where PACKAGE is the name of the package, ACCOUNT is the GitHub account name or @npm if the package is being
-            hosted on NPM. Once installed in an application, the package files will be saved under the 
+            hosted on NPM. Once installed in an application, the package files will be saved under the
             <em>paks/PACKAGE</em> local directory.</p>
 
             <a name="exporting"></a>
             <h2>Exporting Runtime Files</h2>
             <p>Often a package will have some files that are used during development and some that are used to run
-                the application. Pak supports exporting runtime files so the application can easily deploy just the 
+                the application. Pak supports exporting runtime files so the application can easily deploy just the
                 runtime application separate from the development time files. </p>
-            <p>Package files that are only needed for development can be accessed from the 
-                <em>paks/PACKAGE</em> directory. For example: Less or Sass stylesheets can be accessed under 
-                the <em>paks</em> directory and do not need to be exported. Runtime files are exported to the 
+            <p>Package files that are only needed for development can be accessed from the
+                <em>paks/PACKAGE</em> directory. For example: Less or Sass stylesheets can be accessed under
+                the <em>paks</em> directory and do not need to be exported. Runtime files are exported to the
                 <em>lib/PACKAGE</em> directory.</p>
 
             <h3>Export Instructions</h3>
-            <p>A package can define export instructions that specify exactly which files to export and where 
+            <p>A package can define export instructions that specify exactly which files to export and where
                 to export the files. While this is useful for many packages, it is especially useful when creating
                 meta-packages that wrap existing third-party packages for which you cannot modify.</p>
 
-            <p>Export instructions in a <em>package.json</em> file may be specified two ways:</p>
+            <p>Export instructions in a <em>pak.json</em> file may be specified two ways:</p>
             <ul>
                 <li>Export properties</li>
                 <li>Export scripts</li>
@@ -176,8 +172,8 @@
     "overwrite": true,
 }
 </pre>
-            <p>This copies the files under <em>src/js</em> and <em>src/css</em> to the <em>lib/myapp</em> directory 
-            after trimmming one segment off the path. i.e. this trims the <em>src</em> segment from the filenames. 
+            <p>This copies the files under <em>src/js</em> and <em>src/css</em> to the <em>lib/myapp</em> directory
+            after trimmming one segment off the path. i.e. this trims the <em>src</em> segment from the filenames.
             The result will be the directories <em>lib/myapp/js</em> and <em>lib/myapp/css</em>.</p>
 
             <p>You may also use these conventient short forms. For example:</p>
@@ -186,11 +182,11 @@
 "export": [ "*.js", "**.css" ]
 </pre>
             <p>The export property can be set to a string, an array of strings, an object instruction, or
-            an array of object instructions. In the example above, the <em>**.css</em> selects all CSS 
+            an array of object instructions. In the example above, the <em>**.css</em> selects all CSS
             files in any subdirectory. </p>
 
             <h3>File Destinations</h3>
-            <p>The <em>to</em> property defines the destination directory relative to the <em>lib/PACKAGE</em> 
+            <p>The <em>to</em> property defines the destination directory relative to the <em>lib/PACKAGE</em>
             directory for the package. You may use <em>${TOP}</em> to refer to the top application directory and thus
             export files outside of the <em>lib</em> directory.</p>
 
@@ -213,30 +209,30 @@
                     </tr>
                     <tr>
                         <td>to</td>
-                        <td>Optional target directory for the files. Defaults to <em>lib/PACKAGE</em> where PACKAGE 
-                        is the name of the package. Use <em>${TOP}</em> for the application's top directory 
+                        <td>Optional target directory for the files. Defaults to <em>lib/PACKAGE</em> where PACKAGE
+                        is the name of the package. Use <em>${TOP}</em> for the application's top directory
                         and <em>${LIB}</em> for the application's export lib directory.</td>
                     </tr>
                     <tr>
                         <td>trim</td>
                         <td>Number of directory components to trim from filenames when exporting.</td>
-                    </tr> 
+                    </tr>
                 </tbody>
             </table>
 
             <h4>Wild Cards</h4>
-            <p>The <em>from</em> property value (or the <em>export</em> property if it is set to a simple string) 
+            <p>The <em>from</em> property value (or the <em>export</em> property if it is set to a simple string)
             may contain wild cards. The following wild cards are supported.</p>
             <ul>
                 <li>The wildcard <em>?</em> matches any single character.</li>
                 <li><em>*</em> matches zero or more characters in a filename or directory.</li>
                 <li><em>**</em> matches zero or more files or directories and matches recursively in a directory tree.</li>
-                <li><em>!</em> Negates pattern. This removes matching patterns from the set. These are applied after 
+                <li><em>!</em> Negates pattern. This removes matching patterns from the set. These are applied after
                 all source patterns have been processed.</li>
             </ul>
 
             <h3>Scripted Export</h3>
-            <p>If you have export needs that go beyond what can be expressed via export properties, you can also use 
+            <p>If you have export needs that go beyond what can be expressed via export properties, you can also use
             the full scripting power of <a href="http://embedthis.com/ejscript/">Ejscript</a> to create
                 custom export scripts. For example:</p>
 <pre class="code">"export": {
@@ -252,9 +248,9 @@
 }
 </pre>
             <h3>Extended JSON</h3>
-            <p>Pak supports an extended JSON syntax where multi-line strings can be used. Strings can be    
+            <p>Pak supports an extended JSON syntax where multi-line strings can be used. Strings can be
             delimited by single, double or back quote characters. Also, property names do not need to be quoted.
-            However, if you are using the package.json for any other purposes, you may need to use strict JSON with
+            However, if you are using the pak.json for any other purposes, you may need to use strict JSON with
             single line strings only. In this case, it may be easier to put your export script in a separate file.</p>
 
             <p>For example:</p>
@@ -266,42 +262,40 @@
             <a name="blending"></a>
             <h2>Blending Package Configuration</h2>
             <p>Pak provides JSON blending services for packages to merge JSON configuration from packages into an
-            application. This feature can help automate the installation and configuration of packages. For example: 
-            the <a href="http://embedthis.com/expansive">Expansive</a> web site generator uses this facility to blend 
+            application. This feature can help automate the installation and configuration of packages. For example:
+            the <a href="http://embedthis.com/expansive">Expansive</a> web site generator uses this facility to blend
             <em>expansive.json</em> configuration files from packages such as skeletons and plugins.</p>
-            
+
             <p>Blending is a process of merging a package's JSON properties into the application.
-            Blending may occur from the package's <em>package.json</em> file or external files may be blended.</p>
+            Blending may occur from the package's <em>pak.json</em> file or external files may be blended.</p>
 
             <h3>Blending Files</h3>
             <p>The <em>pak.manage</em> property can list an array of file to blend. For example:</p>
-            <pre class="code">"pak": {
+            <pre class="code">{
     "manage": [
         "expansive.json",
         "esp.json"
-    ] 
+    ]
 }</pre>
             <p>When a package containing this definition is installed, the package's <em>expansive.json</em> and
             <em>esp.json</em> files will be blended into files of the same name in the applications directory.
             If the files do not exist, they will be created.</p>
 
             <h3>Blending Properties</h3>
-            <p>The <em>pak.blend</em> property collection specifies a collection of properties that are to be blended 
-            into the top level of the application's package.json.</p>
-            <pre class="code">"pak": {
+            <p>The <em>pak.blend</em> property collection specifies a collection of properties that are to be blended
+            into the top level of the application's pak.json.</p>
+            <pre class="code">{
     "blend": {
-        "pak": {
-            "?mode": "debug",
-            "?import": true,
-        }
+        "?profile": "debug",
+        "?import": true,
     }
 }</pre>
-            <p>This will define the <em>pak.mode</em> and <em>pak.import</em> properties in the application's 
-            <em>package.json</em> file if they do not already exist.</p>
+            <p>This will define the <em>profile</em> and <em>import</em> properties in the application's
+            <em>pak.json</em> file if they do not already exist.</p>
 
             <h3>Property Blend Prefixes</h3>
-            <p>Properties from the package's JSON file are created, added, subtracted or set 
-            in the application package.json file. To assist with blending, properties can have 
+            <p>Properties from the package's JSON file are created, added, subtracted or set
+            in the application pak.json file. To assist with blending, properties can have
             prefixes to control the blending.</p>
 
             <table class="ui table" title="blend">

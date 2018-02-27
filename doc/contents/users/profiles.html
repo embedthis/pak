@@ -1,0 +1,38 @@
+{
+    title: "Pak Profiles",
+    crumbs: [
+        { "User's Guide": "index.html" }
+    ],
+}
+
+            <h1>Pak Profiles</h1>
+            <p>Pak supports the definition of execution profiles. For example: <em>debug</em>, <em>test</em>
+                or <em>release</em> profile. By defining an execution profile, a specific Pak configuration may be easily
+                defined and enabled.</p>
+
+            <p>The Pak profile is defined via the <em>profile</em> property. This then selects collections of properties
+            under the <em>profiles</em> property. For example:
+            <code>{
+    <b>"profile": "debug"</b>,
+    "profiles": {
+        "debug": {
+            "import": true,
+        },
+        "release": {
+            "import": false,
+        }
+    }
+}
+</code>
+            <p>When the profile is set to <em>debug</em>, the properties under <em>profiles.debug</em> are
+            logically copied to the top level of the pak.json properties. i.e. <em>import</em> is set to true.
+
+            <h2>Changing Profile</h2>
+            <p>Use the <em>pak profile MODE</em> command to change the execution profile. For example:</p>
+            <code>pak profile debug</code>
+            <p>To display the current profile, run: <code>pak profile</code></p>
+
+            <h2>Other Applications</h2>
+            <p>Other applications such as <a href="http://embedthis.com/expansive/">Expansive</a> utilize the
+            pak.json <em>profile</em> setting and modify their execution profile similarly. The
+            <a href="http://embedthis.com/esp/">ESP Web Framework</a> also uses the <em>profile</em> setting.</p>

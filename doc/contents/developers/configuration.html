@@ -6,7 +6,8 @@
 }
             <h1>Configuring Pak</h1>
 
-            <p>On startup, Pak reads configuration from a pakrc file. This file defines the default configuration for Pak. 
+            <p>On startup, Pak reads configuration from a pakrc file. This file defines the default configuration for Pak.
+<!--
             To show the pak configuration, type:<code>pak config</code></p>
             <p>This displays something like:</p>
 <code>{
@@ -37,23 +38,24 @@
   }
 }</code>
             <p>The <em>catalogs</em> property specifies the web sites that host Pak or Bower catalogs. </p>
+        -->
 
             <h2>Directories</h2>
-            <p>The <em>paks</em> directory is the name of the local application sub-directory in which to 
+            <p>The <em>paks</em> directory is the name of the local application sub-directory in which to
             store paks. The <em>pakcache</em> directory defines where to cache paks on the local system.
-            The <em>export</em> directory is to where Pak will export installed pacakge contents. The 
+            The <em>export</em> directory is to where Pak will export installed package contents. The
             <em>top</em> directory refers to the current directory.</p>
 
             <h2>Pakrc</h2>
             <p>The Pak configuration may be modified by defining properties in a <em>pakrc</em> file or in the
-            application's <em>package.json</em> file. Pak locates a <em>pakrc</em> file by searching in order 
+            application's <em>pak.json</em> file. Pak locates a <em>pakrc</em> file by searching in order
             until it finds a suitable configuration file. This is the search order:</p>
             <ul>
                 <li>pakrc</li>
                 <li>.pakrc</li>
                 <li>../pakrc and ../.pakrc and repeat up the parent directory chain</li>
                 <li>/etc/pakrc</li>
-                <li>package.json</li>
+                <li>pak.json</li>
             </ul>
-            <p>The <em>package.json</em> is always loaded after any <em>pakrc</em> file. In this manner, the 
-            package.json may override default configuration.</p>
+            <p>The <em>pak.json</em> is always loaded after any <em>pakrc</em> file. In this manner, the
+            pak.json may override default configuration.</p>

@@ -6,9 +6,9 @@
 }
             <h1>Installing Packages</h1>
 
-            <p>To install named packages, use the <em>pak install PACKAGES ...</em> command and name the packages to 
+            <p>To install named packages, use the <em>pak install PACKAGES ...</em> command and name the packages to
             install. Multiple packages can be installed on one command line. </p>
-            <p>You first need to run <em>pak init</em> if you do not have a package.json in the current directory.
+            <p>You first need to run <em>pak init</em> if you do not have a pak.json in the current directory.
             For example:</p>
 
 <code>$ pak init
@@ -16,20 +16,20 @@ $ pak install jquery bootstrap
 [Install] jquery 2.1.3
 [Install] bootstrap 3.3.2</code>
 
-            <p>Alternatively, you can use the <em>--init</em> option to initialize the directory by creating a 
-            package.json file if one does not already exist.</p>
+            <p>Alternatively, you can use the <em>--init</em> option to initialize the directory by creating a
+            pak.json file if one does not already exist.</p>
 <code>$ pak -i install jquery bootstrap
 [Install] jquery 2.1.3
 [Install] bootstrap 3.3.2</code>
 
-            <p>The <em>pak install</em> command will download the packages, save them in the per-user global 
+            <p>The <em>pak install</em> command will download the packages, save them in the per-user global
             package cache and install the package under the <em>paks</em> directory.
-            If invoked with the <em>--write</em> option, Pak will record which packages are required by 
-            adding an entry to a package.json.</p>
+            If invoked with the <em>--write</em> option, Pak will record which packages are required by
+            adding an entry to a pak.json.</p>
 
             <code>$ <b>pak --write install jquery bootstrap</b></code>
 
-            <p>The updated package.json will look like this subset:</p>
+            <p>The updated pak.json will look like this subset:</p>
 <code>{
     "name": "my
     "version": "1.0.0",
@@ -37,19 +37,17 @@ $ pak install jquery bootstrap
         "bootstrap": "^3.3",
         "jquery": "^2.1"
     }</b>,
-    "pak": {
-        "import": true,
-        "mode": "debug"
-    }
+    "import": true,
+    "mode": "debug"
 }
 </code>
-            <p>The <em>dependencies</em> property will document the required packages and their versions. 
+            <p>The <em>dependencies</em> property will document the required packages and their versions.
                 You can modify the version string for packages to specify what range of versions
-                your application can accept. See <a href="versions.html">Pak Versions</a> for 
+                your application can accept. See <a href="versions.html">Pak Versions</a> for
                 more details.</p>
 
-            <p>In the previous example, Bootstrap internally specifies jQuery as a dependency, so we could have 
-            installed just Bootstrap and it would have automatically downloaded and installed jquery &mdash; 
+            <p>In the previous example, Bootstrap internally specifies jQuery as a dependency, so we could have
+            installed just Bootstrap and it would have automatically downloaded and installed jquery &mdash;
             as it is required by Bootstrap. For example:</p>
 <code>$ <b>pak --write install bootstrap</b>
 [Install] jquery 2.1.3
@@ -70,31 +68,35 @@ $ pak install jquery bootstrap
             <p>When installing packages, the package name may be a simple name, or it may be a more complex endpoint that
                 describes where to locate the package. The complete syntax is:</p>
             <code>pak install ENDPOINTS ...</code>
-            <p>Where an ENDPOINT can be the name of a package published in the Pak catalog, NPM or bower catalog, 
-            a GitHub repository endpoint, a GitHub account/repository or a path to a local package directory. 
+            <p>Where an ENDPOINT can be the name of a package published in the Pak catalog, NPM or bower catalog,
+            a GitHub repository endpoint, a GitHub account/repository or a path to a local package directory.
             For example:</p>
-<code>pak install jquery
+            <!--
 pak install pak:jquery
 pak install npm:jquery
 pak install bower:jquery
+-->
+<code>pak install jquery
 pak install embedthis/exp-js
 pak install https://github.com/embedthis/exp-js.git
 pak install git@github.com:embedthis/jquery
 pak install ./my-source/graphics</code>
 
+<!--
             <h3>Catalog Prefixes</h3>
             <p>A catalog prefix may be used on an endpoint to specify a catalog to use when searching for a package.
             The <em>pak</em>, <em>npm</em>, <em>bower</em> prefixes direct Pak to use the corresponding package catalog
-            to search when locating the package. If no prefix is specified and the endpoint is a simple name, the 
+            to search when locating the package. If no prefix is specified and the endpoint is a simple name, the
             catalogs will be searched in the order: Pak catalog, NPM catalog, and finally the Bower catalog. For example:</p>
             <code>pak install jquery
 pak install <b>pak:</b>jquery
 pak install <b>npm:</b>jquery
 pak install <b>bower:</b>jquery
 </code>
+-->
 
             <h3>GitHub Endpoints</h3>
-            <p>A catalog search is not required if the endpoint is a resolved Git repository endpoint. 
+            <p>A catalog search is not required if the endpoint is a resolved Git repository endpoint.
             Three forms are supported:</p>
             <ul>
                 <li>account/repository</li>
@@ -103,7 +105,7 @@ pak install <b>bower:</b>jquery
             </ul>
             <p>The account/repository form is a short-cut for https://github.com/account/repository.git.</p>
 
-            <p>An endpoint may optionally have a <em>#version</em> suffix that nominates a specific version to install. 
+            <p>An endpoint may optionally have a <em>#version</em> suffix that nominates a specific version to install.
             Otherwise the most recent, stable version will be selected. For example:</p>
             <code>pak install jquery#2.1.3</code>
 
@@ -112,13 +114,13 @@ pak install <b>bower:</b>jquery
             <code>pak -f install PACKAGE ...</code>
 
             <h2>Installing and Upgrading Packages</h2>
-            <p>To install all the packages required by an application as specified in package.json:</p>
+            <p>To install all the packages required by an application as specified in pak.json:</p>
             <code>pak install</code>
 
             <p>To reinstall all the application's packages.</p>
             <code>pak -f install</code>
 
-            <p>To upgrade all the packages required by an application as specified in package.json:</p>
+            <p>To upgrade all the packages required by an application as specified in pak.json:</p>
             <code>pak upgrade</code>
             <p>This will upgrade the application using the latest versions of packages. This will download newer
             package versions and update the cache if required. Use <em>--noupdate</em> to upgrade only from the local
@@ -126,4 +128,3 @@ pak install <b>bower:</b>jquery
 
             <p>To update the package cache with the latest available version of a package:</p>
             <code>pak update NAME</code>
-

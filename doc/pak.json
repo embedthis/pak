@@ -11,8 +11,7 @@
     "directories": {
         "export": "contents/lib"
     },
-    "pak": {
-        "mode": "debug",
-        "import": true
-    }
+    "mode": "debug",
+    "import": true,
+    "pak": "debug"
 }

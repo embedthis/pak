@@ -5,8 +5,8 @@
     ],
 }
             <h1>Package Events</h1>
-            <p>Sometimes a package needs to perform custom actions when it is downloaded, installed, 
-            or uninstalled. To support such custom actions, Pak triggers events that can be hooked 
+            <p>Sometimes a package needs to perform custom actions when it is downloaded, installed,
+            or uninstalled. To support such custom actions, Pak triggers events that can be hooked
             at various points of the package management lifecycle.</p>
 
             <table class="ui celled table" title="events">
@@ -26,9 +26,9 @@
             </table>
 
             <h2>Hooking Events</h2>
-            <p>Events may be hooked by defining event scripts via the <em>pak.scripts</em> package.json property.
+            <p>Events may be hooked by defining event scripts via the <em>scripts</em> pak.json property.
             Event handlers be defined inside the scripts collection. For example:</p>
-            <pre class="code">"pak": {
+            <pre class="code">{
     "scripts": {
         "postcache": {
             "script": "print('Any script in here')"
@@ -39,14 +39,14 @@
             <h3>Literal Scripts</h3>
             <p>Each event may define a literal script or define a script filename. If the event value is a
                 string, it will be interpreted as a literal script to execute. For example:</p>
-            <pre class="code">"pak": {
+            <pre class="code">{
     "scripts": {
         "postcache": "run('npm install -g babel')"
     }
 }
 </pre>
             <p>This is quivalent to the following:</p>
-            <pre class="code">"pak": {
+            <pre class="code">{
     "scripts": {
         "postcache": {
             "script": "run('npm install -g babel')"
@@ -57,7 +57,7 @@
             <h3>Event Script Files</h3>
             <p>You can externalize the event script in a file by using the <em>path</em> property inside the
                 event definition.</p>
-            <code>"pak": {
+            <code>{
     "scripts": {
         "postcache": {
             "path": "run('npm install -g babel')"
@@ -72,11 +72,9 @@
             <pre>me -q --file PATH</pre>
 
             <h2>Automatic MakeMe Events</h2>
-            <p>If the package does not define event handlers, but provides a MakeMe file of the same name 
+            <p>If the package does not define event handlers, but provides a MakeMe file of the same name
             as the package: <em>NAME.me</em>, then
             then it will be invoked with the name of the event, prefixed with <em>pak-</em> as a target.</p>
             <p>For example:</p>
             <pre class="code">me -q --file PATH pak-postcache</pre>
-            <p>This can be a convenient way of handling Pak events via MakeMe project files.</p> 
-
-
+            <p>This can be a convenient way of handling Pak events via MakeMe project files.</p>

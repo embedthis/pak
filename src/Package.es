@@ -101,8 +101,8 @@ enumerable class Package {
             /* Source package */
             let package = Package.loadPackage(ref)
             if (package) {
-                if (package.pak && package.pak.origin) {
-                    parseEndpoint(package.pak.origin)
+                if (package.origin) {
+                    parseEndpoint(package.origin)
                 } else if (package.repository) {
                     parseEndpoint(package.repository.url)
                 } else {
@@ -168,8 +168,8 @@ enumerable class Package {
                 install = Package.loadPackage(installPath)
                 if (install) {
                     installVersion = Version(install.version || '0.0.1')
-                    if (install.pak && install.pak.origin) {
-                        parseEndpoint(install.pak.origin)
+                    if (install.origin) {
+                        parseEndpoint(install.origin)
                     }
                     name = install.name
                 }
@@ -193,9 +193,6 @@ enumerable class Package {
                     if (install) {
                         installVersion = Version(install.version || '0.0.1')
                     }
-                }
-                if (cache.pak is String) {
-                    trace('Warn', 'Using deprecated "pak" version property. Use "pak.version" instead in ' + cachePath)
                 }
             }
         }
@@ -306,20 +303,29 @@ enumerable class Package {
         if (!path) {
             return null
         }
-        for each (name in PakFiles) {
+        let data = {}
+        let found
+        for each (name in PakFiles.reverse()) {
             let f = path.join(name)
             if (f.exists) {
                 let obj = deserialize(f.readString())
                 obj.dependencies ||= {}
                 obj.optionalDependencies ||= {}
-                obj.pak ||= {}
-                if (name == 'bower.json') {
-                    print('WARNING: using bower.json for ' + path)
+                if (obj.pak) {
+                    if (obj.pak.version) {
+                        delete obj.pak.version
+                    }
+                    blend(obj, obj.pak)
+                    delete obj.pak
                 }
-                return obj
+                if (name == 'package.json') {
+                    obj.migrated = true
+                }
+                blend(data, obj)
+                found = true
             }
         }
-        return null
+        return found ? data : null
     }
 
     public static function getSpecFile(path: Path): Path? {
