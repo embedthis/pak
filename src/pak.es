@@ -306,6 +306,7 @@ class Pak
         if (!git) {
             throw 'Cannot find "git" utility. Please install git first.'
         }
+        spec = {}
         if (PAK.exists) {
             spec = PAK.readJSON()
         }
