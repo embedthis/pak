@@ -305,7 +305,8 @@ enumerable class Package {
         }
         let data = {}
         let found
-        for each (name in PakFiles.reverse()) {
+        let reversed = PakFiles.clone().reverse()
+        for each (name in reversed) {
             let f = path.join(name)
             if (f.exists) {
                 let obj = deserialize(f.readString())
