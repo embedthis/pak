@@ -38,7 +38,5 @@
     "devDependencies": {
         "makeme": ">=0.9"
     },
-    "pak": {
-        "import": true
-    }
+    "import": true
 }
