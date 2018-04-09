@@ -140,10 +140,8 @@ class Pak
         name: aname.toLowerCase()
         version: '1.0.0',
         dependencies: {},
-        pak: {
-            import: true,
-            mode: 'debug',
-        },
+        import: true,
+        profile: 'debug',
     }
 
     function Pak() {
@@ -200,7 +198,7 @@ class Pak
             '    license paks...             # Display LICENSE for paks\n' +
             '    list [paks...]              # List installed paks\n' +
             '    lockdown                    # Lockdown dependencies\n' +
-            '    mode [debug|release]        # Select property mode set\n' +
+            '    profile [dev|prod]          # Select profile\n' +
             '    prune [paks...]             # Prune named paks\n' +
             '    publish [name uri pass]     # publish a pak in a catalog\n' +
             '    retract name [pass]         # Unpublish a pak\n' +
@@ -220,9 +218,9 @@ class Pak
             '    --optional                  # Install as an optional dependency\n' +
             '    --paks dir                  # Use given directory for "paks" directory\n' +
             '    --password file             # File containing the package password\n' +
-            '    --quiet, -q                 # Run in quiet mode\n' +
-            '    --silent                    # Run in totally silent mode\n' +
-            '    --verbose, -v               # Run in verbose mode\n' +
+            '    --quiet, -q                 # Run quietly\n' +
+            '    --silent                    # Run totally silently\n' +
+            '    --verbose, -v               # Run verbosely\n' +
             '    --write, -w                 # Write installed package to dependencies\n\n' +
             '  List options:\n' +
             '    -a, --all                   # Show all versions for a pak\n' +
@@ -343,8 +341,17 @@ class Pak
             throw '' + spec.name + ' requires Pak ' + pver + '. Pak version ' + Config.Version +
                             ' is not compatible with this requirement.' + '\n'
         }
-        if (spec.mode && spec.modes && spec.modes[spec.mode]) {
-            blend(spec, spec.modes[spec.mode], {combine: true})
+        //  LEGACY
+        if (spec.mode) {
+            spec.profile = spec.mode
+            delete spec.mode
+        }
+        if (spec.modes) {
+            spec.profiles = spec.modes
+            delete spec.modes
+        }
+        if (spec.profile && spec.profiles && spec.profiles[spec.profile]) {
+            blend(spec, spec.profiles[spec.profile], {combine: true})
         }
         state.force = options.force
     }
@@ -421,9 +428,11 @@ class Pak
             lockdown()
             break
 
+        //  LEGACY
         case 'mode':
+        case 'profile':
             checkDir()
-            mode(rest)
+            profile(rest)
             break
 
         case 'prune':
@@ -808,8 +817,12 @@ class Pak
             blend(pak.cache, pak.cache.pak)
             delete pak.cache.pak
         }
+        if (pak.cache.profile) {
+            spec.profile ||= pak.cache.profile
+        }
+        //  LEGACY
         if (pak.cache.mode) {
-            spec.mode ||= pak.cache.mode
+            spec.profile ||= pak.cache.mode
         }
         /*
             Manage external json files (esp.json, expansive.json)
@@ -1170,12 +1183,12 @@ class Pak
         saveSpec(path, spec)
     }
 
-    function mode(newMode, meta) {
-        if (newMode.length == 0) {
-            print(spec.mode)
+    function profile(newProfile, meta) {
+        if (newProfile.length == 0) {
+            print(spec.profile)
         } else {
-            setValue('pak.mode', newMode[0])
-            trace('Set', 'Mode to "' + spec.mode + '"')
+            setValue('pak.profile', newProfile[0])
+            trace('Set', 'Mode to "' + newProfile[0] + '"')
         }
     }
 
