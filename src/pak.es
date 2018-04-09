@@ -1188,7 +1188,7 @@ class Pak
             print(spec.profile)
         } else {
             setValue('pak.profile', newProfile[0])
-            trace('Set', 'Mode to "' + newProfile[0] + '"')
+            trace('Set', 'Profile to "' + newProfile[0] + '"')
         }
     }
 
