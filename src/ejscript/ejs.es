@@ -16369,6 +16369,8 @@ module ejs.tar {
                             try {
                                 if (App.uid == 0) {
                                     filename.setAttributes(header.attributes)
+                                } else {
+                                    filename.setAttributes({permissions: header.mode})
                                 }
                             } catch {}
 
