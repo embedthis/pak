@@ -1187,7 +1187,7 @@ class Pak
         if (newProfile.length == 0) {
             print(spec.profile)
         } else {
-            setValue('pak.profile', newProfile[0])
+            setValue('profile', newProfile[0])
             trace('Set', 'Profile to "' + newProfile[0] + '"')
         }
     }
