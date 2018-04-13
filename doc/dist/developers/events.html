@@ -2,20 +2,19 @@
 <html lang="en">
 <head>
     <title>Package Events</title>
-    <!-- Copyright Embedthis Software. All Rights Reserved. -->
+    
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <meta name="description" content="Package manager for Applications" />
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700'
-        rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="description" content="Package manager for Applications">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
     
-    <link href="../images/favicon.ico" rel="shortcut icon" />
-    <link href="../lib/semantic-ui/semantic.css" rel="stylesheet" type="text/css" />
-    <link href="../css/all.css" rel="stylesheet" type="text/css" />
-    <link href="../css/api.css" rel="stylesheet" type="text/css" />
+    <link href="../images/favicon.ico" rel="shortcut icon">
+    <link href="/lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/api.min.css" rel="stylesheet" type="text/css">
     
 
 </head>
@@ -51,9 +50,7 @@
                 <a href="../users/index.html"><b>User's Guide</b></a>
                 <div class="menu">
                     <a class="item" href="../users/tour.html">Quick Tour</a>
-                    <!--
-                    <a class="item" href="../users/searching.html">Searching for Packages</a>
-                    -->
+                    
                     <a class="item" href="../users/installing.html">Installing Packages</a>
                     <a class="item" href="../users/customizing.html">Customizing Packages</a>
                     <a class="item" href="../users/versions.html">Package Versions</a>
@@ -65,9 +62,7 @@
                 <a href="../developers/index.html"><b>Developer's Guide</b></a>
                 <div class="menu">
                     <a class="item" href="../developers/creating.html">Creating Packages</a>
-                    <!--
-                    <a class="item" href="../developers/publishing.html">Publishing Packages</a>
-                    -->
+                    
                     <a class="item" href="../developers/events.html">Package Events</a>
                     <a class="item" href="../developers/configuration.html">Pak Configuration</a>
                 </div>
@@ -77,9 +72,7 @@
                 <div class="menu">
                     <a class="item" href="https://embedthis.com/blog/categories/Pak/">Official Pak News</a>
                     <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
-                    <!--
-                    <a class="item" href="https://embedthis.com/catalog/#/">Pak Catalog</a>
-                    -->
+                    
                     <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
                     <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
                     <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
@@ -145,17 +138,17 @@
 
             <table class="ui celled table" title="events">
                 <thead>
-                    <tr><th>Event</th><th>Description</th></tr>
+                    <tr><th>Event<th>Description</tr>
                 </thead>
                 <tbody>
-                    <tr><td>preinstall</td><td>Before installing and after caching package</td></tr>
-                    <tr><td>preupdate</td><td>Before updating cached packages</td></tr>
-                    <tr><td>preupgrade</td><td>Before upgrading installed packages</td></tr>
-                    <tr><td>install</td><td>After installing files locally</td></tr>
-                    <tr><td>postcache</td><td>After saving package to the cache</td></tr>
-                    <tr><td>postprune</td><td>After removing a package from the cache</td></tr>
-                    <tr><td>postuninstall</td><td>After uninstalling package locally</td></tr>
-                    <tr><td>uninstall</td><td>Before uninstalling package locally</td></tr>
+                    <tr><td>preinstall<td>Before installing and after caching package</tr>
+                    <tr><td>preupdate<td>Before updating cached packages</tr>
+                    <tr><td>preupgrade<td>Before upgrading installed packages</tr>
+                    <tr><td>install<td>After installing files locally</tr>
+                    <tr><td>postcache<td>After saving package to the cache</tr>
+                    <tr><td>postprune<td>After removing a package from the cache</tr>
+                    <tr><td>postuninstall<td>After uninstalling package locally</tr>
+                    <tr><td>uninstall<td>Before uninstalling package locally</tr>
                 </tbody>
             </table>
 
@@ -218,12 +211,14 @@
         <p>&copy; Embedthis Software. All rights reserved.</p>
     </div>
 
-    <script src="../lib/jquery/jquery.min.js"></script>
-    <script src="../lib/semantic-ui/semantic.js"></script>
-    <script src="../scripts/sidebar.js"></script>
+    <script src="/lib/jquery/jquery.min.js"></script>
+    <script src="/lib/jquery/pak.min.js"></script>
+    <script src="/lib/semantic-ui/semantic.min.js"></script>
+    <script src="/scripts/sidebar.min.js"></script>
      
 
     
 
-</body>
-</html>
+
+
+

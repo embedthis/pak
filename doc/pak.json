@@ -9,9 +9,9 @@
         "expansive": ">=0.6.0"
     },
     "directories": {
+        "contents": "contents",
         "export": "contents/lib"
     },
-    "mode": "debug",
     "import": true,
-    "pak": "debug"
+    "profile": "debug"
 }

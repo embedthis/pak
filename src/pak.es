@@ -16,6 +16,8 @@ const VER_FACTOR: Number = 1000
 const HOME = App.home
 const PAK: Path = Path('pak.json')
 const PACKAGE: Path = Path('package.json')
+const PakProperties = ['dependencies', 'devDependencies', 'optionalDependencies', 
+    'main', 'scripts', 'commitplease', 'migrated']
 
 var PakFiles = [ PAK, PACKAGE ]
 
@@ -63,12 +65,6 @@ class Pak
                 publish:   'https://embedthis.com/catalog/pak/publish',
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
                 overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
-
-                /* OLD && KEEP
-                lookup: 'http://embedthis.com/catalog/do/pak/search?keywords=${NAME}',
-                query: 'http://embedthis.com/catalog/pak/search',
-                download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
-                */
             },
             bower: {
                 lookup: 'http://bower.herokuapp.com/packages/${NAME}',
@@ -82,6 +78,7 @@ class Pak
         },
         directories: {
             export: (!Path('lib').exists && Path('src').exists) ? 'src' : 'lib'
+            contents: 'contents',
             paks: 'paks',
             pakcache: '~/.paks',
             top: '.',
@@ -646,6 +643,9 @@ class Pak
             if (pak.sourcePath) {
                 /* Update origin */
                 pak.source.origin = pak.origin
+                if (pak.source.migrated) {
+                    pak.source = trimPackageProperties(pak.source)
+                }
                 saveSpec(pak.cachePath.join(PAK), pak.source)
             } else {
                 if (pak.origin) {
@@ -662,6 +662,9 @@ class Pak
                         }
                     }
                     pak.cache.origin = pak.origin
+                    if (pak.cache.migrated) {
+                        pak.cache = trimPackageProperties(pak.cache)
+                    }
                     saveSpec(pak.cachePath.join(PAK), pak.cache)
                     /*
                         Resolve after updating the json file as it will be re-read
@@ -1008,7 +1011,7 @@ class Pak
                 blend(pak.cache, spec.overrides[pak.name], {combine: true})
                 pak.dirty = true
             }
-            /* Saved below to paks/name/*.json */
+            /* Saved below to paks/name/ *.json */
         }
         let ignore = pak.cache.ignore || []
         if (!(ignore is Array)) {
@@ -2457,13 +2460,33 @@ class Pak
     private function saveSpec(path: Path, spec) {
         spec = spec.clone(true)
         path.dirname.makeDir()
-        if (PACKAGE.exists) {
+        if (path.dirname == '.' && PACKAGE.exists) {
             let data = PACKAGE.readJSON()
             if (data.version) {
                 delete spec.version
             }
         }
         path.write(serialize(cleanSpec(spec), {pretty: true, indent: 4}) + '\n')
+    }
+
+    function trimPackageProperties(spec) {
+        print('MIGRATED', spec.migrated)
+        if (spec.migrated) {
+        dump("BEFORE", spec)
+            spec = black(spec, PakProperties)
+        dump("AFTER", spec)
+        }
+        return spec
+    }
+
+    function black(obj, mask) {
+        let result
+        result = obj.clone()
+        for each (let key in mask) {
+        print("KEY", key)
+            delete result[key]
+        }
+        return result
     }
 }
 
