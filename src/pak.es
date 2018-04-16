@@ -134,7 +134,8 @@ class Pak
     let aname = App.dir.basename.toString()
 
     private var PakTemplate = {
-        name: aname.toLowerCase()
+        name: aname.toLowerCase(),
+        title: aname.toPascal() + ' Application',
         version: '1.0.0',
         dependencies: {},
         import: true,
@@ -283,6 +284,7 @@ class Pak
         if (options.name) {
             aname = options.name
             PakTemplate.name = aname
+            PakTemplate.title = aname.toPascal() + ' Application'
         }
     }
 
@@ -780,6 +782,7 @@ class Pak
         if (args && args.length > 0) {
             let [name, version] = args
             pspec.name = name
+            pspec.title = name.toPascal() + ' Application'
             pspec.version = version
         } else {
             pspec.name = options.name || App.dir.basename.toLowerCase()
@@ -1074,6 +1077,9 @@ class Pak
             let path = Package.getSpecFile(pak.installPath)
             saveSpec(path, pak.cache)
             vtrace('Save', path + ' with local overrides')
+        }
+        for (let [key,path] in spec.directories) {
+            mkdir(path, DIR_PERMS)
         }
     }
 
@@ -2202,9 +2208,6 @@ class Pak
                 name.startsWith('appweb-') || name.startsWith('pak-') || name.startsWith('me-')) {
                 throw 'Reserved pak name ' + name
             }
-        }
-        if (!pspec.description) {
-            throw 'Invalid package name: ' + pspec.description
         }
         if (!pspec.version || !Version(pspec.version).valid) {
             throw 'Invalid package version: ' + pspec.version
