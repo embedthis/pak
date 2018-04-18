@@ -16,7 +16,7 @@ const VER_FACTOR: Number = 1000
 const HOME = App.home
 const PAK: Path = Path('pak.json')
 const PACKAGE: Path = Path('package.json')
-const PakProperties = ['dependencies', 'devDependencies', 'optionalDependencies', 
+const PakProperties = ['dependencies', 'devDependencies', 'optionalDependencies',
     'main', 'scripts', 'commitplease', 'migrated']
 
 var PakFiles = [ PAK, PACKAGE ]
@@ -513,9 +513,6 @@ class Pak
     }
 
     function build(names: Array): Void {
-        if (names.length == 0) {
-            names = directories.pakcache.files('*')
-        }
         for each (name in names) {
             buildPak(Package(Path(name).basename))
         }
@@ -2473,11 +2470,8 @@ class Pak
     }
 
     function trimPackageProperties(spec) {
-        print('MIGRATED', spec.migrated)
         if (spec.migrated) {
-        dump("BEFORE", spec)
             spec = black(spec, PakProperties)
-        dump("AFTER", spec)
         }
         return spec
     }
@@ -2486,7 +2480,6 @@ class Pak
         let result
         result = obj.clone()
         for each (let key in mask) {
-        print("KEY", key)
             delete result[key]
         }
         return result
