@@ -21,7 +21,6 @@ const PakProperties = ['dependencies', 'devDependencies', 'optionalDependencies'
 
 var PakFiles = [ PAK, PACKAGE ]
 
-//  TODO - convert to public members of Pak
 var catalogs: Object?
 var dirTokens: Object
 var files: Object
@@ -30,6 +29,293 @@ var spec: Object
 var state: Object
 var out: File = App.outputStream
 var currentPak: Package?
+
+var InternalCatalog = {
+    /*
+        Redirects
+     */
+    angular: {
+        endpoint: '@npm:angular'
+    },
+    'angular-animate': {
+        endpoint: '@npm:angular-animate'
+    },
+    'angular-route': {
+        endpoint: '@npm:angular-route'
+    },
+    'animate': {
+        endpoint: '@npm:animate.css'
+    },
+    'animate.css': {
+        endpoint: '@npm:animate.css'
+    },
+    'bootstrap': {
+        endpoint: '@npm:bootstrap',
+        override: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master/bootstrap.json'
+    },
+    'font-awesome': {
+        endpoint: '@npm:font-awesome'
+    },
+    'html5shiv': {
+        endpoint: '@npm:html5shiv'
+    },
+    'jquery': {
+        endpoint: '@npm:jquery'
+    },
+    'less': {
+        endpoint: '@npm:less'
+    },
+    'normalize': {
+        endpoint: '@npm:normalize'
+    },
+    'respond': {
+        endpoint: '@scottjehl/Respond'
+    },
+    'semantic-ui': {
+        endpoint: '@Semantic-Org/Semantic-UI-CSS'
+    },
+
+    /*
+        3rd party packages
+     */
+    openssl: {
+        endpoint: 'https://github.com/openssl/openssl.git'
+    },
+    mbedtls: {
+        endpoint: 'https://github.com/ARMmbed/mbedtls.git'
+    },
+    ai: {
+        endpoint: 'https://github.com/aws/aws-iot-device-sdk-embedded-C.git'
+    },
+
+    /*
+        Embedthis 3rd party repaks
+     */
+    'angular-bootstrap: {
+        endpoint: 'https://github.com/embedthis/angular-bootstrap.git'
+    },
+    more: {
+        endpoint: 'https://github.com/embedthis/more.git'
+    },
+    phplib: {
+        endpoint: 'https://github.com/embedthis/phplib.git'
+    },
+
+    /*
+        Appweb
+     */
+    'appweb-ejscript': {
+        endpoint: 'https://github.com/embedthis/appweb-ejscript.git'
+    },
+    'appweb-php': {
+        endpoint: 'https://github.com/embedthis/appweb-php.git'
+    },
+
+    /*
+        MPR
+     */
+    'mpr-openssl': {
+        endpoint: 'https://github.com/embedthis/mpr-openssl.git'
+    },
+    'mpr-matrixssl': {
+        endpoint: 'https://github.com/embedthis/mpr-matrixssl.git'
+    },
+    'mpr-nanossl': {
+        endpoint: 'https://github.com/embedthis/mpr-nanossl.git'
+    },
+    'mpr-est': {
+        endpoint: 'https://github.com/embedthis/mpr-est.git'
+    },
+    'mpr-mbedtls': {
+        endpoint: 'https://github.com/embedthis/mpr-mbedtls.git'
+    },
+    'makerom': {
+        endpoint: 'https://github.com/embedthis/makerom.git'
+    },
+
+    /*
+        GoAhead
+     */
+    'goahead-openssl': {
+        endpoint: 'https://github.com/embedthis/goahead-openssl.git'
+    },
+    'goahead-matrixssl': {
+        endpoint: 'https://github.com/embedthis/goahead-matrixssl.git'
+    },
+    'goahead-est': {
+        endpoint: 'https://github.com/embedthis/goahead-est.git'
+    },
+    'goahead-nanossl': {
+        endpoint: 'https://github.com/embedthis/goahead-nanossl.git'
+    },
+    'goahead-mbedtls': {
+        endpoint: 'https://github.com/embedthis/goahead-mbedtls.git'
+    },
+
+    /*
+        Ejscript
+     */
+    'ejs-version': {
+        endpoint: 'https://github.com/embedthis/ejs-version.git'
+    },
+
+    /*
+        ESP
+     */
+    'esp-html-skeleton': {
+        endpoint: 'https://github.com/embedthis/esp-html-skeleton.git'
+    },
+    'esp-mvc': {
+        endpoint: 'https://github.com/embedthis/esp-mvc.git'
+    },
+    'esp-server': {
+        endpoint: 'https://github.com/embedthis/esp-server.git'
+    },
+    'esp-angular': {
+        endpoint: 'https://github.com/embedthis/esp-angular.git'
+    },
+    'esp-angular-best': {
+        endpoint: 'https://github.com/embedthis/esp-angular-best.git'
+    },
+    'esp-angular-skeleton': {
+        endpoint: 'https://github.com/embedthis/esp-angular-skeleton.git'
+    },
+    'esp-angular-user': {
+        endpoint: 'https://github.com/embedthis/esp-angular-user.git'
+    },
+    'esp-angular-mgr-skeleton': {
+        endpoint: 'https://github.com/embedthis/esp-angular-mgr-skeleton.git'
+    },
+
+    /*
+        Expansive
+     */
+    'exp-angular': {
+        endpoint: 'https://github.com/embedthis/exp-angular.git'
+    },
+    'exp-angular-skeleton': {
+        endpoint: 'https://github.com/embedthis/exp-angular-skeleton.git'
+    },
+    'exp-babel': {
+        endpoint: 'https://github.com/embedthis/exp-babel.git'
+    },
+    'exp-blog': {
+        endpoint: 'https://github.com/embedthis/exp-blog.git'
+    },
+    'exp-blog-skeleton': {
+        endpoint: 'https://github.com/embedthis/exp-blog-skeleton.git'
+    },
+    'exp-bootstrap-skeleton': {
+        endpoint: 'https://github.com/embedthis/exp-bootstrap-skeleton.git'
+    },
+    'exp-canon': {
+        endpoint: 'https://github.com/embedthis/exp-canon.git'
+    },
+    'exp-css': {
+        endpoint: 'https://github.com/embedthis/exp-css.git'
+    },
+    'exp-esp': {
+        endpoint: 'https://github.com/embedthis/exp-esp.git'
+    },
+    'exp-gzip': {
+        endpoint: 'https://github.com/embedthis/exp-gzip.git'
+    },
+    'exp-html': {
+        endpoint: 'https://github.com/embedthis/exp-html.git'
+    },
+    'exp-html-skeleton': {
+        endpoint: 'https://github.com/embedthis/exp-html-skeleton.git'
+    },
+    'exp-js': {
+        endpoint: 'https://github.com/embedthis/exp-js.git'
+    },
+    'exp-less': {
+        endpoint: 'https://github.com/embedthis/exp-less.git'
+    },
+    'exp-markdown': {
+        endpoint: 'https://github.com/embedthis/exp-markdown.git'
+    },
+    'exp-reload': {
+        endpoint: 'https://github.com/embedthis/exp-reload.git'
+    },
+    'exp-sass': {
+        endpoint: 'https://github.com/embedthis/exp-sass.git'
+    },
+    'exp-semantic-skeleton': {
+        endpoint: 'https://github.com/embedthis/exp-semantic-skeleton.git'
+    },
+    'exp-shell': {
+        endpoint: 'https://github.com/embedthis/exp-shell.git'
+    },
+    'exp-traceur': {
+        endpoint: 'https://github.com/embedthis/exp-traceur.git'
+    },
+    'exp-vulcanize': {
+        endpoint: 'https://github.com/embedthis/exp-vulcanize.git'
+    },
+
+    /*
+        MakeMe
+     */
+    'me-components': {
+        endpoint: 'https://github.com/embedthis/me-components.git'
+    },
+    'me-configuration': {
+        endpoint: 'https://github.com/embedthis/me-configuration.git'
+    },
+    'me-dev': {
+        endpoint: 'https://github.com/embedthis/me-dev.git'
+    },
+    'me-doc': {
+        endpoint: 'https://github.com/embedthis/me-doc.git'
+    },
+    'me-docstyle': {
+        endpoint: 'https://github.com/embedthis/me-docstyle.git'
+    },
+    'me-installs': {
+        endpoint: 'https://github.com/embedthis/me-installs.git'
+    },
+    'me-os': {
+        endpoint: 'https://github.com/embedthis/me-os.git'
+    },
+    'me-project': {
+        endpoint: 'https://github.com/embedthis/me-project.git'
+    },
+    'me-vstudio': {
+        endpoint: 'https://github.com/embedthis/me-vstudio.git'
+    },
+    'me-xcode': {
+        endpoint: 'https://github.com/embedthis/me-xcode.git'
+    },
+
+    /*
+        Product distributions
+     */
+    'ejscript': {
+        endpoint: 'https://github.com/embedthis/ejscript.git'
+    },
+    'http': {
+        endpoint: 'https://github.com/embedthis/http.git'
+    },
+    'mpr': {
+        endpoint: 'https://github.com/embedthis/mpr.git'
+    },
+    'osdep': {
+        endpoint: 'https://github.com/embedthis/osdep.git'
+    },
+    'pcre': {
+        endpoint: 'https://github.com/embedthis/pcre.git'
+    },
+    'sqlite': {
+        endpoint: 'https://github.com/embedthis/sqlite.git'
+    },
+    'ssl': {
+        endpoint: 'https://github.com/embedthis/ssl.git'
+    },
+    'zlib': {
+        endpoint: 'https://github.com/embedthis/zlib.git'
+    },
+}
 
 class Pak
 {
@@ -50,31 +336,32 @@ class Pak
     /* This layers over App.config */
     private var defaultConfig = {
         catalogs: {
-        /* KEEP
-            pak: {
-                lookup:    'https://localhost:4443/search/${NAME}',
-                query:     'https://localhost:4443/search/${NAME}',
-                publish:   'https://localhost:4443/pak/publish',
+            internal: {
+                direct:    true,
+                locate:    InternalCatalog,
+                query:     InternalCatalog,
+                publish:   null,
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
                 overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
-            },
-        */
-            pak: {
-                lookup:    'https://embedthis.com/catalog/search/${NAME}',
-                query:     'https://embedthis.com/catalog/search/${NAME}',
-                publish:   'https://embedthis.com/catalog/pak/publish',
-                download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
-                overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
-            },
-            bower: {
-                lookup: 'http://bower.herokuapp.com/packages/${NAME}',
-                query: 'http://bower.herokuapp.com/packages',
-                download: 'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
             },
             npm: {
-                lookup: 'http://registry.npmjs.org/${NAME}',
-                download: 'http://registry.npmjs.org/${NAME}/-/${NAME}-${TAG}.tgz',
-            }
+                locate:     'http://registry.npmjs.org/${NAME}',
+                download:   'http://registry.npmjs.org/${NAME}/-/${NAME}-${TAG}.tgz',
+            },
+            github: {
+                locate:     'https://api.github.com/repos/${OWNER}/${NAME}',
+                query:      'https://github.com/archive/${OWNER}/${NAME}/archive',
+                download:   'http://api.github.com/repos/${OWNER}/${NAME}/tarball/${TAG}',
+            },
+            /*
+            pak: {
+                //  MOB - what is the difference between look and query
+                locate:     'https://embedthis.com/catalog/search/${NAME}',
+                query:      'https://embedthis.com/catalog/search/${NAME}',
+                publish:    'https://embedthis.com/catalog/pak/publish',
+                download:   'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
+                overrides:  'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
+            }, */
         },
         directories: {
             export: (!Path('lib').exists && Path('src').exists) ? 'src' : 'lib'
@@ -882,7 +1169,7 @@ class Pak
             topDeps = {}
             for each (vname in names) {
                 let [name,version] = vname.split('#')
-                if (RegExp('^(npm:)|(pak:)|(bower:)').exec(name)) {
+                if (RegExp('^(github:)|(npm:)|(pak:)').exec(name)) {
                     [, name] = name.split(':')
                 }
                 topDeps[name] = true
@@ -2000,38 +2287,39 @@ class Pak
                     continue
                 }
                 trace('Info', 'Search catalog: "' + cname + '" for ' + pak.name + ' for version ' + pak.versionCriteria)
-                let cmd = catalog.lookup
-                let http = new Http
-                try {
-                    cmd = cmd.expand({NAME: pak.name})
-                    vtrace('Get', cmd)
-                    // http.verify = false
-                    http.get(cmd)
-                    if (http.status != 200) {
-                        vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname +
-                               '" catalog. Status ' + http.status)
-                        continue
-                    }
-                } catch (e) {
-                    print(e)
-                    qtrace('Warn', 'Cannot access catalog at: ' + cmd)
-                    if (App.config.requirePrimaryCatalog && !state.force) {
-                        throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
+                let cmd = catalog.locate
+                let entry
+                if (catalog.direct) {
+    print("DIRECT CATALOG")
+                    entry = cmd[pak.name]
+                } else {
+                    let http = new Http
+                    try {
+                        cmd = cmd.expand({NAME: pak.name})
+                        vtrace('Get', cmd)
+                        // http.verify = false
+                        http.get(cmd)
+                        if (http.status != 200) {
+                            vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname +
+                                   '" catalog. Status ' + http.status)
+                            continue
+                        }
+                        entry = deserialize(http.response)
+                    } catch (e) {
+                        print(e)
+                        qtrace('Warn', 'Cannot access catalog at: ' + cmd)
+                        if (App.config.requirePrimaryCatalog && !state.force) {
+                            throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
+                        }
                     }
                 }
                 try {
-                    let response
-                    try {
-                        response = deserialize(http.response)
-                    } catch {
-                        trace('Skip', 'Bad response from catalog: ' + catalog + '\n' + http.response)
-                    }
-                    if (!response) {
+                    if (!entry) {
                         trace('Skip', 'Missing catalog data')
                         continue
                     }
                     if (cname == 'pak') {
-                        for each (item in response.data) {
+                        for each (item in entry.data) {
                             if (item.name == pak.name) {
                                 if (item.endpoint.startsWith('@')) {
                                     vtrace('Redirect', 'Redirect to ' + item.endpoint.slice(1))
@@ -2049,20 +2337,13 @@ class Pak
                                 break
                             }
                         }
-                    } else if (cname == 'bower') {
-                        pak.parseEndpoint(location)
-                        fetchGlobalOverrides(pak)
-                        pak.resolve()
-                        location = selectVersion(pak, pak.versionCriteria || (options.all ? '*' : '~*'))
-                        location = response.url
-
                     } else if (cname == 'npm') {
-                        for (let [key,value] in response.versions) {
+                        for (let [key,value] in entry.versions) {
                             if (value.deprecated) {
-                                delete response.versions[key]
+                                delete entry.versions[key]
                             }
                         }
-                        pak.versions = Object.getOwnPropertyNames(response.versions).map(function(e) e.trimStart('v'))
+                        pak.versions = Object.getOwnPropertyNames(entry.versions).map(function(e) e.trimStart('v'))
                         if (options.debug) {
                             vtrace('Info', 'Available versions:')
                             dump(pak.versions)
@@ -2101,7 +2382,7 @@ class Pak
             return [pak]
         }
         /*
-            Now search for partial name match or keyword match
+            Now search for partial name match or keyword match. Only works for some repositories
          */
         let http = new Http
         let matches = []
@@ -2109,41 +2390,49 @@ class Pak
             if (pak.catalog && pak.catalog != cname) {
                 continue
             }
-            trace('Info', 'Search catalog: ' + cname + ' for partial "' + pak.name + '" ' + (pak.versionCriteria || ''))
-            let cmd = catalog.query || catalog.lookup
+            let cmd = catalog.query || catalog.locate
             cmd = cmd.expand({NAME: pak.name})
-            try {
-                vtrace('Get', cmd)
-                http.get(cmd)
-            } catch (e) {
-                qtrace('Warn', 'Cannot access catalog at: ' + cmd)
-                if (App.config.requirePrimaryCatalog && !state.force) {
-                    throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
-                }
-            }
-            try {
-                let index = {}
-                let response
+            trace('Info', 'Search catalog: ' + cname + ' for partial "' + pak.name + '" ' + (pak.versionCriteria || ''))
+            let entry
+
+dump("CC", catalog)
+            if (catalog.direct) {
+print("DIRECT CATALOG")
+                entry = cmd[pak.name]
+            } else {
                 try {
-                    response = deserialize(http.response)
+                    vtrace('Get', cmd)
+                    http.get(cmd)
+                } catch (e) {
+                    qtrace('Warn', 'Cannot access catalog at: ' + cmd)
+                    if (App.config.requirePrimaryCatalog && !state.force) {
+                        throw 'Cannot continue with offline primary catalog ' + cmd + '\n' + 'Wait or retry with --force'
+                    }
+                }
+                try {
+                    entry = deserialize(http.response)
                 } catch {
                     trace('Skip', 'Bad response from catalog: ' + catalog + '\n' + http.response)
+                    continue
                 }
-                if (!response) {
+            }
+            dump("EE", entry)
+            try {
+                if (!entry) {
                     trace('Skip', 'Missing catalog data')
                     continue
                 }
                 let index = {}
                 if (cname == 'npm') {
-                    if (response.name == pak.name) {
-                        pak.versions = Object.getOwnPropertyNames(response.versions).map(function(e) e.trimStart('v'))
-                        index[pak.name] = response.repository.url
+                    if (entry.name == pak.name) {
+                        pak.versions = Object.getOwnPropertyNames(entry.versions).map(function(e) e.trimStart('v'))
+                        index[pak.name] = entry.repository.url
                     }
                 } else {
-                    if (response.data is Array) {
-                        response = response.data
+                    if (entry.data is Array) {
+                        entry = entry.data
                     }
-                    for each (item in response) {
+                    for each (item in entry) {
                         index[item.name] = item.endpoint || item.url
                     }
                 }
