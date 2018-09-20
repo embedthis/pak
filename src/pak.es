@@ -91,7 +91,7 @@ var InternalCatalog = {
     /*
         Embedthis 3rd party repaks
      */
-    'angular-bootstrap: {
+    'angular-bootstrap': {
         endpoint: 'https://github.com/embedthis/angular-bootstrap.git'
     },
     more: {
@@ -2290,7 +2290,6 @@ class Pak
                 let cmd = catalog.locate
                 let entry
                 if (catalog.direct) {
-    print("DIRECT CATALOG")
                     entry = cmd[pak.name]
                 } else {
                     let http = new Http
@@ -2395,9 +2394,7 @@ class Pak
             trace('Info', 'Search catalog: ' + cname + ' for partial "' + pak.name + '" ' + (pak.versionCriteria || ''))
             let entry
 
-dump("CC", catalog)
             if (catalog.direct) {
-print("DIRECT CATALOG")
                 entry = cmd[pak.name]
             } else {
                 try {
@@ -2416,7 +2413,6 @@ print("DIRECT CATALOG")
                     continue
                 }
             }
-            dump("EE", entry)
             try {
                 if (!entry) {
                     trace('Skip', 'Missing catalog data')
