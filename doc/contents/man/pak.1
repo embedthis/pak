@@ -14,7 +14,6 @@ pak \- Embedthis Pak -- Package Manager
     \fB--nodeps\fR
     \fB--optional\fR
     \fB--paks dir\fR
-    \fB--password file\fR
     \fB--quiet\fR
     \fB--silent\fR
     \fB--verbose\fR
@@ -35,8 +34,6 @@ pak \- Embedthis Pak -- Package Manager
     lockdown
     profile [debug|release|...]
     prune packages...
-    publish [name endpoint email [override]]
-    retract name [password]
     search packages...
     uninstall packages...
     update packages...
@@ -142,15 +139,6 @@ For more details, see:
 To run Pak with more verbose trace output, use the [-v] --verbose switch. To run with less trace, use the
 [-q] --quiet switch.  To run completely silently except for hard-errors, use --silent.
 
-.SH PUBLISHING
-To publish a new package, create a pak.json and then run pak inside the directory of the package to be published:
-
-    pak publish
-
-Where NAME is the name of package, REPOSITORY is the GitHub endpoint of the package. You will be prompted to enter a
-password to manage the package. You will need this password to modify or retract the package in the future.
-Safeguard it well.
-
 .SH CONFIGURATION
 On startup, Pak reads configuration from a pakrc file. This file defines the operational configuration for Pak.
 
@@ -177,7 +165,7 @@ depend [packages...]
 Display installed package dependencies.
 .TP
 edit key[=value]...
-Edit a package description file.
+Edit a value in the pak.json package description file.
 .TP
 help ...
 Display this Pak usage help.
@@ -205,12 +193,6 @@ a "debug" or "release" configuration.
 .TP
 prune [packages...]
 Prune named packages.
-.TP
-publish name endpoint password
-Publish a package in the Pak catalog.
-.TP
-retract name [pass]
-Unpublish a package.
 .TP
 search packages...
 Search for packages in the catalogs.
@@ -277,10 +259,6 @@ Used when installing packages to add them to the 'optionalDependencies' list ins
 \fB\--paks directory\fR
 Specify the local "paks" directory in which to install packages. This overrides the values specified in the various pakrc
 or pak.json files.
-
-.TP
-\fB\--password file\fR
-Specify the a file containing the password to use when doing "pak publish".
 
 .TP
 \fB\--quiet\fR

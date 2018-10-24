@@ -252,7 +252,9 @@ enumerable class Package {
 
     public function setInstallPath() {
         installPath = App.config.directories.paks.join(name)
-        installed = (installPath.exists && installPath.join('package.json').exists)
+        installed = (installPath.exists &&
+            (installPath.join('pak.json').exists || installPath.join('package.json').exists)
+        )
     }
 
     function setInstalledVersion(ver: String?) {
