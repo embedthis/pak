@@ -2,7 +2,7 @@
     "name": "pak",
     "title": "Embedthis Pak",
     "description": "Embedthis Pak Manager",
-    "version": "0.12.4",
+    "version": "1.0.0",
     "keywords": [
         "pak",
         "package",
@@ -33,7 +33,7 @@
         "ssl": "~0.9"
     },
     "optionalDependencies": {
-        "mpr-openssl": "~0.5"
+        "mpr-openssl": "~1"
     },
     "devDependencies": {
         "makeme": ">=0.9"
