@@ -97,8 +97,8 @@ var InternalCatalog = {
     more: {
         endpoint: 'https://github.com/embedthis/more.git'
     },
-    phplib: {
-        endpoint: 'https://github.com/embedthis/phplib.git'
+    php: {
+        endpoint: 'https://github.com/php/php-src.git'
     },
 
     /*
