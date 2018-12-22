@@ -18,7 +18,6 @@ SYNOPSIS
            --nodeps
            --optional
            --paks dir
-           --password file
            --quiet
            --silent
            --verbose
@@ -40,8 +39,6 @@ SYNOPSIS
            lockdown
            profile [debug|release|...]
            prune packages...
-           publish [name endpoint email [override]]
-           retract name [password]
            search packages...
            uninstall packages...
            update packages...
@@ -156,18 +153,6 @@ RUNNING
        completely silently except for hard-errors, use --silent.
 
 
-PUBLISHING
-       To publish a new package, create a pak.json and then run pak inside the
-       directory of the package to be published:
-
-           pak publish
-
-       Where NAME is the name of package, REPOSITORY is the GitHub endpoint of
-       the  package.  You  will  be prompted to enter a password to manage the
-       package. You will need this password to modify or retract  the  package
-       in the future.  Safeguard it well.
-
-
 CONFIGURATION
        On  startup,  Pak  reads  configuration  from  a  pakrc file. This file
        defines the operational configuration for Pak.
@@ -195,7 +180,7 @@ COMMANDS
               Display installed package dependencies.
 
        edit key[=value]...
-              Edit a package description file.
+              Edit a value in the pak.json package description file.
 
        help ...
               Display this Pak usage help.
@@ -228,12 +213,6 @@ COMMANDS
 
        prune [packages...]
               Prune named packages.
-
-       publish name endpoint password
-              Publish a package in the Pak catalog.
-
-       retract name [pass]
-              Unpublish a package.
 
        search packages...
               Search for packages in the catalogs.
@@ -313,17 +292,12 @@ OPTIONS
               pak.json files.
 
 
-       --password file
-              Specify the a file containing the password  to  use  when  doing
-              "pak publish".
-
-
        --quiet
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
 
        --silent
-              Run  in  silent mode suppressing all but hard errors. Aliased as
+              Run in silent mode suppressing all but hard errors.  Aliased  as
               -s.
 
 
@@ -332,8 +306,8 @@ OPTIONS
 
 
        --write URI
-              Write  installed  packages   to   pak.json   dependencies.   Use
-              --optional  to  update optionalDependencies.  When uninstalling,
+              Write   installed   packages   to   pak.json  dependencies.  Use
+              --optional to update optionalDependencies.   When  uninstalling,
               --write will remove the package from the dependencies and update
               the pak.json.
 
@@ -343,7 +317,7 @@ REPORTING BUGS
        Report bugs to dev@embedthis.com.
 
 COPYRIGHT
-       Copyright  (C) Embedthis Software. Bit and Ejscript are a trademarks of
+       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
        Embedthis Software.
 
 SEE ALSO

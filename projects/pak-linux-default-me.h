@@ -22,7 +22,7 @@
     #define ME_COMPANY "embedthis"
 #endif
 #ifndef ME_COMPATIBLE
-    #define ME_COMPATIBLE "0.12"
+    #define ME_COMPATIBLE "1.0"
 #endif
 #ifndef ME_COMPILER_HAS_ATOMIC
     #define ME_COMPILER_HAS_ATOMIC 0
@@ -142,7 +142,7 @@
     #define ME_TUNE "speed"
 #endif
 #ifndef ME_VERSION
-    #define ME_VERSION "0.12.4"
+    #define ME_VERSION "1.0.1"
 #endif
 
 /* Prefixes */
@@ -162,7 +162,7 @@
     #define ME_APP_PREFIX "/usr/local/lib/pak"
 #endif
 #ifndef ME_VAPP_PREFIX
-    #define ME_VAPP_PREFIX "/usr/local/lib/pak/0.12.4"
+    #define ME_VAPP_PREFIX "/usr/local/lib/pak/1.0.1"
 #endif
 #ifndef ME_BIN_PREFIX
     #define ME_BIN_PREFIX "/usr/local/bin"
@@ -195,7 +195,7 @@
     #define ME_CACHE_PREFIX "/var/spool/pak/cache"
 #endif
 #ifndef ME_SRC_PREFIX
-    #define ME_SRC_PREFIX "pak-0.12.4"
+    #define ME_SRC_PREFIX "pak-1.0.1"
 #endif
 
 /* Suffixes */
@@ -231,16 +231,16 @@
 
 /* Miscellaneous */
 #ifndef ME_MAJOR_VERSION
-    #define ME_MAJOR_VERSION 0
+    #define ME_MAJOR_VERSION 1
 #endif
 #ifndef ME_MINOR_VERSION
-    #define ME_MINOR_VERSION 12
+    #define ME_MINOR_VERSION 0
 #endif
 #ifndef ME_PATCH_VERSION
-    #define ME_PATCH_VERSION 4
+    #define ME_PATCH_VERSION 1
 #endif
 #ifndef ME_VNUM
-    #define ME_VNUM 100004
+    #define ME_VNUM 100000001
 #endif
 
 /* Components */

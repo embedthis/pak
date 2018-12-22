@@ -1076,7 +1076,7 @@
     ../src/ejscript/ejs.es
     			);
     			outputPaths = (
-    ../build/macosx-x64-default/bin/ejs.mod
+    
     			);
     			runOnlyForDeploymentPostprocessing = 0;
     			shellPath = /bin/bash;
@@ -1102,7 +1102,15 @@ cd ../src/ejscript
 ../src/certs/samples/test.key
     			);
     			outputPaths = (
-    ../build/macosx-x64-default/bin
+    ../build/macosx-x64-default/bin/ca.crt,
+../build/macosx-x64-default/bin/ca.key,
+../build/macosx-x64-default/bin/ec.crt,
+../build/macosx-x64-default/bin/ec.key,
+../build/macosx-x64-default/bin/roots.crt,
+../build/macosx-x64-default/bin/self.crt,
+../build/macosx-x64-default/bin/self.key,
+../build/macosx-x64-default/bin/test.crt,
+../build/macosx-x64-default/bin/test.key
     			);
     			runOnlyForDeploymentPostprocessing = 0;
     			shellPath = /bin/bash;
@@ -1131,7 +1139,7 @@ cd ..
 ../src/pak.es
     			);
     			outputPaths = (
-    ../build/macosx-x64-default/bin/pak.mod
+    
     			);
     			runOnlyForDeploymentPostprocessing = 0;
     			shellPath = /bin/bash;
@@ -1711,7 +1719,7 @@ fi";
                     COMBINE_HIDPI_IMAGES = YES;
     				ALWAYS_SEARCH_USER_PATHS = NO;
                     ONLY_ACTIVE_ARCH = YES;
-                    CURRENT_PROJECT_VERSION = 0.12;
+                    CURRENT_PROJECT_VERSION = 1.0;
                     DYLIB_COMPATIBILITY_VERSION = "$(CURRENT_PROJECT_VERSION)";
                     DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 
@@ -1769,6 +1777,8 @@ ENABLE_TESTABILITY = YES;
 					"$(inherited)"
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					"_REENTRANT",
+					"PIC",
 					"ME_DEBUG=1",
 					"$(inherited)"
 				);
@@ -1796,7 +1806,7 @@ ENABLE_TESTABILITY = YES;
                     COMBINE_HIDPI_IMAGES = YES;
     				ALWAYS_SEARCH_USER_PATHS = NO;
                     ONLY_ACTIVE_ARCH = YES;
-                    CURRENT_PROJECT_VERSION = 0.12;
+                    CURRENT_PROJECT_VERSION = 1.0;
                     DYLIB_COMPATIBILITY_VERSION = "$(CURRENT_PROJECT_VERSION)";
                     DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 
@@ -1855,6 +1865,8 @@ ENABLE_TESTABILITY = YES;
 					"$(inherited)"
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					"_REENTRANT",
+					"PIC",
 					"ME_DEBUG=0",
 					"$(inherited)"
 				);
