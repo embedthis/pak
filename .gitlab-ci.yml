@@ -11,7 +11,6 @@ stages:
 build:
     stage: build
     script:
-        - env
         - ./configure --profile ${PROFILE}
         - me build test package
     artifacts:
@@ -27,7 +26,7 @@ publish:
         - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
         - me configure --profile ${PROFILE}
         - me publish
-    only: [ 'tags', 'triggers', 'schedules', 'web' ]
+    only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
     tags:
         - embedthis
     environment:
