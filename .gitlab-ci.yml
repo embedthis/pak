@@ -22,7 +22,7 @@ publish:
     stage: publish
     script:
         - ./configure --profile ${PROFILE}
-        - $(secrets --env 'PUBLISH_' --profile ${PROFILE} --store ${SECRET_STORE} get)
+        - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
         - me publish
     dependencies:
         - build
