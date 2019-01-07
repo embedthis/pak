@@ -22,8 +22,8 @@ publish:
     stage: publish
     script:
         - ./configure --profile ${PROFILE}
-        - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
+        - $(secrets --env 'PUBLISH_' --profile ${PROFILE} --store ${SECRET_STORE} get)
         - me publish
     dependencies:
         - build
-    only: [ 'tags', 'triggers', 'schedules' ]
+    #only: [ 'tags', 'triggers', 'schedules' ]
