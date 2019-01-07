@@ -23,7 +23,7 @@ publish:
     script:
         - ./configure --profile ${PROFILE}
         - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
-        - me publish
+        - PUBLISH_PUBLICBUCKET=embedthis.software me publish
     dependencies:
         - build
     #only: [ 'tags', 'triggers', 'schedules' ]
