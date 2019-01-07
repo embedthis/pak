@@ -1,0 +1,29 @@
+image: runner:latest
+
+variables:
+    PROFILE: "release"
+    SECRET_STORE: "embedthis.config/embedthis"
+
+stages:
+    - build
+    - publish
+
+build:
+    stage: build
+    script:
+        - ./configure --profile ${PROFILE}
+        - me build test package
+    artifacts:
+        expire_in: 20 minutes
+        paths:
+            - build/*/img/*-*-*.tgz
+
+publish:
+    stage: publish
+    script:
+        - ./configure --profile ${PROFILE}
+        - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
+        - me publish
+    dependencies:
+        - build
+    only: [ 'tags', 'triggers', 'schedules' ]

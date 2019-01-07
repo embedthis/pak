@@ -430,7 +430,7 @@ class Pak
         version: '1.0.0',
         dependencies: {},
         import: true,
-        profile: 'debug',
+        profile: 'dev',
     }
 
     function Pak() {
