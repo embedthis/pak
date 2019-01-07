@@ -1,5 +1,4 @@
 image: runner:current
-# image: 319066273707.dkr.ecr.us-east-1.amazonaws.com/runner:current
 
 variables:
     PROFILE: "release"
@@ -12,6 +11,7 @@ stages:
 build:
     stage: build
     script:
+        - env
         - ./configure --profile ${PROFILE}
         - me build test package
     artifacts:
