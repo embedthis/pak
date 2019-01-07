@@ -14,7 +14,7 @@ build:
         - ./configure --profile ${PROFILE}
         - me build test package
     artifacts:
-        expire_in: 20 minutes
+        expire_in: 1 hour
         paths:
             - build/*/img/*-*-*.tgz
 
@@ -23,7 +23,10 @@ publish:
     script:
         - ./configure --profile ${PROFILE}
         - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
-        - PUBLISH_PUBLICBUCKET=embedthis.software me publish
+        - me publish
     dependencies:
         - build
-    #only: [ 'tags', 'triggers', 'schedules' ]
+    only: [ 'tags', 'triggers', 'schedules', 'web' ]
+    environment:
+        name: ${PROFILE}
+        url: https://www.embedthis.com/pak/download.html
