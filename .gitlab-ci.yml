@@ -1,4 +1,4 @@
-image: runner:current
+image: 319066273707.dkr.ecr.us-east-1.amazonaws.com/runner
 
 variables:
     PROFILE: "release"
