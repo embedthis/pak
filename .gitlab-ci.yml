@@ -28,7 +28,7 @@ publish:
         - me publish
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
     tags:
-        - macosx
+        - embedthis
     environment:
         name: ${PROFILE}
         url: https://www.embedthis.com/pak/download.html
