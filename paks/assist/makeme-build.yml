@@ -1,0 +1,63 @@
+#
+#   build.yml - Template build action
+#
+#   Inputs:
+#       PROFILE         dev, release, prod, ...
+#       SECRET_STORE    embedthis.config/embedthis
+#   Outputs
+#       build/*/img/    built images
+#
+
+stages:
+    - build
+    - publish
+
+.build: &build
+    stage: build
+    script:
+        - ./configure --profile ${PROFILE}
+        - me build test package
+    artifacts:
+        name: "images"
+        paths:
+            - build/*/img/*-*-*.*
+
+.publish: &publish
+    stage: publish
+    script:
+        - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
+        - me configure --profile ${PROFILE}
+        - me publish
+    only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
+    environment:
+        name: ${PROFILE}
+        url: https://www.embedthis.com/pak/download.html
+
+build-linux:
+    extends: .build
+    tags: ['linux']
+
+build-macosx:
+    extends: .build
+    tags: ['macosx']
+
+build-windows:
+    extends: .build
+    tags: ['windows']
+    when: manual
+
+publish-linux:
+    extends: .publish
+    dependencies: ['build-linux']
+    tags: ['linux']
+
+publish-macosx:
+    extends: .publish
+    dependencies: ['build-macosx']
+    tags: ['macosx']
+
+publish-windows:
+    extends: .publish
+    dependencies: ['build-windows']
+    tags: ['windows']
+    when: manual
