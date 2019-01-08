@@ -24,13 +24,12 @@ publish:
         - build
     script:
         - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
-        - env | grep AWS
-        - ls ~/.paks/me-dev/embedthis
         - me configure --profile ${PROFILE}
         - me publish
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
     tags:
         - embedthis
+        - macosx
     environment:
         name: ${PROFILE}
         url: https://www.embedthis.com/pak/download.html
