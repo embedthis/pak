@@ -1,5 +1,6 @@
 {
     "name": "pak",
+    "owner": "embedthis",
     "title": "Embedthis Pak",
     "description": "Embedthis Pak Manager",
     "version": "1.0.1",

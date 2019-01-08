@@ -8,7 +8,7 @@ variables:
     PROFILE: "release"
     SECRET_STORE: "embedthis.config/embedthis"
 
-include: "paks/assist/makeme-build.yml"
+include: "paks/assist/gitlab-makeme.yml"
 
 stages:
     - build
