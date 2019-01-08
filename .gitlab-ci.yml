@@ -28,7 +28,6 @@ publish:
         - me publish
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
     tags:
-        - embedthis
         - macosx
     environment:
         name: ${PROFILE}
