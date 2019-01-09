@@ -1,5 +1,5 @@
 #
-#   gitlab-website.yml - Template CI/CD for gulp 
+#   gitlab-website.yml - Template CI/CD for gulp
 #
 #   Inputs:
 #       AWS_ACCOUNT     mobsense

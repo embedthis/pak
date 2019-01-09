@@ -25,7 +25,7 @@ stages:
 .publish: &publish
     stage: publish
     script:
-        - $(secrets --env '' --profile ${PROFILE} --store ${SECRET_STORE} get)
+        - $(secrets --env '' --profile "${PROFILE}" --aws-profile "${AWS_ACCOUNT}" get)
         - me configure --profile ${PROFILE}
         - me publish
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
