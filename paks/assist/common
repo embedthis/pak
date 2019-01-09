@@ -8,26 +8,3 @@ if [ "${TRACE}" != "" ] ; then
     set -x
 fi
 unset CDPATH
-
-#
-#   dockerLogin profile region
-#
-dockerLogin() {
-    local AWS_PROFILE="$1"
-    local AWS_REGION="$2"
-    LOGIN=$(aws ecr get-login --no-include-email --region ${AWS_REGION} --profile ${AWS_PROFILE})
-    [ $? != 0 ] && exit 1
-    TOKEN=$(echo ${LOGIN} | sed 's/.*-p //' | sed 's/ https.*//')
-    URI=$(echo ${LOGIN} | sed 's/.* https...//')
-    output=$(echo ${TOKEN} | docker login -u AWS --password-stdin ${URI} 2>&1)
-    if [ $? != 0 ] ; then
-        echo "Cannot login for docker"
-        echo "${output}"
-        exit 1
-    fi
-    echo ${URI}
-}
-
-dockerLogout() {
-    DOCKER_HOST= docker logout >/dev/null
-}

@@ -1,5 +1,5 @@
 /*
-    config - Read configuration and poly fills
+    config - Read configuration for gulp builds and define polyfills
  */
 
 import * as fs from 'fs'

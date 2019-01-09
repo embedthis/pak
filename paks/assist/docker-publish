@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#   docker-publish - Publish docker image to the ECR repository 
+#   docker-publish - Publish docker image to the ECR repository
 #
 #   usage: docker-publish image profile region [primary]
 #
@@ -12,6 +12,7 @@ REGION=${3}
 VERSION=$(pak --dir .. edit version)
 
 . $(dirname ${BASH_SOURCE[0]})/common
+. $(dirname ${BASH_SOURCE[0]})/docker-login
 
 echo "Docker login for ${PROFILE} at ${REGION}"
 URI=$(dockerLogin ${PROFILE} ${REGION})

@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+#   build-parts - Build parts of a product
+#
+
+PARTS=$(echo ${PARTS} | tr ',' ' ')
+
+for PART in ${PARTS}
+do
+    cd "./${PART}"
+    echo -e "\nBuild ${PART} $*"
+    if [ -f gulpfile.ts ] ; then
+        PART=${PART} gulp --series build package $*
+    elif [ -f main.me ] ; then
+        me
+    elif [ -f Makefile ] ; then
+        make
+    fi
+    [ $? != 0 ] && exit 2
+    cd ..
+done

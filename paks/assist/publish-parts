@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+#   publish-parts - Publish parts of a product
+#
+
+PARTS=$(echo ${PARTS} | tr ',' ' ')
+
+for PART in ${PARTS}
+do
+    cd "./${PART}"
+    echo -e "\nPublish ${PART} $*"
+    if [ -f gulpfile.ts ] ; then
+        PART=${PART} gulp --series publish $*
+    elif [ -f main.me ] ; then
+        me publish
+    elif [ -f Makefile ] ; then
+        make publish
+    fi
+    [ $? != 0 ] && exit 2
+    cd ..
+done
