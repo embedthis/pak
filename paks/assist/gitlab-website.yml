@@ -35,6 +35,7 @@ publish-website:
     stage: publish
     script:
         - $(secrets --env '' --profile "${PROFILE}" --aws-profile "${AWS_ACCOUNT}" get)
+        - ./configure --profile ${PROFILE}
         - npm link gulp
         - ./paks/assist/publish-parts --profile "${PROFILE}"
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]

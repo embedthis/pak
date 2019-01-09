@@ -8,9 +8,7 @@ if [ "${PATH/$_MMPRODUCT\/build//}" = "${PATH}" ] ; then
     _MMOS=`uname | sed 's/CYGWIN.*/windows/;s/Darwin/macosx/' | tr '[A-Z]' '[a-z]'`
     _MMARCH=`uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/'`
     export PATH="$PWD/build/${_MMOS}-${_MMARCH}-release/bin:$PWD/build/${_MMOS}-${_MMARCH}-debug/bin:$PATH"
-    echo
-    echo Setup \"${_MMPRODUCT}\" Environment
-    echo
+    echo Switch to \"${_MMPRODUCT}\" Environment
 fi
 
 if [ -z "${CI}" ] ; then
