@@ -1,7 +1,7 @@
 # Embedthis Pak
 
-<img align="right" src="https://www.embedthis.com/images/pak-icon-128.png">
 [![pipeline status](https://gitlab.com/embedthis/pak/badges/master/pipeline.svg)](https://gitlab.com/embedthis/pak/commits/master)
+<img align="right" src="https://www.embedthis.com/images/pak-icon-128.png">
 
 Pak is a generic package manager for applications. 
 Pak makes it easy to retrieve, integrate and manage components for applications. 
