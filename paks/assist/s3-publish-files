@@ -30,10 +30,7 @@ if [ "${AWS_PROFILE}" = "" ] ; then
 fi
 . $(dirname ${BASH_SOURCE[0]})/common
 
-set -x
-echo
-echo aws s3 sync ${SRC} "s3://${DST}/" --delete --profile "${AWS_PROFILE}"
-aws s3 sync --quiet ${SRC} "s3://${DST}/" --delete --profile "${AWS_PROFILE}"
+aws s3 sync --no-progress ${SRC} "s3://${DST}/" --delete --profile "${AWS_PROFILE}"
 if [ $? != 0 ] ; then
     echo "Cannot copy to S3"
     exit 255

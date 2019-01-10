@@ -5,7 +5,7 @@
 #       AWS_ACCOUNT     mobsense
 #       PARTS           app, src
 #       PROFILE         dev, release, prod, ...
-#       WEBSRC          "web"
+#       DIR             "web"
 #   Outputs
 #       build/web/      rendered pages
 #
@@ -17,18 +17,18 @@ stages:
 cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-        - ${WEBSRC}/node_modules/
+        - ${DIR}/node_modules/
 
 build-website:
     stage: build
     script:
         - ./configure --profile ${PROFILE}
-        - ./paks/assist/build-parts --profile "${PROFILE}"
+        - PARTS=${PARTS} ./paks/assist/build-parts --profile "${PROFILE}"
     artifacts:
         expire_in: 1 hour
         name: "rendered"
         paths:
-            - ${WEBSRC}/build/
+            - ${DIR}/build/
     tags: ['macosx']
 
 publish-website:
@@ -37,6 +37,6 @@ publish-website:
         - $(secrets --env '' --profile "${PROFILE}" --aws-profile "${AWS_ACCOUNT}" get)
         - ./configure --profile ${PROFILE}
         - npm link gulp
-        - ./paks/assist/publish-parts --profile "${PROFILE}"
+        - PARTS=${PARTS} ./paks/assist/publish-parts --profile "${PROFILE}"
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
     tags: ['macosx']
