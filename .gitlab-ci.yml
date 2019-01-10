@@ -2,7 +2,7 @@
 #   gitlab-ci.yml -- GitLab CI/CD build instructions
 #
 
-image: alpine-runner:current
+image: alpine-runner:latest
 
 variables:
     AWS_ACCOUNT: "embedthis"
