@@ -3,19 +3,38 @@
 #   build-parts - Build parts of a product
 #
 
-PARTS=$(echo ${PARTS} | tr ',' ' ')
+function buildParts() {
+    unset CDPATH
+    local PARTS="app, web"
+    while [[ $# -gt 0 ]] ; do
+        arg="$1"
+        case ${arg} in
+            -p|--parts)
+                PARTS=${2}
+                shift ; shift
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
 
-for PART in ${PARTS}
-do
-    cd "./${PART}"
-    echo -e "\nBuild ${PART} $*"
-    if [ -f gulpfile.ts ] ; then
-        PART=${PART} gulp --series build package $*
-    elif [ -f main.me ] ; then
-        me
-    elif [ -f Makefile ] ; then
-        make
-    fi
-    [ $? != 0 ] && exit 2
-    cd ..
-done
+    PARTS=$(echo ${PARTS} | tr ',' ' ')
+
+    for part in ${PARTS} ; do
+        [ ! -d "${part}" ] && continue
+        echo -e "\nBuild ${part} $*"
+        cd "./${part}"
+        if [ -f gulpfile.ts ] ; then
+            gulp build $*
+        elif [ -f main.me ] ; then
+            me
+        elif [ -f Makefile ] ; then
+            make
+        fi
+        [ $? != 0 ] && exit 2
+        cd ..
+    done
+}
+
+buildParts

@@ -9,7 +9,3 @@ variables:
     PROFILE: "release"
 
 include: "paks/assist/gitlab-makeme.yml"
-
-stages:
-    - build
-    - publish

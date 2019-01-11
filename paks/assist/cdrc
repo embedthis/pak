@@ -7,7 +7,7 @@ if [ "${PATH/$_MMPRODUCT\/build//}" = "${PATH}" ] ; then
     export CDPATH="$CDPATH:$PWD:$PWD/src"
     _MMOS=`uname | sed 's/CYGWIN.*/windows/;s/Darwin/macosx/' | tr '[A-Z]' '[a-z]'`
     _MMARCH=`uname -m | sed 's/i.86/x86/;s/x86_64/x64/;s/arm.*/arm/;s/mips.*/mips/'`
-    export PATH="$PWD/build/${_MMOS}-${_MMARCH}-release/bin:$PWD/build/${_MMOS}-${_MMARCH}-debug/bin:paks/build/bin:$PATH"
+    export PATH="$PWD/build/${_MMOS}-${_MMARCH}-release/bin:$PWD/build/${_MMOS}-${_MMARCH}-debug/bin:paks/assist:$PATH"
     echo Switching to \"${_MMPRODUCT}\" profile
 fi
 

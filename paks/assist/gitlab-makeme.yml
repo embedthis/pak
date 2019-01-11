@@ -12,10 +12,14 @@ stages:
     - build
     - publish
 
+before_script:
+    - ./configure --profile ${PROFILE}
+    - npm link gulp
+    - eval $(paks/assist/secrets --env '' --profile "${PROFILE}" --aws-profile "${AWS_ACCOUNT}" get)
+
 .build: &build
     stage: build
     script:
-        - ./configure --profile ${PROFILE}
         - me build test package
     artifacts:
         name: "images"
@@ -25,8 +29,6 @@ stages:
 .publish: &publish
     stage: publish
     script:
-        - $(secrets --env '' --profile "${PROFILE}" --aws-profile "${AWS_ACCOUNT}" get)
-        - me configure --profile ${PROFILE}
         - me publish
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
     environment:

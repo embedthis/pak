@@ -5,8 +5,8 @@
 #   usage: docker-publish image profile region [primary]
 #
 IMAGE=${1}
-PROFILE=${2}
-REGION=${3}
+AWS_PROFILE=${2}
+AWS_DEFAULT_REGION=${3}
 : ${PRIMARY:=${4}}
 
 VERSION=$(pak --dir .. edit version)
@@ -14,8 +14,8 @@ VERSION=$(pak --dir .. edit version)
 . $(dirname ${BASH_SOURCE[0]})/common
 . $(dirname ${BASH_SOURCE[0]})/docker-login
 
-echo "Docker login for ${PROFILE} at ${REGION}"
-URI=$(dockerLogin ${PROFILE} ${REGION})
+echo "Docker login for ${AWS_PROFILE} at ${AWS_DEFAULT_REGION}"
+URI=$(dockerLogin)
 IMAGE_PATH=${URI}/${IMAGE}
 
 echo "Tagging image: docker tag ${IMAGE} ${IMAGE_PATH}:${VERSION}"
