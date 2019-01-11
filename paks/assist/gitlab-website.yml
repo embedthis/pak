@@ -13,10 +13,10 @@ stages:
     - build
     - publish
 
-cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-        - ${WEB}/node_modules/
+#cache:
+#    key: ${CI_COMMIT_REF_SLUG}
+#    paths:
+#        - ${WEB}/node_modules/
 
 before_script:
     - ./configure --profile ${PROFILE}
