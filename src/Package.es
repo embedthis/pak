@@ -298,6 +298,11 @@ enumerable class Package {
                 parseEndpoint(source.repository.url)
                 resolve()
             }
+            if (!this.owner) {
+                this.owner = source.owner
+                let cacheBase = repository.join(this.owner, cacheVersion.toString())
+                cachePath = App.config.directories.pakcache.join(cacheBase)
+            }
         }
     }
 

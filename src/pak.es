@@ -427,6 +427,7 @@ class Pak
     private var PakTemplate = {
         name: aname.toLowerCase(),
         title: aname.toPascal() + ' Application',
+        owner: 'default',
         version: '1.0.0',
         dependencies: {},
         import: true,
