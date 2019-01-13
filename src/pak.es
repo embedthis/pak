@@ -460,9 +460,6 @@ class Pak
             noupdate: { alias: 'n' },
             optional: { alias: 'o' },
             paks: { range: String },
-            /* DEPRECATE
-            password: { range: String },
-            */
             quiet: { alias: 'q' },
             silent: { alias: 's' },
             trace: { range: /\w+(:\d)/, value: 'stderr:4' },
@@ -492,10 +489,6 @@ class Pak
             '    lockdown                    # Lockdown dependencies\n' +
             '    profile [dev|prod]          # Select profile\n' +
             '    prune [paks...]             # Prune named paks\n' +
-            /* DEPRECATE
-            '    publish [name uri pass]     # publish a pak in a catalog\n' +
-            '    retract name [pass]         # Unpublish a pak\n' +
-            */
             '    search paks...              # Search for paks in the catalog\n' +
             '    uninstall paks...           # Uninstall a pak on the local system\n' +
             '    update [paks...]            # Update the cache with latest version\n' +
@@ -732,17 +725,6 @@ class Pak
         case 'prune':
             prune(rest)
             break
-
-        /* DEPRECATE
-        case 'publish':
-            publish(rest)
-            break
-
-        case 'retract':
-        case 'unpublish':
-            retract(rest)
-            break
-        */
 
         case 'search':
             search(rest)
@@ -1590,7 +1572,7 @@ class Pak
     }
 
     /*
-        DEPRECATED
+        DEPRECATE
         pak [--password passfile] publish
         pak [--password passfile] publish name email endpoint [override]
      */
@@ -2133,7 +2115,7 @@ class Pak
                         throw 'Cannot run MakeMe installation script "' + event + '" for ' + pak + '\n' + e
                     }
                 } else {
-                    //  DEPRECATED
+                    //  DEPRECATE
                     path = pak.cachePath.join('start.me')
                     if (path.exists) {
                         if (Cmd.locate('me')) {
