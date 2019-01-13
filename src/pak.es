@@ -828,10 +828,14 @@ class Pak
             for each (name in names) {
                 if (Path(name).exists && Package.getSpecFile(name)) {
                     let pspec = Package.loadPackage(name)
-                    if (!pspec.repository || !pspec.repository.url) {
+                    let pak
+                    if (pspec.repository is String) {
+                        pak = Package(pspec.repository)
+                    } else if (pspec.repository && pspec.repository.url) {
+                        pak = Package(pspec.repository.url)
+                    } else {
                         throw 'Package.json is missing repository.url'
                     }
-                    let pak = Package(pspec.repository.url)
                     pak.setSource(name)
                     cachePak(pak)
                 } else {
@@ -1609,7 +1613,13 @@ class Pak
                 return
             }
             name = pak.name
-            endpoint = (spec.repository && spec.repository.url) || null
+            if (spec.repository is String) {
+                endpoint = spec.repository
+            } else if (spec.repository && spec.repository.url) {
+                endpoint = spec.repository.url
+            } else {
+                endpoint = null
+            }
             over = (spec.repository && spec.repository.override) || null
         } else if (args.length == 3) {
             [name, endpoint, over] = args
@@ -2486,7 +2496,11 @@ class Pak
                 if (cname == 'npm') {
                     if (entry.name == pak.name) {
                         pak.versions = Object.getOwnPropertyNames(entry.versions).map(function(e) e.trimStart('v'))
-                        index[pak.name] = entry.repository.url
+                        if (entry.repository is String) {
+                            index[pak.name] = entry.repository
+                        } else {
+                            index[pak.name] = entry.repository.url
+                        }
                     }
                 } else {
                     if (entry.data is Array) {

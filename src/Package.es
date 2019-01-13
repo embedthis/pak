@@ -104,7 +104,11 @@ enumerable class Package {
                 if (package.origin) {
                     parseEndpoint(package.origin)
                 } else if (package.repository) {
-                    parseEndpoint(package.repository.url)
+                    if (package.repository is String) {
+                        parseEndpoint(package.repository)
+                    } else {
+                        parseEndpoint(package.repository.url)
+                    }
                 } else {
                     name = Path(ref).basename
                 }
@@ -295,7 +299,11 @@ enumerable class Package {
             sourceVersion = Version(source.version || '0.0.1')
             setCacheVersion(source.version)
             if (source.repository) {
-                parseEndpoint(source.repository.url)
+                if (source.repository is String) {
+                    parseEndpoint(source.repository)
+                } else {
+                    parseEndpoint(source.repository.url)
+                }
                 resolve()
             }
             if (!this.owner) {

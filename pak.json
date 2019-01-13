@@ -16,10 +16,7 @@
         "email": "dev@embedthis.com",
         "url": "https://embedthis.com"
     },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/embedthis/pak.git"
-    },
+    "repository": "embedthis/pak",
     "bugs": {
         "email": "dev@embedthis.com",
         "url": "https://github.com/embedthis/pak/issues"
