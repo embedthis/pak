@@ -55,7 +55,7 @@ publish-linux:
     tags: ['linux']
     except:
         variables:
-            - ${DEPLOY} =~ /no-deploy/
+            - $DEPLOY =~ /no-deploy/
 
 publish-macosx:
     extends: .publish
@@ -63,7 +63,7 @@ publish-macosx:
     tags: ['macosx']
     except:
         variables:
-            - ${DEPLOY} =~ /no-deploy/
+            - $DEPLOY =~ /no-deploy/
 
 publish-windows:
     extends: .publish
@@ -71,5 +71,5 @@ publish-windows:
     tags: ['windows']
     except:
         variables:
-            - ${DEPLOY} =~ /no-deploy/
+            - $DEPLOY =~ /no-deploy/
     when: manual
