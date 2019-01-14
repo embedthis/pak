@@ -1,34 +1,32 @@
 #
-#   gitlab-app.yml - Template CI/CD for gulp
+#   gitlab-ui.yml - Template CI/CD for building a UI hosted in S3
 #
 #   Inputs:
-#       APP             "app"
 #       AWS_ACCOUNT     mobsense
 #       PROFILE         dev, release, prod, ...
+#       UI              "ui"
 #   Outputs
-#       build/app/      rendered pages
+#       build/ui/       rendered pages
 #
 
 stages:
     - build
     - publish
-    - deploy
 
 variables:
-    - APP: "app"
+    ui: 'ui'
 
 #cache:
 #    key: ${CI_COMMIT_REF_SLUG}
 #    paths:
-#        - ${APP}/node_modules/
-#        - .decrypted
+#        - ${UI}/node_modules/
 
 before_script:
     - ./configure --profile ${PROFILE}
     - npm link gulp
     - eval $(paks/assist/secrets --env '' --profile "${PROFILE}" --aws-profile "${AWS_ACCOUNT}" get)
 
-build-app:
+build-ui:
     stage: build
     script:
         - ./paks/assist/build-parts --profile "${PROFILE}"
@@ -36,10 +34,10 @@ build-app:
         expire_in: 1 hour
         name: "rendered"
         paths:
-            - ${APP}/build/
+            - ${UI}/build/
     tags: ['macosx']
 
-publish-app:
+publish-ui:
     stage: publish
     script:
         - ./paks/assist/publish-parts --profile "${PROFILE}"
@@ -48,14 +46,3 @@ publish-app:
         variables:
             - ${DEPLOY} =~ /no-deploy/
     tags: ['macosx']
-
-deploy-app:
-    stage: deploy
-    script:
-        - ./paks/assist/deploy-parts --profile "${PROFILE}"
-    only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
-    except:
-        variables:
-            - ${DEPLOY} =~ /no-deploy/
-    tags: ['macosx']
-    when: manual

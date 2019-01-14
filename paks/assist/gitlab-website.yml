@@ -13,6 +13,9 @@ stages:
     - build
     - publish
 
+variables:
+    - WEB: "web"
+
 #cache:
 #    key: ${CI_COMMIT_REF_SLUG}
 #    paths:
@@ -39,4 +42,7 @@ publish-website:
     script:
         - ./paks/assist/publish-parts --profile "${PROFILE}"
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
+    except:
+        variables:
+            - ${DEPLOY} =~ /no-deploy/
     tags: ['macosx']
