@@ -44,5 +44,5 @@ publish-website:
     only: [ 'tags', 'triggers', 'schedules', 'web', 'api' ]
     except:
         variables:
-            - ${DEPLOY} =~ /no-deploy/
+            - $DEPLOY =~ /no-deploy/
     tags: ['macosx']
