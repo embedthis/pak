@@ -498,6 +498,7 @@ class Pak
             '    --cache dir                 # Directory to use for the Pak cache\n' +
             '    --dir dir                   # Change to directory before running\n' +
             '    --force                     # Force requested action\n' +
+            '    --init                      # Initialize a pak.json\n' +
             '    --log file:level            # Send output to a file at a given level\n' +
             '    --name name                 # Set an application name for "pak init"\n' +
             '    --nodeps                    # Do not install or upgrade dependencies\n' +
