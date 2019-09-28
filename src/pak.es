@@ -2637,16 +2637,22 @@ class Pak
          */
         for (let [name, requiredVersion] in pak.dependencies) {
             if (!result[name]) {
-                let dep = Package(name, requiredVersion)
-                if (matchPakName(name, patterns)) {
-                    result[name] = dep
+                try {
+                    let dep = Package(name, requiredVersion)
+                    if (!result[dep.name]) {
+                        if (matchPakName(dep.name, patterns)) {
+                            result[dep.name] = dep
+                        }
+                        if (!dep.install && !dep.cache) {
+                            // trace('Warn', 'Cannot find package "' + dep.name + '" referenced by "' + pak.name + '"')
+                            dep.cache = { dependencies: {}, pak: {} }
+                            continue
+                        }
+                        getDepPaks(result, patterns, dep.install || dep.cache)
+                    }
+                } catch (err) {
+                    error('Cannot load package: ' + name)
                 }
-                if (!dep.install && !dep.cache) {
-                    // trace('Warn', 'Cannot find package "' + dep.name + '" referenced by "' + pak.name + '"')
-                    dep.cache = { dependencies: {}, pak: {} }
-                    continue
-                }
-                getDepPaks(result, patterns, dep.install || dep.cache)
             }
         }
         return result
@@ -2655,20 +2661,24 @@ class Pak
     function getInstalledPaks(result, patterns, pak) {
         for each (path in directories.paks.files('*')) {
             if (path.isDir) {
-                let dep = Package(path.absolute)
-                if (matchPakName(dep.name, patterns)) {
-                    /* Overwrites entry for dependencies if present */
-                    let prior = result[dep.name]
-                    if (prior && (prior.versionCriteria != '~*')) {
-                        if (dep.versionCriteria == '~*') {
-                            dep.versionCriteria = prior.versionCriteria
+                try {
+                    let dep = Package(path.absolute)
+                    if (dep.name && matchPakName(dep.name, patterns)) {
+                        /* Overwrites entry for dependencies if present */
+                        let prior = result[dep.name]
+                        if (prior && (prior.versionCriteria != '~*')) {
+                            if (dep.versionCriteria == '~*') {
+                                dep.versionCriteria = prior.versionCriteria
+                            }
+                        } else if (spec.optionalDependencies[dep.name]) {
+                            dep.versionCriteria = spec.optionalDependencies[dep.name]
                         }
-                    } else if (spec.optionalDependencies[dep.name]) {
-                        dep.versionCriteria = spec.optionalDependencies[dep.name]
+                        dep.cacheVersion = null
+                        dep.resolve(dep.versionCriteria)
+                        result[dep.name] = dep
                     }
-                    dep.cacheVersion = null
-                    dep.resolve(dep.versionCriteria)
-                    result[dep.name] = dep
+                } catch (err) {
+                    error('Cannot load package: ' + path)
                 }
             }
         }
