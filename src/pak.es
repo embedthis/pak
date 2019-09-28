@@ -1453,7 +1453,7 @@ class Pak
             }
             let frozen = (pak.install && pak.install.frozen) ? 'frozen' : pak.versionCriteria
             let why = 'local'
-            if (spec.dependencies[pak.name]) {
+            if (spec.dependencies[pak.name] || spec.dependencies[pak.origin]) {
                 why = 'dependency'
             } else if (optional(spec, pak.name)) {
                 why = 'optional'
@@ -1581,8 +1581,8 @@ class Pak
         pak [--password passfile] publish name email endpoint [override]
      */
     function publish(args): Void {
-        //  MOB -- remove publish and remove from doc
-        //  MOB - keep code just in case
+        //  TODO -- remove publish and remove from doc
+        //  TODO - keep code just in case
         let passfile = options.password
         let name, endpoint, over
         if (args.length == 0) {
@@ -1657,8 +1657,8 @@ class Pak
         pak retract name [password]
      */
     function retract(args): Void {
-        //  MOB - remove and remove from doc
-        //  MOB - keep code just in case
+        //  TODO - remove and remove from doc
+        //  TODO - keep code just in case
         let uri = catalogs[0]
         let name, endpoint, password
         let pak = new Package(spec.name)
@@ -2072,7 +2072,7 @@ class Pak
             currentPak = pak
 
             let scripts
-            if (pak.cache && pak.cache.pak && pak.cache.scripts) {
+            if (pak.cache && pak.cache.scripts) {
                 scripts = pak.cache.scripts[event]
             }
             if (scripts) {
@@ -2081,10 +2081,16 @@ class Pak
                 }
                 for each (script in scripts) {
                     if (script is String || script.script) {
+                        /*
+                            Run as Ejscript
+                         */
                         vtrace('Run', 'Event "' + event + '"')
                         eval('require ejs.unix\n' + script.script)
 
                     } else if (script.path) {
+                        /*
+                            Load a script
+                         */
                         let path = pak.cachePath.join(script.path)
                         if (!path.exists) {
                             throw 'Cannot find ' + path
@@ -2092,6 +2098,7 @@ class Pak
                         if (path.extension == 'es') {
                             vtrace('Run', 'ejs', path)
                             load(path)
+
                         } else if (path.extension == 'me') {
                             if (Cmd.locate('me')) {
                                 vtrace('Run', 'me -q --file ' + path + ' pak-' + event)
@@ -2099,12 +2106,15 @@ class Pak
                             } else {
                                 throw 'Cannot run MakeMe installation script "' + event + '" for ' + pak + '\n' + e
                             }
+
                         } else {
                             vtrace('Run', 'bash', path)
                             results = Cmd.run('bash ' + path)
                         }
-                    } else if (script is String) {
+                    } else if (script.run || script.shell) {
+                        script = script.run || script.shell
                         vtrace('Run', script)
+                        script = ['/bin/bash', '-c', script.toString().trimEnd('\n')]
                         results = Cmd.run(script)
                     }
                 }
@@ -2453,7 +2463,6 @@ class Pak
             trace('Info', 'Search catalog: ' + cname + ' for partial "' + pak.name + '" ' + (pak.versionCriteria || ''))
             let entry
 
-//MOB - must fix this just like locatePak
             if (catalog.direct) {
                 entry = cmd[pak.name]
             } else {
