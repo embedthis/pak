@@ -1375,6 +1375,9 @@ class Pak
         for (let [key,path] in spec.directories) {
             mkdir(path, DIR_PERMS)
         }
+        if (pak.cache.warn) {
+            trace('Warn', pak.cache.warn)
+        }
     }
 
     private function installDependencies(pak: Package) {
