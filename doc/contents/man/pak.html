@@ -3,31 +3,32 @@
 <head>
 <title>Pak Man Page</title>
 </head>
-<BODY><PRE>
-PAK(1)                           User Commands                          PAK(1)
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
 
-<B>NAME</B>
-       pak - Embedthis Pak -- Package Manager
-
-<B>SYNOPSIS</B>
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
        <B>pak</B>
            <B>--all</B>
-           <B>--cache dir</B>
+           <B>--cache</B> <B>dir</B>
            <B>--details</B>
-           <B>--dir dir</B>
+           <B>--dir</B> <B>dir</B>
            <B>--force</B>
-           <B>--log file:level</B>
+           <B>--log</B> <B>file:level</B>
            <B>--init</B>
-           <B>--name name</B>
+           <B>--name</B> <B>name</B>
            <B>--nodeps</B>
            <B>--optional</B>
-           <B>--paks dir</B>
+           <B>--paks</B> <B>dir</B>
            <B>--quiet</B>
            <B>--silent</B>
            <B>--verbose</B>
            <B>--versions</B>
            <B>--write</B>
-           <B>commands ...</B>
+           <B>commands</B> <B>...</B>
+
 
        <B>Commands:</B>
            cache packages...
@@ -48,27 +49,22 @@ PAK(1)                           User Commands                          PAK(1)
            upgrade packages...
            version [major|minor|patch|other]
 
-<B>DESCRIPTION</B>
-       <B>Pak </B>is a package manager for application components.
 
-<B>WHY PAK?</B>
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       <B>Pak</B> is a package manager for application components.
+
+
+
+
+</PRE>
+<H2>WHY PAK?</H2><PRE>
        Existing  package managers like NPM are excellent, but they are heavily
        focussed the needs of NodeJS and not for non-Node applications or  gen-
        eral application components. Pak is agnostic to its environment and can
        be used to install components for any application.
 
-<B>FEATURES</B>
-       Pak has the following major features:
 
-           . Install, list and uninstall packages into a local application
-           . Manages a local cache of retrieved packages
-           . Easy upgrading packages when new versions become available
-           . Automatically retrieves and installs dependent packages
-           . Supports the CommonJS package standard
-           . Supports the SemVer package versioning standard
-           . Supports using GitHub and NPM as the primary package repository
-
-<B>NICE PARTS</B>
        While Pak has a strong feature set, there are some characteristics that
        make Pak particularly sweet.
 
@@ -77,7 +73,11 @@ PAK(1)                           User Commands                          PAK(1)
            . Catalog web portal to search published packages.
            . Package.json is compatible with nodejs.
 
-<B>BASIC USAGE</B>
+
+
+
+</PRE>
+<H2>BASIC USAGE</H2><PRE>
        To install packages:
            pak install Endpoints...
 
@@ -109,7 +109,11 @@ PAK(1)                           User Commands                          PAK(1)
        To prune old versions from the cache
            pak prune
 
-<B>OVERVIEW</B>
+
+
+
+</PRE>
+<H2>OVERVIEW</H2><PRE>
        A package is described by a pak.json file (similar  to  the  NPM  pack-
        age.json file). This provides at a minimum the following properties.
 
@@ -117,20 +121,6 @@ PAK(1)                           User Commands                          PAK(1)
                 "name": "Package name - one word"
                 "description": "Package description - one line"
                 "version": "1.2.3",
-                "keywords": [
-                    "comms", "websockets", "sockets", "ssl",
-                ],
-                "author": {
-                    "name": "Your name",
-                    "email": "Your email",
-                    "url": "Your web site"
-                },
-                "bugs": {
-                    "email": "name@example.com",
-                    "url": "http://example.com/bugs"
-                },
-                "license": "GPL",
-                "dependencies": {
                     "name": "version"
                 } }
 
@@ -139,12 +129,19 @@ PAK(1)                           User Commands                          PAK(1)
            http://wiki.commonjs.org/wiki/Packages/1.1
            https://npmjs.org/doc/json.html
 
-<B>RUNNING</B>
+
+
+
+</PRE>
+<H2>RUNNING</H2><PRE>
        To  run  Pak  with  more  verbose  trace output, use the [-v] --verbose
        switch. To run with less trace, use the [-q] --quiet  switch.   To  run
        completely silently except for hard-errors, use --silent.
 
-<B>CONFIGURATION</B>
+
+
+</PRE>
+<H2>CONFIGURATION</H2><PRE>
        On  startup,  Pak  reads  configuration  from  a  pakrc file. This file
        defines the operational configuration for Pak.
 
@@ -157,7 +154,10 @@ PAK(1)                           User Commands                          PAK(1)
 
            pakrc, .pakrc, ../pakrc, ../.pakrc, /etc/pakrc, pak.json
 
-<B>COMMANDS</B>
+
+
+</PRE>
+<H2>COMMANDS</H2><PRE>
        cache [packages...]
               Download and populate the cache with packages.
 
@@ -179,20 +179,6 @@ PAK(1)                           User Commands                          PAK(1)
               Display the README for a cached package.
 
        init [name [version]]
-              Create a new pak.json.
-
-       install packages...
-              Install a package on the local system. The package name can be a
-              name in an online catalog or it can be a GitHub endpoint URL  or
-              of  the  form  'account/repositiory'.  Use the --write option to
-              update the pak.json dependencies with the install  package.  Use
-              with the --optional switch to update the optionalDependencies.
-
-       list [packages...]
-              List the installed packages.
-
-       lockdown
-              Lockdown   the  version  criteria  for  all  dependencies.  This
               rewrites the pak.json to define a compatible version  expression
               for all installed dependencies.
 
@@ -229,75 +215,88 @@ PAK(1)                           User Commands                          PAK(1)
               exact version string to set. Without any argument, 'pak version'
               will print the current version.
 
-<B>OPTIONS</B>
-       <B>--all URI</B>
+
+
+</PRE>
+<H2>OPTIONS</H2><PRE>
+       <B>--all</B> <B>URI</B>
               Show all versions of a package.
 
-       <B>--cache directory</B>
+
+       <B>--cache</B> <B>directory</B>
               Specify  the directory to use for the paks cache. This overrides
               the values specified in the various pakrc or pak.json files.
 
-       <B>--details URI</B>
+
+       <B>--details</B> <B>URI</B>
               Show more package details. Useful with "pak list".
 
-       <B>--dir directory</B>
-              Change to the given directory before running.
 
-       <B>--force</B>
-              Force the command to continue. This  is  useful  to  install  or
-              cache  a  package  when dependencies cannot be satisfied.  It is
-              also useful to cache  or  install  an  already  cached/installed
-              pack. Aliased as -f.
-
-              <B>--init  </B>Initialize  the directory by creating a pak.json file if
-              one does not already exist. The name of the application  is  set
-              to the basename of the directory.
-
-       <B>--log logName[:logLevel]</B>
+       <B>--dir</B> <B>directory</B>
+       <B>--log</B> <B>logName[:logLevel]</B>
               Specify  a file to log internal execution messages. Bit will log
               execution related trace to the log file. The log level specifies
               the  desired  verbosity  of output. Level 0 is the least verbose
               and level 9 is the most. The '-v' switch is an alias for  '--log
               stderr:2'.
 
+
        <B>--nodeps</B>
               Used to suppress installing or upgrading dependent packages.
+
 
        <B>--optional</B>
               Used when installing packages to add them to the 'optionalDepen-
               dencies' list instead of as a hard dependency.
 
-       <B>--paks directory</B>
+
+       <B>--paks</B> <B>directory</B>
               Specify the local "paks" directory in which to install packages.
               This  overrides  the  values  specified  in the various pakrc or
               pak.json files.
 
+
        <B>--quiet</B>
               Run in quiet mode with less verbose otuput. Aliased as -q.
+
 
        <B>--silent</B>
               Run in silent mode suppressing all but hard errors.  Aliased  as
               -s.
 
-       <B>--versions URI</B>
+
+       <B>--versions</B> <B>URI</B>
               Show package version information.
 
-       <B>--write URI</B>
+
+       <B>--write</B> <B>URI</B>
               Write   installed   packages   to   pak.json  dependencies.  Use
               --optional to update optionalDependencies.   When  uninstalling,
               --write will remove the package from the dependencies and update
               the pak.json.
 
-<B>REPORTING BUGS</B>
+
+
+
+</PRE>
+<H2>REPORTING BUGS</H2><PRE>
        Report bugs to dev@embedthis.com.
 
-<B>COPYRIGHT</B>
+
+</PRE>
+<H2>COPYRIGHT</H2><PRE>
        Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
        Embedthis Software.
 
-<B>SEE ALSO</B>
-       http://embedthis.com/pak/
 
-pak                               March 2014                            PAK(1)
-</PRE></BODY>
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>
 </html>
