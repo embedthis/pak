@@ -1,4 +1,4 @@
-PAK(1)                           User Commands                          PAK(1)
+PAK(1)                            User Commands                           PAK(1)
 
 
 
@@ -49,14 +49,11 @@ DESCRIPTION
        Pak is a package manager for application components.
 
 
-
 WHY PAK?
-       Existing  package managers like NPM are excellent, but they are heavily
-       focussed the needs of NodeJS and not for non-Node applications or  gen-
-       eral application components. Pak is agnostic to its environment and can
-       be used to install components for any application.
-
-
+       Existing package managers like NPM are excellent, but they are heavily
+       focussed the needs of NodeJS and not for non-Node applications or general
+       application components. Pak is agnostic to its environment and can be
+       used to install components for any application.
 
 FEATURES
        Pak has the following major features:
@@ -80,12 +77,11 @@ NICE PARTS
            . Package.json is compatible with nodejs.
 
 
-
 BASIC USAGE
        To install packages:
            pak install Endpoints...
 
-       Where  an  ENDPOINT  can be the name of a package published in a GitHub
+       Where an ENDPOINT can be the name of a package published in a GitHub
        account/repository or a path to a local package directory. For example:
 
            pak install jquery
@@ -103,8 +99,7 @@ BASIC USAGE
        To display package dependencies
            pak depend
 
-       To  show  what  packages are present in the cache and where they origi-
-       nated
+       To show what packages are present in the cache and where they originated
            pak cached
 
        To download and cache a package but not install in the local directory
@@ -114,10 +109,9 @@ BASIC USAGE
            pak prune
 
 
-
 OVERVIEW
-       A package is described by a pak.json file (similar  to  the  NPM  pack-
-       age.json file). This provides at a minimum the following properties.
+       A package is described by a pak.json file (similar to the NPM
+       package.json file). This provides at a minimum the following properties.
 
             {
                 "name": "Package name - one word"
@@ -148,19 +142,19 @@ OVERVIEW
 
 
 RUNNING
-       To  run  Pak  with  more  verbose  trace output, use the [-v] --verbose
-       switch. To run with less trace, use the [-q] --quiet  switch.   To  run
-       completely silently except for hard-errors, use --silent.
+       To run Pak with more verbose trace output, use the [-v] --verbose switch.
+       To run with less trace, use the [-q] --quiet switch.  To run completely
+       silently except for hard-errors, use --silent.
 
 
 CONFIGURATION
-       On  startup,  Pak  reads  configuration  from  a  pakrc file. This file
-       defines the operational configuration for Pak.
+       On startup, Pak reads configuration from a pakrc file. This file defines
+       the operational configuration for Pak.
 
        The "catalogs" property defines sites that index and catalog packs. The
-       "paks"  directory  is the name of the local directory in which to store
-       packages. The "pakcache" directory defines where to cache  packages  on
-       the local system.
+       "paks" directory is the name of the local directory in which to store
+       packages. The "pakcache" directory defines where to cache packages on the
+       local system.
 
        Pak locates a valid pakrc file by searching in order:
 
@@ -193,22 +187,22 @@ COMMANDS
 
        install packages...
               Install a package on the local system. The package name can be a
-              name in an online catalog or it can be a GitHub endpoint URL  or
-              of  the  form  'account/repositiory'.  Use the --write option to
-              update the pak.json dependencies with the install  package.  Use
-              with the --optional switch to update the optionalDependencies.
+              name in an online catalog or it can be a GitHub endpoint URL or of
+              the form 'account/repositiory'. Use the --write option to update
+              the pak.json dependencies with the install package. Use with the
+              --optional switch to update the optionalDependencies.
 
        list [packages...]
               List the installed packages.
 
        lockdown
-              Lockdown   the  version  criteria  for  all  dependencies.  This
-              rewrites the pak.json to define a compatible version  expression
-              for all installed dependencies.
+              Lockdown the version criteria for all dependencies. This rewrites
+              the pak.json to define a compatible version expression for all
+              installed dependencies.
 
        profile
               Index in the profiles property. The selected property collection
-              is copied up to the top level. This may  be  used  to  select  a
+              is copied up to the top level. This may be used to select a
               "debug" or "release" configuration.
 
        prune [packages...]
@@ -218,24 +212,23 @@ COMMANDS
               Search for packages in the catalogs.
 
        uninstall
-              Uninstall  an  installed package. Use --write to remove from the
+              Uninstall an installed package. Use --write to remove from the
               package dependencies.
 
        update [packages...]
-              Update the pak cache with latest available version of the  pack-
-              age.  This will check with catalogs to determine the most recent
-              versions of a package and will download the package and save  in
+              Update the pak cache with latest available version of the package.
+              This will check with catalogs to determine the most recent
+              versions of a package and will download the package and save in
               the cache.
 
        upgrade [packages...]
-              Upgrade  installed packages with the latest version of the pack-
-              age. This will update the cache if required.  Use --noupdate  to
-              upgrade  only  from the local cache without downloading new ver-
-              sions.
+              Upgrade installed packages with the latest version of the package.
+              This will update the cache if required.  Use --noupdate to upgrade
+              only from the local cache without downloading new versions.
 
        version [major|minor|patch|other]
-              Update the version by incrementing the relevant major, minor  or
-              patch  portion of the version string.  Alternatively, provide an
+              Update the version by incrementing the relevant major, minor or
+              patch portion of the version string.  Alternatively, provide an
               exact version string to set. Without any argument, 'pak version'
               will print the current version.
 
@@ -246,7 +239,7 @@ OPTIONS
 
 
        --cache directory
-              Specify  the directory to use for the paks cache. This overrides
+              Specify the directory to use for the paks cache. This overrides
               the values specified in the various pakrc or pak.json files.
 
 
@@ -259,21 +252,21 @@ OPTIONS
 
 
        --force
-              Force the command to continue. This  is  useful  to  install  or
-              cache  a  package  when dependencies cannot be satisfied.  It is
-              also useful to cache  or  install  an  already  cached/installed
-              pack. Aliased as -f.
+              Force the command to continue. This is useful to install or cache
+              a package when dependencies cannot be satisfied.  It is also
+              useful to cache or install an already cached/installed pack.
+              Aliased as -f.
 
-              --init  Initialize  the directory by creating a pak.json file if
-              one does not already exist. The name of the application  is  set
-              to the basename of the directory.
+              --init Initialize the directory by creating a pak.json file if one
+              does not already exist. The name of the application is set to the
+              basename of the directory.
 
 
        --log logName[:logLevel]
-              Specify  a file to log internal execution messages. Bit will log
+              Specify a file to log internal execution messages. Bit will log
               execution related trace to the log file. The log level specifies
-              the  desired  verbosity  of output. Level 0 is the least verbose
-              and level 9 is the most. The '-v' switch is an alias for  '--log
+              the desired verbosity of output. Level 0 is the least verbose and
+              level 9 is the most. The '-v' switch is an alias for '--log
               stderr:2'.
 
 
@@ -282,13 +275,13 @@ OPTIONS
 
 
        --optional
-              Used when installing packages to add them to the 'optionalDepen-
-              dencies' list instead of as a hard dependency.
+              Used when installing packages to add them to the
+              'optionalDependencies' list instead of as a hard dependency.
 
 
        --paks directory
               Specify the local "paks" directory in which to install packages.
-              This  overrides  the  values  specified  in the various pakrc or
+              This overrides the values specified in the various pakrc or
               pak.json files.
 
 
@@ -297,8 +290,7 @@ OPTIONS
 
 
        --silent
-              Run in silent mode suppressing all but hard errors.  Aliased  as
-              -s.
+              Run in silent mode suppressing all but hard errors. Aliased as -s.
 
 
        --versions URI
@@ -306,18 +298,16 @@ OPTIONS
 
 
        --write URI
-              Write   installed   packages   to   pak.json  dependencies.  Use
-              --optional to update optionalDependencies.   When  uninstalling,
-              --write will remove the package from the dependencies and update
-              the pak.json.
-
+              Write installed packages to pak.json dependencies. Use --optional
+              to update optionalDependencies.  When uninstalling, --write will
+              remove the package from the dependencies and update the pak.json.
 
 
 REPORTING BUGS
        Report bugs to dev@embedthis.com.
 
 COPYRIGHT
-       Copyright (C) Embedthis Software. Bit and Ejscript are a trademarks  of
+       Copyright © Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 SEE ALSO
@@ -325,4 +315,4 @@ SEE ALSO
 
 
 
-pak                               March 2014                            PAK(1)
+pak                                March 2014                             PAK(1)
