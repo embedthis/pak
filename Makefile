@@ -7,9 +7,9 @@
 #   you can build using the MakeMe tool for for a fully configurable build. If you wish to
 #   cross-compile, you should use MakeMe.
 #
-#	See projects/$(OS)-$(ARCH)-$(PROFILE)-me.h for configuration default settings. Can override 
-#	via make environment variables. For example: make ME_COM_SQLITE=0. These are converted to 
-#	DFLAGS and will then override the me.h default values. Use "make help" for a list of available 
+#	See projects/$(OS)-$(ARCH)-$(PROFILE)-me.h for configuration default settings. Can override
+#	via make environment variables. For example: make ME_COM_SQLITE=0. These are converted to
+#	DFLAGS and will then override the me.h default values. Use "make help" for a list of available
 #	make variable options.
 #
 NAME    := pak
@@ -47,7 +47,6 @@ all compile:
 	fi
 	@echo '       [Run] $(MAKE) -f projects/$(NAME)-$(OS)-$(PROFILE).$(EXT) $@'
 	@$(MAKE) -f projects/$(NAME)-$(OS)-$(PROFILE).$(EXT) $@
-	@echo '      [Info] You can now install via "sudo make $(MAKEFLAGS) install"'
 	@echo "      [Info] To run locally, put $(OS)-$(ARCH)-$(PROFILE)/bin in your path."
 	@echo ""
 
