@@ -2349,10 +2349,10 @@ class Pak
                         cmd = cmd.expand({NAME: pak.name})
                         vtrace('Get', cmd)
                         // http.verify = false
+                        http.followRedirects = true
                         http.get(cmd)
                         if (http.status != 200) {
-                            vtrace('Info', 'Cannot not find "' + pak.name + '" in "' + cname +
-                                   '" catalog. Status ' + http.status)
+                            vtrace('Info', 'Cannot find "' + pak.name + '" in "' + cname + '" catalog. Status ' + http.status)
                             continue
                         }
                         entry = deserialize(http.response)
@@ -2468,6 +2468,7 @@ class Pak
             } else {
                 try {
                     vtrace('Get', cmd)
+                    http.followRedirects = true
                     http.get(cmd)
                 } catch (e) {
                     qtrace('Warn', 'Cannot access catalog at: ' + cmd)

@@ -30,6 +30,7 @@
         "me-win": "~0.1",
         "mpr": "~9",
         "mpr-mbedtls": "~3",
+        "mbedtls": "~2.8",
         "ssl": "~1"
     },
     "optionalDependencies": {
