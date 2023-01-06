@@ -2768,6 +2768,7 @@ class Pak
 
     function getValue(key): Void {
         let obj = spec
+        print("KEY", key)
         for each (thisKey in key.split('.')) {
             obj = obj[thisKey]
         }
