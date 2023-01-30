@@ -123,9 +123,6 @@
 #ifndef ME_PREFIXES
     #define ME_PREFIXES "install-prefixes"
 #endif
-#ifndef ME_PROFILE
-    #define ME_PROFILE "undefined"
-#endif
 #ifndef ME_TITLE
     #define ME_TITLE "Embedthis Pak"
 #endif

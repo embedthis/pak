@@ -1,2 +1,10 @@
 /start.me
 .local.mk
+**/*.guid
+.DS_Store
+.cdrc
+.expansive-lastgen
+.install-certs-modified
+.profile
+build/
+projects/*-mine*

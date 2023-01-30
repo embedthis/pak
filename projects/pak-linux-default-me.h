@@ -25,13 +25,13 @@
     #define ME_COMPATIBLE "1.0"
 #endif
 #ifndef ME_COMPILER_HAS_ATOMIC
-    #define ME_COMPILER_HAS_ATOMIC 0
+    #define ME_COMPILER_HAS_ATOMIC 1
 #endif
 #ifndef ME_COMPILER_HAS_ATOMIC64
-    #define ME_COMPILER_HAS_ATOMIC64 0
+    #define ME_COMPILER_HAS_ATOMIC64 1
 #endif
 #ifndef ME_COMPILER_HAS_DOUBLE_BRACES
-    #define ME_COMPILER_HAS_DOUBLE_BRACES 0
+    #define ME_COMPILER_HAS_DOUBLE_BRACES 1
 #endif
 #ifndef ME_COMPILER_HAS_DYN_LOAD
     #define ME_COMPILER_HAS_DYN_LOAD 1
@@ -61,13 +61,13 @@
     #define ME_COMPILER_HAS_SYNC64 1
 #endif
 #ifndef ME_COMPILER_HAS_SYNC_CAS
-    #define ME_COMPILER_HAS_SYNC_CAS 0
+    #define ME_COMPILER_HAS_SYNC_CAS 1
 #endif
 #ifndef ME_COMPILER_HAS_UNNAMED_UNIONS
     #define ME_COMPILER_HAS_UNNAMED_UNIONS 1
 #endif
 #ifndef ME_COMPILER_WARN64TO32
-    #define ME_COMPILER_WARN64TO32 0
+    #define ME_COMPILER_WARN64TO32 1
 #endif
 #ifndef ME_COMPILER_WARN_UNUSED
     #define ME_COMPILER_WARN_UNUSED 1
@@ -137,9 +137,6 @@
 #endif
 #ifndef ME_PREFIXES
     #define ME_PREFIXES "install-prefixes"
-#endif
-#ifndef ME_PROFILE
-    #define ME_PROFILE "undefined"
 #endif
 #ifndef ME_TITLE
     #define ME_TITLE "Embedthis Pak"
