@@ -1,0 +1,33 @@
+{ title: "Pak Catalog", crumbs: [ { "User's Guide": "index.html" }, ], }
+<h1>Pak Catalog</h1>
+<h2>WARNING: this documenation is out of date</h2>
+
+<p>Pak uses three catalogs to locate packages:</p>
+<ul>
+  <li><a href="http://bower.io/search/">Bower Catalog</a></li>
+  <li><a href="http://npmjs.org/">NPM Catalog</a></li>
+  <li><a href="http://embedthis.com/catalog/">Pak Catalog</a></li>
+</ul>
+
+<p>
+  The Bower catalog is for web components. The NPM catalog focusses on the needs
+  of the <a href="http://nodejs.org/">Node.js</a> community. The Pak catalog
+  contains packages for <a href="http://embedthis.com/appweb/">Appweb</a>,
+  <a href="http://embedthis.com/ejscript/">Ejscript</a>,
+  <a href="http://embedthis.com/esp/">ESP</a>,
+  <a href="http://embedthis.com/expansive/">Expansive</a>,
+  <a href="http://embedthis.com/makeme/">MakeMe</a>, and
+  <a href="http://embedthis.com/goahead/">Goahead</a> products. Together they
+  provide over 150,000 packages for your use. Using Pak, you can search and
+  install packages from any of these three catalogs and install packages
+  directly from their repositories on GitHub.
+</p>
+
+<p>The Pak Catalog provides tested, integrated componens that work together.</p>
+
+<a
+  class="ui primary right labeled icon button"
+  href="https://www.embedthis.com/catalog/#/"
+>
+  <i class="right long arrow icon"></i>Browse the Pak Catalog
+</a>

@@ -6,17 +6,17 @@
         "pak",
         "package",
     ],
-    "homepage": "https://embedthis.com/product/pak/",
+    "homepage": "https://www.embedthis.com/product/pak/",
     "author": {
         "name": "Embedthis Software",
         "email": "dev@embedthis.com",
-        "url": "https://embedthis.com"
+        "url": "https://www.embedthis.com"
     },
     "contributors": [
-        "Embedthis <dev@embedthis.com> (https://embedthis.com)",
+        "Embedthis <dev@embedthis.com> (https://www.embedthis.com)",
     ],
     "maintainers": [
-        "Embedthis <dev@embedthis.com> (https://embedthis.com)",
+        "Embedthis <dev@embedthis.com> (https://www.embedthis.com)",
     ],
     "repository": {
         "type": "git",

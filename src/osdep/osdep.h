@@ -1,5 +1,9 @@
-/**
-    osdep.h -- O/S abstraction for products using MakeMe.
+/*
+    osdep.h -- O/S abstraction layer.
+
+    This module provides a portable cross-platform abstraction layer.
+    By including "osdep.h", you will include most common O/S headers and define
+    a set of useful cross-platform constants.
  */
 
 #ifndef _h_OSDEP
@@ -8,6 +12,12 @@
 /********************************** Includes **********************************/
 
 #include "me.h"
+
+/**
+    Operating system dependent layer that provides a portable cross-platform abstraction layer.
+    @defgroup Osdep Osdep
+    @stability Evolving
+*/
 
 /******************************* Default Features *****************************/
 /*
@@ -62,7 +72,7 @@
     #define CPU_ENDIAN ME_LITTLE_ENDIAN
 
 #elif defined(__arm64__) || defined(__aarch64__)
-    #define ME_CPU "arm"
+    #define ME_CPU "arm64"
     #define ME_CPU_ARCH ME_CPU_ARM
     #define CPU_ENDIAN ME_LITTLE_ENDIAN
 
@@ -456,6 +466,7 @@
     #include    <mach/mach_time.h>
     #include    <mach/task.h>
     #include    <libkern/OSAtomic.h>
+    #include    <net/if_dl.h>
 #endif
 #if VXWORKS
     #include    <vxWorks.h>
@@ -505,6 +516,8 @@
             #define HAS_BOOL 1
             /**
                 Boolean data type.
+                @ingroup Osdep
+                @stability Stable
              */
             #if !WINDOWS || ((_MSC_VER < 1800) && !defined(bool))
                 /* Bool introduced via stdbool in VS 2015 */
@@ -518,6 +531,8 @@
     #define HAS_UCHAR 1
     /**
         Unsigned char data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef unsigned char uchar;
 #endif
@@ -526,6 +541,8 @@
     #define HAS_SCHAR 1
     /**
         Signed char data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef signed char schar;
 #endif
@@ -534,6 +551,8 @@
     #define HAS_CCHAR 1
     /**
         Constant char data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef const char cchar;
 #endif
@@ -542,6 +561,8 @@
     #define HAS_CUCHAR 1
     /**
         Unsigned char data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef const unsigned char cuchar;
 #endif
@@ -550,6 +571,8 @@
     #define HAS_USHORT 1
     /**
         Unsigned short data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef unsigned short ushort;
 #endif
@@ -558,6 +581,8 @@
     #define HAS_CUSHORT 1
     /**
         Constant unsigned short data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef const unsigned short cushort;
 #endif
@@ -566,6 +591,8 @@
     #define HAS_CVOID 1
     /**
         Constant void data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef const void cvoid;
 #endif
@@ -574,6 +601,8 @@
     #define HAS_INT8 1
     /**
         Integer 8 bits data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef char int8;
 #endif
@@ -582,6 +611,8 @@
     #define HAS_UINT8 1
     /**
         Unsigned integer 8 bits data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef unsigned char uint8;
 #endif
@@ -590,6 +621,8 @@
     #define HAS_INT16 1
     /**
         Integer 16 bits data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef short int16;
 #endif
@@ -598,6 +631,8 @@
     #define HAS_UINT16 1
     /**
         Unsigned integer 16 bits data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef unsigned short uint16;
 #endif
@@ -606,6 +641,8 @@
     #define HAS_INT32 1
     /**
         Integer 32 bits data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef int int32;
 #endif
@@ -614,6 +651,8 @@
     #define HAS_UINT32 1
     /**
         Unsigned integer 32 bits data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef unsigned int uint32;
 #endif
@@ -622,6 +661,8 @@
     #define HAS_UINT 1
     /**
         Unsigned integer (machine dependent bit size) data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef unsigned int uint;
 #endif
@@ -630,6 +671,8 @@
     #define HAS_ULONG 1
     /**
         Unsigned long (machine dependent bit size) data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef unsigned long ulong;
 #endif
@@ -638,6 +681,8 @@
     #define HAS_CINT 1
     /**
         Constant int data type.
+        @ingroup Osdep
+        @stability Stable
      */
     typedef const int cint;
 #endif
@@ -647,6 +692,8 @@
     #if ME_UNIX_LIKE || VXWORKS || DOXYGEN
         /**
             Signed integer size field large enough to hold a pointer offset.
+            @ingroup Osdep
+            @stability Stable
          */
         typedef ssize_t ssize;
     #elif TIDSP
@@ -657,8 +704,10 @@
     #endif
 #endif
 
-/*
+/**
     Windows uses uint for write/read counts (Ugh!)
+    @ingroup Osdep
+    @stability Stable
  */
 #if ME_WIN_LIKE
     typedef uint wsize;
@@ -672,6 +721,8 @@
     #elif VXWORKS || DOXYGEN
         /**
             Integer 64 bit data type.
+            @ingroup Osdep
+            @stability Stable
          */
         typedef long long int int64;
     #elif ME_WIN_LIKE
@@ -695,11 +746,17 @@
 
 /**
     Signed file offset data type. Supports large files greater than 4GB in size on all systems.
+    @ingroup Osdep
+    @stability Stable
  */
 typedef int64 Offset;
 
 #if DOXYGEN
-    /** Size to hold the length of a socket address */
+    /**
+        Size to hold the length of a socket address
+        @ingroup Osdep
+        @stability Stable
+     */
     typedef int Socklen;
 #elif VXWORKS
     typedef int Socklen;
@@ -708,7 +765,11 @@ typedef int64 Offset;
 #endif
 
 #if DOXYGEN || ME_UNIX_LIKE || VXWORKS
-    /** Argument for sockets */
+    /**
+        Argument for sockets
+        @ingroup Osdep
+        @stability Stable
+    */
     typedef int Socket;
     #ifndef SOCKET_ERROR
         #define SOCKET_ERROR -1
@@ -732,15 +793,24 @@ typedef int64 Offset;
     #endif
 #endif
 
+/**
+    Time in milliseconds since Jan 1, 1970.
+    @ingroup Osdep
+    @stability Stable
+*/
 typedef int64 Time;
 
 /**
     Elapsed time data type. Stores time in milliseconds from some arbitrary start epoch.
+    @ingroup Osdep
+    @stability Stable
  */
 typedef int64 Ticks;
 
 /**
     Time/Ticks units per second (milliseconds)
+    @ingroup Osdep
+    @stability Stable
  */
 #define TPS 1000
 
@@ -1411,6 +1481,18 @@ extern "C" {
     extern struct tm *localtime_r(const time_t *when, struct tm *tp);
     extern struct tm *gmtime_r(const time_t *t, struct tm *tp);
 #endif /* WINCE */
+
+/*
+    Help for generated documentation
+ */
+#if DOXYGEN
+    /** Argument for sockets */
+    typedef int Socket;
+    /** Unsigned integral type. Equivalent in size to void* */
+    typedef long size_t;
+    /** Unsigned time type. Time in seconds since Jan 1, 1970 */
+    typedef long time_t;
+#endif
 
 #ifdef __cplusplus
 }

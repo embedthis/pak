@@ -346,9 +346,9 @@ class Pak
             },
             /* UNUSED
             pak: {
-                lookup:    'https://embedthis.com/catalog/search/${NAME}',
-                query:     'https://embedthis.com/catalog/search/${NAME}',
-                publish:   'https://embedthis.com/catalog/pak/publish',
+                lookup:    'https://www.embedthis.com/catalog/search/${NAME}',
+                query:     'https://www.embedthis.com/catalog/search/${NAME}',
+                publish:   'https://www.embedthis.com/catalog/pak/publish',
                 download:  'https://github.com/${OWNER}/${NAME}/archive/${TAG}.tar.gz',
                 overrides: 'https://raw.githubusercontent.com/embedthis/pak-overrides/master'
             }, */

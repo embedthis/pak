@@ -11239,7 +11239,7 @@ static MprEvent *createEvent(MprDispatcher *dispatcher, cchar *name, MprTicks pe
         dispatcher = (flags & MPR_EVENT_QUICK) ? MPR->nonBlock : MPR->dispatcher;
     }
     if (dispatcher && dispatcher->flags & MPR_DISPATCHER_DESTROYED) {
-        return 0;
+        dispatcher = (flags & MPR_EVENT_QUICK) ? MPR->nonBlock : MPR->dispatcher;
     }
     /*
         The hold is for allocations via foreign threads which retains the event until it is queued.
@@ -24726,12 +24726,11 @@ PUBLIC char *stitle(cchar *str)
 PUBLIC char *spbrk(cchar *str, cchar *set)
 {
     cchar       *sp;
-    int         count;
 
     if (str == 0 || set == 0) {
         return 0;
     }
-    for (count = 0; *str; count++, str++) {
+    for (; *str; str++) {
         for (sp = set; *sp; sp++) {
             if (*str == *sp) {
                 return (char*) str;

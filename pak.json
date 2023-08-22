@@ -10,11 +10,11 @@
         "npm",
         "bower"
     ],
-    "homepage": "https://embedthis.com/pak/",
+    "homepage": "https://www.embedthis.com/pak/",
     "author": {
         "name": "Embedthis Software",
         "email": "dev@embedthis.com",
-        "url": "https://embedthis.com"
+        "url": "https://www.embedthis.com"
     },
     "repository": "embedthis/pak",
     "bugs": {
@@ -23,7 +23,6 @@
     },
     "licenses": "GPL",
     "dependencies": {
-        "assist": "~1",
         "certs": "~1",
         "ejs.version": "~1",
         "ejscript": "~2.7",

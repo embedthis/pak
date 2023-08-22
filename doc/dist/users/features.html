@@ -31,7 +31,7 @@
                 <div class="menu">
                     <a class="item" href="../index.html">Pak Overview</a>
                     <a class="item" href="../users/features.html">Pak Features</a>
-                    <a class="item" href="https://embedthis.com/pak/download.html">Download</a>
+                    <a class="item" href="https://www.embedthis.com/pak/download.html">Download</a>
                     <a class="item" href="../licensing/index.html">Licensing</a>
                 </div>
             </div>
@@ -70,21 +70,21 @@
             <div class="item">
                 <a href="../users/project.html">Project Resources</a>
                 <div class="menu">
-                    <a class="item" href="https://embedthis.com/blog/categories/Pak/">Official Pak News</a>
-                    <a class="item" href="https://embedthis.com/pak/">Pak Web Site</a>
+                    <a class="item" href="https://www.embedthis.com/blog/categories/Pak/">Official Pak News</a>
+                    <a class="item" href="https://www.embedthis.com/pak/">Pak Web Site</a>
                     
                     <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
                     <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
                     <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
                     <a class="item" href="https://github.com/embedthis/pak/milestones">Roadmap</a>
-                    <a class="item" href="https://embedthis.com/developers/contributors.html">Contributors Agreement</a>
+                    <a class="item" href="https://www.embedthis.com/developers/contributors.html">Contributors Agreement</a>
                 </div>
             </div>
             <div class="item">
                 <b>Links</b>
                 <div class="menu">
-                    <a class="item" href="https://embedthis.com/">Embedthis Web Site</a>
-                    <a class="item" href="https://embedthis.com/blog/">Embedthis Blog</a>
+                    <a class="item" href="https://www.embedthis.com/">Embedthis Web Site</a>
+                    <a class="item" href="https://www.embedthis.com/blog/">Embedthis Blog</a>
                     <a class="item" href="http://twitter.com/embedthat">Twitter</a>
                 </div>
             </div>
@@ -100,12 +100,12 @@
                 <i class="icon list layout"></i>
             </div>
             <div class="right menu">
-                <a class="item" href="https://embedthis.com/">Embedthis</a>
-                    <a class="item" href="https://embedthis.com/pak/">Pak Site</a>
+                <a class="item" href="https://www.embedthis.com/">Embedthis</a>
+                    <a class="item" href="https://www.embedthis.com/pak/">Pak Site</a>
                     <span class="desktop-only">
-                        <a class="item" href="https://embedthis.com/blog/categories/Pak/">Pak News</a>
+                        <a class="item" href="https://www.embedthis.com/blog/categories/Pak/">Pak News</a>
                         <a class="item" href="https://github.com/embedthis/pak">Repository</a>
-                        <a class="item" href="https://embedthis.com/blog/">Blog</a>
+                        <a class="item" href="https://www.embedthis.com/blog/">Blog</a>
                         <a class="item" href="https://twitter.com/embedthat">Twitter</a>
                     </span>
 
@@ -126,56 +126,125 @@
     </div>
     <div class="content">
 
-            <h1>Embedthis Pak&trade; Features</h1>
+<h1>Embedthis Pak&trade; Features</h1>
 
-            <p>Pak has the following major features:</p>
-            <ul>
-                <li>Install, list and uninstall packages into a local application.</li>
-                <li>Manage package versions and dependencies.</li>
-                <li>Automatically retrieves and installs dependent packages.</li>
-                <li>Update and upgrade packages and their dependencies.</li>
-                <li>Support version expressions using <a href="http://semver.org">Semantic Versioning 2.0</a>.</li>
-                <li>Packages are described via a pak.json file that is compatible with
-                    <a href="http://nodejs.org">NodeJS</a> package.json files.</li>
-                
-                <li>Manages a local cache of retrieved packages.</li>
-            </ul>
+<p>Pak has the following major features:</p>
+<ul>
+  <li>Install, list and uninstall packages into a local application.</li>
+  <li>Manage package versions and dependencies.</li>
+  <li>Automatically retrieves and installs dependent packages.</li>
+  <li>Update and upgrade packages and their dependencies.</li>
+  <li>
+    Support version expressions using
+    <a href="http://semver.org">Semantic Versioning 2.0</a>.
+  </li>
+  <li>
+    Packages are described via a pak.json file that is compatible with
+    <a href="http://nodejs.org">NodeJS</a> package.json files.
+  </li>
+  
+  <li>Manages a local cache of retrieved packages.</li>
+</ul>
 
-            <h2>What's Unique</h2>
-            <p>While Pak has a strong feature set, there are some characteristics that make Pak unique.</p>
-            <ul>
-                <li>Pak is a meta-package manager in that is works with multiple package catalogs.</li>
-                
-                <li>Post install configuration of packages by selectively exporting package contents into
-                    local "lib" directory.</li>
-                <li>Can override and wrap existing 3rd party packages.</li>
-                <li>Very fast operation.</li>
-            </ul>
+<h2>What's Unique</h2>
+<p>
+  While Pak has a strong feature set, there are some characteristics that make
+  Pak unique.
+</p>
+<ul>
+  <li>
+    Pak is a meta-package manager in that is works with multiple package
+    catalogs.
+  </li>
+  
+  <li>
+    Post install configuration of packages by selectively exporting package
+    contents into local "lib" directory.
+  </li>
+  <li>Can override and wrap existing 3rd party packages.</li>
+  <li>Very fast operation.</li>
+</ul>
 
-            <h2>Commands</h2>
-            <p>The Pak command has the following commands:</p>
-            <table class="ui table segment" title="commands">
-                <thead><tr><th>Command<th>Description</thead>
-                <tbody>
-                <tr><td>cache<td>Download and save packages to the the local package cache</tr>
-                <tr><td>cached<td>List packages in the cache</tr>
-                <tr><td>config<td>Show the Pak configuration</tr>
-                <tr><td>depend<td>Display installed package dependencies</tr>
-                <tr><td>edit<td>Edit a package description file</tr>
-                <tr><td>help<td>Display this usage help</tr>
-                <tr><td>info<td>Display README for a package</tr>
-                <tr><td>init<td>Create a new pak.json</tr>
-                <tr><td>install<td>Install a package on the local system</tr>
-                <tr><td>list<td>list installed packages</tr>
-                <tr><td>prune<td>Prune named packages</tr>
-                <tr><td>publish<td>publish a package in a catalog</tr>
-                <tr><td>retract<td>Unpublish a package</tr>
-                <tr><td>search<td>Search for packages in the catalog</tr>
-                <tr><td>uninstall<td>Uninstall a package on the local system</tr>
-                <tr><td>update<td>Update the cache with latest version of packages</tr>
-                <tr><td>upgrade<td>Upgrade installed packages</tr>
-                </tbody>
-            </table>
+<h2>Commands</h2>
+<p>The Pak command has the following commands:</p>
+<table class="ui table segment" title="commands">
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>cache</td>
+      <td>Download and save packages to the the local package cache</td>
+    </tr>
+    <tr>
+      <td>cached</td>
+      <td>List packages in the cache</td>
+    </tr>
+    <tr>
+      <td>config</td>
+      <td>Show the Pak configuration</td>
+    </tr>
+    <tr>
+      <td>depend</td>
+      <td>Display installed package dependencies</td>
+    </tr>
+    <tr>
+      <td>edit</td>
+      <td>Edit a package description file</td>
+    </tr>
+    <tr>
+      <td>help</td>
+      <td>Display this usage help</td>
+    </tr>
+    <tr>
+      <td>info</td>
+      <td>Display README for a package</td>
+    </tr>
+    <tr>
+      <td>init</td>
+      <td>Create a new pak.json</td>
+    </tr>
+    <tr>
+      <td>install</td>
+      <td>Install a package on the local system</td>
+    </tr>
+    <tr>
+      <td>list</td>
+      <td>list installed packages</td>
+    </tr>
+    <tr>
+      <td>prune</td>
+      <td>Prune named packages</td>
+    </tr>
+    <tr>
+      <td>publish</td>
+      <td>publish a package in a catalog</td>
+    </tr>
+    <tr>
+      <td>retract</td>
+      <td>Unpublish a package</td>
+    </tr>
+    <tr>
+      <td>search</td>
+      <td>Search for packages in the catalog</td>
+    </tr>
+    <tr>
+      <td>uninstall</td>
+      <td>Uninstall a package on the local system</td>
+    </tr>
+    <tr>
+      <td>update</td>
+      <td>Update the cache with latest version of packages</td>
+    </tr>
+    <tr>
+      <td>upgrade</td>
+      <td>Upgrade installed packages</td>
+    </tr>
+  </tbody>
+</table>
 
     </div>
     <div class="terms ui basic center aligned segment">
@@ -183,8 +252,8 @@
     </div>
 
     <script src="../lib/jquery/jquery.min.js"></script>
+    <script src="../lib/jquery/jquery.slim.min.js"></script>
     <script src="../lib/semantic-ui/semantic.min.js"></script>
-    <script src="../scripts/sidebar.min.js"></script>
      
 
     
