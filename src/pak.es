@@ -1232,6 +1232,7 @@ class Pak
             }
         }
         runScripts(pak, 'preinstall')
+        uninstallPak(pak)
         installPak(pak, true)
 
         let path = Package.getSpecFile('.')
@@ -1714,6 +1715,7 @@ class Pak
         }
         qtrace('Uninstall', pak.name)
         runScripts(pak, 'postuninstall')
+        installed[pak.name] = false
     }
 
     function uninstall(patterns): Void {
