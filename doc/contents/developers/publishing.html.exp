@@ -12,7 +12,7 @@
             <ul>
                 <li><a href="http://bower.io/search/">Bower Catalog</a></li>
                 <li><a href="http://npmjs.org/">NPM Catalog</a></li>
-                <li><a href="http://embedthis.com/catalog/">Pak Catalog</a></li>
+                <li>Pak Catalog</li>
             </ul>
             <p>This document describes the process for creating a package in the Pak catalog. Consult the relevant
                 <a href="http://npmjs.org/">NPM</a> or <a href="http://bower.io/">Bower</a> documentation for
@@ -32,7 +32,7 @@ $ pak publish NAME ENDPOINT EMAIL [OVERRIDE]</pre>
             use it to modify or retract your package from the catalog.</p>
 
             <p>The package name should be a globally unique name for your package. It may contain <em>-</em>,
-            <em>_</em> or <em>.</em> characters. Check the <a href="http://embedthis.com/catalog">Pak Catalog</a>
+            <em>_</em> or <em>.</em> characters. Check the Pak Catalog
             for currently published Pak names to ensure your chosen name is unique. Note that Pak names that start
             with <em>appweb</em>, <em>esp</em>, <em>ejs</em>, <em>embedthis</em>, <em>exp</em>, <em>expansive</em>,
             <em>go</em>, <em>goahead</em>, <em>makeme</em>, <em>me</em> and <em>pak</em> are reserved. </p>

@@ -233,7 +233,7 @@
 
             <h3>Scripted Export</h3>
             <p>If you have export needs that go beyond what can be expressed via export properties, you can also use
-            the full scripting power of <a href="http://embedthis.com/ejscript/">Ejscript</a> to create
+            the full scripting power of <a href="https://www.embedthis.com/ejscript/">Ejscript</a> to create
                 custom export scripts. For example:</p>
 <pre class="code">"export": {
     "script": `
@@ -263,7 +263,7 @@
             <h2>Blending Package Configuration</h2>
             <p>Pak provides JSON blending services for packages to merge JSON configuration from packages into an
             application. This feature can help automate the installation and configuration of packages. For example:
-            the <a href="http://embedthis.com/expansive">Expansive</a> web site generator uses this facility to blend
+            the <a href="https://www.embedthis.com/expansive">Expansive</a> web site generator uses this facility to blend
             <em>expansive.json</em> configuration files from packages such as skeletons and plugins.</p>
 
             <p>Blending is a process of merging a package's JSON properties into the application.

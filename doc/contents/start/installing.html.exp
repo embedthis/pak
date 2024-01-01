@@ -28,12 +28,15 @@
   daily builds, use the <em>dev</em> branch.
 </p>
 
+<!--
+
 <a
   class="ui primary right labeled icon button"
   href="https://www.embedthis.com/pak/download.html"
 >
   <i class="right long arrow icon"></i>Download Source
 </a>
+-->
 <a
   class="ui secondary right labeled icon button"
   href="https://github.com/embedthis/pak"

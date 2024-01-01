@@ -33,6 +33,6 @@
             <p>To display the current profile, run: <code>pak profile</code></p>
 
             <h2>Other Applications</h2>
-            <p>Other applications such as <a href="http://embedthis.com/expansive/">Expansive</a> utilize the
+            <p>Other applications such as <a href="https://www.embedthis.com/expansive/">Expansive</a> utilize the
             pak.json <em>profile</em> setting and modify their execution profile similarly. The
-            <a href="http://embedthis.com/esp/">ESP Web Framework</a> also uses the <em>profile</em> setting.</p>
+            <a href="https://www.embedthis.com/esp/">ESP Web Framework</a> also uses the <em>profile</em> setting.</p>

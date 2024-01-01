@@ -1,36 +1,154 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Embedthis Pak Documentation</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="description" content="Package manager for Applications">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
+    
+    <link href="../images/favicon.ico" rel="shortcut icon">
+    <link href="../lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/api.min.css" rel="stylesheet" type="text/css">
+    
+
+</head>
+<body class="show-sidebar">
+    <div class="sidebar">
+        <div class="ui large left vertical inverted labeled menu">
+            <div class="item">
+                <a href="../index.html" class="logo">Pak Docs</a>
+            </div>
+            <div class="item">
+                <a href="../index.html">
+                    <b>General</b>
+                </a>
+                <div class="menu">
+                    <a class="item" href="../index.html">Pak Overview</a>
+                    <a class="item" href="../users/features.html">Pak Features</a>
+                    
+                    <a class="item" href="../licensing/index.html">Licensing</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../start/index.html">
+                    <b>Getting Started</b>
+                </a>
+                <div class="menu">
+                    <a class="item" href="../start/quick.html">Quick Start</a>
+                    <a class="item" href="../start/installing.html">Installing</a>
+                    <a class="item" href="../start/releaseNotes.html">Release Notes</a>
+                    <a class="item" href="../start/source.html">Building from Source</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../users/index.html"><b>User's Guide</b></a>
+                <div class="menu">
+                    <a class="item" href="../users/tour.html">Quick Tour</a>
+                    
+                    <a class="item" href="../users/installing.html">Installing Packages</a>
+                    <a class="item" href="../users/customizing.html">Customizing Packages</a>
+                    <a class="item" href="../users/versions.html">Package Versions</a>
+                    <a class="item" href="../users/profiles.html">Pak Profiles</a>
+                </div>
+            </div>
+
+            <div class="item">
+                <a href="../developers/index.html"><b>Developer's Guide</b></a>
+                <div class="menu">
+                    <a class="item" href="../developers/creating.html">Creating Packages</a>
+                    
+                    <a class="item" href="../developers/events.html">Package Events</a>
+                    <a class="item" href="../developers/configuration.html">Pak Configuration</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../users/project.html">Project Resources</a>
+                <div class="menu">
+                    <a class="item" href="https://www.embedthis.com/blog/categories/Pak/">Official Pak News</a>
+                    <a class="item" href="https://www.embedthis.com/pak/">Pak Web Site</a>
+                    
+                    <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
+                    <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
+                    <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
+                    <a class="item" href="https://github.com/embedthis/pak/milestones">Roadmap</a>
+                    
+                </div>
+            </div>
+            <div class="item">
+                <b>Links</b>
+                <div class="menu">
+                    <a class="item" href="https://www.embedthis.com/">Embedthis Web Site</a>
+                    <a class="item" href="https://www.embedthis.com/blog/">Embedthis Blog</a>
+                    <a class="item" href="http://twitter.com/embedthat">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="ui inverted masthead">
+        <div class="ui fixed inverted menu">
+            <div class="ui sidebar-launch button">
+                <i class="icon list layout"></i>
+            </div>
+            <div class="right menu">
+                <a class="item" href="https://www.embedthis.com/">Embedthis</a>
+                    <a class="item" href="https://www.embedthis.com/pak/">Pak Site</a>
+                    <span class="desktop-only">
+                        <a class="item" href="https://www.embedthis.com/blog/categories/Pak/">Pak News</a>
+                        <a class="item" href="https://github.com/embedthis/pak">Repository</a>
+                        <a class="item" href="https://www.embedthis.com/blog/">Blog</a>
+                        <a class="item" href="https://twitter.com/embedthat">Twitter</a>
+                    </span>
+
+            </div>
+        </div>
+        
+        <iframe class="version desktop-only" src="../version.html"></iframe>
+
+    </div>
+    <div class="content">
+<!DOCTYPE html>
 <html lang="eng">
 <head>
 <title>Pak Man Page</title>
 </head>
-<HTML>
-<BODY>
-<PRE>
-<!-- Manpage converted by man2html 3.0.1 -->
 
-</PRE>
-<H2>SYNOPSIS</H2><PRE>
-       <B>pak</B>
-           <B>--all</B>
-           <B>--cache</B> <B>dir</B>
-           <B>--details</B>
-           <B>--dir</B> <B>dir</B>
-           <B>--force</B>
-           <B>--log</B> <B>file:level</B>
-           <B>--init</B>
-           <B>--name</B> <B>name</B>
-           <B>--nodeps</B>
-           <B>--optional</B>
-           <B>--paks</B> <B>dir</B>
-           <B>--quiet</B>
-           <B>--silent</B>
-           <B>--verbose</B>
-           <B>--versions</B>
-           <B>--write</B>
-           <B>commands</B> <B>...</B>
+<body>
+<pre>
 
 
-       <B>Commands:</B>
+</pre>
+<h2>SYNOPSIS</h2><pre>
+       <b>pak</b>
+           <b>--all</b>
+           <b>--cache</b> <b>dir</b>
+           <b>--details</b>
+           <b>--dir</b> <b>dir</b>
+           <b>--force</b>
+           <b>--log</b> <b>file:level</b>
+           <b>--init</b>
+           <b>--name</b> <b>name</b>
+           <b>--nodeps</b>
+           <b>--optional</b>
+           <b>--paks</b> <b>dir</b>
+           <b>--quiet</b>
+           <b>--silent</b>
+           <b>--verbose</b>
+           <b>--versions</b>
+           <b>--write</b>
+           <b>commands</b> <b>...</b>
+
+
+       <b>Commands:</b>
            cache packages...
            cached packages...
            config
@@ -50,22 +168,22 @@
            version [major|minor|patch|other]
 
 
-</PRE>
-<H2>DESCRIPTION</H2><PRE>
-       <B>Pak</B> is a package manager for application components.
+</pre>
+<h2>DESCRIPTION</h2><pre>
+       <b>Pak</b> is a package manager for application components.
 
 
 
-</PRE>
-<H2>WHY PAK?</H2><PRE>
+</pre>
+<h2>WHY PAK?</h2><pre>
        Existing package managers like NPM are excellent, but they are heavily
        focussed the needs of NodeJS and not for non-Node applications or general
        application components. Pak is agnostic to its environment and can be
        used to install components for any application.
 
 
-</PRE>
-<H2>FEATURES</H2><PRE>
+</pre>
+<h2>FEATURES</h2><pre>
        Pak has the following major features:
            . Fast, fast, fast.
            . Local cache of packages supports fast offline use.
@@ -74,8 +192,8 @@
 
 
 
-</PRE>
-<H2>BASIC USAGE</H2><PRE>
+</pre>
+<h2>BASIC USAGE</h2><pre>
        To install packages:
            pak install Endpoints...
 
@@ -108,8 +226,8 @@
 
 
 
-</PRE>
-<H2>OVERVIEW</H2><PRE>
+</pre>
+<h2>OVERVIEW</h2><pre>
        A package is described by a pak.json file (similar to the NPM
        package.json file). This provides at a minimum the following properties.
 
@@ -129,16 +247,16 @@
 
 
 
-</PRE>
-<H2>RUNNING</H2><PRE>
+</pre>
+<h2>RUNNING</h2><pre>
        To run Pak with more verbose trace output, use the [-v] --verbose switch.
        To run with less trace, use the [-q] --quiet switch.  To run completely
        silently except for hard-errors, use --silent.
 
 
 
-</PRE>
-<H2>CONFIGURATION</H2><PRE>
+</pre>
+<h2>CONFIGURATION</h2><pre>
        On startup, Pak reads configuration from a pakrc file. This file defines
        the operational configuration for Pak.
 
@@ -153,8 +271,8 @@
 
 
 
-</PRE>
-<H2>COMMANDS</H2><PRE>
+</pre>
+<h2>COMMANDS</h2><pre>
        cache [packages...]
               Download and populate the cache with packages.
 
@@ -213,88 +331,103 @@
 
 
 
-</PRE>
-<H2>OPTIONS</H2><PRE>
-       <B>--all</B> <B>URI</B>
+</pre>
+<h2>OPTIONS</h2><pre>
+       <b>--all</b> <b>URI</b>
               Show all versions of a package.
 
 
-       <B>--cache</B> <B>directory</B>
+       <b>--cache</b> <b>directory</b>
               Specify the directory to use for the paks cache. This overrides
               the values specified in the various pakrc or pak.json files.
 
 
-       <B>--details</B> <B>URI</B>
+       <b>--details</b> <b>URI</b>
               Show more package details. Useful with "pak list".
 
 
-       <B>--dir</B> <B>directory</B>
+       <b>--dir</b> <b>directory</b>
               Change to the given directory before running.
 
 
-       <B>--force</B>
+       <b>--force</b>
               Force the command to continue. This is useful to install or cache
               a package when dependencies cannot be satisfied.  It is also
               useful to cache or install an already cached/installed pack.
 
-       <B>--nodeps</B>
+       <b>--nodeps</b>
               Used to suppress installing or upgrading dependent packages.
 
 
-       <B>--optional</B>
+       <b>--optional</b>
               Used when installing packages to add them to the
               'optionalDependencies' list instead of as a hard dependency.
 
 
-       <B>--paks</B> <B>directory</B>
+       <b>--paks</b> <b>directory</b>
               Specify the local "paks" directory in which to install packages.
               This overrides the values specified in the various pakrc or
               pak.json files.
 
 
-       <B>--quiet</B>
+       <b>--quiet</b>
               Run in quiet mode with less verbose otuput. Aliased as -q.
 
 
-       <B>--silent</B>
+       <b>--silent</b>
               Run in silent mode suppressing all but hard errors. Aliased as -s.
 
 
-       <B>--versions</B> <B>URI</B>
+       <b>--versions</b> <b>URI</b>
               Show package version information.
 
 
-       <B>--write</B> <B>URI</B>
+       <b>--write</b> <b>URI</b>
               Write installed packages to pak.json dependencies. Use --optional
               to update optionalDependencies.  When uninstalling, --write will
               remove the package from the dependencies and update the pak.json.
 
 
 
-</PRE>
-<H2>REPORTING BUGS</H2><PRE>
+</pre>
+<h2>REPORTING BUGS</h2><pre>
        Report bugs to dev@embedthis.com.
 
 
-</PRE>
-<H2>COPYRIGHT</H2><PRE>
+</pre>
+<h2>COPYRIGHT</h2><pre>
        Copyright © Embedthis Software. Bit and Ejscript are a trademarks of
        Embedthis Software.
 
 
-</PRE>
-<H2>SEE ALSO</H2><PRE>
-       http://embedthis.com/pak/
+</pre>
+<h2>SEE ALSO</h2><pre>
+       https://www.embedthis.com/pak/
 
 
 
-pak                                March 2014                             <B>PAK(1)</B>
-</PRE>
-<HR>
-<ADDRESS>
+pak                                March 2014                             <b>PAK(1)</b>
+</pre>
+<hr>
+<address>
 Man(1) output converted with
 <a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
-</ADDRESS>
-</BODY>
-</HTML>
-</html>
+</address>
+
+
+
+    </div>
+    <div class="terms ui basic center aligned segment">
+        <p>&copy; Embedthis Software. All rights reserved.</p>
+    </div>
+
+    <script src="../lib/jquery/jquery.min.js"></script>
+    <script src="../lib/jquery/jquery.slim.min.js"></script>
+    <script src="../lib/semantic-ui/semantic.min.js"></script>
+     
+
+    
+
+
+
+

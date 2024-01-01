@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-inverse navbar-static-top">
             <div class="navbar-header">
-                <a class="navbar-brand ng-cloak" href="http://embedthis.com/products/pak/">Embedthis Pak</a>
+                <a class="navbar-brand ng-cloak" href="https://www.embedthis.com/products/pak/">Embedthis Pak</a>
             </div>
             <!--
             <div class="navbar-collapse collapse">
@@ -110,7 +110,7 @@
           '000262706376373952077:1hs0lhenihk');
         customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
         var options = new google.search.DrawOptions();
-        options.enableSearchboxOnly("http://embedthis.com/search.html");
+        options.enableSearchboxOnly("https://www.embedthis.com/search.html");
         customSearchControl.draw('cse-search-form', options);
       }, true);
     </script>

@@ -311,7 +311,7 @@ COPYRIGHT
        Embedthis Software.
 
 SEE ALSO
-       http://embedthis.com/pak/
+       https://www.embedthis.com/pak/
 
 
 

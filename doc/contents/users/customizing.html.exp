@@ -156,7 +156,7 @@
 
             <h3>Scripted Export</h3>
             <p>If you have export needs that go beyond what can be expressed via export properties, you can also use
-            the full scripting power of <a href="http://embedthis.com/ejscript/">Ejscript</a> to create
+            the full scripting power of <a href="https://www.embedthis.com/ejscript/">Ejscript</a> to create
                 custom export scripts. For example:</p>
                 <pre class="code">
 "export": {

@@ -1,7 +1,9 @@
 { title: 'Quick Start', crumbs: [ { 'Getting Started': 'index.html' }, ], }
 <h1>Pak Quick Start</h1>
 <ol>
+    <!--
   <li>
+
     <h3><a href="https://www.embedthis.com/pak/download.html">Download</a></h3>
     <p>
       First download Pak on your system. You can download a binary package from
@@ -10,6 +12,7 @@
       >.
     </p>
   </li>
+    -->
   <li>
     <h3><a href="installing.html">Installing Pak</a></h3>
     <p>

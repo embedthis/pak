@@ -1,37 +1,143 @@
-<!-- BeginDsi "dsi/head.html" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Embedthis Pak Documentation</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="description" content="Package manager for Applications">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
+    
+    <link href="../images/favicon.ico" rel="shortcut icon">
+    <link href="../lib/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/api.min.css" rel="stylesheet" type="text/css">
+    
+
+</head>
+<body class="show-sidebar">
+    <div class="sidebar">
+        <div class="ui large left vertical inverted labeled menu">
+            <div class="item">
+                <a href="../index.html" class="logo">Pak Docs</a>
+            </div>
+            <div class="item">
+                <a href="../index.html">
+                    <b>General</b>
+                </a>
+                <div class="menu">
+                    <a class="item" href="../index.html">Pak Overview</a>
+                    <a class="item" href="../users/features.html">Pak Features</a>
+                    
+                    <a class="item" href="../licensing/index.html">Licensing</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../start/index.html">
+                    <b>Getting Started</b>
+                </a>
+                <div class="menu">
+                    <a class="item" href="../start/quick.html">Quick Start</a>
+                    <a class="item" href="../start/installing.html">Installing</a>
+                    <a class="item" href="../start/releaseNotes.html">Release Notes</a>
+                    <a class="item" href="../start/source.html">Building from Source</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../users/index.html"><b>User's Guide</b></a>
+                <div class="menu">
+                    <a class="item" href="../users/tour.html">Quick Tour</a>
+                    
+                    <a class="item" href="../users/installing.html">Installing Packages</a>
+                    <a class="item" href="../users/customizing.html">Customizing Packages</a>
+                    <a class="item" href="../users/versions.html">Package Versions</a>
+                    <a class="item" href="../users/profiles.html">Pak Profiles</a>
+                </div>
+            </div>
+
+            <div class="item">
+                <a href="../developers/index.html"><b>Developer's Guide</b></a>
+                <div class="menu">
+                    <a class="item" href="../developers/creating.html">Creating Packages</a>
+                    
+                    <a class="item" href="../developers/events.html">Package Events</a>
+                    <a class="item" href="../developers/configuration.html">Pak Configuration</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="../users/project.html">Project Resources</a>
+                <div class="menu">
+                    <a class="item" href="https://www.embedthis.com/blog/categories/Pak/">Official Pak News</a>
+                    <a class="item" href="https://www.embedthis.com/pak/">Pak Web Site</a>
+                    
+                    <a class="item" href="https://github.com/embedthis/pak">Source Code Repository</a>
+                    <a class="item" href="https://github.com/embedthis/pak/issues">Project Issue Database</a>
+                    <a class="item" href="https://github.com/embedthis/pak/releases">Change Log</a>
+                    <a class="item" href="https://github.com/embedthis/pak/milestones">Roadmap</a>
+                    
+                </div>
+            </div>
+            <div class="item">
+                <b>Links</b>
+                <div class="menu">
+                    <a class="item" href="https://www.embedthis.com/">Embedthis Web Site</a>
+                    <a class="item" href="https://www.embedthis.com/blog/">Embedthis Blog</a>
+                    <a class="item" href="http://twitter.com/embedthat">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="ui inverted masthead">
+        <div class="ui fixed inverted menu">
+            <div class="ui sidebar-launch button">
+                <i class="icon list layout"></i>
+            </div>
+            <div class="right menu">
+                <a class="item" href="https://www.embedthis.com/">Embedthis</a>
+                    <a class="item" href="https://www.embedthis.com/pak/">Pak Site</a>
+                    <span class="desktop-only">
+                        <a class="item" href="https://www.embedthis.com/blog/categories/Pak/">Pak News</a>
+                        <a class="item" href="https://github.com/embedthis/pak">Repository</a>
+                        <a class="item" href="https://www.embedthis.com/blog/">Blog</a>
+                        <a class="item" href="https://twitter.com/embedthat">Twitter</a>
+                    </span>
+
+            </div>
+        </div>
+        
+        <iframe class="version desktop-only" src="../version.html"></iframe>
+
+    </div>
+    <div class="content">
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Embedthis Pak 0.9.5 Documentation</title>
-    <meta name="keywords" content="package manager, pak" />
-    <meta name="description" content="Embedthis Pak." />
-	<meta name="robots" content="index,follow" />
-	<link href="../bootstrap.css" rel="stylesheet" type="text/css" />
-	<link href="../app.css" rel="stylesheet" type="text/css" />
-    <link href="http://www.google.com/cse/style/look/default.css" type="text/css" rel="stylesheet" />
+    <meta name="keywords" content="package manager, pak">
+    <meta name="description" content="Embedthis Pak.">
+	<meta name="robots" content="index,follow">
+	<link href="../bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="../app.css" rel="stylesheet" type="text/css">
+    <link href="http://www.google.com/cse/style/look/default.css" type="text/css" rel="stylesheet">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-inverse navbar-static-top">
             <div class="navbar-header">
-                <a class="navbar-brand ng-cloak" href="http://embedthis.com/products/pak/">Embedthis Pak</a>
+                <a class="navbar-brand ng-cloak" href="https://www.embedthis.com/products/pak/">Embedthis Pak</a>
             </div>
-            <!--
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right ng-cloak">
-                    <li>
-                        <form class="navbar-form">
-                            <input class="form-control" type="text">
-                            <i class="glyphicon glyphicon-search"></i>
-                            <div id="cse-search-form"></div>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-            -->
+            
         </nav>
     </header>
-<!-- EndDsi -->
+
         <main class="container ng-cloak">
             <ul class="breadcrumb">
                 <li><a href="../index.html">Pak Documentation</a></li>
@@ -101,7 +207,7 @@
             </section>
         </main>
     </div>
-<!-- BeginDsi "dsi/bottom.html" -->
+
     <script src="http://www.google.com/jsapi" type="text/javascript"></script>
     <script type="text/javascript"> 
       google.load('search', '1', {language : 'en'});
@@ -110,7 +216,7 @@
           '000262706376373952077:1hs0lhenihk');
         customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
         var options = new google.search.DrawOptions();
-        options.enableSearchboxOnly("http://embedthis.com/search.html");
+        options.enableSearchboxOnly("https://www.embedthis.com/search.html");
         customSearchControl.draw('cse-search-form', options);
       }, true);
     </script>
@@ -124,5 +230,21 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
-</body>
-</html>
+
+
+
+    
+    <div class="terms ui basic center aligned segment">
+        <p>&copy; Embedthis Software. All rights reserved.</p>
+    </div>
+
+    <script src="../lib/jquery/jquery.min.js"></script>
+    <script src="../lib/jquery/jquery.slim.min.js"></script>
+    <script src="../lib/semantic-ui/semantic.min.js"></script>
+     
+
+    
+
+
+
+
