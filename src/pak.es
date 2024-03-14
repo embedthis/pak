@@ -17,7 +17,7 @@ const HOME = App.home
 const PAK: Path = Path('pak.json')
 const PACKAGE: Path = Path('package.json')
 const PakProperties = ['dependencies', 'devDependencies', 'optionalDependencies',
-    'main', 'scripts', 'commitplease', 'migrated']
+    'main', 'scripts', 'commitplease', 'migrated', 'exports']
 
 var PakFiles = [ PAK, PACKAGE ]
 
@@ -598,17 +598,16 @@ class Pak
         }
         if (PACKAGE.exists) {
             let package = PACKAGE.readJSON()
-            if (!spec) {
-                //  Try to determine if this is a legacy package.json
-                if (package.pak || package.export || package.origin) {
-                    spec = package
-                }
-            } else if (package.version && spec.version) {
-                qtrace('Warn', 'Version property exists in package.json and pak.json')
+            if (spec) {
+                spec.name ||= package.name
+                spec.version ||= package.version
+                spec.repository ||= package.repository
+            } else {
+                spec = package
+                delete package.dependencies
+                delete package.devDependencies
+                spec.pak ||= {}
             }
-            spec.name ||= package.name
-            spec.version ||= package.version
-            spec.repository ||= package.repository
         } else if (!spec) {
             spec = PakTemplate.clone()
         }
@@ -616,27 +615,9 @@ class Pak
         spec.optionalDependencies ||= {}
         spec.devDependencies ||= {}
 
-        //  DEPRECATE
         if (spec.pak) {
-            if (spec.pak.version) {
-                delete spec.pak.version
-            }
             blend(spec, spec.pak)
             delete spec.pak
-        }
-        let pver = spec.pak || spec.devDependencies.pak
-        if (pver && !Version(Config.Version).acceptable(pver)) {
-            throw '' + spec.name + ' requires Pak ' + pver + '. Pak version ' + Config.Version +
-                            ' is not compatible with this requirement.' + '\n'
-        }
-        //  LEGACY
-        if (spec.mode) {
-            spec.profile = spec.mode
-            delete spec.mode
-        }
-        if (spec.modes) {
-            spec.profiles = spec.modes
-            delete spec.modes
         }
         if (spec.profile && spec.profiles && spec.profiles[spec.profile]) {
             blend(spec, spec.profiles[spec.profile], {combine: true})
@@ -915,7 +896,10 @@ class Pak
                 vtrace('Info', 'Caching "' + pak.name + '" from "' + pak.sourcePath.relative + '" to "' +
                     pak.cachePath + '"')
                 if (pak.source.files) {
-                    pak.source.files = (pak.source.files + ['pak.json', 'package.json', 'README.md', 'LICENSE.md']).unique()
+                    pak.source.files = (pak.source.files + ['pak.json', 'README.md', 'LICENSE.md']).unique()
+                    if (pak.migrated) {
+                        pak.source.files = (pak.source.files + ['package.json']).unique()
+                    }
                 }
                 copyTree(pak, pak.sourcePath, pak.cachePath, pak.source.ignore, pak.source.files)
             } else {
@@ -1328,8 +1312,12 @@ class Pak
         if (spec.import) {
             let import = getPakSetting(pak, 'import')
             if (import !== false) {
-                if (spec.override && spec.override[pak.name] && spec.override[pak.name].export) {
-                    export = spec.override[pak.name].export
+                if (spec.override && spec.override[pak.name] && spec.override[pak.name].export != null) {
+                    if (spec.override[pak.name].export) {
+                        export = spec.override[pak.name].export
+                    } else {
+                        export = []
+                    }
                 } else {
                     let needExports = (export.length == 0)
                     let needFiles = (files.length == 0)
@@ -2831,6 +2819,9 @@ class Pak
     private function saveSpec(path: Path, spec) {
         spec = spec.clone(true)
         path.dirname.makeDir()
+        if (spec.pak) {
+            path = path.dirname.join(PACKAGE)
+        }
         if (path.dirname == '.' && PACKAGE.exists) {
             let data = PACKAGE.readJSON()
             if (data.version) {

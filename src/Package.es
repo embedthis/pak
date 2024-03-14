@@ -320,8 +320,7 @@ enumerable class Package {
         }
         let data = {}
         let found
-        let reversed = PakFiles.clone().reverse()
-        for each (name in reversed) {
+        for each (name in PakFiles) {
             let f = path.join(name)
             if (f.exists) {
                 let obj = deserialize(f.readString())
@@ -339,6 +338,7 @@ enumerable class Package {
                 }
                 blend(data, obj)
                 found = true
+                break
             }
         }
         return found ? data : null
